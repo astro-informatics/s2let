@@ -5,7 +5,7 @@
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-B = 3;
+B = 2;
 zoomfactor = 1.4;
 J_min = 2;
 L = 128;

@@ -3,6 +3,7 @@
 // Boris Leistedt & Jason McEwen
 
 #include "s2let.h"
+#include "ssht.h"
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -251,6 +252,7 @@ void s2let_tiling_axisym(double *kappa, double *kappa0, const s2let_parameters_t
     free(phi2);
 }
 
+
 /*!
  * Allocates space for directionality components in harmonic
  * space.
@@ -302,6 +304,7 @@ void s2let_tiling_direction(complex double *s_elm, const s2let_parameters_t *par
 
     for (el = 1; el < L; ++el)
     {
+
         int gamma;
         // This if else replaces the -1^(N+l)
         if ((N+el) % 2)
@@ -309,7 +312,8 @@ void s2let_tiling_direction(complex double *s_elm, const s2let_parameters_t *par
         else
             gamma = MIN(N-1, el-1);
 
-        for (m = -el; m <= el; ++m)
+
+    for (m = -el; m <= el; ++m)
         {
             // This if/else takes care of the azimuthal
             // band-limit and replaces the beta factor.
@@ -322,6 +326,59 @@ void s2let_tiling_direction(complex double *s_elm, const s2let_parameters_t *par
         }
     }
 }
+
+
+
+
+/*! For Curvelets: s_elm = delta_elm
+ * Generates the harmonic coefficients for the directionality
+ * component of the tiling functions.
+ * \param[out]  s_elm Harmonic coefficienets of directionality
+ *                    components.
+ * \param[in]  parameters A parameters object with (at least) the following fields:
+ *                        \link s2let_parameters_t::L L\endlink,
+ *
+ */
+void s2let_tiling_curvelet_direction(complex double *s_elm, const s2let_parameters_t *parameters)
+{
+    int L = parameters->L;
+    int N =L;     //  int N = parameters->N;
+    int el, m;
+    int ind, ind_nm;
+    double *signs;
+  // Allocate memory.   (c.f. ssht_core_gl_inverse_sov)
+    signs = (double*)calloc(L+1, sizeof(double));
+  // Perform precomputations.
+    for (m=0; m<=L-1; m=m+2) {
+        signs[m]   =  1.0;
+        signs[m+1] = -1.0;
+    }
+    
+    // Skip the s_00 component, as it is zero.
+    // int ind = 1;
+    for (el = 1; el < L; ++el)
+    {
+       // s_elm[ind] = 0.0;
+        for (m = -el; m <= el; ++m)
+        {
+            if (ABS(m) < N && ABS(m) == el)
+            {
+                ssht_sampling_elm2ind(&ind, el, abs(m));   // int ind_pm= el*el+el+ABS(m);
+                s_elm[ind] = 1.0*sqrt(1.0/(2.0));    // s_elm[ind_pm] = 1.0*sqrt(1.0/(2.0));
+                ssht_sampling_elm2ind(&ind_nm, el, -abs(m)) ; //int ind_nm= el*el+el-ABS(m);
+                s_elm[ind_nm] = signs[m]*conj(s_elm[ind]); //pow(-1,ABS(m))* conj(s_elm[ind_pm]);
+            }
+            else
+            {
+                s_elm[ind] = 0.0;
+            }
+
+          //  ++ind;
+        }
+    }
+}
+
+
 
 /*!
  * Allocates space for directional wavelets in harmonic space.
@@ -345,6 +402,34 @@ void s2let_tiling_wavelet_allocate(complex double **psi, double **phi, const s2l
     *psi = calloc((J+1) * L*L, sizeof **psi);
     *phi = calloc(L, sizeof **phi);
 }
+
+
+
+/*!
+ * Allocates space for curvelets in harmonic space.
+ *
+ * \param[out]  psi Pointer to allocated space for harmonic
+ *                  coefficients of curvelets.
+ * \param[out]  phi Pointer to allocated space for harmonic
+ *                  coefficients of scaling function.
+ * \param[in]  parameters A parameters object with (at least) the following fields:
+ *                        \link s2let_parameters_t::B B\endlink
+ *                        \link s2let_parameters_t::L L\endlink,
+ *                        \link s2let_parameters_t::N N\endlink
+ * \retval none
+ */
+ void s2let_tiling_curvelet_allocate(complex double **psi, double **phi, const s2let_parameters_t *parameters)
+{
+    int L = parameters->L;
+    
+    // TODO: This could be reduced by not storing psi_j_elm with |m| >= N
+    int J = s2let_j_max(parameters);
+    *psi = calloc((J+1) * L*L, sizeof **psi);
+    *phi = calloc(L, sizeof **phi);
+}
+
+
+
 
 /*!
  * Computes the normalization factor for spin-lowered wavelets,
@@ -430,7 +515,9 @@ void s2let_tiling_wavelet(complex double *psi, double *phi, const s2let_paramete
         {
             for (m = -el; m <= el; ++m)
             {
+           
                 psi[j*L*L + ind] = sqrt((2*el+1)/(8.0*PI*PI)) * kappa[j*L + el] * s_elm[ind];
+                
                 if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
                     psi[j*L*L + ind] *= s2let_spin_lowered_normalization(el, original_spin);
                 ++ind;
@@ -442,6 +529,109 @@ void s2let_tiling_wavelet(complex double *psi, double *phi, const s2let_paramete
     free(kappa0);
     free(s_elm);
 }
+
+
+// *************************************** //
+/*!
+ * Generates the harmonic coefficients for the curvelets.
+ * This implementation is based on equation *****
+ *
+ * \param[out]  psi Harmonic coefficienets of directional wavelets.
+ * \param[out]  phi Harmonic coefficienets of scaling function.
+ * \param[in]  parameters A parameters object with (at least) the following fields:
+ *                        \link s2let_parameters_t::B B\endlink,
+ *                        \link s2let_parameters_t::L L\endlink,
+ *                        \link s2let_parameters_t::J_min J_min\endlink
+ *                        \link s2let_parameters_t::N N\endlink
+ *                        \link s2let_parameters_t::spin spin\endlink
+ *                        \link s2let_parameters_t::normalization normalization\endlink
+ *                        \link s2let_parameters_t::original_spin original_spin\endlink
+ *
+ */
+void s2let_tiling_curvelet(complex double *psi, double *phi, const s2let_parameters_t *parameters) {
+    int L = parameters->L;
+    int J_min = parameters->J_min;
+    int spin = parameters->spin;
+    s2let_wav_norm_t normalization = parameters->normalization;
+    int original_spin = parameters->original_spin;
+    
+    // TODO: Add spin parameter to avoid computation of el < |s|
+    // TODO: Correctly compute spin scaling functions
+    double *kappa;
+    double *kappa0;
+    complex double *s_elm;
+    int j, el, m, el_min;
+    int J = s2let_j_max(parameters);
+    
+    // Effectively ignore original_spin if we don't use spin-lowered
+    // wavelets.
+    if (normalization != S2LET_WAV_NORM_SPIN_LOWERED)
+        original_spin = 0;
+    
+    s2let_tiling_axisym_allocate(&kappa, &kappa0, parameters);
+    s2let_tiling_axisym(kappa, kappa0, parameters);
+    s2let_tiling_direction_allocate(&s_elm, parameters);
+    s2let_tiling_curvelet_direction(s_elm, parameters);
+    
+    el_min = MAX(ABS(spin), ABS(original_spin));
+    
+    
+    double *signs;
+    // Allocate memory.   (c.f. ssht_core_gl_inverse_sov)
+    signs = (double*)calloc(L+1, sizeof(double));
+    // Perform precomputations.
+    for (m=0; m<=L-1; m=m+2) {
+        signs[m]   =  1.0;
+        signs[m+1] = -1.0;
+    }
+    
+    // Scaling coefficients
+    for (el = el_min; el < L; ++el)
+    {
+        phi[el] = sqrt((2*el+1)/(4.0*PI)) * kappa0[el];
+        
+        if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
+            phi[el] *= s2let_spin_lowered_normalization(el, original_spin);
+    }
+
+    
+/*  Note the index: ind = el*el+el+m  (maps 2D triangular array of a_lm to 1D array) */
+    // Curvelets coefficients
+    for (j = J_min; j <= J; ++j)
+    {
+        int ind = el_min*el_min;
+        int ind_nm = el_min*el_min;
+        for (el = el_min; el < L; ++el)
+        {
+            for (m = -el; m <= el; ++m)
+            {
+                if  (abs(m) == el)
+                {
+                    ssht_sampling_elm2ind(&ind, el, abs(m)); // int ind_pm= el*el+el+ABS(m);
+                    psi[j*L*L + ind] = sqrt((2*el+1)/(8.0*PI*PI))* kappa[j*L + el]* s_elm[ind];    //psi[j*L*L + ind_pm] = sqrt((2*el+1)/(8.0*PI*PI))* kappa[j*L + el]* s_elm[ind_pm];
+                    ssht_sampling_elm2ind(&ind_nm, el, -abs(m));  //     int ind_nm= el*el+el-ABS(m);
+                    psi[j*L*L + ind_nm] =signs[m]* conj(psi[j*L*L + ind]); //psi[j*L*L + ind_nm] = pow(-1,ABS(m))* conj(psi[j*L*L + ind_pm]);
+                }
+                else
+                {
+                    ssht_sampling_elm2ind(&ind, el, m);
+                    psi[j*L*L + ind] = 0.;
+                }
+                
+                if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
+                     psi[j*L*L + ind] *= s2let_spin_lowered_normalization(el, original_spin);
+              //  ++ind;
+            }
+
+        }
+    }
+    
+    free(kappa);
+    free(kappa0);
+ //   free(s_elm);
+}
+
+
 
 /*!
  * Checks exactness of the harmonic tiling kernels by checking
@@ -569,5 +759,60 @@ double s2let_tiling_wavelet_check_identity(complex double *psi, double *phi, con
         error = MAX(error, fabs(ident[el] - 1.0));
     }
 
+    return error ;
+}
+
+
+
+/*!
+ * Checks exactness of the curvelets by checking
+ * the admissibility condition.
+ *
+ * \param[in]  psi Harmonic coefficients of curvelets.
+ * \param[in]  phi Harmonic coefficients of scaling function.
+ * \param[in]  parameters A parameters object with (at least) the following fields:
+ *                        \link s2let_parameters_t::B B\endlink,
+ *                        \link s2let_parameters_t::L L\endlink,
+ *                        \link s2let_parameters_t::J_min J_min\endlink
+ *                        \link s2let_parameters_t::N N\endlink
+ *                        \link s2let_parameters_t::spin spin\endlink
+ * \retval Achieved accuracy (should be lower than e-14).
+ */
+double s2let_tiling_curvelet_check_identity(complex double *psi, double *phi, const s2let_parameters_t *parameters)
+{
+    int L = parameters->L;
+    int spin = parameters->spin;
+    
+    int j, el, m, ind;
+    int J = s2let_j_max(parameters);
+    double error = 0.0; // maximum error for all el
+    
+    double *ident;
+    ident = calloc(L, sizeof *ident);
+    
+    for (el = ABS(spin); el < L; ++el)
+    {
+        ident[el] += 4.0*PI/(2*el+1) * phi[el] * phi[el];
+    }
+    
+    for (j = 0; j <= J; ++j)
+    {
+        ind = spin*spin;
+        for (el = ABS(spin); el < L; ++el)
+        {
+            for (m = -el; m <= el; ++m)
+            {
+                ident[el] += 8.0*PI*PI/(2*el+1) *
+                psi[j*L*L + ind] * conj(psi[j*L*L + ind]);
+                ++ind;
+            }
+        }
+    }
+    
+    for (el = ABS(spin); el < L; ++el)
+    {
+        error = MAX(error, fabs(ident[el] - 1.0));
+    }
+    
     return error;
 }

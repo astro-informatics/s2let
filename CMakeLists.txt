@@ -25,6 +25,11 @@ link_directories($ENV{FFTW}/lib)
 include_directories($ENV{SSHT}/include/c)
 link_directories($ENV{SSHT}/lib/c)
 
+
+# so3
+#include_directories($ENV{so3}/include/c)
+#link_directories($ENV{so3}/lib/c)
+
 # CFITSIO 
 find_path(CFITSIO_INCLUDE_DIR fitsio.h
   PATH_SUFFIXES libcfitsio3 libcfitsio0 cfitsio

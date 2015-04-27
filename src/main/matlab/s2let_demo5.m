@@ -5,26 +5,30 @@
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-B = 2;
-zoomfactor = 1.4;
-J_min = 2;
-L = 512;
 Spin = 0;
-N = 15;
+B = 2;
+J_min = 0; %2
+L = 16;
+N = 16;
 J = s2let_jmax(L, B);
+zoomfactor = 1.4;
 plot_caxis_scale = 2
 type = 'colour';
 lighting = true;
 
+
 ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = 4;
-nx = 3;
+ny=4;
+nx=3;
 
 maxfigs = nx*ny;
 pltroot = '../../../figs'
 configstr = ['Spin',int2str(Spin),'_N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]
+
+
 [psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min);
 
+% Scaling functions
 figure('Position',[100 100 300 300])
 h=subplot(1, 1, 1);
 flm = zeros(L^2,1);
@@ -44,19 +48,21 @@ v = caxis;
 temp = max(abs(v));
 caxis([-temp temp]*plot_caxis_scale)
 
-
-%colormap(jet)
+colormap(jet)
 %fname = [pltroot,'/s2let_demo5_', configstr, '_scal_jet.png']
-%print('-r200', '-dpng', fname)
-%colormap(hot)
+fname = ['s2let_demo5_', configstr, '_scal_jet.png']
+print('-r200', '-dpng', fname)
+colormap(hot)
 %fname = [pltroot,'/s2let_demo5_', configstr, '_scal_hot.png']
-%print('-r200', '-dpng', fname)
+fname = ['s2let_demo5_', configstr, '_scal_hot.png']
+print('-r200', '-dpng', fname)
 
+
+% Directional scale-discretised wavelets: 
 figure('Position',[100 100 1200 600])
 ind = 0;
 for j = J_min:J
-   flm = psi_lm(:,j+1);
-
+   flm = psi_lm(:,j+1);       
    if Spin == 0
        f = ssht_inverse(flm, L, 'Reality', true);
        ind = ind + 1;
@@ -73,6 +79,7 @@ for j = J_min:J
            temp = max(abs(v));
            caxis([-temp temp]*plot_caxis_scale)
            zoom(zoomfactor)
+
        end
    end
    if Spin > 0
@@ -91,6 +98,7 @@ for j = J_min:J
            temp = max(abs(v));
            caxis([-temp temp]*plot_caxis_scale)
            zoom(zoomfactor)
+
        end
        ind = ind + 1;
        if ind <= maxfigs
@@ -106,6 +114,7 @@ for j = J_min:J
            temp = max(abs(v));
            caxis([-temp temp]*plot_caxis_scale)
            zoom(zoomfactor)
+           
        end
        
        ind = ind + 1;
@@ -129,9 +138,11 @@ end
 
 
 colormap(jet)
-fname = [pltroot,'/s2let_demo5_', configstr, '_wav_jet.png']
+%fname = [pltroot,'/s2let_demo5_', configstr, '_wav_jet.png']
+fname = ['s2let_demo5_', configstr, '_wav_jet.png']
 print('-r200', '-dpng', fname)
 colormap(hot)
-fname = [pltroot,'/s2let_demo5_', configstr, '_wav_hot.png']
+%fname = [pltroot,'/s2let_demo5_', configstr, '_wav_hot.png']
+fname = ['s2let_demo5_', configstr, '_wav_hot.png']
 print('-r200', '-dpng', fname)
 

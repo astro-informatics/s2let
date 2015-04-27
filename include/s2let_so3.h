@@ -11,6 +11,7 @@
 // throughout S2LET.
 #define S2LET_SO3_N_ORDER SO3_N_ORDER_NEGATIVE_FIRST
 #define S2LET_SO3_STORAGE SO3_STORAGE_COMPACT
+// SO3_STORAGE_PADDED   SO3_STORAGE_COMPACT
 
 /*!
  * A static helper function to prepopulate an so3_parameters_t

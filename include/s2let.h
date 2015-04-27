@@ -8,6 +8,8 @@
 #include "s2let_alloc.h"
 #include "s2let_analysis.h"
 #include "s2let_synthesis.h"
+#include "s2let_analysis_cur.h"
+#include "s2let_synthesis_cur.h"
 #include "s2let_transform_axisym_hpx.h"
 #include "s2let_transform_axisym_lm.h"
 #include "s2let_transform_axisym_mw.h"

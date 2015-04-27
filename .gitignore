@@ -1,10 +1,7 @@
-*.sublime-workspace
-
-*.DS_Store
-*.o
-*.mexa64
-*.mexmaci64
-*~
-
-core
-vgcore.*
+*.[oa]
+*~ 
+*dat
+*rtf
+*txt
+*xlsx
+*copy

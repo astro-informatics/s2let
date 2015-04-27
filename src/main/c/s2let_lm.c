@@ -33,12 +33,17 @@ double s2let_lm_power(complex double *flm, int L){
  */
 void s2let_lm_random_flm(complex double *flm, int L, int spin, int seed)
 {
+   // FILE *fp;
+   // fp=fopen("1_s2let_lmrandom_flm.dat", "w");
+    
     int i, i_min;
     srand( time(NULL) );
     // el < |s| are zero, so start with el = |s|, m = -el.
     i_min = spin*spin;
     for (i=i_min; i<L*L; ++i)
-        flm[i] = (2.0*ran2_dp(seed) - 1.0) + I * (2.0*ran2_dp(seed) - 1.0);
+    {   flm[i] = (2.0*ran2_dp(seed) - 1.0) + I * (2.0*ran2_dp(seed) - 1.0);
+   //     fprintf(fp, "%f, %f\n", creal(flm[i]), cimag(flm[i]));
+    }
 }
 
 /*!

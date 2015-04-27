@@ -1,18 +1,18 @@
-function psi_j = s2let_compute_wav(j, alpha, beta, gamma, L, varargin)
-% s2let_compute_wav - Compute a rotated wavelet
+function psi_j = s2let_compute_cur(j, alpha, beta, gamma, L, varargin)
+% s2let_compute_cur - Compute a rotated curvelet
 %
-% Compute the j-th wavelet, rotated by rho=(alpha, beta, gamma) in
+% Compute the j-th curvelet, rotated by rho=(alpha, beta, gamma) in
 % harmonic space and reconstruct it on the sphere.
 %
 % Default usage :
 %
-%   psi_j = s2let_compute_wav(j, alpha, beta, gamma, L, <options>)
+%   psi_j = s2let_compute_cur(j, alpha, beta, gamma, L, <options>)
 %
-% j is the order of the wavelet under consideration (depends on B)
+% j is the order of the curvelet under consideration (depends on B)
 % rho=(alpha, beta, gamma) is the rotation in SO(3) by which to rotate
-% the wavelet wavelet
+% the curvelet
 % L if harmonic band-limit for the reconstruction on the sphere
-% psi_j is the reconstructed wavelet on the sphere, at resolution L
+% psi_j is the reconstructed curvelet on the sphere, at resolution L
 %
 % Options consist of parameter type and value pairs.
 % Valid options include:
@@ -21,7 +21,7 @@ function psi_j = s2let_compute_wav(j, alpha, beta, gamma, L, varargin)
 %  'N'               = { Azimuthal band-limit; N > 0 (default = L) }
 %  'Spin'            = { Spin number; Spin >= 0 (default = 0) }
 %
-% S2LET package to perform Wavelet transform on the Sphere.
+% S2LET package to perform curvelet transform on the Sphere.
 % Copyright (C) 2012-2014  Boris Leistedt, Martin Büttner & Jason McEwen
 % See LICENSE.txt for license details
 
@@ -48,7 +48,7 @@ B = args.B;
 N = args.N;
 Spin = args.Spin;
 
-psi = s2let_wavelet_tiling(B, L, N, Spin, j);
+psi = s2let_curvelet_tiling(B, L, N, Spin, j);
 
 % Precompute Wigner small-d functions
 d = zeros(L, 2*L-1, 2*L-1);

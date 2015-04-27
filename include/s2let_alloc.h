@@ -41,4 +41,28 @@ void s2let_allocate_f_wav_real(
     const s2let_parameters_t *parameters
 );
 
+
+
+/** Wigner space allocation **/
+void s2let_allocate_lmn_f_cur(
+    complex double **f_cur_lmn,
+    complex double **f_scal_lm,
+    const s2let_parameters_t *parameters
+);
+
+/** Curvelet space allocation **/
+void s2let_allocate_f_cur(
+     complex double **f_cur,
+     complex double **f_scal,
+     const s2let_parameters_t *parameters
+);
+
+void s2let_allocate_f_cur_real(
+    double **f_cur,
+    double **f_scal,
+    const s2let_parameters_t *parameters
+);
+
+
+
 #endif

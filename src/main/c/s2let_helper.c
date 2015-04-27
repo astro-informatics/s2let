@@ -62,6 +62,9 @@ int s2let_n_lmn_wav(const s2let_parameters_t *parameters)
     return total;
 }
 
+
+
+
 int s2let_n_gamma(const s2let_parameters_t *parameters)
 {
     so3_parameters_t so3_parameters = {};
@@ -105,3 +108,83 @@ int s2let_n_wav(const s2let_parameters_t *parameters)
     }
     return total;
 }
+
+int s2let_n_wav_j(int j, const s2let_parameters_t *parameters)
+{
+    so3_parameters_t so3_parameters = {};
+    fill_so3_parameters(&so3_parameters, parameters);
+
+    if (!parameters->upsample)
+    {
+        int L = parameters->L;
+        so3_parameters.L = MIN(s2let_bandlimit(j, parameters), L);
+    }
+
+    return so3_sampling_f_size(&so3_parameters);
+}
+
+
+
+
+int s2let_n_lmn_cur(const s2let_parameters_t *parameters)
+{
+    so3_parameters_t so3_parameters = {};
+    fill_so3_parameters(&so3_parameters, parameters);
+    
+    int L = parameters->L;
+    int N = parameters->N;
+    int J_min = parameters->J_min;
+    int J = s2let_j_max(parameters);
+    int bandlimit = L;
+    int j, total = 0;
+    for (j = J_min; j <= J; ++j)
+    {
+        if (!parameters->upsample)
+        {
+            bandlimit = MIN(s2let_bandlimit(j, parameters), L);
+            so3_parameters.L = bandlimit;
+            so3_parameters.N = MIN(N, bandlimit);
+        }
+        total += so3_sampling_flmn_size(&so3_parameters);
+    }
+    return total;
+}
+
+int s2let_n_cur(const s2let_parameters_t *parameters)
+{
+    so3_parameters_t so3_parameters = {};
+    fill_so3_parameters(&so3_parameters, parameters);
+    
+    int L = parameters->L;
+    int J_min = parameters->J_min;
+    int J = s2let_j_max(parameters);
+    int bandlimit = L;
+    int j, total = 0;
+    for (j = J_min; j <= J; ++j)
+    {
+        if (!parameters->upsample)
+        {
+            bandlimit = MIN(s2let_bandlimit(j, parameters), L);
+            so3_parameters.L = bandlimit;
+        }
+        total += so3_sampling_f_size(&so3_parameters);
+    }
+    return total;
+}
+
+int s2let_n_cur_j(int j, const s2let_parameters_t *parameters)
+{
+    so3_parameters_t so3_parameters = {};
+    fill_so3_parameters(&so3_parameters, parameters);
+    
+    if (!parameters->upsample)
+    {
+        int L = parameters->L;
+        so3_parameters.L = MIN(s2let_bandlimit(j, parameters), L);
+    }
+    
+    return so3_sampling_f_size(&so3_parameters);
+}
+
+
+

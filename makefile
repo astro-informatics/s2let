@@ -4,19 +4,19 @@
 # ======================================== #
 
 # Directory for SO3 (required)
-SO3DIR = ../so3
+SO3DIR = /Users/jenniferyhchan/WaveletsCode_PhD/so3
 # Directory for SSHT (required)
-SSHTDIR	= ../ssht
+SSHTDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/ssht
 # Directory for FFTW (required)
-FFTWDIR	= ${FFTW}
+FFTWDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/fftw-3.3.4
 
 # Directory for CFITSIO (optional)
-CFITSIODIR	= ${CFITSIO}
+CFITSIODIR	= /Users/jenniferyhchan/WaveletsCode_PhD/cfitsio
 # Directory for HEALPIX (optional)
-HEALPIXDIR	= ${HEALPIX}
+HEALPIXDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11
 
 # Directory for MATLAB (optional)
-MLAB	=  /Applications/MATLAB_R2013b.app
+MLAB	=  /Applications/MATLAB_R2014a.app
 # Directory for DOXYGEN (optional)
 #DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen
 DOXYGEN_PATH = doxygen
@@ -91,7 +91,7 @@ SSHTLIBNM = ssht
 FFTWINC	     = $(FFTWDIR)/include
 FFTWLIB      = $(FFTWDIR)/lib
 FFTWLIBNM    = fftw3
-FFTWOMPLIBNM = fftw3_threads
+# FFTWOMPLIBNM = fftw3_threads
 
 # === CFITSIO ===
 ifneq ($(strip $(CFITSIODIR)),)
@@ -118,9 +118,9 @@ vpath %.c $(S2LETTESTSRC)
 vpath %.h $(S2LETINC)
 vpath %_mex.c $(S2LETSRCMAT)
 
-LDFLAGS = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWOMPLIBNM) -l$(FFTWLIBNM) -lm
+LDFLAGS = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB)  -l$(FFTWLIBNM) -lm
 
-LDFLAGSMEX = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWOMPLIBNM) -l$(FFTWLIBNM) -lm
+LDFLAGSMEX = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWLIBNM) -lm
 
 FFLAGS  = -I$(FFTWINC) -I$(SSHTINC) -I$(SO3INC) -I$(S2LETINC)
 
@@ -130,6 +130,8 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 	  $(S2LETOBJ)/s2let_helper.o 	\
 	  $(S2LETOBJ)/s2let_analysis.o 	\
 	  $(S2LETOBJ)/s2let_synthesis.o 	\
+	  $(S2LETOBJ)/s2let_analysis_cur.o 	\
+	  $(S2LETOBJ)/s2let_synthesis_cur.o 	\
 	  $(S2LETOBJ)/s2let_idl_mw.o 	\
 	  $(S2LETOBJ)/s2let_lm.o	\
 	  $(S2LETOBJ)/s2let_math.o 	\
@@ -138,23 +140,33 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 
 S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_wavelet_tiling_mex.o		\
+          $(S2LETOBJMAT)/s2let_curvelet_tiling_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_analysis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_synthesis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2wav_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_lm2wav_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2cur_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_synthesis_lm2cur_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_mw_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_analysis_cur_mw_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_synthesis_cur_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_jmax_mex.o	\
 	  $(S2LETOBJMAT)/s2let_bandlimit_mex.o
 
 S2LETOBJSMEX = $(S2LETOBJMEX)/s2let_transform_axisym_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_wavelet_tiling_mex.$(MEXEXT)	\
+          $(S2LETOBJMEX)/s2let_curvelet_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_analysis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_synthesis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_analysis_lm2cur_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_synthesis_lm2cur_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_analysis_cur_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_synthesis_cur_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_jmax_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_bandlimit_mex.$(MEXEXT)
 
