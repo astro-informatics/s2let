@@ -64,12 +64,12 @@ void s2let_synthesis_cur_lmn2lm(
     // For debugging:
     // Open data file '"f_lm.dat"' to write out f_lm
     FILE *fp, *fp2, *fp3, *fp4,*fp5, *fp6;
-    fp=fopen("4b_f_lm.dat", "w");
-    fp2=fopen("4b_f_lmONLYj0_syn.dat", "w");
-    fp3=fopen("4b_f_lmONLYj1_syn.dat", "w");
-    fp4=fopen("4b_f_lmONLYj2_syn.dat", "w");
-    fp5=fopen("4b_f_lmONLYj3_syn.dat", "w");
-    fp6=fopen("4b_f_lmONLYj4_syn.dat", "w");
+    fp=fopen("4b_f_lm_cur.dat", "w");
+    fp2=fopen("4b_f_lmONLYj0_cur_syn.dat", "w");
+    fp3=fopen("4b_f_lmONLYj1_cur_syn.dat", "w");
+    fp4=fopen("4b_f_lmONLYj2_cur_syn.dat", "w");
+    fp5=fopen("4b_f_lmONLYj3_cur_syn.dat", "w");
+    fp6=fopen("4b_f_lmONLYj4_cur_syn.dat", "w");
     
     
     int offset = 0;

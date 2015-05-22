@@ -52,21 +52,21 @@ void s2let_analysis_cur_lm2lmn(
 // For debugging:
 // Open data file '"f_cur_lmn.dat"' to write out f_cur_lm
     FILE *fp, *fp2, *fp3, *fp4,*fp5, *fp6;
-    fp=fopen("3a_f_cur_lmn.dat", "w");
-    fp2=fopen("3a_f_cur_lmnONLYj0.dat", "w");
-    fp3=fopen("3a_f_cur_lmnONLYj1.dat", "w");
-    fp4=fopen("3a_f_cur_lmnONLYj2.dat", "w");
-    fp5=fopen("3a_f_cur_lmnONLYj3.dat", "w");
-    fp6=fopen("3a_f_cur_lmnONLYj4.dat", "w");
+    fp=fopen("3a_f_cur_lmn_ana.dat", "w");
+    fp2=fopen("3a_f_cur_lmnONLYj0_ana.dat", "w");
+    fp3=fopen("3a_f_cur_lmnONLYj1_ana.dat", "w");
+    fp4=fopen("3a_f_cur_lmnONLYj2_ana.dat", "w");
+    fp5=fopen("3a_f_cur_lmnONLYj3_ana.dat", "w");
+    fp6=fopen("3a_f_cur_lmnONLYj4_ana.dat", "w");
     // For debugging:
     // Open data file '"f_lm.dat"' to write out f_lm
     FILE *fp7, *fp8, *fp9, *fp10,*fp11, *fp12;
-    fp7=fopen("3a_in_f_lm.dat", "w");
-    fp8=fopen("3a_in_f_lmONLYj0_syn.dat", "w");
-    fp9=fopen("3a_in_f_lmONLYj1_syn.dat", "w");
-    fp10=fopen("3a_in_f_lmONLYj2_syn.dat", "w");
-    fp11=fopen("3a_in_f_lmONLYj3_syn.dat", "w");
-    fp12=fopen("3a_in_f_lmONLYj4_syn.dat", "w");
+    fp7=fopen("3a_in_f_lm_cur_ana.dat", "w");
+    fp8=fopen("3a_in_f_lmONLYj0_cur_ana.dat", "w");
+    fp9=fopen("3a_in_f_lmONLYj1_cur_ana.dat", "w");
+    fp10=fopen("3a_in_f_lmONLYj2_cur_ana.dat", "w");
+    fp11=fopen("3a_in_f_lmONLYj3_cur_ana.dat", "w");
+    fp12=fopen("3a_in_f_lmONLYj4_cur_ana.dat", "w");
     
     int offset = 0;
     lmn_ind = 0;
@@ -140,7 +140,7 @@ void s2let_analysis_cur_lm2lmn(
         }
     }
     
-    // Close file '"f_cur_lmn.dat"'
+    // Close files:
     fclose(fp);
     fclose(fp2);
     fclose(fp3);

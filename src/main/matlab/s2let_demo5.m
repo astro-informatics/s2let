@@ -5,11 +5,11 @@
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-Spin = 0;
+Spin = 1;
 B = 2;
 J_min = 0; %2
-L = 16;
-N = 16;
+L = 64;
+N = 64;
 J = s2let_jmax(L, B);
 zoomfactor = 1.4;
 plot_caxis_scale = 2
@@ -132,7 +132,6 @@ for j = J_min:J
            caxis([-temp temp]*plot_caxis_scale)
            zoom(zoomfactor)
        end
-       
    end
 end
 
@@ -141,8 +140,8 @@ colormap(jet)
 %fname = [pltroot,'/s2let_demo5_', configstr, '_wav_jet.png']
 fname = ['s2let_demo5_', configstr, '_wav_jet.png']
 print('-r200', '-dpng', fname)
-colormap(hot)
+%colormap(hot)
 %fname = [pltroot,'/s2let_demo5_', configstr, '_wav_hot.png']
-fname = ['s2let_demo5_', configstr, '_wav_hot.png']
-print('-r200', '-dpng', fname)
+%fname = ['s2let_demo5_', configstr, '_wav_hot.png']
+%print('-r200', '-dpng', fname)
 

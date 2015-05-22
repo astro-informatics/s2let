@@ -609,8 +609,13 @@ void s2let_tiling_curvelet(complex double *psi, double *phi, const s2let_paramet
                 {
                     ssht_sampling_elm2ind(&ind, el, abs(m)); // int ind_pm= el*el+el+ABS(m);
                     psi[j*L*L + ind] = sqrt((2*el+1)/(8.0*PI*PI))* kappa[j*L + el]* s_elm[ind];    //psi[j*L*L + ind_pm] = sqrt((2*el+1)/(8.0*PI*PI))* kappa[j*L + el]* s_elm[ind_pm];
+                    if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
+                        psi[j*L*L + ind] *= s2let_spin_lowered_normalization(el, original_spin);
+                    
                     ssht_sampling_elm2ind(&ind_nm, el, -abs(m));  //     int ind_nm= el*el+el-ABS(m);
                     psi[j*L*L + ind_nm] =signs[m]* conj(psi[j*L*L + ind]); //psi[j*L*L + ind_nm] = pow(-1,ABS(m))* conj(psi[j*L*L + ind_pm]);
+                    if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
+                        psi[j*L*L + ind_nm] *= s2let_spin_lowered_normalization(el, original_spin);
                 }
                 else
                 {
@@ -618,9 +623,6 @@ void s2let_tiling_curvelet(complex double *psi, double *phi, const s2let_paramet
                     psi[j*L*L + ind] = 0.;
                 }
                 
-                if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
-                     psi[j*L*L + ind] *= s2let_spin_lowered_normalization(el, original_spin);
-              //  ++ind;
             }
 
         }

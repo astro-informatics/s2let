@@ -6,11 +6,11 @@ clear all;
 close all;
 
 % Main parameters
+Spin = 1;
 L = 16;
 % For curvelets: N=L
 N = L;  %N=1 for axisymmetric wavelets
 B = 2;
-Spin = 0;
 J_min = 0;
 J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
 
@@ -121,6 +121,57 @@ for j = J_min:J,
            zoom(zoomfactor)
        end
    end
+      if Spin > 0
+       f_wav_rot = ssht_inverse(flm_wav_rot, L, 'spin', Spin);
+       ind = ind + 1;
+       if ind <= maxfigs
+           h = subplot(ny, nx, ind);
+           ssht_plot_sphere(real(f_wav_rot), L, 'Type', type, 'Lighting', lighting);
+           title(h, ['Spin Directional Wavelet j = ',int2str(j-J_min+1), ', real part'])
+           locate = get(h,'title');
+           pos = get(locate,'position');
+           pos(1,2) = pos(1,2)+0.7;
+           pos(1,1) = pos(1,1)-0.7;
+           set(locate,'pos',pos);
+           v = caxis;
+           temp = max(abs(v));
+           caxis([-temp temp]*plot_caxis_scale)
+           zoom(zoomfactor)
+
+       end
+       ind = ind + 1;
+       if ind <= maxfigs
+           h = subplot(ny, nx, ind);
+           ssht_plot_sphere(imag(f_wav_rot), L, 'Type', type, 'Lighting', lighting);
+           title(h, ['Spin Directional Wavelet j = ',int2str(j-J_min+1), ', imag part'])
+           locate = get(h,'title');
+           pos = get(locate,'position');
+           pos(1,2) = pos(1,2)+0.7;
+           pos(1,1) = pos(1,1)-0.7;
+           set(locate,'pos',pos);
+           v = caxis;
+           temp = max(abs(v));
+           caxis([-temp temp]*plot_caxis_scale)
+           zoom(zoomfactor)
+           
+       end
+       
+       ind = ind + 1;
+       if ind <= maxfigs
+           h = subplot(ny, nx, ind);
+           ssht_plot_sphere(abs(f_wav_rot), L, 'Type', type, 'Lighting', lighting);
+           title(h, ['Spin Directional Wavelet j = ',int2str(j-J_min+1), ', abs part'])
+           locate = get(h,'title');
+           pos = get(locate,'position'); 
+           pos(1,2) = pos(1,2)+0.7;
+           pos(1,1) = pos(1,1)-0.7;
+           set(locate,'pos',pos);
+           v = caxis;
+           temp = max(abs(v));
+           caxis([-temp temp]*plot_caxis_scale)
+           zoom(zoomfactor)
+       end 
+      end
 end
 %***** step 1b) compute the scaling coefficients (no j-dependence except J_min)
 scal_l = zeros(L^2,1);

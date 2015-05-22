@@ -42,6 +42,7 @@ typedef enum {
     S2LET_WAV_NORM_SIZE
 } s2let_wav_norm_t;
 
+
 /*!
  * A struct with all parameters that are common to several
  * functions of the API. In general only one struct needs to
@@ -124,6 +125,8 @@ typedef struct {
      * \var s2let_wav_norm_t normalization
      */
     s2let_wav_norm_t normalization;
+    
+
 
     /*!
      * If normalization has value S2LET_WAV_NORM_SPIN_LOWERED
