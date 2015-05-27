@@ -289,15 +289,13 @@ void s2let_synthesis_cur2lm(
     int N = parameters->N ;   //L; 
     ssht_dl_method_t dl_method = parameters->dl_method;
 
-
     int bandlimit = L;
     int verbosity = 0;
     so3_parameters_t so3_parameters = {};
     fill_so3_parameters(&so3_parameters, parameters);
 
-    int j, offset, offset_lmn;
+    int j, offset_cur, offset_cur_lmn;
     int J = s2let_j_max(parameters);
-
     
     complex double *cur_lm;
     double *scal_l;
@@ -306,7 +304,7 @@ void s2let_synthesis_cur2lm(
 
     complex double *f_cur_lmn, *f_scal_lm;
     s2let_allocate_lmn_f_cur(&f_cur_lmn, &f_scal_lm, parameters);
-
+    
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
 
@@ -325,6 +323,22 @@ void s2let_synthesis_cur2lm(
 
     
     // For debugging:
+    int arrayind_min,arrayind, arrayind_max;
+    FILE *fp10;
+    arrayind_min = 0;
+    arrayind_max = (2*L-1)*L*(2*N-1);    //L*L;
+    fp10=fopen("4aaa_check_f_cur_inputtocur2lm_syn.dat", "w");
+    for (arrayind = arrayind_min; arrayind <  arrayind_max; arrayind++ )
+    {
+        fprintf(fp10, "%d, %f, %f\n", arrayind, creal(f_cur[arrayind]), cimag(f_cur[arrayind]));
+    }
+    fclose(fp10);
+    
+    //printf(" ***** - size of f_cur :  %ld\n",sizeof(f_cur));
+    //printf(" ***** - size of f_cur_lmn :  %ld\n",sizeof(f_cur_lmn));
+    
+    
+    // For debugging:
     // Open data file '"f_cur_lmn.dat"' to write out f_cur_lm
     FILE *fp ;  //, *fp2, *fp3, *fp4,*fp5, *fp6;
     FILE *fp7; //*fp8, *fp9, *fp10,*fp11, *fp12, *fp13;
@@ -334,8 +348,8 @@ void s2let_synthesis_cur2lm(
     fp13=fopen("4abc_so3para.dat", "w");
     fp14=fopen("4abc_cur_s2letpara.dat", "w");
     
-    offset = 0;
-    offset_lmn = 0;
+    offset_cur = 0;
+    offset_cur_lmn = 0;
     for (j = J_min; j <= J; ++j)
     {
         if (!parameters->upsample)
@@ -350,29 +364,48 @@ void s2let_synthesis_cur2lm(
         so3_parameters.L0 = s2let_L0(j, parameters);
         
         so3_core_forward_via_ssht(
-            f_cur_lmn + offset_lmn,
-            f_cur + offset,
+            f_cur_lmn + offset_cur_lmn,
+            f_cur + offset_cur,
             &so3_parameters
         );
         
-        offset_lmn += so3_sampling_flmn_size(&so3_parameters);
-        offset += so3_sampling_f_size(&so3_parameters);
+        offset_cur_lmn += so3_sampling_flmn_size(&so3_parameters);
+        offset_cur += so3_sampling_f_size(&so3_parameters);
         
         // For debugging:
         fprintf(fp14, "%d,%d,%d,%d\n",j, s2let_L0(j, parameters), MIN(s2let_bandlimit(j, parameters), L), MIN(N,bandlimit));
         fprintf(fp13, "%d,%d,%d,%d\n",j, so3_parameters.L0, so3_parameters.L, so3_parameters.N);
         // Write out to data file '"4ab__f_cur_lmn_syn_cur2lm_so3coreforwardviassht.dat"'
         //fprintf(fp, "%d, %f, %f,  %ld, %d, %d, %f, %f, %ld\n", j , creal(*f_cur_lmn), cimag(*f_cur_lmn), sizeof(f_cur_lmn), (offset_lmn), so3_sampling_flmn_size(&so3_parameters), creal(*f_cur_lmn +offset_lmn), cimag(*f_cur_lmn +offset_lmn), sizeof(f_cur_lmn +offset_lmn));
-        fprintf(fp, "%d, %6.5e+i%6.5e,  %ld, %d, %d, %6.5e+i%6.5e, %ld\n", j , f_cur_lmn, sizeof(f_cur_lmn), (offset_lmn), so3_sampling_flmn_size(&so3_parameters), (f_cur_lmn +offset_lmn), sizeof(f_cur_lmn +offset_lmn));
+        fprintf(fp, "%d, %6.5e+i%6.5e,  %ld, %d, %d, %6.5e+i%6.5e, %ld\n", j , *f_cur_lmn, sizeof(f_cur_lmn), (offset_cur_lmn), so3_sampling_flmn_size(&so3_parameters), (*f_cur_lmn +offset_cur_lmn), sizeof(f_cur_lmn +offset_cur_lmn));
         // Write out to data file '"4aa_f_cur_syn_cur2lm_so3coreforwardviassht.dat"'
-        //fprintf(fp7, "%d, %f, %f, %ld, %d, %f, %f, %ld\n", j, creal(*f_cur), cimag(*f_cur), sizeof(f_cur), (offset), creal(*f_cur+offset), cimag(*f_cur+offset), sizeof(f_cur+offset));
-        fprintf(fp7, "%d, %6.5e+i%6.5e, %ld, %d, %6.5e+%6.5e, %ld\n", j, (f_cur), sizeof(f_cur), (offset), (f_cur+offset), sizeof(f_cur+offset));
-        
+        //fprintf(fp7, "%d, %f, %f, %ld, %d, %f, %f, %ld\n", j, creal(*f_cur), cimag(*f_cur), sizeof(f_cur), (offset_cur), creal(*f_cur+offset), cimag(*f_cur+offset_cur), sizeof(f_cur+offset_cur));
+        fprintf(fp7, "%d, %6.5e+i%6.5e, %ld, %d, %6.5e+%6.5e, %ld\n", j, *(f_cur), sizeof(f_cur), (offset_cur), (*f_cur+offset_cur), sizeof(f_cur+offset_cur));
         
         
     }
 
     s2let_synthesis_cur_lmn2lm(flm, f_cur_lmn, f_scal_lm, cur_lm, scal_l, parameters);
+    // For debugging:
+    int arrayindex;
+    FILE *fp9;
+    fp9=fopen("4ac_check_f_cur_lmn.dat", "w");
+    for (arrayindex =0; arrayindex < arrayind_max; arrayindex++ )
+    {
+        fprintf(fp9, "%d, %f, %f\n", arrayindex, creal(f_cur_lmn[arrayindex]), cimag(f_cur_lmn[arrayindex]));
+    }
+    fclose(fp9);
+    
+    // For debugging:
+    arrayindex=0;
+    FILE *fp11;
+    fp11=fopen("4ad_check_flm_out_fromcur2lm.dat", "w");
+    for (arrayindex =0; arrayindex <arrayind_max; arrayindex++ )
+    {
+        fprintf(fp11, "%d, %f, %f\n", arrayindex, creal(flm[arrayindex]), cimag(flm[arrayindex]));
+    }
+    fclose(fp11);
+    
 
     free(cur_lm);
     free(scal_l);

@@ -145,12 +145,8 @@ S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_synthesis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2wav_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_lm2wav_mex.o		\
-	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2cur_mex.o		\
-	  $(S2LETOBJMAT)/s2let_transform_synthesis_lm2cur_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_mw_mex.o		\
-	  $(S2LETOBJMAT)/s2let_transform_analysis_cur_mw_mex.o		\
-	  $(S2LETOBJMAT)/s2let_transform_synthesis_cur_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_jmax_mex.o	\
 	  $(S2LETOBJMAT)/s2let_bandlimit_mex.o
 
@@ -163,10 +159,6 @@ S2LETOBJSMEX = $(S2LETOBJMEX)/s2let_transform_axisym_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_mw_mex.$(MEXEXT)	\
-	  $(S2LETOBJMEX)/s2let_transform_analysis_lm2cur_mex.$(MEXEXT)	\
-	  $(S2LETOBJMEX)/s2let_transform_synthesis_lm2cur_mex.$(MEXEXT)	\
-	  $(S2LETOBJMEX)/s2let_transform_analysis_cur_mw_mex.$(MEXEXT)	\
-	  $(S2LETOBJMEX)/s2let_transform_synthesis_cur_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_jmax_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_bandlimit_mex.$(MEXEXT)
 
@@ -280,11 +272,14 @@ $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT): $(S2LETOBJS)
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/target/classes/lib/darwin_universal/
 
 .PHONY: test
-test: $(S2LETBIN)/s2let_test $(S2LETBIN)/s2let_test_csv
+test: $(S2LETBIN)/s2let_test $(S2LETBIN)/s2let_test_curvelet  $(S2LETBIN)/s2let_test_csv
 $(S2LETBIN)/s2let_test: $(S2LETTESTOBJ)/s2let_test.o $(S2LETLIB)/lib$(S2LETLIBNM).a
 	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test $(LDFLAGS)
+$(S2LETBIN)/s2let_test_curvelet: $(S2LETTESTOBJ)/s2let_test_curvelet.o $(S2LETLIB)/lib$(S2LETLIBNM).a
+	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test_curvelet $(LDFLAGS)
 $(S2LETBIN)/s2let_test_csv: $(S2LETTESTOBJ)/s2let_test_csv.o $(S2LETLIB)/lib$(S2LETLIBNM).a
 	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test_csv $(LDFLAGS)
+
 
 .PHONY: hpx_demo
 hpx_demo: $(S2LETBIN)/s2let_hpx_demo

@@ -1013,10 +1013,11 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
     // Generate random harmonic coefficients for a complex signal
     s2let_lm_random_flm(flm, L, spin, seed);
     // For debugging:
-    int arrayind;
+    int arrayind, arrayind_min;
     FILE *fp9;
     fp9=fopen("1_wav_flm_randgen_mw_test.dat", "w");
-    for (arrayind =0; arrayind < L*L; arrayind++ )
+    arrayind_min= spin*spin;
+    for (arrayind = arrayind_min; arrayind < L*L; arrayind++ )
     {
         fprintf(fp9, "%f, %f\n", creal(flm[arrayind]), cimag(flm[arrayind]));
     }
@@ -1028,8 +1029,9 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
     // For debugging:
     // Open data file '"f_rec_afterssht_mw_inverse.dat"' to write out f
     FILE *fp2;
+    arrayind =0 ;
     fp2=fopen("2_wav_f_afterssht_mw_inverse.dat", "w");
-    for (arrayind =0; arrayind < L*L; arrayind++ ) //sizeof(f)*2
+    for (arrayind =arrayind_min; arrayind < L*L; arrayind++ ) //sizeof(f)*2
     {
         fprintf(fp2, "%f, %f\n", creal(f[arrayind]), cimag(f[arrayind]));
     }
@@ -1048,8 +1050,9 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
            (time_end - time_start) / (double)CLOCKS_PER_SEC);
     // Open data file '"f_cur_afters2let_ana_px2cur.dat"' to write out f_cur
     FILE *fp3;
+    arrayind =0 ;
     fp3=fopen("3b_f_wav_afters2let_ana_px2wav.dat", "w");
-    for (arrayind =0; arrayind < sizeof(f_wav)*2; arrayind++ )
+    for (arrayind =arrayind_min; arrayind < sizeof(f_wav)*2; arrayind++ )
     {
         fprintf(fp3, "%f, %f\n", creal(f_wav[arrayind]), cimag(f_wav[arrayind]));
     }
@@ -1066,8 +1069,9 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
     // For debugging:
     // Open data file '"f_cur_afters2let_ana_px2cur.dat"' to write out f_cur
     FILE *fp4;
+    arrayind =0 ;
     fp4=fopen("5_wav_f_rec_afters2let_syn_wav2px.dat", "w");
-    for (arrayind =0; arrayind < L*L; arrayind++ ) //sizeof(f_rec)*2
+    for (arrayind =arrayind_min; arrayind < L*L; arrayind++ ) //sizeof(f_rec)*2
     {
         fprintf(fp4, "%f, %f\n", creal(f_rec[arrayind]), cimag(f_rec[arrayind]));
     }
@@ -1081,8 +1085,9 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
     // For debugging:
     // Open data file '"flm_rec_afterssht_mw_forward.dat"' to write out flm_rec
     FILE *fp10;
+    arrayind =0 ;
     fp10=fopen("6_wav_flm_rec_afterssht_mw_forward.dat", "w");
-    for (arrayind =0; arrayind < L*L; arrayind++ )  //sizeof(flm_rec)*2
+    for (arrayind =arrayind_min; arrayind < L*L; arrayind++ )  //sizeof(flm_rec)*2
     {
        fprintf(fp10, "%f, %f\n", creal(flm_rec[arrayind]), cimag(flm_rec[arrayind]));
     }

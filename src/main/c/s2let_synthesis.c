@@ -63,7 +63,7 @@ void s2let_synthesis_lmn2lm(
     // For debugging:
     // Open data file '"f_lm.dat"' to write out f_lm
     FILE *fp, *fp2, *fp3, *fp4,*fp5, *fp6;
-    fp=fopen("4b_f_lm_wav.dat", "w");
+    fp=fopen("4b_f_lm_wav_syn.dat", "w");
     fp2=fopen("4b_f_lm_wavONLYj0_syn.dat", "w");
     fp3=fopen("4b_f_lm_wavONLYj1_syn.dat", "w");
     fp4=fopen("4b_f_lm_wavONLYj2_syn.dat", "w");
@@ -298,7 +298,7 @@ void s2let_synthesis_wav2lm(
     s2let_tiling_wavelet(wav_lm, scal_l, parameters);
 
     complex double *f_wav_lmn, *f_scal_lm;
-    s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);
+    s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);    
 
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
@@ -315,7 +315,22 @@ void s2let_synthesis_wav2lm(
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
-
+    
+    //printf(" ***** - size of f_wav :  %ld\n",sizeof(f_wav));
+    //printf(" ***** - size of f_wav_lmn :  %ld\n",sizeof(f_wav_lmn));
+    
+    // For debugging:
+    int arrayind_min,arrayind, arrayind_max;
+    FILE *fp10;
+    arrayind_min = 0;
+    arrayind_max = (2*L-1)*L*(2*N-1);    //L*L;
+    fp10=fopen("4aaa_check_f_wav.dat", "w");
+    for (arrayind = arrayind_min; arrayind <  arrayind_max; arrayind++ )
+    {
+        fprintf(fp10, "%d, %f, %f\n", arrayind, creal(f_wav[arrayind]), cimag(f_wav[arrayind]));
+    }
+    fclose(fp10);
+    
     
     
     // For debugging:
@@ -326,6 +341,7 @@ void s2let_synthesis_wav2lm(
     fp=fopen("4ab_f_wav_lmn_syn_wav2lm_so3coreforwardviassht.dat", "w");
     fp7=fopen("4aa_f_wav_syn_wav2lm_so3coreforwardviassht.dat", "w");
     fp13=fopen("4abc_wav_so3para.dat", "w");
+    
     
     
     offset = 0;
@@ -342,6 +358,17 @@ void s2let_synthesis_wav2lm(
         }
 
         so3_parameters.L0 = s2let_L0(j, parameters);
+        
+        
+        // For debugging
+        // Write out to data file '"4abc_wav_so3para.dat"'
+        fprintf(fp13, "%d,%d,%d,%d\n",j, so3_parameters.L0, so3_parameters.L, so3_parameters.N);
+        // Write out to data file '"4ab_f_wav_lmn_syn_wav2lm_so3coreforwardviassht.dat"'
+        //fprintf(fp, "%d, %f, %f, %ld, %d, %d, %f, %f, %ld\n",j ,creal(*f_wav_lmn), cimag(*f_wav_lmn) , sizeof(f_wav_lmn), offset_lmn, so3_sampling_flmn_size(&so3_parameters), creal(*f_wav_lmn +offset_lmn),cimag(*f_wav_lmn +offset_lmn), sizeof(f_wav_lmn +offset_lmn));
+        fprintf(fp, "%d,  %6.5e+i%6.5e,  %ld, %d, %d,  %6.5e+i%6.5e,  %ld\n",j ,*(f_wav_lmn) , sizeof(f_wav_lmn), offset_lmn, so3_sampling_flmn_size(&so3_parameters), (*f_wav_lmn +offset_lmn), sizeof(f_wav_lmn +offset_lmn));
+        // Write out to data file '"4aa_f_wav_syn_wav2lm_so3coreforwardviassht.dat"'
+        fprintf(fp7, "%d,  %6.5e+i%6.5e,  %ld, %d,  %6.5e+i%6.5e, , %ld\n",j, *(f_wav), sizeof(f_wav), offset, (*f_wav+offset), sizeof(f_wav+offset));
+
 
         so3_core_forward_via_ssht(
             f_wav_lmn + offset_lmn,
@@ -349,31 +376,43 @@ void s2let_synthesis_wav2lm(
             &so3_parameters
         );
 
-        
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
-        // For debugging
-        // Write out to data file '"4abc_wav_so3para.dat"'
-        fprintf(fp13, "%d,%d,%d,%d\n",j, so3_parameters.L0, so3_parameters.L, so3_parameters.N);
-        // Write out to data file '"4ab_f_wav_lmn_syn_wav2lm_so3coreforwardviassht.dat"'
-        //fprintf(fp, "%d, %f, %f, %ld, %d, %d, %f, %f, %ld\n",j ,creal(*f_wav_lmn), cimag(*f_wav_lmn) , sizeof(f_wav_lmn), offset_lmn, so3_sampling_flmn_size(&so3_parameters), creal(*f_wav_lmn +offset_lmn),cimag(*f_wav_lmn +offset_lmn), sizeof(f_wav_lmn +offset_lmn));
-        fprintf(fp, "%d,  %6.5e+i%6.5e,  %ld, %d, %d,  %6.5e+i%6.5e,  %ld\n",j ,(f_wav_lmn) , sizeof(f_wav_lmn), offset_lmn, so3_sampling_flmn_size(&so3_parameters), (*f_wav_lmn +offset_lmn), sizeof(f_wav_lmn +offset_lmn));
-        // Write out to data file '"4aa_f_wav_syn_wav2lm_so3coreforwardviassht.dat"'
-        fprintf(fp7, "%d,  %6.5e+i%6.5e,  %ld, %d,  %6.5e+i%6.5e, , %ld\n",j, (f_wav), sizeof(f_wav), offset, (f_wav+offset), sizeof(f_wav+offset));
-
-
+        
     }
 
+    // Close file:
+    fclose(fp);
+    fclose(fp7);
+    fclose(fp13);
+    
     s2let_synthesis_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
+    
+    // For debugging:
+    int arrayindex;
+    FILE *fp9;
+    fp9=fopen("4ac_check_f_wav_lmn.dat", "w");
+    for (arrayindex =0; arrayindex < arrayind_max; arrayindex++ )
+    {
+        fprintf(fp9, "%d, %f, %f\n", arrayindex, creal(f_wav_lmn[arrayindex]), cimag(f_wav_lmn[arrayindex]));
+    }
+    fclose(fp9);
+    
+    // For debugging:
+    arrayindex=0;
+    FILE *fp11;
+    fp11=fopen("4ad_check_flm_out_fromwav2lm.dat", "w");
+    for (arrayindex =0; arrayindex < arrayind_max; arrayindex++ )
+    {
+        fprintf(fp11, "%d, %f, %f\n", arrayindex, creal(flm[arrayindex]), cimag(flm[arrayindex]));
+    }
+    fclose(fp11);
 
     free(wav_lm);
     free(scal_l);
     free(f_scal_lm);
     free(f_wav_lmn);
-    // Close file:
-    fclose(fp);
-    fclose(fp7);
-    fclose(fp13);
+
     
 }
 

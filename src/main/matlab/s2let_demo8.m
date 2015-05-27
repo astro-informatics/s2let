@@ -55,9 +55,9 @@ configstr = ['Spin',int2str(Spin),'_N',int2str(N),'_L',int2str(L),'_B',int2str(B
 % Plot curvelets on the sphere
 % Rotate the sphere such that x-axis -> z-axis 
 % (i.e. curvelets lie on the sphere top)
-gamma = 0
-beta = pi/2
-alpha = pi
+gamma = 0;
+beta = pi/2;
+alpha = pi;
 % Precompute Wigner small-d functions for rotation 
 d = zeros(L, 2*L-1, 2*L-1);
 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);

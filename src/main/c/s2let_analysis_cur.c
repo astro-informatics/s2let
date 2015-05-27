@@ -34,7 +34,7 @@ void s2let_analysis_cur_lm2lmn(
 ) {
     int L = parameters->L;
     int J_min = parameters->J_min;
-    int N=L ;
+    int N = L ;
     int spin = parameters->spin;
 
     int j, el, m ,n;
@@ -260,7 +260,7 @@ void s2let_analysis_lm2cur(
                            ) {
     int L = parameters->L;
     int J_min = parameters->J_min;
-    int N = parameters->N;
+    int N = parameters->N;  //L;
     ssht_dl_method_t dl_method = parameters->dl_method;
     
     int bandlimit = L;
@@ -268,7 +268,7 @@ void s2let_analysis_lm2cur(
     so3_parameters_t so3_parameters = {};
     fill_so3_parameters(&so3_parameters, parameters);
     
-    int j, offset, offset_lmn;
+    int j, offset_cur, offset_cur_lmn;
     int J = s2let_j_max(parameters);
     
     complex double *cur_lm;
@@ -279,7 +279,28 @@ void s2let_analysis_lm2cur(
     complex double *f_cur_lmn, *f_scal_lm;
     
     s2let_allocate_lmn_f_cur(&f_cur_lmn, &f_scal_lm, parameters);
-    s2let_analysis_lm2lmn(f_cur_lmn, f_scal_lm, flm, cur_lm, scal_l, parameters);
+    s2let_analysis_cur_lm2lmn(f_cur_lmn, f_scal_lm, flm, cur_lm, scal_l, parameters);
+    // For debugging:
+    int arrayind, arrayind_min;
+    FILE *fp9;
+    fp9=fopen("3aCheck_f_cur_lmn_outfromlm2lmn.dat", "w");
+    arrayind_min= 0;
+    for (arrayind = arrayind_min; arrayind < 11686; arrayind++ )
+    {
+        fprintf(fp9, "%d, %f, %f\n", arrayind, creal(f_cur_lmn[arrayind]), cimag(f_cur_lmn[arrayind]));
+    }
+    fclose(fp9);
+    // For debugging:
+    int arrayindex=0;
+    int arrayind_max = (2*L-1)*L*(2*N-1);
+    FILE *fp11;
+    fp11=fopen("3aCheck_flm_intolm2cur_andlm2lmn.dat", "w");
+    for (arrayindex =0; arrayindex <arrayind_max; arrayindex++ )
+    {
+        fprintf(fp11, "%d, %f, %f\n", arrayindex, creal(flm[arrayindex]), cimag(flm[arrayindex]));
+    }
+    fclose(fp11);
+    
     
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
@@ -305,8 +326,8 @@ void s2let_analysis_lm2cur(
     fp7=fopen("3ab_f_cur_ana_lm2cur_so3coreinversedviassht.dat", "w");
     fp13=fopen("3abc_cur_so3para.dat", "w");
     
-    offset = 0;
-    offset_lmn = 0;
+    offset_cur = 0;
+    offset_cur_lmn = 0;
     for (j = J_min; j <= J; ++j)
     {
         if (!parameters->upsample)
@@ -320,19 +341,20 @@ void s2let_analysis_lm2cur(
         
         so3_parameters.L0 = s2let_L0(j, parameters);
         
-        so3_core_inverse_via_ssht((f_cur + offset),
-                                  (f_cur_lmn + offset_lmn),
+        so3_core_inverse_via_ssht(f_cur + offset_cur,
+                                  f_cur_lmn + offset_cur_lmn,
                                   &so3_parameters
                                   );
+
+        
+        offset_cur_lmn += so3_sampling_flmn_size(&so3_parameters);
+        offset_cur += so3_sampling_f_size(&so3_parameters);
         
         // For debugging:
         fprintf(fp13, "%d,%d,%d,%d\n",j, so3_parameters.L0, so3_parameters.L, so3_parameters.N);
-        fprintf(fp, "%d,  %f, %f, %ld, %d, %f, %f, %ld\n",j , creal(*f_cur_lmn) , cimag(*f_cur_lmn) , sizeof(f_cur_lmn) ,(offset_lmn),creal(*f_cur_lmn+offset_lmn),cimag(*f_cur_lmn+offset_lmn), sizeof(f_cur_lmn+offset_lmn) );
-        fprintf(fp7, "%d, %f, %f, %ld, %d, %f, %f, %ld\n",j, creal(*f_cur), cimag(*f_cur), sizeof(f_cur) ,(offset), creal(*f_cur+offset),cimag(*f_cur+offset),  sizeof(f_cur+offset));
+        fprintf(fp, "%d,  %f, %f, %ld, %d, %f, %f, %ld\n",j , creal(*f_cur_lmn) , cimag(*f_cur_lmn) , sizeof(f_cur_lmn) ,(offset_cur_lmn),creal(*f_cur_lmn+offset_cur_lmn),cimag(*f_cur_lmn+offset_cur_lmn), sizeof(f_cur_lmn+offset_cur_lmn) );
+        fprintf(fp7, "%d, %f, %f, %ld, %d, %f, %f, %ld\n",j, creal(*f_cur), cimag(*f_cur), sizeof(f_cur) ,(offset_cur), creal(*f_cur+offset_cur),cimag(*f_cur+offset_cur),  sizeof(f_cur+offset_cur));
         
-        
-        offset_lmn += so3_sampling_flmn_size(&so3_parameters);
-        offset += so3_sampling_f_size(&so3_parameters);
         
     }
     
@@ -340,6 +362,16 @@ void s2let_analysis_lm2cur(
     fclose(fp);
     fclose(fp7);
     fclose(fp13);
+    
+    FILE *fp10;
+    arrayind_min = 0;
+    arrayind=0;
+    fp10=fopen("3bbb_f_cur_outputfromlm2cur_ana.dat", "w");
+    for (arrayind = arrayind_min; arrayind <  arrayind_max; arrayind++ )
+    {
+        fprintf(fp10, "%d, %f, %f\n", arrayind, creal(f_cur[arrayind]), cimag(f_cur[arrayind]));
+    }
+    fclose(fp10);
     
     
     

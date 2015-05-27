@@ -49,8 +49,6 @@ void s2let_analysis_lm2lmn(
     complex double psi;
     double phi;
 
-    
-    
     // For debugging:
     // Open data file '"f_wav_lmn.dat"' to write out f_wav_lm
     FILE *fp, *fp2, *fp3, *fp4,*fp5, *fp6;
@@ -281,6 +279,19 @@ void s2let_analysis_lm2wav(
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);
     s2let_analysis_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters);
 
+    // For debugging:
+    int arrayind, arrayind_min;
+    FILE *fp9;
+    fp9=fopen("3aCheck_f_wav_lmn_outfromlm2lmn.dat", "w");
+    arrayind_min= 0;
+    for (arrayind = arrayind_min; arrayind < 11686; arrayind++ )
+    {
+        fprintf(fp9, "%f, %f\n", creal(f_wav_lmn[arrayind]), cimag(f_wav_lmn[arrayind]));
+    }
+    fclose(fp9);
+    
+    
+    
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
 
@@ -326,28 +337,28 @@ void s2let_analysis_lm2wav(
             &so3_parameters
         );
         
+        offset_lmn += so3_sampling_flmn_size(&so3_parameters);
+        offset += so3_sampling_f_size(&so3_parameters);
+        
         // For debugging:
         fprintf(fp13, "%d,%d,%d,%d\n",j, so3_parameters.L0, so3_parameters.L, so3_parameters.N);
         fprintf(fp, "%d, %f, %f, %ld, %d, %f, %f, %ld\n",j ,creal(*f_wav_lmn), cimag(*f_wav_lmn) , sizeof(f_wav_lmn), offset_lmn,
                 creal(*f_wav_lmn +offset_lmn),  cimag(*f_wav_lmn +offset_lmn), sizeof(f_wav_lmn +offset_lmn));
         fprintf(fp7, "%d, %f, %f, %ld, %d, %f, %f, %ld\n",j, creal(*f_wav), cimag(*f_wav), sizeof(f_wav), offset, creal(*f_wav+offset),
                 cimag(*f_wav+offset), sizeof(f_wav+offset));
-        
-        offset_lmn += so3_sampling_flmn_size(&so3_parameters);
-        offset += so3_sampling_f_size(&so3_parameters);
 
     }
-                
-    free(wav_lm);
-    free(scal_l);
-    free(f_scal_lm);
-    free(f_wav_lmn);
-    
     
     // For debugging:
     fclose(fp);
     fclose(fp7);
     fclose(fp13);
+    
+    
+    free(wav_lm);
+    free(scal_l);
+    free(f_scal_lm);
+    free(f_wav_lmn);
     
     
 }

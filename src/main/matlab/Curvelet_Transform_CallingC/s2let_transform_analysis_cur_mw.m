@@ -1,14 +1,13 @@
-function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, varargin)
+function [f_cur, f_scal] = s2let_transform_analysis_cur_mw(f, varargin)
 
-% s2let_transform_analysis_lm2cur
-% Compute spin directional curvelet transform, input in harmonic space,
-% output in pixel space.
+% s2let_transform_analysis_cur_mw
+% Compute spin directional curvelet transform, output in pixel space.
 %
 % Default usage :
 %
-%   [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, <options>)
+%   [f_cur, f_scal] = s2let_transform_analysis_cur_mw(f, <options>)
 %
-% flm is the input field in harmonic space,
+% f is the input field -- MW sampling,
 % f_cur contains the output curvelet contributions,
 % f_scal contains the output scaling contributions,
 %
@@ -23,7 +22,7 @@ function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, varargin)
 %                      true       [full resolution curvelets] }
 %  'Sampling'        = { 'MW'           [McEwen & Wiaux sampling (default)],
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
-%  'Reality'         = { false        [do not assume corresponding signal f real (default)],
+%  'Reality'         = { false        [do not assume f real (default)],
 %                        true         [assume f real (improves performance)] }
 %  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
 %                               curvelets and scaling function.],
@@ -38,11 +37,15 @@ function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, varargin)
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-sz = length(flm(:));
-Lguessed = sqrt(sz);
+sz = size(f);
+if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
+    Lguessed = min([sz(1) sz(2)]);
+else
+    Lguessed = min([sz(1) sz(2)])-1;
+end
 
 p = inputParser;
-p.addRequired('flm', @isnumeric);
+p.addRequired('f', @isnumeric);
 p.addParamValue('B', 2, @isnumeric);
 p.addParamValue('L', Lguessed, @isnumeric);
 p.addParamValue('J_min', 0, @isnumeric);
@@ -53,28 +56,24 @@ p.addParamValue('Sampling', 'MW', @ischar);
 p.addParamValue('Reality', false, @islogical);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
-p.parse(flm, varargin{:});
+p.parse(f, varargin{:});
 args = p.Results;
 
-flm_vec = flm(:);
-
-if(all(isreal(flm_vec)))
-  flm_vec = complex(flm_vec,0);
+if strcmp(args.Sampling, 'MWSS')
+    f_vec = s2let_mwss_arr2vec(f);
+else
+    f_vec = s2let_mw_arr2vec(f);
 end
 
-[f_cur_vec, f_scal_vec] = s2let_transform_analysis_lm2cur_mex(flm_vec, args.B, args.L, args.J_min, ...
-                                                              args.N, args.Spin, ...
-                                                              args.Reality, args.Upsample, ...
-                                                              args.SpinLowered, args.SpinLoweredFrom, ...
-                                                              args.Sampling);
+if(all(isreal(f_vec)))
+  f_vec = complex(f_vec,0);
+end
 
-
-%%%%%%%%%%%%%
-
-
-
-
-
+[f_cur_vec, f_scal_vec] = s2let_transform_analysis_cur_mw_mex(f_vec, args.B, args.L, args.J_min, ...
+                                                          args.N, args.Spin, ...
+                                                          args.Reality, args.Upsample, ...
+                                                          args.SpinLowered, args.SpinLoweredFrom, ...
+                                                          args.Sampling);
 
 if strcmp(args.Sampling, 'MWSS')
     f_scal = s2let_mwss_vec2arr(f_scal_vec);

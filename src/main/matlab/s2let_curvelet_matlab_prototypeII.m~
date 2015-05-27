@@ -126,10 +126,10 @@ disp('Curvelet analysis of complex signals in Wigner space (i.e. flm to flmn)')
 %
 % *** TEST***: Compute maximum error in harmonic space.
 %
-for j = J_min:J, 
 disp('Check the error of so3_forward (i.e. f to flmn) and so3_inverse (i.e. flmn to f): ')
 maxerr = max(abs(flmn_syn{j-J_min+1} - flmn{j-J_min+1}))
 end
+
 
 % void s2let_synthesis_cur_lmn2lm(
 disp(' ')
