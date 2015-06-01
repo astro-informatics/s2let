@@ -21,43 +21,53 @@
 % Modified S2LET package to perform Curvelets on the Sphere.
 % -----------------------------------------------------------
 
-Spin = 0;
+% ---------------
+% Define curvelet parameters: 
+% ---------------
+Spin = 4;
 B = 2;   % for dyadic sampling 
 L = 64;
-N= L;  % Since m=l, the azimuthal band limit N = overall band limit L
+N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
+J_min = 2; % minimum and maximum scale probed by wavelets 
 
-% minimum and maximum scale probed by wavelets 
-J_min = 2;
-J = s2let_jmax(L, B);  % J = ceil(log L/ log B)
-
-zoomfactor = 1.4;
-plot_caxis_scale = 2
-type = 'colour';
-lighting = true;
-
-%ns = ceil(sqrt(2+J-J_min+1)) ;
-%nx = ns - 1 + rem(2+J-J_min + 1, ns) ;
-%ny = ns;
-nx = 3
-ny = 4
-
-maxfigs = nx*ny;
-pltroot = '../../../figs'
-configstr = ['Spin',int2str(Spin),'_N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]
-
+% ---------------
+% Tile curvelets and scaling function:
+% ---------------
 % Compute curvelets coefficients (s2let_tiling.c):
 [psi_lm phi_l] = s2let_curvelet_tiling(B, L, N, Spin, J_min);
+for j = J_min:J,
+cur_lm{j-J_min+1} = psi_lm(:,j+1);
+end
+%***** step 1b) compute the scaling coefficients (no j-dependence except J_min)
+scal_l = zeros(L^2,1);
+for l = 0:L-1,
+scal_l(l^2+l+1,1) = phi_l(l+1);
+end
 
-% Plot of tiling of curvelets in harmonic space:]
+
+% Plot of tiling of curvelets in harmonic space:
 % s2let_plot_cur_tiling(B, L, J_min);
 
 
-% Plot curvelets on the sphere
-% Rotate the sphere such that x-axis -> z-axis 
-% (i.e. curvelets lie on the sphere top)
-gamma = 0;
-beta = pi/2;
-alpha = pi;
+% ---------------
+% Plot curvelets:
+% Define Euler angles (for rotation):
+% ---------------
+alpha =  pi ;
+beta = pi/2 ;
+gamma = 0 ;
+disp(' - Plot curvelets');
+%
+% s2let_plot_cur_on_sphere(cur_lm, scal_l, B, L, N, J_min, Spin)
+s2let_plot_cur_on_sphere(alpha, beta, gamma, ...
+                         cur_lm, scal_l, L, ...
+                         J_min,  'B', B, 'N', N, 'Spin', Spin,...
+                         'Upsample', false, 'Function', 'real')
+
+
+%% THE COMMENT-OUT CONTENT BELOW is replaced by callling function s2let_plot_cur_on_sphere
+%{
+
 % Precompute Wigner small-d functions for rotation 
 d = zeros(L, 2*L-1, 2*L-1);
 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);
@@ -207,3 +217,5 @@ print('-r200', '-dpng', fname)
 %% fname = [pltroot,'/s2let_demo8_', configstr, '_scal_hot.png']
 %fname = ['s2let_demo8_', configstr, '_scal_hot.png']
 %print('-r200', '-dpng', fname)
+
+    %}

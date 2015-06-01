@@ -58,6 +58,7 @@ p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.parse(flm_gen,  cur_lm, scal_l, varargin{:});
 args = p.Results;
 
+J = s2let_jmax(args.L, args.B);
 
 %
 % 'Signal Analysis: '
@@ -68,7 +69,6 @@ disp('Curvelet analysis of complex signals in Wigner space (i.e. flm to flmn)')
 ind_ln=0;
 ind = 0;
 ind_lmn = 0;
-J = s2let_jmax(args.L, args.B);
 for j = args.J_min:J,
   f_cur_lmn{j-args.J_min+1} = zeros((2*args.N-1)*args.L*args.L,1);
   for n = -args.N+1:args.N-1,

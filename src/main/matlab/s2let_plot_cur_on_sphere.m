@@ -88,7 +88,7 @@ end
 
 % Define plotting parameters
 zoomfactor = 1.4;
-plot_caxis_scale = 2
+plot_caxis_scale = 2;
 type = 'colour';
 lighting = true;
 nx = 3;

@@ -13,6 +13,7 @@ B = 2;
 J_min = 1;  %N.B. J_min = 2 : NOT EXACT
 J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
 
+%{
 disp('Generates random band-limited function')
 flm_gen = zeros(L^2,1);
 flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
@@ -20,6 +21,18 @@ flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
 
 disp('Construct the corresponding signal on the sphere')
 f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
+%}
+
+flm_gen = zeros(L^2,1);
+disp('read from file flm_gen'); 
+fid= fopen('/Users/jenniferyhchan/WaveletsCode_PhD/s2let_curvelets_MATLAB/1_cur_flm_randgen_mw_test.dat');
+rawData=fscanf(fid, '%f, %f',[2 256]);
+fclose(fid);
+complexData=complex(rawData(1,:),rawData(2,:));
+flm_gen= complexData.' ;  % Non-conjugate transpose
+disp('Construct the corresponding signal via ssht_inverse'); 
+f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
+flm_gen= ssht_forward(f_gen, L, 'Method', 'MW');
 
 
 % ---------------
@@ -37,40 +50,24 @@ for l = 0:L-1,
 scal_l(l^2+l+1,1) = phi_l(l+1);
 end
 
-% ---------------
-% Plot curvelets:
-% Define Euler angles (for rotation): 
-% ---------------
-alpha =  pi ;
-beta = pi/2 ;
-gamma = 0 ;
-disp(' - Plot curvelets');
-%
-% s2let_plot_cur_on_sphere(cur_lm, scal_l, B, L, N, J_min, Spin)
-s2let_plot_cur_on_sphere(alpha, beta, gamma, ...
-                         cur_lm, scal_l, L, ...
-                         J_min,  'B', B, 'N', N, 'Spin', Spin,... 
-                         'Upsample', false, 'Function', 'real')
 
 % -----------------
-% Signal analysis:
+% Signal analysis: (harmonic to wigner space) 
 % -----------------
 % Call matlab function analysis_lm2lmn
 [f_cur_lmn, f_scal_lm] = s2let_transform_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
-                                                         'B', B, 'L', L, 'J_min', J_min, 'N', N, 'Upsample', false, 'Spin', Spin);
+                                                         'B', B, 'L', L, 'J_min', J_min,...
+                                                         'N', N, 'Upsample', false, 'Spin', Spin);
 
-% Compute inverse then forward transform.
-disp(' - TEST SO3: so3_forward (i.e. f to flmn) and so3_inverse (i.e. flmn to f): ');
-disp('Check error : f_cur_lmn_syn ( from so3_forward ) - f_cur_lmn (from ana_lm2lmn)');
-for j = J_min:J, 
-f_cur = so3_inverse(f_cur_lmn{j-J_min+1}, L, N);
-f_cur_lmn_syn{j-J_min+1} = so3_forward(f_cur, L, N);
-% Compute maximum error in Wigner space
-maxerr = max(abs(f_cur_lmn_syn{j-J_min+1} - f_cur_lmn{j-J_min+1}))
-end
-
+for j = J_min:J,
+f_cur{j-J_min+1} = so3_inverse(f_cur_lmn{j-J_min+1}, L, N);
+f_cur_lmn{j-J_min+1} = so3_forward(f_cur{j-J_min+1}, L, N);
+end  
+f_scal= ssht_inverse(f_scal_lm, L);
+f_scal_lm = ssht_forward(f_scal, L);
+                                            
 % -----------------
-% Signal synthesis:
+% Signal synthesis: (pixel to harmonic space) 
 % -----------------
 % Call s2let_transform_synthesis_lmn2lm
 [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, ...
@@ -79,14 +76,15 @@ end
                                                                'N', N, 'Upsample', false, 'Spin', 0);
 
 disp('Sum: flm_cur_syn+flm_scal_syn ');
-disp('then ');
-disp('Compute the re-constructed function via ssht_inverse ');
 flm_rec = flm_scal_syn+flm_cur_syn;
+
+                                       
+disp('Compute the re-constructed function via ssht_inverse ');
 f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
 
 disp('Both analysis and synthesis are done! ');
 disp('');
 disp('- Test exact transform: check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_gen - flm_rec))
-%disp('Check the difference between f_gen and f_rec: ');
-%maxerr = max(abs(f_gen - f_rec))
+disp('Check the difference between f_gen and f_rec: ');
+maxerr = max(abs(f_gen(:) - f_rec(:)))

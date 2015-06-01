@@ -37,51 +37,27 @@ for l = 0:L-1,
 scal_l(l^2+l+1,1) = phi_l(l+1);
 end
 
-% ---------------
-% Plot curvelets:
-% Define Euler angles (for rotation): 
-% ---------------
-alpha =  pi ;
-beta = pi/2 ;
-gamma = 0 ;
-disp(' - Plot curvelets');
-%
-% s2let_plot_cur_on_sphere(cur_lm, scal_l, B, L, N, J_min, Spin)
-s2let_plot_cur_on_sphere(alpha, beta, gamma, ...
-                         cur_lm, scal_l, L, ...
-                         J_min,  'B', B, 'N', N, 'Spin', Spin,... 
-                         'Upsample', false, 'Function', 'real')
 
 % -----------------
-% Signal analysis:
+% Signal analysis: (harmonic to pixel space) 
 % -----------------
-% Call matlab function analysis_lm2lmn
-[f_cur_lmn, f_scal_lm] = s2let_transform_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
-                                                         'B', B, 'L', L, 'J_min', J_min, 'N', N, 'Upsample', false, 'Spin', Spin);
-
-% Compute inverse then forward transform.
-disp(' - TEST SO3: so3_forward (i.e. f to flmn) and so3_inverse (i.e. flmn to f): ');
-disp('Check error : f_cur_lmn_syn ( from so3_forward ) - f_cur_lmn (from ana_lm2lmn)');
-for j = J_min:J, 
-f_cur = so3_inverse(f_cur_lmn{j-J_min+1}, L, N);
-f_cur_lmn_syn{j-J_min+1} = so3_forward(f_cur, L, N);
-% Compute maximum error in Wigner space
-maxerr = max(abs(f_cur_lmn_syn{j-J_min+1} - f_cur_lmn{j-J_min+1}))
-end
-
+% Call matlab function analysis_lm2cur
+[f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen,  ...
+                                                  'B', B, 'L', L, ...
+                                                  'Spin', Spin, 'J_min', J_min, ...
+                                                  'N', N, 'Upsample', false, 'Sampling', 'MW');
+                                              
 % -----------------
-% Signal synthesis:
+% Signal synthesis: (pixel to harmonic space) 
 % -----------------
+% Call s2let_transform_synthesis_cur2lm
 % Call s2let_transform_synthesis_lmn2lm
 [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, ...
                                                                cur_lm, scal_l, flm_gen, ...
                                                                'B', B, 'L', L, 'J_min', J_min, ...
                                                                'N', N, 'Upsample', false, 'Spin', 0);
 
-disp('Sum: flm_cur_syn+flm_scal_syn ');
-disp('then ');
 disp('Compute the re-constructed function via ssht_inverse ');
-flm_rec = flm_scal_syn+flm_cur_syn;
 f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
 
 disp('Both analysis and synthesis are done! ');

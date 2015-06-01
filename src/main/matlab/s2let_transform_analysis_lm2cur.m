@@ -1,4 +1,4 @@
-function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, varargin)
+function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen, varargin)
 
 % s2let_transform_analysis_lm2cur
 % Compute spin directional curvelet transform, input in harmonic space,
@@ -6,9 +6,9 @@ function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, varargin)
 %
 % Default usage :
 %
-%   [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, <options>)
+%   [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen, <options>)
 %
-% flm is the input field in harmonic space,
+% flm_gen is the input field in harmonic space,
 % f_cur contains the output curvelet contributions,
 % f_scal contains the output scaling contributions,
 %
@@ -38,11 +38,11 @@ function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm, varargin)
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-sz = length(flm(:));
+sz = length(flm_gen(:));
 Lguessed = sqrt(sz);
 
 p = inputParser;
-p.addRequired('flm', @isnumeric);
+p.addRequired('flm_gen', @isnumeric);
 p.addParamValue('B', 2, @isnumeric);
 p.addParamValue('L', Lguessed, @isnumeric);
 p.addParamValue('J_min', 0, @isnumeric);
@@ -53,8 +53,59 @@ p.addParamValue('Sampling', 'MW', @ischar);
 p.addParamValue('Reality', false, @islogical);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
-p.parse(flm, varargin{:});
+p.parse(flm_gen, varargin{:});
 args = p.Results;
+
+
+
+B= args.B;
+L= args.L;
+N= args.N;
+Spin= args.Spin;
+J_min= args.J_min;
+J = s2let_jmax(args.L, args.B);
+
+% ---------------
+% Tile curvelets:
+% ---------------
+%***** step 1a) call curvelet- and scaling-function- generating functions
+% disp('Tile curvelets in harmonic space (cur_lm, scal_l)')
+[psi_lm phi_l] = s2let_curvelet_tiling(B, L, N, Spin, J_min);
+for j = J_min:J,
+cur_lm{j-J_min+1} = psi_lm(:,j+1);
+end
+%***** step 1b) compute the scaling coefficients (no j-dependence except on J_min)
+scal_l = zeros(L^2,1);
+for l = 0:L-1,
+scal_l(l^2+l+1,1) = phi_l(l+1);
+end
+
+% -----------------
+% Signal analysis:
+% -----------------
+%***** step 2a) Decompose the signals using curvelets and the scaling functions
+%***** step 2b) Do Wigner transform (lm2lmn -  Call matlab function analysis_lm2lmn)
+[f_cur_lmn, f_scal_lm] = s2let_transform_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
+                                                         'B', B, 'L', L, 'J_min', J_min, ...
+                                                         'N', N, 'Upsample', false, 'Spin', Spin);
+
+%***** step 2c) Transform to pixel space
+%if strcmp(args.Sampling, 'MW')
+
+% Scaling functions:
+  f_scal = ssht_inverse(f_scal_lm, L, 'spin', 0,'Sampling', 'MW');
+
+% Curvelets:
+  for j = J_min:J,
+   f_cur{j-J_min+1} = so3_inverse(f_cur_lmn{j-J_min+1}, L, N,'Sampling', 'MW') ;
+  end
+
+%end
+
+
+
+%%%%%%%%%%%%
+%{
 
 flm_vec = flm(:);
 
@@ -68,14 +119,9 @@ end
                                                               args.SpinLowered, args.SpinLoweredFrom, ...
                                                               args.Sampling);
 
-
+%}
 %%%%%%%%%%%%%
-
-
-
-
-
-
+%{
 if strcmp(args.Sampling, 'MWSS')
     f_scal = s2let_mwss_vec2arr(f_scal_vec);
 
@@ -125,3 +171,4 @@ else
       end
     end
 end
+    %}
