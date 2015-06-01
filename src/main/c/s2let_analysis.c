@@ -48,7 +48,25 @@ void s2let_analysis_lm2lmn(
 
     complex double psi;
     double phi;
-
+    
+    
+    // For debugging:
+    // Open data file '"f_lm.dat"' to write out f_lm (i.e. the inputs of the function, so to compare with "1_wav_flm_randgen_mw_test.dat")
+    int arrayind, arrayind_min;
+    arrayind_min=spin*spin;
+    FILE *fp1;
+    fp1=fopen("3_input_f_lm_wav_ana_lm2lmn.dat", "w");
+    for (arrayind =arrayind_min; arrayind < L*L; arrayind++ )
+    {
+        fprintf(fp1, "%f, %f\n", creal(flm[arrayind]), cimag(flm[arrayind]));
+    }
+    fclose(fp1);
+    // For debugging (inside j loop):
+    FILE *fp;
+    fp=fopen("3a_in_f_lm_wav_ana_lm2lmn.dat", "w");
+    //
+    
+    
     int offset = 0;
 
     for (j = J_min; j <= J; ++j)
@@ -64,7 +82,7 @@ void s2let_analysis_lm2lmn(
             so3_parameters.N = Nj;
         }
 
-        for (n = -Nj+1; n < Nj; n+=2)
+        for (n = -Nj+1; n < Nj; n+=2)  //For debugging: try also n+=1
         {
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
@@ -75,6 +93,10 @@ void s2let_analysis_lm2lmn(
                     ssht_sampling_elm2ind(&lm_ind, el, m);
                     so3_sampling_elmn2ind(&lmn_ind, el, m, n, &so3_parameters);
                     f_wav_lmn[offset + lmn_ind] = flm[lm_ind] * psi;
+                    // Write out to data file "3a_in_f_lm_wav_ana.dat" for all j
+                    fprintf(fp, "%d, %d, %d, %d,%d, %f, %f\n",j,n,el,m,lm_ind,creal(flm[lm_ind]),cimag(flm[lm_ind]));
+                    //
+ 
                 }
             }
         }
@@ -93,6 +115,8 @@ void s2let_analysis_lm2lmn(
             f_scal_lm[lm_ind] = flm[lm_ind] * phi;
         }
     }
+    // Close files:
+    fclose(fp);
 }
 
 /*!

@@ -736,7 +736,18 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
 
     // Generate random harmonic coefficients for a complex signal
     s2let_lm_random_flm(flm, L, spin, seed);
-
+    // For debugging:
+    int arrayind, arrayind_min;
+    arrayind_min=spin*spin;
+    FILE *fp20;
+    fp20=fopen("1_wav_flm_randgen_mw_test.dat", "w");
+    for (arrayind =arrayind_min; arrayind < L*L; arrayind++ )
+    {
+        fprintf(fp20, "%f, %f\n", creal(flm[arrayind]), cimag(flm[arrayind]));
+    }
+    fclose(fp20);
+    //
+    
     // Construct the corresponding signal on the sphere (MW sampling)
     ssht_core_mw_inverse_sov_sym(f, flm, L, spin, dl_method, verbosity);
 
@@ -760,7 +771,19 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
 
     // Convert back to harmonic coefficients
     ssht_core_mw_forward_sov_conv_sym(flm_rec, f_rec, L, spin, dl_method, verbosity);
-
+    // For debugging:
+    // Open data file '"6_wav_flm_rec_afterssht_mw_forward.dat"' to write out flm_rec
+    FILE *fp10;
+    arrayind =0; 
+    fp10=fopen("6_wav_flm_rec_afterssht_mw_forward.dat", "w");
+    for (arrayind =arrayind_min; arrayind < L*L; arrayind++ )
+    {
+        fprintf(fp10, "%f, %f\n", creal(flm_rec[arrayind]), cimag(flm_rec[arrayind]));
+    }
+    fclose(fp10);
+    //
+    
+    
     // Compute the maximum absolute error on the harmonic coefficients
     printf("  - Maximum abs error  : %6.5e\n",
            maxerr_cplx(flm, flm_rec, L*L));fflush(NULL);
@@ -1973,7 +1996,7 @@ int main(int argc, char *argv[])
   const int N = 4;
   const int B = 3;
   const int J_min = 0;
-  const int spin = 2;
+  const int spin = 2;   //For debugging: try also spin =0;
 
   s2let_parameters_t parameters = {};
 

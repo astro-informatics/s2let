@@ -48,7 +48,7 @@ void s2let_synthesis_lmn2lm(
 
     complex double psi;
     double phi;
-
+    
     int offset = 0;
 
     // Clear output
@@ -66,7 +66,7 @@ void s2let_synthesis_lmn2lm(
             so3_parameters.N = Nj;
         }
 
-        for (n = -Nj+1; n < Nj; n+=2)
+        for (n = -Nj+1; n < Nj; n+=2)  //For debugging: try also n+=1
         {
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
@@ -95,6 +95,7 @@ void s2let_synthesis_lmn2lm(
             flm[lm_ind] += f_scal_lm[lm_ind] * phi;
         }
     }
+
 }
 
 /*!
