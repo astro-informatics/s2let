@@ -11,7 +11,7 @@ maskQUfile = '../../../../ebsep/data/wmap_QU_mask_rot.fits';
 [mapU_hpx, ~] = s2let_hpx_read_real_map(mapUfile);
 [maskQU_hpx, ~] = s2let_hpx_read_real_map(maskQUfile);
 
-
+Spin = 2 
 L = 192
 B = 3
 N = 3
@@ -34,7 +34,7 @@ maskQU(maskQU > threshold) = 1;
 maskQU(maskQU <= threshold) = 0;
 maskQU_lm = ssht_forward(maskQU, L);
 
-[maskQU, mask_wav, mask_scal] = ebsep_sample_mask(maskQU_lm, B, L, J_min, 'threshold', threshold, 'Upsample', ~downsampling);
+[maskQU, mask_wav, mask_scal] = ebsep_sample_mask(maskQU_lm, B, L, J_min, 'threshold', threshold, 'Downsample', downsampling);
 %
 f = QpU .* maskQU;
 %f = QpU;
@@ -73,7 +73,7 @@ caxis([-temp temp])
 title('Scaling fct')
 ind = 3
 for j = J_min:J
-	for en = 1:2*N-1
+	for en = 1:N
 		ind = ind + 1
         if ind <= maxfigs
             subplot(nx, ny, ind);

@@ -34,6 +34,18 @@ disp('Construct the corresponding signal via ssht_inverse');
 f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 flm_gen= ssht_forward(f_gen, L, 'Method', 'MW');
 
+%
+% The following c.f.the C analysis function:
+%  s2let_analysis_px2wav( complex double *f_scal, const complex double *f,
+%                          const s2let_parameters_t *parameters) 
+%
+% * Wavelet analysis from pixel space to wavelet space for complex signals.
+% *
+% * \param[out]  f_wav Array of wavelet maps
+% * \param[out]  f_scal Scaling function map
+% * \param[in]   f Signal on the sphere
+% * \param[in]   parameters A fully populated parameters object.
+
 % ---------------
 % Tile curvelets:
 % ---------------
@@ -63,6 +75,7 @@ end
 % Signal synthesis: (pixel to harmonic space) 
 % -----------------
 % Call s2let_transform_synthesis_lmn2lm
+%{
 [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lm2cur(f_cur, f_scal, flm_gen,...
                                            'B', B, 'L', L, 'J_min', J_min, ...
                                            'N', N,'Sampling', 'MW', ...
@@ -70,14 +83,66 @@ end
 disp('Sum: flm_cur_syn+flm_scal_syn ');
 flm_rec = flm_scal_syn+flm_cur_syn;
                                        
-                                       
 disp('Compute the re-constructed function via ssht_inverse ');
 f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
 
 disp('Both analysis and synthesis are done! ');
 disp('');
+
+
+% ---- Check whether tranform is exact --- % 
 disp('- Test exact transform: check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_gen - flm_rec))
 disp('Check the difference between f_gen and f_rec: ');
 maxerr = max(abs(f_gen(:) - f_rec(:)))
+%}
+
+% ------------------- 
+% FULL RESOLUTION PLOT
+% ------------------- 
+
+zoomfactor = 1.6;
+ns = ceil(sqrt(2+J-J_min+1)) ;
+ny = 4; % ns - 1 + rem(2+J-J_min+1 , ns) ;
+nx = 3; % ns;
+
+maxfigs = nx*ny;
+pltroot = '../../../figs'
+configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]
+
+figure('Position',[100 100 1300 1000])
+subplot(ny, nx, 1);
+ssht_plot_mollweide(f_gen, L, 'Mode', 1);
+title('Initial data')
+campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+v = caxis;
+temp = max(abs(v));
+caxis([-temp temp])
+subplot(ny, nx, 2);
+ssht_plot_mollweide(f_scal, L, 'Mode', 1);
+campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+v = caxis;
+temp = max(abs(v));
+caxis([-temp temp])
+title('Scaling fct')
+ind = 2
+for j = J_min:J
+	for en = 1:2*N-1
+		ind = ind + 1
+        if ind <= maxfigs
+            subplot(ny, nx, ind);
+            ssht_plot_mollweide(f_cur{j-J_min+1,en}, L, 'Mode', 1);
+            campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+            v = caxis;
+            temp = max(abs(v));
+            caxis([-temp temp])
+            title(['Wavelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
+        end
+	end
+end
+
+colormap(jet)
+fname = [pltroot,'/s2let_demo4_', configstr, '_earth_multires.png']
+print('-r200', '-dpng', fname)
+
 

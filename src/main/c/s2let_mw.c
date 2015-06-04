@@ -17,8 +17,7 @@
  * \param[in]  L Angular harmonic band-limit.
  * \retval none
  */
-void s2let_mw_alm2map(complex double* f, const complex double* flm, int L) {
-  int spin = 0;
+void s2let_mw_alm2map(complex double* f, const complex double* flm, int L, int spin) {
   int verbosity = 0;
   ssht_dl_method_t dl_method = SSHT_DL_RISBO;
   ssht_core_mw_inverse_sov_sym(f, flm, L, spin, dl_method, verbosity);
@@ -33,8 +32,7 @@ void s2let_mw_alm2map(complex double* f, const complex double* flm, int L) {
  * \param[in]  L Angular harmonic band-limit.
  * \retval none
  */
-void s2let_mw_map2alm(complex double* flm, const complex double* f, int L) {
-  int spin = 0;
+void s2let_mw_map2alm(complex double* flm, const complex double* f, int L, int spin) {
   int verbosity = 0;
   ssht_dl_method_t dl_method = SSHT_DL_RISBO;
   ssht_core_mw_forward_sov_conv_sym(flm, f, L, spin, dl_method, verbosity);
@@ -76,7 +74,7 @@ void s2let_mw_map2alm_real(complex double* flm, const double* f, int L) {
 double s2let_mw_power(complex double *f, int L){
   complex double *flm;
   s2let_allocate_lm(&flm, L);
-  s2let_mw_map2alm(flm, f, L);
+  s2let_mw_map2alm(flm, f, L, 0);
   double res = s2let_lm_power(flm, L);
   free(flm);
   return res;

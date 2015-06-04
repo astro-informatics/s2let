@@ -342,30 +342,33 @@ void s2let_tiling_direction(complex double *s_elm, const s2let_parameters_t *par
 void s2let_tiling_curvelet_direction(complex double *s_elm, const s2let_parameters_t *parameters)
 {
     int L = parameters->L;
-    int N =L;     //  int N = parameters->N;
+    int N =L;
     int el, m;
     int ind, ind_nm;
     double *signs;
-  // Allocate memory.   (c.f. ssht_core_gl_inverse_sov)
+    // Allocate memory for signs.
     signs = (double*)calloc(L+1, sizeof(double));
-  // Perform precomputations.
+    // Perform precomputation.
     for (m=0; m<=L-1; m=m+2) {
         signs[m]   =  1.0;
         signs[m+1] = -1.0;
     }
     
+    // Clear output
+    // for (el = 0; el < L*L; ++el)
+    // s_elm[ind] = 0;
+    // ind = 0;
+    // ind_nm = 0;
     // Skip the s_00 component, as it is zero.
-    // int ind = 1;
     for (el = 1; el < L; ++el)
     {
-       // s_elm[ind] = 0.0;
         for (m = -el; m <= el; ++m)
         {
             if (ABS(m) < N && ABS(m) == el)
             {
-                ssht_sampling_elm2ind(&ind, el, abs(m));   // int ind_pm= el*el+el+ABS(m);
-                s_elm[ind] = 1.0*sqrt(1.0/(2.0));    // s_elm[ind_pm] = 1.0*sqrt(1.0/(2.0));
-                ssht_sampling_elm2ind(&ind_nm, el, -abs(m)) ; //int ind_nm= el*el+el-ABS(m);
+                ssht_sampling_elm2ind(&ind, el, ABS(m));
+                s_elm[ind] = 1.0*sqrt(1.0/(2.0));
+                ssht_sampling_elm2ind(&ind_nm, el, -ABS(m)) ;
                 s_elm[ind_nm] = signs[m]*conj(s_elm[ind]); //pow(-1,ABS(m))* conj(s_elm[ind_pm]);
             }
             else
@@ -373,7 +376,6 @@ void s2let_tiling_curvelet_direction(complex double *s_elm, const s2let_paramete
                 s_elm[ind] = 0.0;
             }
 
-          //  ++ind;
         }
     }
 }

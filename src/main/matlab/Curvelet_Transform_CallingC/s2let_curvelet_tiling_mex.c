@@ -145,12 +145,10 @@ void mexFunction( int nlhs, mxArray *plhs[],
 
   // Run S2LET function
   // Curvelets coefficients stored in 2D->1D array psi_lm, indexing with "ind = el .* el + el + m + 1".
-    // size of psi_lm = ind_pm *J+l
+  // where size of psi_lm = ind_pm *J+l
   // Scaling coefficients stored in 1D array phi_l with size L.
   s2let_tiling_curvelet(psi_lm, phi_l, &parameters);
     
-    
-//*** to do: the conjugate relation : Phi_l(-m)=(-1)^m Phi*_{lm}
 
   // Output psi_lm and phi_l
   double *psi_lm_out_real, *psi_lm_out_imag, *phi_l_out;
@@ -176,12 +174,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
           psi_lm_out_real[j*L*L + ind_nm] =  creal( psi_lm[j*L*L + ind_nm] );
           psi_lm_out_imag[j*L*L + ind_nm] =  cimag( psi_lm[j*L*L + ind_nm] );
           
-    //      for (m = -el; m <= el; ++m)
-    //      {
-    //          psi_lm_out_real[j*L*L + ind] = creal( psi_lm[j*L*L + ind] );
-    //          psi_lm_out_imag[j*L*L + ind] = cimag( psi_lm[j*L*L + ind] );
-    //          ++ind;
-    //      }
       }
   }
 

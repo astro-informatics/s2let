@@ -93,7 +93,7 @@ end
 %if strcmp(args.Sampling, 'MW')
 
 % Scaling functions:
-  f_scal = ssht_inverse(f_scal_lm, L, 'spin', 0,'Sampling', 'MW');
+  f_scal = ssht_inverse(f_scal_lm, L, 'spin', 0, 'Method', 'MW');
 
 % Curvelets:
   for j = J_min:J,

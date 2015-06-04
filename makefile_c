@@ -49,8 +49,7 @@ ifeq ($(UNAME), Darwin)
 endif
 
 # Commands for Healpix
-F90_INCDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11/include
-HPXOPT	 = -O3 -I$(F90_INCDIR) -DGFORTRAN -fno-second-underscore
+HPXOPT	 =  -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
 #  -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
 
 # ======================================== #
@@ -146,6 +145,7 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 
 S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_wavelet_tiling_mex.o		\
+          $(S2LETOBJMAT)/s2let_curvelet_tiling_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_analysis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_synthesis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2wav_mex.o		\
@@ -157,6 +157,7 @@ S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 
 S2LETOBJSMEX = $(S2LETOBJMEX)/s2let_transform_axisym_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_wavelet_tiling_mex.$(MEXEXT)	\
+          $(S2LETOBJMEX)/s2let_curvelet_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_analysis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_synthesis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_lm2wav_mex.$(MEXEXT)	\

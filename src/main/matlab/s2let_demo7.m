@@ -1,16 +1,16 @@
 % s2let_demo7
 % -----------------------------------------------------------
-% Curvelets: 
+% Curvelets (PROTOTYPE):
 % Compute and plot the harmonic tiling and the curvelet kernels.
 %
 % ------ About this demo -------- 
-% This is the prototype MATLAB code for curvelets, 
-% in which curvelets are constructed using 
+% This is the prototype MATLAB code for construction and plot making of curvelets.
+% Curvelets are constructed using
 % [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);
-% with the implementation of  
+% with the condition of
 %    m = el (so to obtain the hyperbolic scaling relation);
 % and the implemention of the conjugate relation: 
-%   %for positive m 
+%   % for positive m
 %   ind_pm = ssht_elm2ind(el, m);
 %   % Curvelet coefficients: 
 %   flm(ind_pm) = kappa(j+1,el+1);
@@ -69,14 +69,18 @@ end
 % kappa0 = scaling function with kappa0[l]= sqrt(k_lambda[1+Jmin*L])
 % kappa[l+jL] = wavelet generating functions = sqrt(k_lambda[1+(j+1)*L]-k_lambda[1+j*L]) 
 
-% Plot of tiling of curvelets in harmonic space (i.e. the same as plotting the axisymmetric wavelets):
+%
+% Plot the tiling of curvelets in harmonic space (i.e. the same as plotting the axisymmetric wavelets):
 % s2let_plot_axisym_tiling(B, L, J_min);
+%
 % fname = ['s2let_d7_', configstr, '_tiling.png']
 % print('-r500', '-dpng', fname)
 % movefile(fname,'/Users/jenniferyhchan/WaveletsCode_PhD/s2let/figs/tiling')
+%
 
-
+%
 % Plot curvelets on the sphere
+%
 figure('Position',[100 100 1200 600])
 flm = zeros(L^2,1);
 ind_pm = 0;

@@ -1,4 +1,4 @@
-function [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, flm_init, varargin)
+function [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, flm_gen, varargin)
 
 % s2let_transform_synthesis_lmn2lm
 % Compute (spin) curvelet transform, 
@@ -7,13 +7,13 @@ function [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lm
 %
 % Default usage :
 %
-%   [flm_cur_syn, f_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l,flm_init, <options>)
+%   [flm_cur_syn, f_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l,flm_gen, <options>)
 %
 % f_cur_lmn is the input curvelet contribution,
 % f_cur_lmn is the input scaling function contribution ,
 % cur_lm contains the curvelet kernels in harmonic space,
 % scal_l contains the scaling contributions in harmonic space,
-% flm_init contains the spherical harmonic coefficients of the initial
+% flm_gen contains the spherical harmonic coefficients of the initial
 % signals. 
 %
 % Option :
@@ -42,7 +42,7 @@ function [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lm
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-sz = length(flm_init(:));
+sz = length(flm_gen(:));
 Lguessed = sqrt(sz);
 
 p = inputParser;
@@ -50,7 +50,7 @@ p.addRequired('f_cur_lmn', @iscell);
 p.addRequired('f_scal_lm', @isnumeric);
 p.addRequired('cur_lm', @iscell);
 p.addRequired('scal_l', @isnumeric);
-p.addRequired('flm_init', @isnumeric);
+p.addRequired('flm_gen', @isnumeric);
 p.addParamValue('B', 2, @isnumeric);
 p.addParamValue('L', Lguessed, @isnumeric);
 p.addParamValue('J_min', 0, @isnumeric);
@@ -61,7 +61,7 @@ p.addParamValue('Sampling', 'MW', @ischar);
 p.addParamValue('Reality', false, @islogical);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
-p.parse(f_cur_lmn, f_scal_lm, cur_lm, scal_l, flm_init, varargin{:});
+p.parse(f_cur_lmn, f_scal_lm, cur_lm, scal_l, flm_gen, varargin{:});
 args = p.Results;
 
 
@@ -100,7 +100,7 @@ for el = 0:args.L-1,
   phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);         % phi_l(l+1);
   for m = -el:el,
    lm_ind=ssht_elm2ind(el, m);
-   flm_scal_syn(lm_ind) =  flm_scal_syn(lm_ind)+ flm_init(lm_ind)* phi;
+   flm_scal_syn(lm_ind) =  flm_scal_syn(lm_ind)+ flm_gen(lm_ind)* phi;
   end
 end
 

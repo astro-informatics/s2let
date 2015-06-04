@@ -28,7 +28,7 @@ maxfigs = nx*ny;
 pltroot = '../../../figs'
 configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]
 
-[f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Upsample', false, 'Spin', 0);
+[f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Upsample', true, 'Spin', 0);
 
 % FULL RESOLUTION PLOT
 figure('Position',[100 100 1300 1000])
@@ -46,10 +46,10 @@ v = caxis;
 temp = max(abs(v));
 caxis([-temp temp])
 title('Scaling fct')
-ind = 2
+ind = 2;
 for j = J_min:J
-	for en = 1:2*N-1
-		ind = ind + 1
+	for en = 1:N
+		ind = ind + 1;
         if ind <= maxfigs
             subplot(ny, nx, ind);
             ssht_plot_mollweide(f_wav{j-J_min+1,en}, L, 'Mode', 1);
@@ -88,10 +88,10 @@ v = caxis;
 temp = max(abs(v));
 caxis([-temp temp])
 title('Scaling fct')
-ind = 2
+ind = 2;
 for j = J_min:J
-	for en = 1:2*N-1
-		ind = ind + 1
+	for en = 1:N
+		ind = ind + 1;
         if ind <= maxfigs
             subplot(ny, nx, ind);
             bl =  min([ s2let_bandlimit(j,J_min,B,L) L ]);

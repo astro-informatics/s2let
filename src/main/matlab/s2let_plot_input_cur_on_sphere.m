@@ -1,4 +1,4 @@
-function s2let_plot_cur_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)
+function s2let_plot_cur_on_sphere(alpha, beta, gamma, cur_lm, scal_l, L, J_min, varargin)
 %
 % s2let_plot_cur_on_sphere -
 % Plot curvelet coefficients on multiple spheres.
@@ -12,25 +12,18 @@ function s2let_plot_cur_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)
 %
 % Default usage :
 %
-%   s2let_plot_spin0cur_on_sphere(alpha, beta, gamma, B, L, J_min, <options>)
+%   s2let_plot_cur_on_sphere(alpha, beta, gamma, cur_lm, scal_l, L, J_min, <options>)
 %
-% (alpha, beta, gamma) are the Euler's angles for rotationing the sphere.
-% B is the wavelet dilation factor 
+% cur is cell array with all the curvelet coefficients.
+% its first index is the wavelet scale j, the second
+% index is the orientation g, and each element is a
+% function on the sphere in MW sampling.
+% scal is the corresponding scaling function contribution
+% (i.e. just a single function on the sphere).
+% B is the wavelet parameter.
 % L is the angular band-limit.
+% N is the orientational band-limit.
 % J_min is the first curvelet scale in cur.
-%
-% Option :
-%  'N'               = { Azimuthal band-limit; N > 0 , and should =L for curvelets; (default = L) }
-%  'Spin'            = { Spin number; Spin >= 0 (default = 0) }
-%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
-%                              wavelets and scaling function.],
-%                        false [Apply the usual normalisation factors such
-%                              that the wavelets fulfil the admissibility
-%                               condition (default)]}
-%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
-%                       option indicates which spin number the wavelets
-%                       should be lowered from (default = 0)]
-%
 %
 % j is the order of the curvelet under consideration (depends on B)
 % rho=(alpha, beta, gamma) is the rotation in SO(3) by which to rotate
@@ -38,6 +31,23 @@ function s2let_plot_cur_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)
 % L if harmonic band-limit for the reconstruction on the sphere
 % psi_j is the reconstructed curvelet on the sphere, at resolution L
 %
+% Options consist of parameter type and value pairs.
+% Valid options include:
+%
+%  'B'               = { Dilation factor; B > 1 (default = 2) }
+%  'N'               = { Azimuthal band-limit; N > 0 (default = L) }
+%  'Spin'            = { Spin number; Spin >= 0 (default = 0) }
+%  'Method'          = { 'MW'         [McEwen & Wiaux sampling (default)],
+%                        'MWSS'       [McEwen & Wiaux symmetric sampling],
+%                        'DH'         [Driscoll & Healy sampling],
+%                        'GL'         [Gauss-Legendre sampling] }
+%  'Reality'         = { false        [do not assume f real (default)],
+%                        true         [assume f real (improves performance)] }
+%  'Upsample'      = { false   [multiresolution algorithm (default)],
+%                      true  [full resolution wavelets] },
+%  'Function'        = { 'real' [plot the real part of the input functions (default)],
+%                        'imag' [plot the imaginary part of the input functions],
+%                        'abs'  [plot the absolute value of the input functions] }
 %
 % S2LET package to perform curvelet transform on the Sphere.
 % Copyright (C) 2012-2014  Boris Leistedt, Martin Büttner & Jason McEwen
@@ -48,14 +58,14 @@ p = inputParser;
 p.addRequired('alpha', @isnumeric);
 p.addRequired('beta', @isnumeric);
 p.addRequired('gamma', @isnumeric);
-p.addRequired('B', @isnumeric);
+p.addRequired('cur_lm', @iscell);
+p.addRequired('scal_l', @isnumeric);
 p.addRequired('L', @isnumeric);
 p.addRequired('J_min', @isnumeric);
+p.addParamValue('B', 2, @isnumeric);
 p.addParamValue('N', -1, @isnumeric);
 p.addParamValue('Spin', 0, @isnumeric);
-p.addParamValue('SpinLowered', false, @islogical);
-p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
-p.parse(alpha, beta, gamma, B, L, J_min, varargin{:});
+p.parse(alpha, beta, gamma, cur_lm, scal_l, L, J_min, varargin{:});
 
 args = p.Results;
 
@@ -63,12 +73,14 @@ if args.N == -1
     args.N = L;
 end
 
+B = args.B;
 N = args.N;
 Spin = args.Spin;
+alpha = args.alpha;
+beta = args.beta;
+gamma = args.gamma ;
+J_min = args.J_min;
 J = s2let_jmax(L, B);
-
-%[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, 'Spin', 'spin', 'SpinLowered', false, 'SpinLoweredFrom', 0);
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min);
 
 % Precompute Wigner small-d functions
 d = zeros(L, 2*L-1, 2*L-1);
@@ -97,7 +109,7 @@ figure('Position',[100 100 1200 600])
 ind=0;
 for j = J_min:J,
 %% Rotate the curvelets coefficients
-   flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, alpha, gamma);
+   flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}, d, alpha, gamma);
   if Spin == 0
    % Compute the function (rotated):
    f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', 'MW', 'spin', Spin, 'Reality', true);
@@ -173,7 +185,7 @@ for j = J_min:J,
 end
 % output as png file
 colormap(jet)
-fname = [pltroot,'s2let_plotfn_', configstr, '_cur_jet.png']
+fname = [pltroot,'s2let_plotfn_', configstr, '_cur_jet.png'];
 print('-r200', '-dpng', fname);
 
 %
@@ -196,6 +208,6 @@ temp = max(abs(v));
 caxis([-temp temp]*plot_caxis_scale)
 % output as png file
 colormap(jet)
-fname = [pltroot,'s2let_plotfn_', configstr, '_scal_jet.png'] 
+fname = [pltroot,'s2let_plotfn_', configstr, '_scal_jet.png'] ;
 print('-r200', '-dpng', fname);
 

@@ -38,12 +38,20 @@ J =s2let_jmax(L, B);  %=ceil(log L/ log B);
 % ---------------
 % Tile curvelets and scaling function:
 % ---------------
-% Compute curvelets coefficients (c.f. s2let_tiling.c but here the matlab function 's2let_curvelet_tiling' is used):
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min);
+% Compute curvelets coefficients (s2let_tiling.c):
+[psi_lm phi_l] = s2let_curvelet_tiling(B, L, N, Spin, J_min);
+for j = J_min:J,
+cur_lm{j-J_min+1} = psi_lm(:,j+1);
+end
+%***** step 1b) compute the scaling coefficients (no j-dependence except J_min)
+scal_l = zeros(L^2,1);
+for l = 0:L-1,
+scal_l(l^2+l+1,1) = phi_l(l+1);
+end
 
 
-% Plot showing the tiling of curvelets in harmonic space:
-s2let_plot_cur_tiling(B, L, J_min, 'spin', Spin);
+% Plot of tiling of curvelets in harmonic space:
+%s2let_plot_cur_tiling(B, L, J_min, 'spin', Spin);
 
 
 % ---------------
@@ -54,14 +62,12 @@ alpha =  pi ;
 beta = pi/2 ;
 gamma = 0 ;
 disp(' - Plot curvelets');
-% s2let_plot_cur_on_sphere(alpha, beta, gamma, B, L, J_min);
-% s2let_plot_cur_on_sphere(alpha, beta, gamma, cur_lm, scal_l, L, J_min);
+%s2let_plot_cur_on_sphere(alpha, beta, gamma, cur_lm, scal_l, L, J_min);
 
 %
 % If not calling the function "s2let_plot_cur_on_sphere", then uncomment
 % the following which is wrapped by %{ and %} : 
 %
-
 %{
 zoomfactor = 1.4;
 plot_caxis_scale = 2;

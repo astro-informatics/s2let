@@ -91,14 +91,14 @@ int main(int argc, char *argv[])
   // a spin map
 
   //char file[100] = "data/earth_tomo_mw_128_rot.fits";
-  char fileQ[100] = "data/wmap_mcmc_base_k_synch_stk_q_9yr_v5_rot.fits";
-  char fileU[100] = "data/wmap_mcmc_base_k_synch_stk_u_9yr_v5_rot.fits";
+  char fileQ[100] = "data/wmap_mcmc_base_k_synch_stk_q_9yr_v5_rot_denoised.fits";
+  char fileU[100] = "data/wmap_mcmc_base_k_synch_stk_u_9yr_v5_rot_denoised.fits";
   //printf(" Reading file %s\n", file);
   printf(" Reading file %s\n", fileQ);
   printf(" Reading file %s\n", fileU);
-  //const int L = s2let_fits_mw_read_bandlimit(file);
-  const int nside = s2let_fits_hpx_read_nside(fileQ);
-  int L = MIN(192,3*nside);
+  const int L = s2let_fits_mw_read_bandlimit(fileQ);
+  //const int nside = s2let_fits_hpx_read_nside(fileQ);
+  //int L = MIN(192,3*nside);
   parameters.L = L;
   printf(" - Detected bandlimit L = %i\n",L);
   int J = s2let_j_max(&parameters);
@@ -113,11 +113,11 @@ int main(int argc, char *argv[])
 
   //s2let_allocate_mw_real(&f_r, L);
   //s2let_fits_mw_read_map(f_r, file, L); // Read MW map from file
-  s2let_hpx_allocate_real(&f_hpx_r, nside);
-  s2let_hpx_allocate_real(&f_hpx_i, nside);
-  s2let_hpx_read_map(f_hpx_r, fileQ, nside);
-  s2let_hpx_read_map(f_hpx_i, fileU, nside);
-  printf(" Map successfully read from file\n");
+  //s2let_hpx_allocate_real(&f_hpx_r, nside);
+  //s2let_hpx_allocate_real(&f_hpx_i, nside);
+  //s2let_hpx_read_map(f_hpx_r, fileQ, nside);
+  //s2let_hpx_read_map(f_hpx_i, fileU, nside);
+  //printf(" Map successfully read from file\n");
 
   // Force into spin signal
   // s2let_allocate_lm(&flm, L);
@@ -132,18 +132,20 @@ int main(int argc, char *argv[])
   // Convert to MW sampling
   s2let_allocate_mw_real(&f_r, L);
   s2let_allocate_mw_real(&f_i, L);
-  s2let_allocate_lm(&flm, L);
-  s2let_hpx_map2alm_real(flm, f_hpx_r, nside, L);
-  s2let_mw_alm2map_real(f_r, flm, L);
-  s2let_hpx_map2alm_real(flm, f_hpx_i, nside, L);
-  s2let_mw_alm2map_real(f_i, flm, L);
+  s2let_fits_mw_read_map(f_r, fileQ, L);
+  s2let_fits_mw_read_map(f_i, fileU, L);
+  //s2let_allocate_lm(&flm, L);
+  //s2let_hpx_map2alm_real(flm, f_hpx_r, nside, L);
+  //s2let_mw_alm2map_real(f_r, flm, L);
+  //s2let_hpx_map2alm_real(flm, f_hpx_i, nside, L);
+  //s2let_mw_alm2map_real(f_i, flm, L);
 
   s2let_allocate_mw(&f, L);
   for (i = 0; i < L*(2*L-1); ++i)
     f[i] = f_r[i] + I*f_i[i];
-  free(flm);
-  free(f_hpx_r);
-  free(f_hpx_i);
+  //free(flm);
+  //free(f_hpx_r);
+  //free(f_hpx_i);
 
   // Compute noise standard deviation and generate noise
   double sigmanoise = sqrt(pow(10.0, -SNR_in/10.0) * s2let_mw_power(f, L));
@@ -156,7 +158,7 @@ int main(int argc, char *argv[])
   // Add noise to the signal in real space
   printf(" Contaminating the signal with this noise...");fflush(NULL);
   s2let_allocate_mw(&noise, L);
-  s2let_mw_alm2map(noise, noise_lm, L);
+  s2let_mw_alm2map(noise, noise_lm, L, 0);
   s2let_allocate_mw(&g, L);
   for (i = 0; i < L*(2*L-1); i++)
     g[i] = f[i] + noise[i];

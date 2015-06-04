@@ -225,7 +225,7 @@ int s2let_idl_mw_map2alm(int argc, void* argv[])
   complex double *f = (complex double *) argv[1];
   IDL_INT *L = (IDL_INT *) argv[2];
 
-  s2let_mw_map2alm(flm, f, *L);
+  s2let_mw_map2alm(flm, f, *L, 0);
 
   return 1;
 }
@@ -237,7 +237,7 @@ int s2let_idl_mw_alm2map(int argc, void* argv[])
   complex double *flm = (complex double *) argv[1];
   IDL_INT *L = (IDL_INT *) argv[2];
 
-  s2let_mw_alm2map(f, flm, *L);
+  s2let_mw_alm2map(f, flm, *L, 0);
 
   return 1;
 }
