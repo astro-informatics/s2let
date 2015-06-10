@@ -21,7 +21,7 @@
 % Log: 
 % -  Last modified on 6th Jan 2015 : Debug completed. 
 % -----------------------------------------------------------
-% S2LET package to perform Wavelets on the Sphere.
+% S2LET package to perform wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 % -----------------------------------------------------------

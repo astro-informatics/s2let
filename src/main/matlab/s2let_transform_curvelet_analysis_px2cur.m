@@ -37,9 +37,10 @@ function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, vara
 % Log: 
 % -  constructed by Jennifer Y H Chan on 5th June 2015  
 % -----------------------------------------------------------
-% S2LET package to perform curvelets transform on the Sphere.
+% S2LET package to perform wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
+% -----------------------------------------------------------
 
 sz = size(f_init);
 if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1

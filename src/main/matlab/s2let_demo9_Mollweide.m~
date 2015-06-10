@@ -26,7 +26,7 @@
 % Valid options include:
 %
 %  'Upsample'      = { false   [multiresolution algorithm (default)],
-%                      true    [full resolution wavelets] },
+%                      true  [full resolution wavelets] },
 %  'Function'        = { 'real' [plot the real part of the input functions (default)],
 %                        'imag' [plot the imaginary part of the input functions],
 %                        'abs'  [plot the absolute value of the input functions] }
@@ -34,11 +34,6 @@
 % Log: 
 % -  constructed by Jennifer Y H Chan on 5th June 2015  
 % -----------------------------------------------------------
-% S2LET package to perform wavelet transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
-% See LICENSE.txt for license details
-% -----------------------------------------------------------
-
 clear all
 % close all 
 

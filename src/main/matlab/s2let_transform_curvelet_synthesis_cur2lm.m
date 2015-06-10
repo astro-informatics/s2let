@@ -35,12 +35,13 @@ function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  var
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %
 % -----------------------------------------------------------
-% Log: 
-% -  constructed by Jennifer Y H Chan on 5th June 2015  
+% Log:
+% -  constructed by Jennifer Y H Chan on 5th June 2015
 % -----------------------------------------------------------
-% S2LET package to perform curvelets transform on the Sphere.
+% S2LET package to perform wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
+% -----------------------------------------------------------
 
 
 
@@ -71,6 +72,8 @@ args = p.Results;
 
 
 N= args.L;
+Nj=N;
+band_limit = args.L;
 J = s2let_jmax(args.L, args.B);
 
 % ---------------
@@ -92,7 +95,12 @@ f_scal_lm_syn = ssht_forward(f_scal, args.L, 'Spin', args.Spin, ...
                             'Method', args.Sampling, 'Reality', args.Reality);
 % Curvelet contribution:
 for j = args.J_min:J,
-f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , args.L, N, ...
+ if (args.Upsample ==0)  %false => multi-resolution 
+     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+     Nj = min(N, band_limit);
+     Nj = Nj+ mod((Nj+N),2) ;  
+ end
+f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} ,band_limit, Nj, ...
                                             'Reality', args.Reality, 'Sampling', args.Sampling);
 end
 

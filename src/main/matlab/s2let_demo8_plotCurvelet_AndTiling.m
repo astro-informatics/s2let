@@ -13,7 +13,7 @@
 % Log: 
 % -  constructed by Jennifer Y H Chan on 5th June 2014  
 % -----------------------------------------------------------
-% S2LET package to perform Wavelets on the Sphere.
+% S2LET package to perform wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 % 
@@ -24,12 +24,12 @@
 % ---------------
 % Define curvelet parameters: 
 % ---------------
-Spin = 2;
+Spin = 0;
 B = 2;   % for dyadic sampling 
 L = 64;
 N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
 J_min = 2; % minimum and maximum scale probed by wavelets 
-J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
+J =s2let_jmax(L, B); %=ceil(log L/ log B);  
 
 % ---------------
 % Plot the tiling of scaling function and curvelets in harmonic space:

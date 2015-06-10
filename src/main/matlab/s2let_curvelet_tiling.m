@@ -65,8 +65,8 @@ for (m=1:2:L-1)
   signs(m+1) = 1.0;
 end 
 % Skip the s_00 component as it is zero 
+%for el = Spin*Spin+1:L-1
 for el = 1:L-1 
-% for el = Spin*Spin+1:L-1 
 m = el;  % automatically satisfy the condition : m < N 
 % for positive m
 ind_pm = ssht_elm2ind(el, m);
@@ -101,28 +101,26 @@ error_on_slm_tiling = error_on_slm_tiling +sum - 1.0
 % Curvelet angular components:
 % ----------
 [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);
-ind_pm = 0;
-ind_nm = 0;
-%ind_pm = el_min*el_min;
-%ind_pm = el_min*el_min;
+%ind_pm = 0;
+%ind_nm = 0;
+ind_pm = el_min*el_min;
+ind_pm = el_min*el_min;
 for j = J_min:J
-% for el = 1:L-1  %s_00 is zero
-for el = el_min+1:L-1 
+for el = el_min:L-1  % for el = 1:L-1  %s_00 is zero
  m = el;
  % for positive m
  ind_pm = ssht_elm2ind(el, m);
- % Curvelet coefficients:
- % s_lm= sqrt(1./2.);
- % cur_lm{j-J_min+1}(ind_pm) =sqrt(1./2.) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
  cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
+  % s_lm= sqrt(1./2.);
+  % cur_lm{j-J_min+1}(ind_pm) =sqrt(1./2.) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
  % for negative m
  ind_nm = ssht_elm2ind(el, -m);
- cur_lm{j-J_min+1}(ind_nm) =  signs(m) * conj(cur_lm{j-J_min+1}(ind_pm));
- % cur_lm{j-J_min+1}(ind_nm) =(-1)^m* conj(cur_lm{j-J_min+1}(ind_pm));
+ cur_lm{j-J_min+1}(ind_nm) =  signs(m+1) * conj(cur_lm{j-J_min+1}(ind_pm));  % signs(m) if el starts at 1
+  % cur_lm{j-J_min+1}(ind_nm) =(-1)^m* conj(cur_lm{j-J_min+1}(ind_pm));
   if (args.SpinLowered~= 0)  
     s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
-    cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)+ s2let_spin_lowered_norm_factor ;
-    cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)+ s2let_spin_lowered_norm_factor ;
+    cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
+    cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
   end 
  end
 end 
@@ -131,8 +129,7 @@ end
 % Scaling Function
 % ----------
 scal_l = zeros(L^2,1);
-for el = 0:L-1
-%for l = el_min:L-1
+for el = el_min:L-1  % for el = 0:L-1
  scal_l(el^2+el+1,1) = sqrt((2*el+1)/(4.0*pi)) *kappa0(el+1);
  if (args.SpinLowered~= 0)  
   s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
@@ -146,17 +143,16 @@ end
 % 's2let_check_cur_tiling.m', run 's2let_fulltest.m')
 % `````````````
 %{
-Spin = 0; 
 % Scaling function
 identity = zeros(1,L);
-for el=abs(Spin):L-1
+for el=abs(args.Spin):L-1
 	% identity(1,el+1) = identity(1,el+1) + 4*pi/(2*el+1) * kappa0_cur(el+1,1) * conj(kappa0_cur(el+1,1));
     identity(1,el+1) = identity(1,el+1)+(4.*pi/(2*el+1))*scal_l(el^2+el+1,1)*conj(scal_l(el^2+el+1,1)); 
 end
 % Curvelet functions
-for j= 0:J %J_min: J 
-	ind = Spin*Spin + 1;
-	for el=abs(Spin):L-1
+for j= J_min: J  %0:J
+	ind = args.Spin*args.Spin + 1;
+	for el=abs(args.Spin):L-1
 		for m= -el:el
            identity(1,el+1) = identity(1,el+1)+(8.*pi^2/(2*el+1))* cur_lm{j-J_min+1}(1,ind)*conj(cur_lm{j-J_min+1}(1,ind));
 		   ind = ind + 1;
@@ -164,8 +160,8 @@ for j= 0:J %J_min: J
 	end
 end
 error_on_cur_tiling = 0;
-for el=abs(Spin):L-1
-    error_on_cur_tiling = error_on_cur_tiling + identity(1,el+1) - 1.0;
+for el=abs(args.Spin):L-1
+    error_on_cur_tiling = error_on_cur_tiling + identity(1,el+1) - 1.0
 end
 %}
 

@@ -30,7 +30,7 @@ configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_mi
 
 [f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Upsample', true, 'Spin', 0);
 
-% MULTI-RESOLUTION PLOT
+% FULL-RESOLUTION PLOT
 figure('Position',[100 100 1300 1000])
 subplot(ny, nx, 1);
 ssht_plot_mollweide(f, L, 'Mode', 1);
@@ -71,7 +71,7 @@ print('-r200', '-dpng', fname)
 
 [f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Upsample', false, 'Spin', 0);
 
-% FULL RESOLUTION PLOT
+% MULTI-RESOLUTION PLOT
 figure('Position',[100 100 1300 1000])
 subplot(ny, nx, 1);
 ssht_plot_mollweide(f, L, 'Mode', 1);

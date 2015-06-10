@@ -55,14 +55,15 @@ J = s2let_jmax(L, B);
                                         'Spin', args.Spin, 'SpinLowered', args.SpinLowered,...
                                         'SpinLoweredFrom',args.SpinLoweredFrom);
 % 
+el_min = max(abs(args.Spin), abs(args.SpinLoweredFrom));
 kappa0_cur = zeros(1,L);
-for el = 0:L-1
+for el = el_min:L-1
  kappa0_cur(1,el+1) = scal_l(el^2+el+1,1)/sqrt((2*el+1)/(4.0*pi)) ;
 end
 % 
 kappa_cur = zeros(J+1,L);
 for j = J_min:J
- for el = 0:L-1
+ for el = el_min:L-1 % 0:L-1
   % ind = l^2 +l + m + 1 ; now consider m =  el; 
   kappa_cur(j+1,el+1) = cur_lm{j-J_min+1}(1,el^2+el+el+1) /(sqrt(1./2.)* sqrt((2*el+1)/(8.0*pi*pi))) ;
  end
@@ -77,7 +78,7 @@ configstr = ['Spin',int2str(args.Spin),...
 
 
 % 
-xi = 0:0.01:L-1;
+xi =0:0.01:L-1;
 x = 0:L-1;
 % ------------
 % Plot the tiling of the scaling function: 
