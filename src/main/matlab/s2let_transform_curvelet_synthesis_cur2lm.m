@@ -100,10 +100,10 @@ for j = args.J_min:J,
      Nj = min(N, band_limit);
      Nj = Nj+ mod((Nj+N),2) ;  
  end
-f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} ,band_limit, Nj, ...
+f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , args.L, N , ...
                                             'Reality', args.Reality, 'Sampling', args.Sampling);
 end
-
+%band_limit, Nj, ...
 
 % Reconstruct the signals in harmonic space
 % Perform Wigner transform (lmn2lm -  Call matlab function synthesis_lmn2lm)

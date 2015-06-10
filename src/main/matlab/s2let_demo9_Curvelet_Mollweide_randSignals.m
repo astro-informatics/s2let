@@ -57,18 +57,17 @@ f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 % -----------------
 % Call matlab function analysis_lm2cur
 [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_gen,  ...
-                                                         'B', B, 'L', L, ...
-                                                  'Spin', Spin, 'J_min', J_min, ...
-                                                  'N', N, 'Sampling', 'MW',...
-                                                  'Upsample', true);
-f_cur_new = zeros(L^2,1);                                              
-for j = J_min:J                                              
-% isnumeric(f_cur{j-J_min+1}(:))
-   for l = 0:L-1 
-        f_cur_new(l^2+l+1,1) = f_cur{j-J_min+1}(l+1);
-   end  
-end 
-isnumeric(f_cur_new(:))
+                                                          'B', B, 'L', L,  'J_min', J_min, ...
+                                                          'Spin', Spin,  ...
+                                                          'Sampling', 'MW',...
+                                                          'Upsample', true);
+                                                     
+f_cur_new = cell(J+1-J_min, 2*N-1);  
+for j = J_min:J 
+   for en = 1: 2*N-1 
+   f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
+   end
+end   
 
 % -----------------
 % Signal synthesis: (pixel to harmonic space) 
@@ -109,27 +108,23 @@ caxis([-temp temp])
 title('Scaling fct')
 ind = 2; 
 for j = J_min:J
-%	for en = 1:2*N-1
+	for en = 1:2*N-1
 		ind = ind + 1 ; 
         if ind <= maxfigs
             subplot(ny, nx, ind);
-            % f_cur is numeric 
-            %            ssht_plot_mollweide(f_cur{j-J_min+1,en}, L, 'Mode', 1);
-            %ssht_plot_mollweide(f_cur{j-J_min+1}(:), L, 'Mode', 1);
-            %
-            ssht_plot_sphere(f_cur{j-J_min+1}(:), L);
+            ssht_plot_mollweide(f_cur_new{j-J_min+1,en}, L, 'Mode', 1);
             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
             v = caxis;
             temp = max(abs(v));
             caxis([-temp temp])
             title(['Wavelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
         end
-%	end
+	end
 end
 
 colormap(jet)
-fname = [pltroot,'/s2let_demo9_', configstr, '_testSIGANL.png']
-print('-r200', '-dpng', fname)
+%fname = [pltroot,'/s2let_demo9_', configstr, '_testSIGANL.png']
+%print('-r200', '-dpng', fname)
 
 
                                        

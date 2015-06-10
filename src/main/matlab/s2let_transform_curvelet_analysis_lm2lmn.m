@@ -62,8 +62,8 @@ args = p.Results;
 
 % Azimuthal/directional band-limit N =L always holds for curvelets:           
 N = args.L ;
-Nj = N; 
-band_limit = args.L; 
+% Nj = N; 
+% band_limit = args.L; 
 J = s2let_jmax(args.L, args.B);
 
 % ---------------
@@ -87,25 +87,28 @@ J = s2let_jmax(args.L, args.B);
 % -----------------
 % disp('ana_lm2lmn: Curvelet analysis of complex signals from harmonic to Wigner space (i.e. flm to flmn)')
 
-
-ind_ln=0;
-ind = 0;
-ind_lmn = 0;
-for j = args.J_min:J,
-  f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
-  if (args.Upsample ~= 1)  %i.e. false => multi-resolution
+%{
+  if (args.Upsample == 0)  %i.e. false => multi-resolution
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     %Nj = min(N, band_limit);
     %Nj = Nj+ mod((Nj+N),2) ;  % ensure Nj and J are both even or both odd
     Nj = band_limit;
   end
-  for en = -Nj+1:Nj-1,
-   for el = max(abs(args.Spin),abs(en)):band_limit-1,
+%}  
+ind_ln=0;
+ind = 0;
+ind_lmn = 0;
+for j = args.J_min:J,
+  f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
+  for en =  -N+1: N+1,   
+       %-Nj+1:Nj-1,
+   for el = max(abs(args.Spin),abs(en)):args.L-1,   
+       %band_limit-1,
      ind_ln = ssht_elm2ind(el, en);
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,
       ind = ssht_elm2ind(el, m);
-      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+      ind_lmn = so3_elmn2ind(el,m,en,args.L,N);   %band_limit,Nj);
       f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind) * psi;
      end
     end
@@ -117,12 +120,14 @@ end
 % Scaling function contribution: 
 % -----------------
 % disp('ana_lm2lmn: : Compute scaling function f_scal_lm=flm_init(lm_ind) * phi '); 
+%{
 if (args.Upsample ~= 1)  %false => multi-resolution 
    band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
 end
+%}
 f_scal_lm = zeros(args.L^2,1);
 lm_ind=0;
-for el = abs(args.Spin):band_limit-1,  % 0:args.L-1,
+for el =  0:args.L-1, %abs(args.Spin):band_limit-1, 
    phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);   
    for m = -el:el,
     lm_ind=ssht_elm2ind(el, m);

@@ -40,7 +40,7 @@
 % -----------------------------------------------------------
 
 clear all
-% close all 
+close all 
 
 load('EGM2008_Topography_flms_L0128');
 L = 32; 
@@ -53,7 +53,6 @@ f_gen = ssht_inverse(flm_gen, L, 'Reality', true);
 % ---------------
 Spin = 0;
 B = 6;   
-L = 32;
 N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
 J_min = 1; % minimum and maximum scale probed by wavelets 
 J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
@@ -96,8 +95,8 @@ for j = J_min:J
    f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
    end
 end   
-%figure
-%ssht_plot_mollweide(f_cur_new{1, en}, L, 'Mode', 1);
+% figure
+% ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);
 
 % FULL-RESOLUTION  PLOT (Upsample: true) 
 zoomfactor = 1.6;
@@ -213,12 +212,13 @@ print('-r200', '-dpng', fname)
 % Compare reconstructed signal with the initial signals: 
 % ---------- 
 
+%{
 f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal, ...
                                                   'B', B, 'L', L, ...
                                                   'J_min', J_min, ...
                                                   'Spin', Spin, ...
                                                   'Reality', false, ...
-                                                  'Upsample', false, ...
+                                                  'Upsample', true, ...
                                                   'SpinLowered', false, ...
                                                   'SpinLoweredFrom', 0,...
                                                   'Sampling', 'MW');
@@ -234,3 +234,5 @@ title('reconstructed signal')
                            
 %fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 %print('-r200', '-dpng', fname)
+
+%}
