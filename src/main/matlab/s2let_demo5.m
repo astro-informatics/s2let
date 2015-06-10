@@ -5,9 +5,9 @@
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-Spin = 1;
+Spin = 2;
 B = 2;
-J_min = 0; %2
+J_min = 2; %2
 L = 64;
 N = 64;
 J = s2let_jmax(L, B);
@@ -26,7 +26,9 @@ pltroot = '../../../figs'
 configstr = ['Spin',int2str(Spin),'_N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]
 
 
-[psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min);
+[psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min, ...
+                                     'SpinLowered', true, ...
+                                     'SpinLoweredFrom', 2);
 
 % Scaling functions
 figure('Position',[100 100 300 300])

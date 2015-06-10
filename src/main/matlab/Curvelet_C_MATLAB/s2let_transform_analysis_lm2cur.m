@@ -1,4 +1,4 @@
-function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen, varargin)
+function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_init, varargin)
 
 % s2let_transform_analysis_lm2cur
 % Compute spin directional curvelet transform, input in harmonic space,
@@ -6,9 +6,9 @@ function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen, varargin)
 %
 % Default usage :
 %
-%   [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen, <options>)
+%   [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_init, <options>)
 %
-% flm_gen is the input field in harmonic space,
+% flm_init is the input field in harmonic space,
 % f_cur contains the output curvelet contributions,
 % f_scal contains the output scaling contributions,
 %
@@ -38,11 +38,11 @@ function [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen, varargin)
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-sz = length(flm_gen(:));
+sz = length(flm_init(:));
 Lguessed = sqrt(sz);
 
 p = inputParser;
-p.addRequired('flm_gen', @isnumeric);
+p.addRequired('flm_init', @isnumeric);
 p.addParamValue('B', 2, @isnumeric);
 p.addParamValue('L', Lguessed, @isnumeric);
 p.addParamValue('J_min', 0, @isnumeric);

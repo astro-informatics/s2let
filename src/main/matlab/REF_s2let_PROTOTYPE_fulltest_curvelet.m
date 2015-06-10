@@ -12,7 +12,6 @@ close all;
 
 % Main parameters
 L = 16;
-% For curvelets: N=L
 N = L;
 B = 2;
 Spin = 0;

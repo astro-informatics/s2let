@@ -38,7 +38,10 @@ function s2let_plot_cur_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)
 % L if harmonic band-limit for the reconstruction on the sphere
 % psi_j is the reconstructed curvelet on the sphere, at resolution L
 %
-%
+% -----------------------------------------------------------
+% Log: 
+% -  constructed by Jennifer Y H Chan on 5th June 2015  
+% -----------------------------------------------------------
 % S2LET package to perform curvelet transform on the Sphere.
 % Copyright (C) 2012-2014  Boris Leistedt, Martin Büttner & Jason McEwen
 % See LICENSE.txt for license details
@@ -51,24 +54,28 @@ p.addRequired('gamma', @isnumeric);
 p.addRequired('B', @isnumeric);
 p.addRequired('L', @isnumeric);
 p.addRequired('J_min', @isnumeric);
-p.addParamValue('N', -1, @isnumeric);
 p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.parse(alpha, beta, gamma, B, L, J_min, varargin{:});
-
 args = p.Results;
 
-if args.N == -1
-    args.N = L;
-end
-
-N = args.N;
+alpha = args.alpha;
+beta = args.beta; 
+gamma = args.gamma;
+B = args. B; 
+L = args.L;
+J_min = args.J_min;
+N = args.L;
 Spin = args.Spin;
-J = s2let_jmax(L, B);
+J = s2let_jmax(args.L, args.B);
 
-%[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, 'Spin', 'spin', 'SpinLowered', false, 'SpinLoweredFrom', 0);
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min);
+% ---------------
+% Tile curvelets:
+% ---------------
+[cur_lm scal_l] = s2let_curvelet_tiling(args.B, args.L, args.J_min, ...
+                                        'Spin', args.Spin, 'SpinLowered', args.SpinLowered,...
+                                        'SpinLoweredFrom',args.SpinLoweredFrom);
 
 % Precompute Wigner small-d functions
 d = zeros(L, 2*L-1, 2*L-1);
@@ -120,8 +127,7 @@ for j = J_min:J,
    end
 
    if Spin > 0
-    f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', 'MW',...
-                             'spin', Spin,'Reality', true);
+    f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Spin', Spin);
     ind = ind + 1;
      if ind <= maxfigs
       h = subplot(ny, nx, ind);
