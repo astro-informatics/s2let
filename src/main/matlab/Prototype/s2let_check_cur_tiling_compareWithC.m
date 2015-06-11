@@ -9,15 +9,18 @@ function error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J
 % S2LET package to perform Wavelets transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
+%
+% Modified S2LET package to perform curvelet transform on the Sphere.
+% ---------------------------------------------------------
 
 
 % For direct comparison with C:
-
+% scalinging functions:
 kappa0_cur = zeros(L,1);
 for el = 0:L-1
  kappa0_cur(el+1,1) = scal_l(el^2+el+1,1);
 end
-% 
+% curvelets:
 kappa_cur = zeros(J+1,L^2);
 for j = J_min:J
  ind = Spin*Spin + 1;

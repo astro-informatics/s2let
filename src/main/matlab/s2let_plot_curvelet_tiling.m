@@ -23,10 +23,13 @@ function s2let_plot_curvelet_tiling(B, L, J_min, varargin)
 %  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the wavelets
 %                       should be lowered from (default = 0)]
-%
+% ---------------------------------------------------------
 % S2LET package to perform Wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
+%
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 
 % Parse arguments.
 p = inputParser;

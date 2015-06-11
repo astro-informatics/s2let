@@ -32,7 +32,9 @@ function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)
 % S2LET package to perform wavelets transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
-% -----------------------------------------------------------
+% 
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 
 p = inputParser;
 p.addRequired('B', @isnumeric);

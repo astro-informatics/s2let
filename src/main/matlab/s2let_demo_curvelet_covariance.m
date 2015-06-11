@@ -1,22 +1,27 @@
-% s2let_demo_covariance - Run covariance demo.
+% s2let_demo_curvelet_covariance 
+% - Run curvelet covariance demo.
 %
-% Demo to compare theoretical covariance of wavelet coefficients with
-% empirical data from using our transform functions. The empirical
-% covariance is computed for several sets of harmonic coefficients,
+% Demo to compare theoretical covariance of curvelet coefficients with
+% empirical data from using our transform functions. 
+% The empirical covariance is computed for several sets of 
+% harmonic coefficients,
 % and the theoretical covariance is compared to the mean of those
-% calculations in units of its standard deviation.
+% calculations in units of its standard deviation. 
 %
 % Default usage is given by
 %
-%   s2let_demo_covariance
-%
+%   s2let_demo_curvelet_covariance
+% 
 % Authors: Martin Büttner (m.buettner.d@gmail.com)
 %          Jason McEwen (www.jasonmcewen.org)
-
-% S2LET package to perform Wavelet transforms on the sphere.
+%          Jennifer Y. H. Chan (jennifercyh@gmail.com)
+% ---------------------------------------------------------
+% S2LET package to perform wavelet transforms on the sphere.
 % Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen
 % See LICENSE.txt for license details
-
+% 
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 clear all;
 
 % Define parameters
@@ -30,21 +35,44 @@ J = s2let_jmax(L, B);
 var_flm = 1; % Should we use the actual variance var(flmn) of each
              % realization here instead?
 
-% Compute theoretical covariance of wavelet coefficients.
+% Compute theoretical covariance of curvelet coefficients.
 % The covariance <Wj(rho)Wj*(rho)> is given by the following expression:
 %
 % sigma^2 Sum(l,n) |Psij_ln|^2
 %
 % Where sigma^2 is the variance of the harmonic coefficients and Psij_lm
-% are the harmonic coefficients of the j-th wavelet.
+% are the harmonic coefficients of the j-th curvelet.
 %
 % A similar expression applies for the scaling function coefficients.
 
-[psi_lm, phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min);
+
+% ---------------
+% Tile curvelets:
+% ---------------
+[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, ...
+                                        'Spin', Spin, 'SpinLowered', false,...
+                                        'SpinLoweredFrom',0);
+% reshape scaling functions
+kappa0_cur = zeros(L,1);
+for el = 0:L-1
+ kappa0_cur(el+1,1) = scal_l(el^2+el+1,1);
+end
+% reshape curvelets 
+kappa_cur = zeros(J+1,L^2);
+for j = J_min:J
+ ind = Spin*Spin + 1;
+ for el = abs(Spin):L-1
+  for m= -el:el
+   kappa_cur(j+1,ind) = cur_lm{j-J_min+1}(1,ind);
+   ind = ind +1; 
+  end
+ end
+end 
+
 
 covar_W_phi_theory = 0;
 for el = 0:L-1
-    covar_W_phi_theory = covar_W_phi_theory + phi_l(el+1) * phi_l(el+1)';
+    covar_W_phi_theory = covar_W_phi_theory + kappa0_cur(el+1) * kappa0_cur(el+1)';
 end
 
 covar_W_psi_theory = zeros(J-J_min+1,1);
@@ -52,7 +80,7 @@ for j = J_min:J
     ind = 1;
     for el = 0:L-1
         for n = -el:el
-            covar_W_psi_theory(j-J_min+1) = covar_W_psi_theory(j-J_min+1) + psi_lm(ind,j+1) * psi_lm(ind,j+1)';
+            covar_W_psi_theory(j-J_min+1) = covar_W_psi_theory(j-J_min+1) + kappa_cur(j+1,ind) * kappa_cur(j+1,ind)';
             ind = ind + 1;
         end
     end
@@ -86,9 +114,18 @@ for i = 1:runs
     % Compute inverse then forward transform.
     f = ssht_inverse(flm, L, 'Spin', Spin);
 
-    [f_wav, f_scal] = s2let_transform_analysis_mw(complex(real(f), imag(f)), 'B', B, 'L', L, 'N', N,    ...
-                                                  'Spin', Spin, 'J_min', J_min, ...
-                                                  'Upsample', true);
+    
+    % ---------------
+    % Curvelet transform:
+    % ---------------
+    [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(complex(real(f), imag(f)), ...
+                                                               'B', B, 'L', L,  'J_min', J_min,  ...
+                                                               'Spin', Spin,  ...
+                                                               'Reality', false, ...
+                                                               'Upsample', true, ...
+                                                               'SpinLowered', false,...
+                                                               'SpinLoweredFrom',0, ...
+                                                               'Sampling','MW');
 
     if J_min == 0
         f_scals(i) = f_scal(1);
@@ -97,8 +134,8 @@ for i = 1:runs
     end
 
     for j = J_min:J
-        f_wav_j = f_wav{j-J_min+1};
-        covar_W_psi_data(j-J_min+1,i) = var(f_wav_j(:));
+        f_cur_j = f_cur{j-J_min+1};
+        covar_W_psi_data(j-J_min+1,i) = var(f_cur_j(:));
     end
 end
 

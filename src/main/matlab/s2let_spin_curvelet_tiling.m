@@ -107,7 +107,8 @@ for j = J_min:J
      m = el;
      % for positive m
      ind_pm = el_min*el_min+ssht_elm2ind(el, m);
-     cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
+     %cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
+     cur_lm{j-J_min+1}(ind_pm) = sqrt(1./2.) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
      % for negative m
      ind_nm = el_min*el_min+ssht_elm2ind(el, -m);
      cur_lm{j-J_min+1}(ind_nm) = ((-1)^m) * conj(cur_lm{j-J_min+1}(ind_pm));  

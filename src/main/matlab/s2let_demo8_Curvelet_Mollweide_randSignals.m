@@ -1,15 +1,9 @@
-% s2let_demo9
+% s2let_demo8_Curvelet_Mollweide_randSignals
 % -----------------------------------------------------------
 % Plot curvelet coefficients on multiple Mollweide projections.
 % The function generates one plot of the scaling function
 % contribution and a grid of plots for each orientation of
 % each scale of the wavelet contributions. 
-% -----------------------------------------------------------
-% S2LET package to perform Wavelets on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
-% See LICENSE.txt for license details
-% 
-% Modified S2LET package to perform Curvelets on the Sphere.
 % -----------------------------------------------------------
 % wav is cell array with all the wavelet coefficients.
 % its first index is the wavelet scale j, the second
@@ -30,6 +24,13 @@
 %  'Function'        = { 'real' [plot the real part of the input functions (default)],
 %                        'imag' [plot the imaginary part of the input functions],
 %                        'abs'  [plot the absolute value of the input functions] }
+% -----------------------------------------------------------
+% S2LET package to perform Wavelets on the Sphere.
+% Copyright (C) 2012  Boris Leistedt & Jason McEwen
+% See LICENSE.txt for license details
+%
+% Modified S2LET package to perform Curvelets on the Sphere.
+% -----------------------------------------------------------
 
 % ---------------
 % Define curvelet parameters: 

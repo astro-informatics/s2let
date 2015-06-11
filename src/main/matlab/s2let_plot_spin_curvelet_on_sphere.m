@@ -42,10 +42,13 @@ function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin
 % L if harmonic band-limit for the reconstruction on the sphere
 % psi_j is the reconstructed curvelet on the sphere, at resolution L
 %
-%
-% S2LET package to perform curvelet transform on the Sphere.
-% Copyright (C) 2012-2014  Boris Leistedt, Martin Büttner & Jason McEwen
+% ---------------------------------------------------------
+% S2LET package to perform wavelet transforms on the sphere.
+% Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen
 % See LICENSE.txt for license details
+%
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 
 % Parse arguments.
 p = inputParser;
@@ -61,24 +64,34 @@ p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.addParamValue('Reality', false, @islogical);
 p.addParamValue('Sampling', 'MW', @ischar);
 p.parse(alpha, beta, gamma, B, L, J_min, varargin{:});
-
 args = p.Results;
 
-N = args.L;
+B = args.B ; 
+L = args. L; 
+N = L;
+J_min = args.J_min; 
 J = s2let_jmax(L, B);
-
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, ...
-                                        'Spin', args.Spin, ...
-                                        'SpinLowered', args.SpinLowered,...
-                                        'SpinLoweredFrom', args.SpinLoweredFrom);
-
 
 % Precompute Wigner small-d functions
 d = zeros(L, 2*L-1, 2*L-1);
-d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);
-for el = 1:L-1
-    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, beta);
+d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, args.beta);  %el_min, beta);
+for el = 1:L-1  %el_min:L-1  %
+    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, args.beta);
 end
+
+%[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...
+[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, ...
+                                             'Spin', args.Spin, ...
+                                             'SpinLowered', args.SpinLowered,...
+                                             'SpinLoweredFrom', args.SpinLoweredFrom);
+                                    
+                                    
+original_spin = 0 ;  % if we don't use spin-lowered wavelets (default). 
+if (args.SpinLowered ~= 0) % For spin-lowered curvelet: 
+original_spin= args.SpinLoweredFrom; 
+end 
+el_min = max(abs(args.Spin), abs(original_spin));
+
 
 % Define plotting parameters
 zoomfactor = 1.4;
@@ -100,7 +113,7 @@ figure('Position',[100 100 1200 600])
 ind=0;
 for j = J_min:J,
 %% Rotate the curvelets coefficients
-   flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, alpha, gamma);
+   flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, args.alpha, args.gamma);
   if args.Spin == 0
    % Compute the function (rotated):
    f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', args.Sampling, 'Spin', args.Spin, 'Reality', args.Reality);
