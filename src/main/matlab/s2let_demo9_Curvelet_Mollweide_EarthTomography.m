@@ -24,12 +24,38 @@
 %
 % Options consist of parameter type and value pairs.
 % Valid options include:
+%  'Spin'            = { non-negative integers (default=0) }
+%  'Reality'         = { false        [do not assume f real (default)],
+%                        true         [assume f real (improves performance)] }
+%  'Upsample'        = { false        [multiresolution algorithm (default)],
+%                        true       [full resolution curvelets] }
+%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+%                               curvelets and scaling function.],
+%                        false [Apply the usual normalisation factors such
+%                               that the curvelets fulfil the admissibility
+%                               condition (default)]}
+%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+%                       option indicates which spin number the curvelets
+%                       should be lowered from (default = 0)]
+%  'Sampling'        = { 'MW'           [McEwen & Wiaux sampling (default)],
+%                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %
-%  'Upsample'      = { false   [multiresolution algorithm (default)],
-%                      true    [full resolution wavelets] },
-%  'Function'        = { 'real' [plot the real part of the input functions (default)],
-%                        'imag' [plot the imaginary part of the input functions],
-%                        'abs'  [plot the absolute value of the input functions] }
+%
+% FOR ssht_plot_mollweide(f, L, <options>)
+% where f is the sampled function and L is the harmonic band-limit.
+% Options consist of parameter type and value pairs.  Valid options
+% include:
+%  'Method'          = { 'MW'         [McEwen & Wiaux sampling (default)],
+%                        'MWSS'       [McEwen & Wiaux symmetric sampling],
+%                        'DH'         [Driscoll & Healy sampling],
+%                        'GL'         [Gauss-Legendre sampling] }
+%  'ColourBar'       = { false        [do not add colour bar (default)],
+%                        true         [add colour bar] }
+%  'Mode'            = { 0            Plot amplitude, or modulus is f complex (default),
+%                        1            Plot real part,
+%                        2            Plot imaginaty part,
+%                        3            Plot modulus and arrows for real/img angle }
+%  'Spin'            = { non-negative integers (default=0) }
 % -----------------------------------------------------------
 % Log: 
 % -  constructed by Jennifer Y H Chan on 5th June 2015  
@@ -40,20 +66,20 @@
 % -----------------------------------------------------------
 
 clear all;
-% close all ;
+close all ;
 
 load('EGM2008_Topography_flms_L0128');
 L = 16; 
 flm_gen = flm(1:L^2,1);
 f_gen = ssht_inverse(flm_gen, L, 'Reality', true);
-
+     
 % ---------------
 % Define curvelet parameters: 
 % ---------------
 Spin = 0;
-B = 2;   
+B = 6;   
 N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
-J_min = 0; % minimum and maximum scale probed by wavelets 
+J_min = 1; % minimum and maximum scale probed by wavelets 
 J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
 
 
@@ -99,16 +125,16 @@ end
 % figure
 % ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);
 
-zoomfactor = 1.6;
+zoomfactor =1.;  %1.6;
 ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = 4; % ns - 1 + rem(2+J-J_min+1 , ns) ;
-nx = 3; % ns;
+ny = 16;  %4 % ns - 1 + rem(2+J-J_min+1 , ns) ;
+nx = 4;   %3 % ns;
 
 maxfigs = nx*ny;
 pltroot = '../../../figs' ; 
 configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]; 
 
-figure('Position',[100 100 1300 1000])
+figure('Position',[100 100 1400 1200]) %100 100 1300 1000
 subplot(ny, nx, 1);
 % --- plot initial data --- % 
 ssht_plot_mollweide(f_gen, L, 'Mode', 1);
@@ -128,20 +154,21 @@ campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
 v = caxis;
 temp = max(abs(v));
 caxis([-temp temp])
+% --- plot curvelet kernel contributions --- % 
 ind = 2;
 for j = J_min:J
 	for en = 1: 2*N-1 %N
 		ind = ind + 1;
         if ind <= maxfigs
             subplot(ny, nx, ind);
-            %ssht_plot_mollweide(reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1), L, 'Mode', 1);
+            %
             ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, L, 'Mode', 1);
             %
             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
             v = caxis;
             temp = max(abs(v));
             caxis([-temp temp])
-            title(['Wavelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
+            title(['Curvelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
         end
 	end
 end

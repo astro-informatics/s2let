@@ -1,13 +1,13 @@
-function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)
+function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)
 
-% s2let_transform_curvelet_synthesis_cur2lm
-% Compute curvelet transform:  
-% input in curvelet space (i.e. hamonic to Wigner space via SO3_forward) 
-% output in harmonic space (i.e. Wigner to harmonic space via synthesis_lmn2lm) .
+% s2let_transform_spin_curvelet_synthesis_lm2cur
+% Compute (spin) curvelet transform,
+% input curvelet space
+% output in pixel space.
 %
 % Default usage :
 %
-% flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  <options>)
+% f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  flm_init, <options>)
 %
 % f_cur contains the input curvelet contributions -- MW sampling,
 % f_scal contains the input scaling contributions -- MW sampling,
@@ -43,8 +43,6 @@ function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  var
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-
-
 len = size(f_cur);
 temp = f_cur{len};
 sz = size(temp);
@@ -59,7 +57,7 @@ p = inputParser;
 p.addRequired('f_cur');
 p.addRequired('f_scal', @isnumeric);
 p.addParamValue('B', 2, @isnumeric);
-p.addParamValue('L', Lguessed, @isnumeric);                           
+p.addParamValue('L', Lguessed, @isnumeric);                     
 p.addParamValue('J_min', 0, @isnumeric);
 p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('Upsample', false, @islogical);
@@ -73,30 +71,12 @@ args = p.Results;
 N= args.L;
 J = s2let_jmax(args.L, args.B);
 
-% ---------------
-% Tile curvelets:
-% ---------------
-% Call curvelet- and scaling-function- generating functions
-[cur_lm scal_l] = s2let_curvelet_tiling(args.B, args.L, args.J_min,...
-                                        'Spin', args.Spin,...
-                                        'SpinLowered', args.SpinLowered, ...
-                                        'SpinLoweredFrom', args.SpinLoweredFrom);
 
 % -----------------
-% Signal synthesis: (Transform to lmn space, then reconstruct the signal in harmonic space)
+% Signal synthesis: (Transform to lm space, then reconstruct the signal in pixel space)
 % -----------------
-% Scaling function contribution:
-f_scal_lm_syn = ssht_forward(f_scal, args.L, 'Spin', args.Spin, ...
-                            'Method', args.Sampling, 'Reality', args.Reality);
-% Curvelet kernel contribution:
-for j = args.J_min:J,
-f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , args.L, N , ...
-                                            'Reality', args.Reality, 'Sampling', args.Sampling);
-end
-
-% Reconstruct the signals in harmonic space
-% Perform Wigner transform (lmn2lm -  Call matlab function synthesis_lmn2lm)
-flm_rec = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn_syn, f_scal_lm_syn, cur_lm, scal_l,...
+% Reconstruct the signals in harmonic space:
+flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  ...
                                                     'B', args.B, 'L', args.L, ...
                                                     'Spin', args.Spin, ...
                                                     'J_min', args.J_min, ...
@@ -105,6 +85,11 @@ flm_rec = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn_syn, f_scal_lm_syn
                                                     'SpinLowered', args.SpinLowered, ...
                                                     'SpinLoweredFrom', args.SpinLoweredFrom,...
                                                     'Sampling', args.Sampling );
-
                                       
+% Reconstruct the signals in pxiel space:   
+f_rec = ssht_inverse(flm_rec, args.L, 'Method', 'MW');                                       
+                                      
+% Clear array memory:                                    
+% flm_rec = 0.; 
+
 end

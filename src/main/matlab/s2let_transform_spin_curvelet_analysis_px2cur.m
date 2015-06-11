@@ -1,17 +1,17 @@
-function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)
+function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)
 
-% s2let_transform_curvelet_synthesis_cur2px
+% s2let_transform_spin_curvelet_analysis_lm2cur
 % Compute (spin) curvelet transform,
-% input curvelet space
-% output in pixel space.
+% input in pixel space,
+% output in curvelet space.
 %
 % Default usage :
 %
-% f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  flm_init, <options>)
+%   [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, <options>)
 %
-% f_cur contains the input curvelet contributions -- MW sampling,
-% f_scal contains the input scaling contributions -- MW sampling,
-% flm_rec is the output field = flm_cur_syn+ flm_scal_syn
+% f_init is the input field in pixel space,
+% f_cur contains the output curvelet contributions,
+% f_scal contains the output scaling contributions,
 %
 % Option :
 %  'B'               = { Dilation factor; B > 1 (default=2) }
@@ -35,61 +35,58 @@ function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varar
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %
 % -----------------------------------------------------------
-% Log:
-% -  constructed by Jennifer Y H Chan on 5th June 2015
+% Log: 
+% -  constructed by Jennifer Y H Chan on 5th June 2015  
 % -----------------------------------------------------------
 % S2LET package to perform wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-len = size(f_cur);
-temp = f_cur{len};
-sz = size(temp);
+sz = size(f_init);
 if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
     Lguessed = min([sz(1) sz(2)]);
 else
     Lguessed = min([sz(1) sz(2)])-1;
 end
 
-
 p = inputParser;
-p.addRequired('f_cur');
-p.addRequired('f_scal', @isnumeric);
+p.addRequired('flm_init', @isnumeric);
 p.addParamValue('B', 2, @isnumeric);
-p.addParamValue('L', Lguessed, @isnumeric);                     
+p.addParamValue('L', Lguessed, @isnumeric); 
 p.addParamValue('J_min', 0, @isnumeric);
 p.addParamValue('Spin', 0, @isnumeric);
-p.addParamValue('Upsample', false, @islogical);
 p.addParamValue('Reality', false, @islogical);
+p.addParamValue('Upsample', false, @islogical);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.addParamValue('Sampling', 'MW', @ischar);
-p.parse(f_cur, f_scal, varargin{:});
+p.parse(f_init, varargin{:});
 args = p.Results;
 
-N= args.L;
+% For curvelets, azimuthal/directional band-limit N always equals to L           
+N = args.L ; 
 J = s2let_jmax(args.L, args.B);
 
+% ---------------
+% Construct signals in harmonic space:
+% ---------------
+flm_init= ssht_forward(f_init, args.L,  'Method', args.Sampling, 'Spin', args.Spin, 'Reality', args.Reality);
 
-% -----------------
-% Signal synthesis: (Transform to lm space, then reconstruct the signal in pixel space)
-% -----------------
-% Reconstruct the signals in harmonic space:
-flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  ...
-                                                    'B', args.B, 'L', args.L, ...
-                                                    'Spin', args.Spin, ...
-                                                    'J_min', args.J_min, ...
-                                                    'Upsample', args.Upsample,...
-                                                    'Reality', args.Reality,...
-                                                    'SpinLowered', args.SpinLowered, ...
-                                                    'SpinLoweredFrom', args.SpinLoweredFrom,...
-                                                    'Sampling', args.Sampling );
-                                      
-% Reconstruct the signals in pxiel space:   
-f_rec = ssht_inverse(flm_rec, args.L, 'Method', 'MW');                                       
-                                      
-% Clear array memory:                                    
-% flm_rec = 0.; 
+% ---------------
+% Signal analysis (from harmonic to curvelet space):
+% ---------------
+[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init,  ...
+                                                                'B',args.B, 'L', args.L, 'J_min', args.J_min, ...
+                                                                'Spin', args.Spin,'Reality', args.Reality,...
+                                                                'Upsample', args.Upsample, ...
+                                                                'SpinLowered', args.SpinLowered, ...
+                                                                'SpinLoweredFrom',  args.SpinLoweredFrom, ...
+                                                                'Sampling', args.Sampling);
+
+
+                                                      
+% Clear arrary memory:
+flm_init = 0;
 
 end

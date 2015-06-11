@@ -1,7 +1,7 @@
 function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)
 %
-% s2let_wavelet_tiling - Compute tiling in harmonic space.
-% -- CURVELETS on the sphere.
+% s2let_curvelet_tiling
+% - Generate and tile the scaling functions and curvelet kernels in harmonic space.
 %
 % Default usage :
 %

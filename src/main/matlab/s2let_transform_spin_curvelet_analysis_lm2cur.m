@@ -1,6 +1,7 @@
-function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)
+function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)
 
 % s2let_transform_analysis_lm2cur
+% Compute curvelet transform:
 % input in harmonic space (i.e. harmonic to Wigner space via analysis_lm2lmn),
 % output in curvelet space (i.e. Wigner space to curvelet space via SO3_inverse).
 %
@@ -61,13 +62,15 @@ args = p.Results;
 
 % For curvelets, azimuthal/directional band-limit N always equals to L           
 N = args.L ; 
+Nj=N;
+band_limit = args.L;
 J = s2let_jmax(args.L, args.B);
 
 % ---------------
 % Tile curvelets:
 % ---------------
 % Call curvelet- and scaling-function- generating functions
-[cur_lm scal_l] = s2let_curvelet_tiling(args.B, args.L, args.J_min,...
+[cur_lm scal_l] = s2let_spin_curvelet_tiling(args.B, args.L, args.J_min,...
                                         'Spin', args.Spin,...
                                         'SpinLowered', args.SpinLowered, ...
                                         'SpinLoweredFrom', args.SpinLoweredFrom);
@@ -75,9 +78,9 @@ J = s2let_jmax(args.L, args.B);
 % -----------------
 % Signal analysis:
 % -----------------
-% Decompose the signals in harmonic space using curvelets 
-% Then perform Wigner transform (lm2lmn -  Call matlab function s2let_transform_analysis_lm2lmn)
-[f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l,...
+% Decompose the signals using curvelets and the scaling functions
+% And perform Wigner transform (lm2lmn -  Call matlab function s2let_transform_analysis_lm2lmn)
+[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l,...
                                                                 'B',args.B, 'L', args.L, 'J_min', args.J_min, ...
                                                                 'Spin', args.Spin,'Reality', args.Reality,...
                                                                 'Upsample', args.Upsample, ...
@@ -88,16 +91,23 @@ J = s2let_jmax(args.L, args.B);
 % -----------------                                                     
 % Transform to pixel space:
 % -----------------
-% Scaling function contribution:
+% Scaling functions:
 f_scal = ssht_inverse(f_scal_lm, args.L, 'Spin', args.Spin, ...
                       'Method', args.Sampling, 'Reality', args.Reality);                  
-% Curvelet kernel conrtribution:
-for j = args.J_min:J,  
- f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, args.L, N , ...
+% Curvelets:
+for j = args.J_min:J,     
+ if (args.Upsample == 0)  %false => multi-resolution 
+     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+     Nj = band_limit; 
+    % Nj = min(N, band_limit);
+    % Nj = Nj+ mod((Nj+N),2) ;  %ensure N and Nj are both even and both odd
+ end
+ f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, ...
                         'Sampling', args.Sampling,'Reality', args.Reality) ;
 end
 
-% Clear array: 
+
+% Clear array
 flm_int = 0;
 
 end

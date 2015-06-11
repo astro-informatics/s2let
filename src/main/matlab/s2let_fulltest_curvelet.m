@@ -1,26 +1,21 @@
-% s2let_fulltest_curvelet
+% s2let_fulltest
+% Run all exactness tests for the MW sampling,
+% all wavelet transforms must reconstruct the input maps
+% at floating-point precision. Various parameters are tested.
 %
-% Run all exactness tests for the MW sampling. 
-% All curvelet transforms must reconstruct the input maps
-% at floating-point precision. 
-% Various parameters are tested.
-% -----------------------------------------------------------
-% Log:
-% -  constructed by Jennifer Y H Chan on 5th June 2015
-% -----------------------------------------------------------
-% S2LET package to perform wavelets transform on the Sphere.
+% S2LET package to perform Wavelets on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
-% -----------------------------------------------------------
+
 clear all;
 close all;
 
 % Main parameters
 L = 16;
-N = L; % always hold for curvelets. 
-B = 2; 
+N = L; % For curvelets: N=L  
+B = 2;  %4
 Spin = 0; 
-J_min = 1; 
+J_min = 1; %1
 J = s2let_jmax(L, B);
 
 % ------------------------
@@ -113,7 +108,7 @@ default = max(abs(f_spin_gen_cur (:)-f_rec_spin_px2cur_custom(:)))
 %f_rec_usingcur = s2let_transform_synthesis_cur_mw(f_cur, f_scal, 'N', N, 'Spin', Spin, 'Upsample', true);
 %default = max(max(abs(f_s_cur-f_rec_usingcur)))
 
-%{
+
 disp('==============')
 disp('Complex Signals, multi-resolution tests start (Upsample: false):')
 disp('==============')
@@ -189,7 +184,7 @@ default = max(abs(f_spin_gen_cur (:)-f_rec_spin_px2cur_custom(:)))
 %[f_cur, f_scal] = s2let_transform_analysis_cur_mw(f_s_cur,  'B', B, 'L', L, 'J_min', J_min, 'N', N, 'Spin', Spin, 'Upsample', true);
 %f_rec_usingcur = s2let_transform_synthesis_cur_mw(f_cur, f_scal,  'B', B, 'L', L, 'J_min', J_min, 'N', N, 'Spin', Spin, 'Upsample', true);
 %default = max(max(abs(f_s_cur-f_rec_usingcur)))
-%}
+
 
 %{
 % -------------------------

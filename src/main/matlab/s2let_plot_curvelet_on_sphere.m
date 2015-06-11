@@ -67,8 +67,11 @@ N = args.N;
 Spin = args.Spin;
 J = s2let_jmax(L, B);
 
-%[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, 'Spin', 'spin', 'SpinLowered', false, 'SpinLoweredFrom', 0);
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min);
+[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, ...
+                                        'Spin', args.Spin, ...
+                                        'SpinLowered', args.SpinLowered,...
+                                        'SpinLoweredFrom', args.SpinLoweredFrom);
+
 
 % Precompute Wigner small-d functions
 d = zeros(L, 2*L-1, 2*L-1);

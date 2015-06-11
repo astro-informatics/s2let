@@ -1,8 +1,9 @@
 function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)
 
-% s2let_transform_analysis_lm2cur
-% Compute spin directional curvelet transform, input in harmonic space,
-% output in pixel space.
+% s2let_transform_curvelet_analysis_px2cur
+% Compute (spin) curvelet transform,
+% input in pixel space,
+% output in curvelet space.
 %
 % Default usage :
 %

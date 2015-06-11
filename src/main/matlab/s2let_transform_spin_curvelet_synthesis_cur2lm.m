@@ -1,13 +1,13 @@
-function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)
+function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)
 
-% s2let_transform_curvelet_synthesis_cur2lm
+% s2let_transform_spin_curvelet_synthesis_cur2lm
 % Compute curvelet transform:  
 % input in curvelet space (i.e. hamonic to Wigner space via SO3_forward) 
 % output in harmonic space (i.e. Wigner to harmonic space via synthesis_lmn2lm) .
 %
 % Default usage :
 %
-% flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  <options>)
+% flm_rec = s2let_transform_spin_curvelet_synthesis_lm2cur(f_cur, f_scal,  <options>)
 %
 % f_cur contains the input curvelet contributions -- MW sampling,
 % f_scal contains the input scaling contributions -- MW sampling,
@@ -70,33 +70,45 @@ p.addParamValue('Sampling', 'MW', @ischar);
 p.parse(f_cur, f_scal, varargin{:});
 args = p.Results;
 
+
 N= args.L;
+Nj=N;
+band_limit = args.L;
 J = s2let_jmax(args.L, args.B);
 
 % ---------------
 % Tile curvelets:
 % ---------------
 % Call curvelet- and scaling-function- generating functions
-[cur_lm scal_l] = s2let_curvelet_tiling(args.B, args.L, args.J_min,...
+[cur_lm scal_l] = s2let_spin_curvelet_tiling(args.B, args.L, args.J_min,...
                                         'Spin', args.Spin,...
                                         'SpinLowered', args.SpinLowered, ...
                                         'SpinLoweredFrom', args.SpinLoweredFrom);
 
+
+
 % -----------------
 % Signal synthesis: (Transform to lmn space, then reconstruct the signal in harmonic space)
 % -----------------
-% Scaling function contribution:
+% Scaling functions:
 f_scal_lm_syn = ssht_forward(f_scal, args.L, 'Spin', args.Spin, ...
                             'Method', args.Sampling, 'Reality', args.Reality);
-% Curvelet kernel contribution:
+% Curvelet contribution:
 for j = args.J_min:J,
-f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , args.L, N , ...
+ if (args.Upsample ==0)  %false => multi-resolution 
+     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+     %Nj = min(N, band_limit);
+     %Nj = Nj+ mod((Nj+N),2) ;  
+     Nj = band_limit;
+ end
+f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , band_limit, Nj, ...
                                             'Reality', args.Reality, 'Sampling', args.Sampling);
 end
 
+
 % Reconstruct the signals in harmonic space
 % Perform Wigner transform (lmn2lm -  Call matlab function synthesis_lmn2lm)
-flm_rec = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn_syn, f_scal_lm_syn, cur_lm, scal_l,...
+flm_rec = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn_syn, f_scal_lm_syn, cur_lm, scal_l,...
                                                     'B', args.B, 'L', args.L, ...
                                                     'Spin', args.Spin, ...
                                                     'J_min', args.J_min, ...
