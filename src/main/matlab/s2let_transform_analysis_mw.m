@@ -74,7 +74,6 @@ end
                                                           args.Reality, args.Upsample, ...
                                                           args.SpinLowered, args.SpinLoweredFrom, ...
                                                           args.Sampling);
-                                                      
 
 if strcmp(args.Sampling, 'MWSS')
     f_scal = s2let_mwss_vec2arr(f_scal_vec);

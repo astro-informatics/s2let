@@ -1,11 +1,11 @@
-function f_rec = s2let_transform_curvelet_mw(f_init, varargin)
+function f_rec = s2let_transform_curvelet_mw_ana_syn(f_init, varargin)
 
 % s2let_transform_analysis_mw
 % Perform curvelet transform in harmonic space and then reconstruction (output in pixel space).
 %  
 % Default usage :
 %
-%   [f_rec] = s2let_transform_analysis_mw(f_init, <options>)
+%   [f_rec] = s2let_transform_curvelet__mw_ana_syn(f_init, <options>)
 %
 % f_init is the input field -- MW sampling,
 % f_rec is the output reconstructed field. 

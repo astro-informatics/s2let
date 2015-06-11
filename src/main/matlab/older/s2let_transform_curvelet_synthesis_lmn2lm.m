@@ -64,6 +64,10 @@ N = args.L ;
 Nj = N; 
 band_limit = args.L; 
 
+% Debug:
+% f_scal_plot = ssht_inverse(f_scal_lm, args.L, 'Reality', args.Reality);
+% ssht_plot_mollweide(f_scal_plot, args.L, 'Mode', 1);
+
 % ---------------
 % Signal synthesis: 
 % ---------------
@@ -73,15 +77,20 @@ band_limit = args.L;
 % Curvelet contribution:
 % -----------------
 % disp('syn_lmn2lm: Curvelet synthesis of complex signals from Wigner to harmonic space (flm_cur_syn from flmn_syn)');
-
+ind_ln =0;
+ind=0;
+ind_lmn=0;
 flm_cur_syn=zeros(args.L^2,1);
 J = s2let_jmax(args.L, args.B);
 for j = args.J_min:J,
- ind_ln =0;
- ind=0;
- ind_lmn=0;
- for en = -N+1:N-1,
-  for el = abs(en):args.L-1,
+ if (args.Upsample ~= 1)  %false => multi-resolution 
+     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+     Nj =  band_limit;
+     %Nj = min(N, band_limit);
+     %Nj = Nj+ mod((Nj+N),2) ;  %ensure N and Nj are both even and both odd
+ end
+ for en = -Nj+1:Nj-1,
+  for el = max(abs(args.Spin),abs(en)):band_limit-1,
    ind_ln = ssht_elm2ind(el, en);
    psi = (cur_lm{j-args.J_min+1}(ind_ln));
    for m = -el:el,
@@ -97,9 +106,12 @@ end
 % Scaling function contribution: 
 % -----------------
 % disp('syn_lmn2lm:  Compute flm_scal_syn ');
+if (args.Upsample ~= 1)  %false => multi-resolution 
+   band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
+end
 flm_scal_syn=zeros(args.L^2,1);
 lm_ind=0;
-for el = 0: args.L-1,
+for el = abs(args.Spin): band_limit-1,
   phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
   for m = -el:el,
    lm_ind=ssht_elm2ind(el, m);

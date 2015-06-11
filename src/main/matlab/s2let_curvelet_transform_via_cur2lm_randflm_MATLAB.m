@@ -34,21 +34,42 @@ disp('Construct the corresponding signal via ssht_inverse');
 f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 flm_gen= ssht_forward(f_gen, L, 'Method', 'MW');
 
+% ---------------
+% Tile curvelets:
+% ---------------
+%***** step 1a) call curvelet- and scaling-function- generating functions 
+disp('Tile curvelets in harmonic space (cur_lm, scal_l)')
+[psi_lm phi_l] = s2let_curvelet_tiling(B, L, N, Spin, J_min);
+for j = J_min:J, 
+ cur_lm{j-J_min+1} = psi_lm(:,j+1);  
+end
+%***** step 1b) compute the scaling coefficients (no j-dependence except on J_min)
+scal_l = zeros(L^2,1);
+for l = 0:L-1,
+scal_l(l^2+l+1,1) = phi_l(l+1);
+end
 
 % -----------------
 % Signal analysis: (harmonic to pixel space) 
 % -----------------
 % Call matlab function analysis_lm2cur
-[f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_gen,  ...
+[f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen,  ...
                                                   'B', B, 'L', L, ...
+<<<<<<< HEAD
                                                   'J_min', J_min, 'Spin', Spin, ...
                                                   'Sampling', 'MW',...
                                                   'Upsample', true);
+=======
+                                                  'Spin', Spin, 'J_min', J_min, ...
+                                                  'N', N, 'Sampling', 'MW',...
+                                                  'Upsample', false);
+>>>>>>> parent of cc46a19... 5th commit: add transform_mw.m and demo 8 and 9
                                               
 % -----------------
 % Signal synthesis: (pixel to harmonic space) 
 % -----------------
 % Call s2let_transform_synthesis_lmn2lm
+<<<<<<< HEAD
 flm_rec= s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal, ...
                                            'B', B, 'L', L,...
                                            'J_min', J_min, ...
@@ -57,6 +78,15 @@ flm_rec= s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal, ...
                                            'Upsample', true);
 
 
+=======
+[flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lm2cur(f_cur, f_scal, flm_gen,...
+                                           'B', B, 'L', L, 'J_min', J_min, ...
+                                           'N', N,'Sampling', 'MW', ...
+                                           'Upsample', false, 'Spin', 0);
+disp('Sum: flm_cur_syn+flm_scal_syn ');
+flm_rec = flm_scal_syn+flm_cur_syn;
+                                       
+>>>>>>> parent of cc46a19... 5th commit: add transform_mw.m and demo 8 and 9
                                        
 disp('Compute the re-constructed function via ssht_inverse ');
 f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 

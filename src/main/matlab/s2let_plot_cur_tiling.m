@@ -45,9 +45,9 @@ L = args.L;
 J_min = args.J_min;
 Spin = args.Spin;
 N = L; 
-J = s2let_jmax(L, B);
 
 
+<<<<<<< HEAD
 % ---------------
 % Tile curvelets:
 % ---------------
@@ -59,17 +59,37 @@ el_min = max(abs(args.Spin), abs(args.SpinLoweredFrom));
 kappa0_cur = zeros(1,L);
 for el = el_min:L-1
  kappa0_cur(1,el+1) = scal_l(el^2+el+1,1)/sqrt((2*el+1)/(4.0*pi)) ;
+=======
+% Tile curvelet and the scaling functions: 
+[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min);
+
+J = s2let_jmax(L, B);
+xi = 0:0.01:L-1;
+x = 0:L-1;
+
+%
+% Plot the scaling function: 
+%
+kappa0 = zeros(1,L);
+for l = 0:L-1
+ kappa0(1,l+1) = scal_l(l^2+l+1,1);
+>>>>>>> parent of cc46a19... 5th commit: add transform_mw.m and demo 8 and 9
 end
-% 
-kappa_cur = zeros(J+1,L);
+
+kappa = zeros(J+1,L);
 for j = J_min:J
+<<<<<<< HEAD
  for el = el_min:L-1 % 0:L-1
+=======
+ for l = 0:L-1
+>>>>>>> parent of cc46a19... 5th commit: add transform_mw.m and demo 8 and 9
   % ind = l^2 +l + m + 1 ; now consider m =  el; 
-  kappa_cur(j+1,el+1) = cur_lm{j-J_min+1}(1,el^2+el+el+1) /(sqrt(1./2.)* sqrt((2*el+1)/(8.0*pi*pi))) ;
+  kappa(j+1,l+1) = cur_lm{j-J_min+1}(1,l^2+l+l+1);
  end
 end 
 
 
+<<<<<<< HEAD
 % Set for the output figures: 
 pltroot = '../../../figs/' ;
 configstr = ['Spin',int2str(args.Spin),...
@@ -83,19 +103,18 @@ x = 0:L-1;
 % ------------
 % Plot the tiling of the scaling function: 
 % ------------
+=======
+>>>>>>> parent of cc46a19... 5th commit: add transform_mw.m and demo 8 and 9
 figure('Position',[100 100 900 450])
   %semilogx(0:L-1, kappa0, 'k', 'LineWidth', 2);
-yi = interp1(x, kappa0_cur, xi,'pchip');
+yi = interp1(x, kappa0, xi,'pchip');
 semilogx(xi, yi, 'k', 'LineWidth', 2);
   %h = text(2, 1.07, 'k0', 'Color', [0 0 0]);
 hold on;
-% ------------
-% Plot the tiling of the curvelet kernels : 
-% ------------
 for j = J_min:J
   colour = rand(1,3)*0.9;
   %plot(0:L-1, kappa(j+1,:), 'LineWidth', 2, 'Color', colour);
-  yi = interp1(x,kappa_cur(j+1,:),xi,'pchip');
+  yi = interp1(x,kappa(j+1,:),xi,'pchip');
   plot(xi, yi, 'LineWidth', 2, 'Color', colour);
   %h = text(B.^j, 1.07, strcat('j',num2str(j+1)), 'Color', colour);
 end
@@ -103,14 +122,11 @@ end
 %xlabel('l');
 axis([0 L -0.05 1.15]);
 set(gca,'XTick',2.^[0:(J+2)]);
-fname = [pltroot,'s2let_plot_cur_tiling_', configstr, '.png']
-print('-r200', '-dpng', fname);
 
 
-
-% ----------------------------
+%
 % Plot the scaling function in real space: 
-% ----------------------------
+%
 nx = 2;
 ny = 3;
 [thetas, phis, n, ntheta, nphi] = ssht_sampling(L);
@@ -121,23 +137,23 @@ plot(thetas, f(:,1), '-k', 'LineWidth', 2)
 mx = 1.1*max(f(:,1));
 axis([0 3. -mx/8 mx ]) 
 
-% ----------------------------
+
+%
 % Plot the curvelet kernels in real space:  
-% ----------------------------
+%
 Jmax = J;
 for j = J_min:Jmax
    h = subplot(nx, ny, j-J_min+2);
    hold on
    flm = zeros(L^2,1);
-    for el = 0:L-1
-        flm(el^2+el+1,1) = kappa_cur(j+1,el+1);
+    for l = 0:L-1
+        flm(l^2+l+1,1) = kappa(j+1,l+1);
     end  
    f = ssht_inverse(flm, L, 'Reality', true);
    plot(thetas, f(:,1), '-k', 'LineWidth', 2) 
    mx = 1.1*max(f(:,1));
    axis([0 3. -mx/1.5 mx ])
 end 
-fname = [pltroot,'s2let_plot_cur_tiling_fn_real', configstr, '.png']
-print('-r200', '-dpng', fname);
+
 
 end

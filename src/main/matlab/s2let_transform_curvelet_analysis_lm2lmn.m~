@@ -90,9 +90,11 @@ for j = args.J_min:J,
   f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
   ind_ln=0;
   ind = 0;
-  ind_lmn = 0;
-  for en =  -N+1: N+1,
-   for el = abs(en):args.L-1,   
+ ind_lmn = 0;
+  for en =  -N+1: N+1,   
+       %-Nj+1:Nj-1,
+   for el = max(abs(args.Spin),abs(en)):args.L-1,   
+       %band_limit-1,
      ind_ln = ssht_elm2ind(el, en);
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,

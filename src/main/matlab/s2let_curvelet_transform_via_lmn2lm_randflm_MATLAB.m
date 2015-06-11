@@ -1,4 +1,4 @@
-% s2let_curvelet_transform_via_lmn2lm_randflm_MATLAB
+% s2let_curvelet_matlab_prototype
 % Run curvelet analysis and synthesis 
 % of randomly generated signals f 
 %
@@ -30,28 +30,24 @@ J =s2let_jmax(L, B);  %=ceil(log L/ log B);
 
 %{
 disp('Generates random band-limited function')
-flm_init = zeros(L^2,1);
-flm_init = rand(size(flm_init)) + sqrt(-1)*rand(size(flm_init));
-flm_init = 2.*(flm_init - (1+sqrt(-1))./2);
+flm_gen = zeros(L^2,1);
+flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
+flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
 
 disp('Construct the corresponding signal on the sphere')
-f_init = ssht_inverse(flm_gen, L, 'Method', 'MW');
+f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 %}
 
-flm_init = zeros(L^2,1);
-%
-disp('read from file flm_init'); 
+flm_gen = zeros(L^2,1);
+disp('read from file flm_gen'); 
 fid= fopen('/Users/jenniferyhchan/WaveletsCode_PhD/s2let_curvelets_MATLAB/1_cur_flm_randgen_mw_test.dat');
 rawData=fscanf(fid, '%f, %f',[2 256]);
 fclose(fid);
 complexData=complex(rawData(1,:),rawData(2,:));
-flm_init= complexData.' ;  % Non-conjugate transpose
-%
+flm_gen= complexData.' ;  % Non-conjugate transpose
 disp('Construct the corresponding signal via ssht_inverse'); 
-f_init = ssht_inverse(flm_init, L, 'Method', 'MW');
-%
-disp('Construct the corresponding flm of the signal via ssht_forward'); 
-flm_init= ssht_forward(f_init, L, 'Method', 'MW');
+f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
+flm_gen= ssht_forward(f_gen, L, 'Method', 'MW');
 
 % ---------------
 % Tile curvelets:
@@ -64,11 +60,11 @@ disp('curvelet_tiling: Tile curvelets in harmonic space (cur_lm, scal_l)')
 error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min)
 
 % -----------------
-% Signal analysis: (harmonic to Wigner space)
+% Signal analysis: (harmonic to wigner space) 
 % -----------------
 % Call matlab function 's2let_transform_curvelet_analysis_lm2lmn'
 disp('analysis_lm2lmn...')
-[f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, ...
+[f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
                                                          'B', B, 'L', L, 'J_min', J_min,...
                                                          'Spin', Spin, ...
                                                          'Reality', false, ...
@@ -76,7 +72,7 @@ disp('analysis_lm2lmn...')
                                                          'SpinLowered', false,  'SpinLoweredFrom', 0, ...
                                                          'Sampling', 'MW');
 % -----------------
-% Signal synthesis: (Wigner to harmonic space)
+% Signal synthesis: (pixel to harmonic space) 
 % -----------------
 % Call matlab function 's2let_transform_curvelet_synthesis_lmn2lm'
 disp('synthesis_lmn2lm...')
@@ -93,7 +89,7 @@ f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW');
 
 disp('Both analysis and synthesis are done! ');
 disp('');
-disp('- Test exact transform: check the difference between flm_init and flm_rec:');
-maxerr = max(abs(flm_init - flm_rec))
-disp('Check the difference between f_init and f_rec: ');
-maxerr = max(abs(f_init(:) - f_rec(:)))
+disp('- Test exact transform: check the difference between flm_gen and flm_rec:');
+maxerr = max(abs(flm_gen - flm_rec))
+disp('Check the difference between f_gen and f_rec: ');
+maxerr = max(abs(f_gen(:) - f_rec(:)))

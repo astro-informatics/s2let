@@ -1,10 +1,8 @@
 function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)
 
 % s2let_transform_analysis_lm2lmn
-% Compute (spin) curvelet transform, 
-% input in harmonic space,
+% Compute (spin) curvelet transform, input in harmonic space,
 % output in Wigner space.
-% (c.f. C function: s2let_analysis_lm2lmn(f_cur_lmn, f_scal_lm, flm, cur_lm, scal_l, parameters);
 %
 % Default usage :
 %
@@ -63,41 +61,41 @@ p.parse(flm_init, cur_lm, scal_l, varargin{:});
 args = p.Results;
 
 % Azimuthal/directional band-limit N =L always holds for curvelets:           
-N = args.L ; 
+N = args.L ;
 J = s2let_jmax(args.L, args.B);
-
-% ---------------
-% Tile curvelets: (inputs)
-% ---------------
-% otherwise: 
-%{ 
-[cur_lm scal_l] = s2let_curvelet_tiling(args.B, args.L, args.J_min, ...
-                                        'Spin', args.Spin, 'SpinLowered', args.SpinLowered,...
-                                        'SpinLoweredFrom',args.SpinLoweredFrom);
-% where 
-% cur_lm, @iscell, contains the curvelet kernels in harmonic space,
-% scal_l, @isnumeric, contains the scaling contributions in harmonic space
-%}
-
+% For Upsample set up: 
+Nj = N; 
+band_limit = args.L; 
 
 % ------------
-% Signal Analysis: Wigner transform of the complex signal 
+% Signal Analysis: 
 % ------------
+% Generate flmn from flm of the complex signal
+% (c.f. C function: s2let_analysis_lm2lmn(f_cur_lmn, f_scal_lm, flm, cur_lm, scal_l, parameters);
+% -----------------
 % Curvelet contribution:
 % -----------------
 % disp('ana_lm2lmn: Curvelet analysis of complex signals from harmonic to Wigner space (i.e. flm to flmn)')
+ 
+
 for j = args.J_min:J,
+  if (args.Upsample == 0)  %i.e. false => multi-resolution
+    band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+    %Nj = min(N, band_limit);
+    %Nj = Nj+ mod((Nj+N),2) ;  % ensure Nj and J are both even or both odd
+    Nj = band_limit;
+  end 
   f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
   ind_ln=0;
   ind = 0;
   ind_lmn = 0;
-  for en =  -N+1: N+1,
-   for el = abs(en):args.L-1,   
+  for en = -Nj+1:Nj-1,
+   for el = max(abs(args.Spin),abs(en)):band_limit-1,
      ind_ln = ssht_elm2ind(el, en);
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,
       ind = ssht_elm2ind(el, m);
-      ind_lmn = so3_elmn2ind(el,m,en,args.L,N);   %band_limit,Nj);
+      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
       f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind) * psi;
      end
     end
@@ -109,15 +107,14 @@ end
 % Scaling function contribution: 
 % -----------------
 % disp('ana_lm2lmn: : Compute scaling function f_scal_lm=flm_init(lm_ind) * phi '); 
-%{
+
 if (args.Upsample ~= 1)  %false => multi-resolution 
    band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
 end
-%}
 f_scal_lm = zeros(args.L^2,1);
 lm_ind=0;
-for el =  0:args.L-1, %abs(args.Spin):band_limit-1, 
-   phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);   
+for el = abs(args.Spin):band_limit-1, 
+   phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);
    for m = -el:el,
     lm_ind=ssht_elm2ind(el, m);
     f_scal_lm(lm_ind) = flm_init(lm_ind) * phi;

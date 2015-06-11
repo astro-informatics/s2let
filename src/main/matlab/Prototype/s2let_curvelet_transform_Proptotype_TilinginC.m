@@ -25,13 +25,14 @@ f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 % ---------------
 % Tile curvelets:
 % ---------------
-%***** step 1a) call curvelet- and scaling-function- generating functions 
+%  call curvelet- and scaling-function- generating functions
 disp('Tile curvelets in harmonic space (cur_lm, scal_l)')
 [psi_lm phi_l] = s2let_curvelet_tiling(B, L, N, Spin, J_min);
+% curvelet harmonic coefficients:
 for j = J_min:J, 
  cur_lm{j-J_min+1} = psi_lm(:,j+1);  
 end
-%***** step 1b) compute the scaling coefficients (no j-dependence except on J_min)
+% scaling function coefficients (no j-dependence except on J_min):
 scal_l = zeros(L^2,1);
 for l = 0:L-1,
 scal_l(l^2+l+1,1) = phi_l(l+1);
@@ -45,8 +46,6 @@ alpha =  pi ;
 beta = pi/2 ;
 gamma = 0 ;
 disp(' - Plot curvelets');
-%
-% s2let_plot_cur_on_sphere(cur_lm, scal_l, B, L, N, J_min, Spin)
 s2let_plot_cur_on_sphere(alpha, beta, gamma, ...
                          cur_lm, scal_l, L, ...
                          J_min,  'B', B, 'N', N, 'Spin', Spin,... 

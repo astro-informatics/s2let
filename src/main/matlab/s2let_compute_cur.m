@@ -1,4 +1,4 @@
-function cur_lm_j = s2let_compute_cur(j, alpha, beta, gamma, L, varargin)
+function psi_j = s2let_compute_cur(j, alpha, beta, gamma, L, varargin)
 % s2let_compute_cur - Compute a rotated curvelet
 %
 % Compute the j-th curvelet, rotated by rho=(alpha, beta, gamma) in
@@ -6,7 +6,7 @@ function cur_lm_j = s2let_compute_cur(j, alpha, beta, gamma, L, varargin)
 %
 % Default usage :
 %
-%   cur_lm_j = s2let_compute_cur(j, alpha, beta, gamma, L, <options>)
+%   psi_j = s2let_compute_cur(j, alpha, beta, gamma, L, <options>)
 %
 % j is the order of the curvelet under consideration (depends on B)
 % rho=(alpha, beta, gamma) is the rotation in SO(3) by which to rotate
@@ -48,7 +48,7 @@ B = args.B;
 N = args.N;
 Spin = args.Spin;
 
-cur_lm = s2let_curvelet_tiling(B, L, j, 'Spin', Spin);
+psi = s2let_curvelet_tiling(B, L, N, Spin, j);
 
 % Precompute Wigner small-d functions
 d = zeros(L, 2*L-1, 2*L-1);
@@ -58,9 +58,9 @@ for el = 1:L-1
 end
 
 % Rotate spherical harmonic
-cur_lm_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, alpha, gamma);
+psi_lm_rot = ssht_rotate_flm(psi(:,j+1), d, alpha, gamma);
 
-cur_lm_j = ssht_inverse(complex(real(cur_lm_rot), imag(cur_lm_rot)), L, 'Spin', Spin);
+psi_j = ssht_inverse(complex(real(psi_lm_rot), imag(psi_lm_rot)), L, 'Spin', Spin);
 
 end
 

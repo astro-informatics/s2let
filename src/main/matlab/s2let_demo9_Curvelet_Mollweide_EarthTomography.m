@@ -39,42 +39,41 @@
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-clear all
-close all 
+clear all;
+% close all ;
 
 load('EGM2008_Topography_flms_L0128');
-L = 32; 
+L = 16; 
 flm_gen = flm(1:L^2,1);
 f_gen = ssht_inverse(flm_gen, L, 'Reality', true);
-
 
 % ---------------
 % Define curvelet parameters: 
 % ---------------
 Spin = 0;
-B = 6;   
+B = 2;   
 N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
-J_min = 1; % minimum and maximum scale probed by wavelets 
+J_min = 0; % minimum and maximum scale probed by wavelets 
 J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
 
-% ---------------
-% Generate random complex signals :
-% ---------------
-%{
-disp('Generates random band-limited function')
-flm_gen = zeros(L^2,1);
-flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
-flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
 
-disp('Construct the corresponding signal on the sphere')
-f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
-%}
-
-
+% ================================================
+% FULL RESOLUTION PLOT (Upsample: true)
 % -----------------
-% Signal analysis: (pixel to cruvelet space) 
+% Signal analysis: 
 % -----------------
 % Call matlab function analysis_lm2cur
+%{
+[f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen,  ...
+                                                  'B', B, 'L', L, ...
+                                                  'J_min', J_min, ...
+                                                  'Spin', Spin, ...
+                                                  'Reality', false, ...
+                                                  'Upsample', true, ...
+                                                  'SpinLowered', false, ...
+                                                  'SpinLoweredFrom', 0,...
+                                                  'Sampling', 'MW');
+%}
 [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_gen,  ...
                                                   'B', B, 'L', L, ...
                                                   'J_min', J_min, ...
@@ -84,6 +83,8 @@ f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
                                                   'SpinLowered', false, ...
                                                   'SpinLoweredFrom', 0,...
                                                   'Sampling', 'MW');
+
+
 %----  Debug:
 % figure
 % ssht_plot_mollweide(f_scal, L, 'Mode', 1);
@@ -98,7 +99,6 @@ end
 % figure
 % ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);
 
-% FULL-RESOLUTION  PLOT (Upsample: true) 
 zoomfactor = 1.6;
 ns = ceil(sqrt(2+J-J_min+1)) ;
 ny = 4; % ns - 1 + rem(2+J-J_min+1 , ns) ;
@@ -166,40 +166,38 @@ figure('Position',[100 100 1300 1000])
 subplot(ny, nx, 1);
 %
 ssht_plot_mollweide(f_gen, L, 'Mode', 1);
-%
 title('Initial data')
 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
 v = caxis;
 temp = max(abs(v));
 caxis([-temp temp])
 subplot(ny, nx, 2);
-bl = min([ s2let_bandlimit(J_min-1,J_min,B,L) L ]);
 %
-bl
-ssht_plot_mollweide(f_scal, bl, 'Mode', 1);
+ssht_plot_mollweide(f_scal, L, 'Mode', 1);
 %
 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
 v = caxis;
 temp = max(abs(v));
 caxis([-temp temp])
 title('Scaling fct')
-ind = 2;
+ind = 2; 
 for j = J_min:J
-	for en = 1:N
-		ind = ind + 1;
+%	for en = 1:2*N-1
+		ind = ind + 1 ; 
         if ind <= maxfigs
             subplot(ny, nx, ind);
-            bl =  min([ s2let_bandlimit(j,J_min,B,L) L ]);
+            % f_cur is numeric 
+            %            ssht_plot_mollweide(f_cur{j-J_min+1,en}, L, 'Mode', 1);
+            %ssht_plot_mollweide(f_cur{j-J_min+1}(:), L, 'Mode', 1);
             %
-            ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, bl, 'Mode', 1);
-            %
+            ssht_plot_sphere(f_cur{j-J_min+1}(:), L);
             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
             v = caxis;
             temp = max(abs(v));
             caxis([-temp temp])
             title(['Wavelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
         end
-	end
+%	end
 end
 
 colormap(jet)
@@ -207,12 +205,10 @@ fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires.png']
 print('-r200', '-dpng', fname)
 %}
 
-
 % ---------- 
 % Compare reconstructed signal with the initial signals: 
 % ---------- 
 
-%{
 f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal, ...
                                                   'B', B, 'L', L, ...
                                                   'J_min', J_min, ...
@@ -234,5 +230,3 @@ title('reconstructed signal')
                            
 %fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 %print('-r200', '-dpng', fname)
-
-%}

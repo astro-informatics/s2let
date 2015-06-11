@@ -27,10 +27,10 @@ J = s2let_jmax(L, B);
 % Test curvelets: 
 % ------------------------
 disp('Checks tiling of harmonic space for curvelets')
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min);
+[cur_lm scal_l] = s2let_curvelet_tiling_spin(B, L, J_min);
 error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min)
 
-
+%{
 % Generate signals: 
 disp('-------------')
 disp('Generate band-limited function')
@@ -219,6 +219,6 @@ default = max(max(abs(f_real_cur-f_rec_usingcur)))
 %default = max(max(abs(f_real_cur-f_rec_usingcur)))
 
 %}
-
+%}
 
 

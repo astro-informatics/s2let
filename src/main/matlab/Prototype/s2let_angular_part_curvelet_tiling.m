@@ -1,11 +1,10 @@
-function  [cur_lm scal_l] = s2let_spin0curvelet_tiling(B, L, J_min)
+function  [cur_lm scal_l] = s2let_angular_part_curvelet_tiling(B, L, J_min)
 
-% s2let_wavelet_tiling - Compute tiling in harmonic space.
-% -- CURVELETS on the sphere.
+% s2let_angular_part_curvelet_tiling - Compute tiling in harmonic space (ignore normalisation)
 %
 % Default usage :
 %
-%   [cur_lm scal_l] = s2let_spin0curvelet_tiling(B, L, J_min)
+%   [cur_lm scal_l] = s2let_angular_part_curvelet_tiling(B, L, J_min)
 %
 % cur_lm is an array containing the curvelets spherical harmonic coefficients.
 % scal_l is an array containing the scaling function spherical harmonic coefficients (l only).
