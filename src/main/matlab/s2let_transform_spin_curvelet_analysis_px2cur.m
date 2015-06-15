@@ -71,7 +71,7 @@ J = s2let_jmax(args.L, args.B);
 % ---------------
 % Construct signals in harmonic space:
 % ---------------
-flm_init= ssht_forward(f_init, args.L,  'Method', args.Sampling, 'Spin', args.Spin, 'Reality', args.Reality);
+flm_init= ssht_forward(f_init, args.L, 'Spin', args.Spin,  'Reality', args.Reality, 'Method', args.Sampling);
 
 % ---------------
 % Signal analysis (from harmonic to curvelet space):

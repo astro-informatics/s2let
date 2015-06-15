@@ -59,6 +59,45 @@ disp('curvelet_tiling: Tile curvelets in harmonic space (cur_lm, scal_l)')
 % Check tiling error:
 error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min)
 
+disp('----------- ');                                             
+disp(' Curvelet transform: multiresolution (Upsample: true): ');
+% -----------------
+% Signal analysis: (harmonic to wigner space) 
+% -----------------
+% Call matlab function 's2let_transform_curvelet_analysis_lm2lmn'
+disp('analysis_lm2lmn...')
+[f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
+                                                         'B', B, 'L', L, 'J_min', J_min,...
+                                                         'Spin', Spin, ...
+                                                         'Reality', false, ...
+                                                         'Upsample', true,...
+                                                         'SpinLowered', false,  'SpinLoweredFrom', 0, ...
+                                                         'Sampling', 'MW');
+% -----------------
+% Signal synthesis: (pixel to harmonic space) 
+% -----------------
+% Call matlab function 's2let_transform_curvelet_synthesis_lmn2lm'
+disp('synthesis_lmn2lm...')
+flm_rec  = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
+                                                      'B', B, 'L', L, 'J_min', J_min,...
+                                                      'Spin', Spin, ...
+                                                      'Reality', false,...
+                                                      'Upsample', true,...
+                                                      'SpinLowered', false,  'SpinLoweredFrom', 0, ...
+                                                      'Sampling', 'MW');
+                                       
+disp('Compute the re-constructed function via ssht_inverse ');
+f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
+
+disp('- Test exact transform:');
+disp('Check the difference between flm_gen and flm_rec:');
+maxerr = max(abs(flm_gen - flm_rec))
+disp('Check the difference between f_gen and f_rec: ');
+maxerr = max(abs(f_gen(:) - f_rec(:)))
+
+
+disp('----------- ');                                             
+disp(' Curvelet transform: multiresolution (Upsample: false): ');
 % -----------------
 % Signal analysis: (harmonic to wigner space) 
 % -----------------
@@ -83,13 +122,10 @@ flm_rec  = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_l
                                                       'Upsample', false,...
                                                       'SpinLowered', false,  'SpinLoweredFrom', 0, ...
                                                       'Sampling', 'MW');
-                                       
-disp('Compute the re-constructed function via ssht_inverse ');
-f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
 
-disp('Both analysis and synthesis are done! ');
-disp('');
-disp('- Test exact transform: check the difference between flm_gen and flm_rec:');
+disp('- Test exact transform:');
+disp('Check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_gen - flm_rec))
 disp('Check the difference between f_gen and f_rec: ');
 maxerr = max(abs(f_gen(:) - f_rec(:)))
+disp('----------- ');

@@ -92,22 +92,29 @@ J = s2let_jmax(args.L, args.B);
 % Transform to pixel space:
 % -----------------
 % Scaling functions:
-f_scal = ssht_inverse(f_scal_lm, args.L, 'Spin', args.Spin, ...
-                      'Method', args.Sampling, 'Reality', args.Reality);                  
+if (args.Upsample == 0)  %false => multi-resolution 
+     band_limit = min([s2let_bandlimit(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
+end     
+f_scal = ssht_inverse(f_scal_lm, band_limit,  ...
+                      'Method', args.Sampling, ...
+                      'Spin', 0, ...
+                      'Reality', args.Reality);          
+                  
 % Curvelets:
 for j = args.J_min:J,     
- if (args.Upsample == 0)  %false => multi-resolution 
+if (args.Upsample == 0)  % i.e. false (default) => multi-resolution 
      band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-     Nj = band_limit; 
-    % Nj = min(N, band_limit);
-    % Nj = Nj+ mod((Nj+N),2) ;  %ensure N and Nj are both even and both odd
- end
- f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, ...
+     Nj = band_limit;  
+end
+f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, ...
                         'Sampling', args.Sampling,'Reality', args.Reality) ;
 end
 
 
 % Clear array
-flm_int = 0;
+cur_lm = 0; 
+scal_l = 0; 
+f_cur_lmn =0; 
+f_scal_lm =0;
 
 end

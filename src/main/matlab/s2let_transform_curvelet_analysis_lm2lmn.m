@@ -65,6 +65,7 @@ args = p.Results;
 % Azimuthal/directional band-limit N =L always holds for curvelets:           
 N = args.L ; 
 J = s2let_jmax(args.L, args.B);
+L= args.L;
 
 % ---------------
 % Tile curvelets: (inputs)
@@ -97,7 +98,7 @@ for j = args.J_min:J,
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,
       ind = ssht_elm2ind(el, m);
-      ind_lmn = so3_elmn2ind(el,m,en,args.L,N);   %band_limit,Nj);
+      ind_lmn = so3_elmn2ind(el,m,en,args.L,N);
       f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind) * psi;
      end
     end
@@ -108,15 +109,10 @@ end
 % -----------------
 % Scaling function contribution: 
 % -----------------
-% disp('ana_lm2lmn: : Compute scaling function f_scal_lm=flm_init(lm_ind) * phi '); 
-%{
-if (args.Upsample ~= 1)  %false => multi-resolution 
-   band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
-end
-%}
-f_scal_lm = zeros(args.L^2,1);
+% disp('ana_lm2lmn: : Compute scaling function f_scal_lm=flm_init(lm_ind) * phi ');
+f_scal_lm = zeros(L^2,1);
 lm_ind=0;
-for el =  0:args.L-1, %abs(args.Spin):band_limit-1, 
+for el =  0:args.L-1,
    phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);   
    for m = -el:el,
     lm_ind=ssht_elm2ind(el, m);

@@ -25,19 +25,19 @@ f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 
 
 disp('----------- ');
-flm_init = zeros(L^2,1);
+flm_gen = zeros(L^2,1);
 disp('read from file flm_init'); 
 fid= fopen('/Users/jenniferyhchan/WaveletsCode_PhD/s2let_curvelets_MATLAB/1_cur_flm_randgen_mw_test.dat');
 rawData=fscanf(fid, '%f, %f',[2 256]);
 fclose(fid);
 complexData=complex(rawData(1,:),rawData(2,:));
-flm_init= complexData.' ;  % Non-conjugate transpose
+flm_gen= complexData.' ;  % Non-conjugate transpose
 disp('Construct the corresponding signal via ssht_inverse'); 
-f_init = ssht_inverse(flm_init, L, 'Method', 'MW');
+f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 disp('---------'); 
 
 disp('Curvelet analysis (px2cur) ...');
-[f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init,...
+[f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_gen,...
                                                     'B', B, 'L', L, ...
                                                     'J_min', J_min, 'Spin', Spin, ...
                                                     'Upsample', false, 'Reality', false,...
@@ -58,6 +58,6 @@ f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal, ...
 disp('----------- ');
 disp('- Test exact transform:');
 disp('Check the difference between f_gen and f_rec: ');
-maxerr = max(abs(f_init(:) - f_rec(:)))
+maxerr = max(abs(f_gen(:) - f_rec(:)))
 
 

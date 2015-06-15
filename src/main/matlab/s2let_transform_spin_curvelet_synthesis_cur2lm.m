@@ -43,17 +43,14 @@ function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-
-
 len = size(f_cur);
 temp = f_cur{len};
 sz = size(temp);
 if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
     Lguessed = min([sz(1) sz(2)]);
 else
-    Lguessed = min([sz(1) sz(2)])-1;
+    Lguessed = min([sz(1) sz(2)])-1 ;
 end
-
 
 p = inputParser;
 p.addRequired('f_cur');
@@ -85,23 +82,27 @@ J = s2let_jmax(args.L, args.B);
                                         'SpinLowered', args.SpinLowered, ...
                                         'SpinLoweredFrom', args.SpinLoweredFrom);
 
-
-
 % -----------------
 % Signal synthesis: (Transform to lmn space, then reconstruct the signal in harmonic space)
 % -----------------
 % Scaling functions:
-f_scal_lm_syn = ssht_forward(f_scal, args.L, 'Spin', args.Spin, ...
-                            'Method', args.Sampling, 'Reality', args.Reality);
+if (args.Upsample == 0)  %false => multi-resolution 
+     band_limit = min([ s2let_bandlimit(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
+end    
+f_scal_lm_syn = ssht_forward(f_scal, band_limit, ...
+                            'Method', args.Sampling,...
+                            'Spin', 0, ...
+                            'Reality', args.Reality);
+                        
+
+                        
 % Curvelet contribution:
 for j = args.J_min:J,
  if (args.Upsample ==0)  %false => multi-resolution 
      band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-     %Nj = min(N, band_limit);
-     %Nj = Nj+ mod((Nj+N),2) ;  
      Nj = band_limit;
  end
-f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , band_limit, Nj, ...
+ f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , band_limit, Nj, ...
                                             'Reality', args.Reality, 'Sampling', args.Sampling);
 end
 
@@ -109,14 +110,18 @@ end
 % Reconstruct the signals in harmonic space
 % Perform Wigner transform (lmn2lm -  Call matlab function synthesis_lmn2lm)
 flm_rec = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn_syn, f_scal_lm_syn, cur_lm, scal_l,...
-                                                    'B', args.B, 'L', args.L, ...
-                                                    'Spin', args.Spin, ...
-                                                    'J_min', args.J_min, ...
-                                                    'Upsample', args.Upsample,...
-                                                    'Reality', args.Reality,...
-                                                    'SpinLowered', args.SpinLowered, ...
-                                                    'SpinLoweredFrom', args.SpinLoweredFrom,...
-                                                    'Sampling', args.Sampling );
-
+                                                        'B', args.B, 'L', args.L, ...
+                                                        'Spin', args.Spin, ...
+                                                        'J_min', args.J_min, ...
+                                                        'Upsample', args.Upsample,...
+                                                        'Reality', args.Reality,...
+                                                        'SpinLowered', args.SpinLowered, ...
+                                                        'SpinLoweredFrom', args.SpinLoweredFrom,...
+                                                        'Sampling', args.Sampling );
+% Clear array
+cur_lm = 0; 
+scal_l = 0; 
+f_cur_lmn_syn =0; 
+f_scal_lm_syn =0;
                                       
 end

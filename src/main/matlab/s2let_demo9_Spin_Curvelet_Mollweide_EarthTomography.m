@@ -1,4 +1,4 @@
-% s2let_demo9
+% s2let_demo9_Spin_Curvelet_Mollweide_EarthTomography
 % -----------------------------------------------------------
 % Plot curvelet coefficients on multiple Mollweide projections.
 % The function generates one plot of the scaling function
@@ -71,8 +71,10 @@ close all ;
 load('EGM2008_Topography_flms_L0128');
 L = 16; 
 flm_gen = flm(1:L^2,1);
-f_gen = ssht_inverse(flm_gen, L, 'Reality', true);
-     
+Spin = 2; 
+f_gen = ssht_inverse(flm_gen, L, 'Spin', Spin, 'Reality', false);
+
+
 % ---------------
 % Define curvelet parameters: 
 % ---------------
@@ -90,7 +92,7 @@ J =s2let_jmax(L, B);  %=ceil(log L/ log B);
 % -----------------
 % Call matlab function analysis_lm2cur
 %{
-[f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen,  ...
+[f_cur, f_scal] = s2let_transform_spin_analysis_lm2cur(flm_gen,  ...
                                                   'B', B, 'L', L, ...
                                                   'J_min', J_min, ...
                                                   'Spin', Spin, ...
@@ -109,12 +111,6 @@ J =s2let_jmax(L, B);  %=ceil(log L/ log B);
                                                   'SpinLowered', false, ...
                                                   'SpinLoweredFrom', 0,...
                                                   'Sampling', 'MW');
-
-
-%----  Debug:
-% figure
-% ssht_plot_mollweide(f_scal, L, 'Mode', 1);
-% whos f_scal
                                               
 f_cur_new = cell(J+1-J_min, 2*N-1);  
 for j = J_min:J 
@@ -173,12 +169,12 @@ for j = J_min:J
 	end
 end
 colormap(jet)
-fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_fullres.png']
+fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_fullres.png']
 print('-r200', '-dpng', fname)
 
 
-%{
-[f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_gen,  ...
+
+[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_gen,  ...
                                                   'B', B, 'L', L, ...
                                                   'J_min', J_min, ...
                                                   'Spin', Spin, ...
@@ -228,9 +224,9 @@ for j = J_min:J
 end
 
 colormap(jet)
-fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires.png']
+fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires.png']
 print('-r200', '-dpng', fname)
-%}
+
 
 % ---------- 
 % Compare reconstructed signal with the initial signals: 
@@ -254,6 +250,8 @@ hold on
 subplot(2, 2, 2);
 ssht_plot_mollweide(f_rec,L);
 title('reconstructed signal')
+% Check error:
+check_error = max(abs(f_gen(:)-f_rec(:)))
                            
-%fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires_Int_Rec_signal.png']
+%fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 %print('-r200', '-dpng', fname)

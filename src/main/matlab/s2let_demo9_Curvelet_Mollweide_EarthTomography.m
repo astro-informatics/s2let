@@ -254,6 +254,7 @@ hold on
 subplot(2, 2, 2);
 ssht_plot_mollweide(f_rec,L);
 title('reconstructed signal')
+check_error = max(abs(f_gen(:)-f_rec(:)))
                            
 %fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 %print('-r200', '-dpng', fname)

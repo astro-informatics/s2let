@@ -35,6 +35,8 @@ f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');
 flm_gen= ssht_forward(f_gen, L, 'Method', 'MW');
 
 
+disp('----------- ');                                             
+disp(' Curvelet transform: full resolution (Upsample: true): ');
 % -----------------
 % Signal analysis: (harmonic to pixel space) 
 % -----------------
@@ -60,10 +62,42 @@ flm_rec= s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal, ...
 disp('Compute the re-constructed function via ssht_inverse ');
 f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
 
-disp('Both analysis and synthesis are done! ');
-disp('');
-disp('- Test exact transform: check the difference between flm_gen and flm_rec:');
+disp('- Test exact transform:');
+disp('Check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_gen - flm_rec))
 disp('Check the difference between f_gen and f_rec: ');
 maxerr = max(abs(f_gen(:) - f_rec(:)))
 
+disp('----------- ');                                             
+disp(' Curvelet transform: multi-resolution (Upsample: false): ');
+% -----------------
+% Signal analysis: (harmonic to pixel space) 
+% -----------------
+% N.B. 's2let_transform_curvelet_analysis_lm2cur.m' 
+% called 's2let_curvelet_tiling.m'
+[f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_gen,  ...
+                                                  'B', B, 'L', L, ...
+                                                  'J_min', J_min, 'Spin', Spin, ...
+                                                  'Sampling', 'MW',...
+                                                  'Upsample', false);
+    
+% -----------------
+% Signal synthesis: (pixel to harmonic space) 
+% -----------------
+flm_rec= s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal, ...
+                                           'B', B, 'L', L,...
+                                           'J_min', J_min, ...
+                                           'Spin', Spin, ...
+                                           'Sampling', 'MW', ...
+                                           'Upsample', false);
+
+                                       
+disp('Compute the re-constructed function via ssht_inverse ');
+f_rec = ssht_inverse(flm_rec, L, 'Method', 'MW'); 
+
+disp('- Test exact transform:');
+disp('Check the difference between flm_gen and flm_rec:');
+maxerr = max(abs(flm_gen - flm_rec))
+disp('Check the difference between f_gen and f_rec: ');
+maxerr = max(abs(f_gen(:) - f_rec(:)))
+disp('----------- ');

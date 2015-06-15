@@ -63,9 +63,9 @@ args = p.Results;
 % Azimuthal/directional band-limit N =L always holds for curvelets:           
 N = args.L ;
 J = s2let_jmax(args.L, args.B);
-% For Upsample set up: 
-Nj = N; 
-band_limit = args.L; 
+% Upsample paramters (if true: full-resolution): 
+Nj = N ;
+band_limit = args.L;
 
 % ------------
 % Signal Analysis: 
@@ -79,39 +79,36 @@ band_limit = args.L;
  
 
 for j = args.J_min:J,
-  if (args.Upsample == 0)  %i.e. false => multi-resolution
+  if (args.Upsample == 0)  %i.e. false (default) => multi-resolution
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-    %Nj = min(N, band_limit);
-    %Nj = Nj+ mod((Nj+N),2) ;  % ensure Nj and J are both even or both odd
     Nj = band_limit;
   end 
-  f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
+  % f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
+  f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
   ind_ln=0;
-  ind = 0;
+  ind_lm = 0;
   ind_lmn = 0;
   for en = -Nj+1:Nj-1,
    for el = max(abs(args.Spin),abs(en)):band_limit-1,
      ind_ln = ssht_elm2ind(el, en);
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,
-      ind = ssht_elm2ind(el, m);
+      ind_lm = ssht_elm2ind(el, m);
       ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
-      f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind) * psi;
+      f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
      end
     end
   end
 end
 
-
 % -----------------
 % Scaling function contribution: 
 % -----------------
 % disp('ana_lm2lmn: : Compute scaling function f_scal_lm=flm_init(lm_ind) * phi '); 
-
-if (args.Upsample ~= 1)  %false => multi-resolution 
+if (args.Upsample == 0)   %i.e. false (default) => multi-resolution 
    band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
 end
-f_scal_lm = zeros(args.L^2,1);
+f_scal_lm = zeros(band_limit^2,1);  %band_limit*(2*band_limit-1) for MW; (band_limit+1)*2*band_limit for MWSS
 lm_ind=0;
 for el = abs(args.Spin):band_limit-1, 
    phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);
@@ -120,10 +117,6 @@ for el = abs(args.Spin):band_limit-1,
     f_scal_lm(lm_ind) = flm_init(lm_ind) * phi;
    end
 end
-
-
-% Clear array memory: 
-flm_init =0;
 
 end
 

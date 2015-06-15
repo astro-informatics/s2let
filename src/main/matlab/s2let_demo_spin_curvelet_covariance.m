@@ -1,4 +1,4 @@
-% s2let_demo_curvelet_covariance 
+% s2let_demo_spin_curvelet_covariance 
 % - Run curvelet covariance demo.
 %
 % Demo to compare theoretical covariance of curvelet coefficients with
@@ -49,7 +49,7 @@ var_flm = 1; % Should we use the actual variance var(flmn) of each
 % ---------------
 % Tile curvelets:
 % ---------------
-[cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, ...
+[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...
                                         'Spin', Spin, 'SpinLowered', false,...
                                         'SpinLoweredFrom',0);
 % reshape scaling functions

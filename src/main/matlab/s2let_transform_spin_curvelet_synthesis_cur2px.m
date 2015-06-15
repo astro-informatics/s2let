@@ -47,11 +47,10 @@ len = size(f_cur);
 temp = f_cur{len};
 sz = size(temp);
 if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
-    Lguessed = min([sz(1) sz(2)]);
+    Lguessed = min([sz(1) sz(2)])
 else
-    Lguessed = min([sz(1) sz(2)])-1;
+    Lguessed = min([sz(1) sz(2)])-1   
 end
-
 
 p = inputParser;
 p.addRequired('f_cur');
@@ -87,9 +86,12 @@ flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  ...
                                                     'Sampling', args.Sampling );
                                       
 % Reconstruct the signals in pxiel space:   
-f_rec = ssht_inverse(flm_rec, args.L, 'Method', 'MW');                                       
+f_rec = ssht_inverse(flm_rec, args.L, ...
+                    'Spin', args.Spin, ... 
+                    'Method', 'MW', ...
+                    'Reality', args.Reality);      
                                       
 % Clear array memory:                                    
-% flm_rec = 0.; 
+flm_rec = 0; 
 
 end
