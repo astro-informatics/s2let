@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_plot_mollweide</title>
+  <meta name="keywords" content="s2let_plot_mollweide">
+  <meta name="description" content="s2let_plot_mollweide">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_plot_mollweide.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_plot_mollweide
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_plot_mollweide</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function s2let_plot_mollweide(wav, scal, B, L, N, J_min, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_plot_mollweide
+ Plot wavelet coefficients on multiple Mollweide projections.
+ The function generates one plot of the scaling function
+ contribution and a grid of plots for each orientation of
+ each scale of the wavelet contributions.
+
+ Default usage :
+
+   s2let_plot_mollweide(wav, scal, B, L, N, J_min, &lt;options&gt;)
+
+ wav is cell array with all the wavelet coefficients.
+ its first index is the wavelet scale j, the second
+ index is the orientation g, and each element is a
+ function on the sphere in MW sampling.
+ scal is the corresponding scaling function contribution
+ (i.e. just a single function on the sphere).
+ B is the wavelet parameter.
+ L is the angular band-limit.
+ N is the orientational band-limit.
+ J_min is the first wavelet scale in wav.
+
+ Options consist of parameter type and value pairs.
+ Valid options include:
+
+  'Upsample'      = { false   [multiresolution algorithm (default)],
+                      true  [full resolution wavelets] },
+  'Function'        = { 'real' [plot the real part of the input functions (default)],
+                        'imag' [plot the imaginary part of the input functions],
+                        'abs'  [plot the absolute value of the input functions] }</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s2let_plot_mollweide(wav, scal, B, L, N, J_min, varargin)</a>
+0002 <span class="comment">% s2let_plot_mollweide</span>
+0003 <span class="comment">% Plot wavelet coefficients on multiple Mollweide projections.</span>
+0004 <span class="comment">% The function generates one plot of the scaling function</span>
+0005 <span class="comment">% contribution and a grid of plots for each orientation of</span>
+0006 <span class="comment">% each scale of the wavelet contributions.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Default usage :</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   s2let_plot_mollweide(wav, scal, B, L, N, J_min, &lt;options&gt;)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% wav is cell array with all the wavelet coefficients.</span>
+0013 <span class="comment">% its first index is the wavelet scale j, the second</span>
+0014 <span class="comment">% index is the orientation g, and each element is a</span>
+0015 <span class="comment">% function on the sphere in MW sampling.</span>
+0016 <span class="comment">% scal is the corresponding scaling function contribution</span>
+0017 <span class="comment">% (i.e. just a single function on the sphere).</span>
+0018 <span class="comment">% B is the wavelet parameter.</span>
+0019 <span class="comment">% L is the angular band-limit.</span>
+0020 <span class="comment">% N is the orientational band-limit.</span>
+0021 <span class="comment">% J_min is the first wavelet scale in wav.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Options consist of parameter type and value pairs.</span>
+0024 <span class="comment">% Valid options include:</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  'Upsample'      = { false   [multiresolution algorithm (default)],</span>
+0027 <span class="comment">%                      true  [full resolution wavelets] },</span>
+0028 <span class="comment">%  'Function'        = { 'real' [plot the real part of the input functions (default)],</span>
+0029 <span class="comment">%                        'imag' [plot the imaginary part of the input functions],</span>
+0030 <span class="comment">%                        'abs'  [plot the absolute value of the input functions] }</span>
+0031 
+0032 <span class="comment">% TODO: make more parameters optional and guess them from the sizes of</span>
+0033 <span class="comment">% wav and scal</span>
+0034 
+0035 <span class="comment">% Parse arguments.</span>
+0036 p = inputParser;
+0037 p.addRequired(<span class="string">'wav'</span>);
+0038 p.addRequired(<span class="string">'scal'</span>, @isnumeric);
+0039 p.addRequired(<span class="string">'B'</span>, @isnumeric);
+0040 p.addRequired(<span class="string">'L'</span>, @isnumeric);
+0041 p.addRequired(<span class="string">'N'</span>, @isnumeric);
+0042 p.addRequired(<span class="string">'J_min'</span>, @isnumeric);
+0043 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
+0044 p.addParamValue(<span class="string">'Function'</span>, <span class="string">'real'</span>, @ischar)
+0045 
+0046 p.parse(wav, scal, B, L, N, J_min, varargin{:});
+0047 
+0048 args = p.Results;
+0049 
+0050 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L,B);
+0051 
+0052 <span class="keyword">switch</span> args.Function
+0053     <span class="keyword">case</span> {<span class="string">'real'</span>, <span class="string">'imag'</span>, <span class="string">'abs'</span>}
+0054         f = str2func(args.Function);
+0055     <span class="keyword">otherwise</span>
+0056         error(<span class="string">'Invalid Function parameter. Must be one of &quot;real&quot;, &quot;imag&quot;, &quot;abs&quot;.'</span>)
+0057 <span class="keyword">end</span>
+0058 
+0059 figure(11);
+0060 
+0061 <span class="keyword">if</span> args.Upsample
+0062     bl = L;
+0063 <span class="keyword">else</span>
+0064     bl = min([<a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(J_min-1, J_min, B, L), L]);
+0065 <span class="keyword">end</span>
+0066 ssht_plot_mollweide(f(scal), bl)
+0067 
+0068 figure(12);
+0069 
+0070 iplot = 1;
+0071 <span class="keyword">for</span> j = J_min:J
+0072     <span class="keyword">for</span> n = 1:2*N-1
+0073         subplot(J-J_min+1,2*N-1,iplot);
+0074         <span class="keyword">if</span> args.Upsample
+0075             bl = L;
+0076         <span class="keyword">else</span>
+0077             bl = min([<a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j, J_min, B, L), L]);
+0078         <span class="keyword">end</span>
+0079         ssht_plot_mollweide(f(wav{j-J_min+1,n}), bl)
+0080         iplot = iplot + 1;
+0081     <span class="keyword">end</span>
+0082 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

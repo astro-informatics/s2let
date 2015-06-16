@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_DirectionalWavelet_matlab_prototype</title>
+  <meta name="keywords" content="s2let_DirectionalWavelet_matlab_prototype">
+  <meta name="description" content="s2let_directionalWavelet_matlab_prototype">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="../index.html">matlab</a> &gt; <a href="index.html">Prototype</a> &gt; s2let_DirectionalWavelet_matlab_prototype.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab/Prototype&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_DirectionalWavelet_matlab_prototype
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_directionalWavelet_matlab_prototype</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_directionalWavelet_matlab_prototype
+ Run directional wavelet analysis and synthesis 
+ of randomly generated signals f</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_directionalWavelet_matlab_prototype</span>
+0002 <span class="comment">% Run directional wavelet analysis and synthesis</span>
+0003 <span class="comment">% of randomly generated signals f</span>
+0004 
+0005 clear all;
+0006 close all;
+0007 
+0008 <span class="comment">% Main parameters</span>
+0009 Spin = 0;
+0010 L = 16;
+0011 <span class="comment">% For curvelets: N=L</span>
+0012 N = L;  <span class="comment">%N=1 for axisymmetric wavelets</span>
+0013 B = 2;
+0014 J_min = 0;
+0015 J =s2let_jmax(L, B);  <span class="comment">%=ceil(log L/ log B);</span>
+0016 
+0017 <span class="comment">%%disp('Generates random band-limited function')</span>
+0018 <span class="comment">%flm_gen = zeros(L^2,1);</span>
+0019 <span class="comment">%flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));</span>
+0020 <span class="comment">%flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);</span>
+0021 <span class="comment">%disp('Construct the corresponding signal on the sphere')</span>
+0022 <span class="comment">%%** using C:</span>
+0023 <span class="comment">%f_gen = ssht_inverse(flm_gen, L, 'Method', 'MW');</span>
+0024 
+0025 <span class="comment">% For comparison with C-codes, use flm stored in file</span>
+0026 <span class="comment">%open file</span>
+0027 disp(<span class="string">'Read from file the randomly-generated flm of band-limited function'</span>)
+0028 fid= fopen(<span class="string">'/Users/jenniferyhchan/WaveletsCode_PhD/s2let/1_wav_flm_randgen_mw_test.dat'</span>);
+0029 rawData=fscanf(fid, <span class="string">'%f, %f'</span>,[2 256]);
+0030 <span class="comment">%fclose(fid);</span>
+0031 complexData=complex(rawData(1,:),rawData(2,:));
+0032 <span class="comment">% Non-conjugate transpose</span>
+0033 complexData= complexData.' ; 
+0034 
+0035 <span class="comment">% Read from file &quot;1_wav_flm_randgen_mw_test.dat&quot; containing randomly-generated flm</span>
+0036 flm_gen = zeros(L^2,1);
+0037 flm_gen =  complexData ; 
+0038 
+0039 f_gen = ssht_inverse(flm_gen, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0040 
+0041 
+0042 <span class="comment">%disp('Perform spin directional harmonic-to-wavelet (lm2wav) transform with custom parameters')</span>
+0043 <span class="comment">%[f_wav, f_scal] = s2let_transform_analysis_lm2wav(flm,  'B', B, 'L', L, 'J_min', J_min, 'N', N, 'Spin', Spin, 'Upsample', false);</span>
+0044 <span class="comment">%flm_rec = s2let_transform_synthesis_lm2wav(f_wav, f_scal,  'B', B, 'L', L, 'J_min', J_min, 'N', N, 'Spin', Spin, 'Upsample', false);</span>
+0045 <span class="comment">%default = max(abs(flm-flm_rec))</span>
+0046 
+0047 <span class="comment">%***** BUILD PROPTOTYPE of s2let_transform_analysis_lm2wav</span>
+0048 <span class="comment">%      (i.e. s2let_analysis_lm2wav in s2let_analysis.c) ****************</span>
+0049 <span class="comment">%***** 1st) s2let_tiling_wavelet(wav_lm, scal_l, parameters);</span>
+0050 <span class="comment">%***** step 1a) call wavelet- and scaling-function- generating functions</span>
+0051 disp(<span class="string">'Tile wavelets in harmonic space (wav_lm, scal_l)'</span>)
+0052 <span class="comment">%[kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);</span>
+0053 [psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min);
+0054 <span class="comment">%[psi_lm phi_l] = s2let_curvelet_tiling(B, L, N, Spin, J_min);</span>
+0055 
+0056 <span class="comment">%% Plot</span>
+0057 <span class="comment">%% Rotate function on the sphere such that x-axis -&gt; z-axis  (beta =pi/2)</span>
+0058 <span class="comment">%% (i.e. wavelets lie on the sphere top)</span>
+0059 alpha = 0  <span class="comment">% pi</span>
+0060 beta = 0  <span class="comment">%pi/2</span>
+0061 gamma = 0
+0062 <span class="comment">%% Precompute Wigner small-d functions</span>
+0063 d = zeros(L, 2*L-1, 2*L-1);
+0064 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);
+0065 <span class="keyword">for</span> el = 1:L-1
+0066     d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, beta);
+0067 <span class="keyword">end</span>
+0068 zoomfactor = 1.4;
+0069 plot_caxis_scale = 2
+0070 type = <span class="string">'colour'</span>;
+0071 lighting = true;
+0072 nx = 3;
+0073 ny = 4;
+0074 maxfigs = nx*ny;
+0075 <span class="comment">%%</span>
+0076 
+0077 <span class="comment">%% Plot curvelets on the sphere</span>
+0078 figure(<span class="string">'Position'</span>,[100 100 1200 600])
+0079 <span class="comment">%wav_lm = zeros(L^2,1);</span>
+0080 ind_pm = 0;
+0081 ind_nm = 0;
+0082 ind=0;
+0083 <span class="comment">%ind=0;   %for plotting</span>
+0084 <span class="keyword">for</span> j = J_min:J, 
+0085  wav_lm{j-J_min+1} = psi_lm(:,j+1);  
+0086  <span class="comment">%wav_lm{j-J_min+1} = zeros(L^2,1);</span>
+0087 <span class="comment">%for el = 0:L-1,</span>
+0088  <span class="comment">%  m = el;</span>
+0089   <span class="comment">%%for positive m</span>
+0090  <span class="comment">%  ind_pm = ssht_elm2ind(el, m);</span>
+0091   <span class="comment">%% Curvelet coefficients:</span>
+0092  <span class="comment">%  wav_lm{j-J_min+1}(ind_pm) = kappa(j+1,el+1);</span>
+0093   <span class="comment">%%for negative m</span>
+0094  <span class="comment">%  ind_nm = ssht_elm2ind(el, -m);</span>
+0095  <span class="comment">%  wav_lm{j-J_min+1}(ind_nm) = (-1)^m * conj(wav_lm{j-J_min+1}(ind_pm));</span>
+0096  
+0097  <span class="comment">%% axisymmetric wavelets:</span>
+0098  <span class="comment">%  ind = el^2+el+1;</span>
+0099  <span class="comment">%  wav_lm{j-J_min+1}(ind) = kappa(j+1,el+1);</span>
+0100 <span class="comment">%end</span>
+0101 
+0102 <span class="comment">%% Rotate the wavelets coefficients</span>
+0103    flm_wav_rot = ssht_rotate_flm(wav_lm{j-J_min+1}, d, alpha, gamma);
+0104    <span class="keyword">if</span> Spin == 0
+0105 <span class="comment">%% Compute the function (rotated):</span>
+0106        f_wav_rot = ssht_inverse(flm_wav_rot, L, <span class="string">'Reality'</span>, true);
+0107        ind = ind + 1;
+0108        <span class="keyword">if</span> ind &lt;= maxfigs
+0109            h = subplot(ny, nx, ind);   
+0110 <span class="comment">%% Plot the rotated function on the sphere</span>
+0111            ssht_plot_sphere(f_wav_rot, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0112            title(h, [<span class="string">'Directional wavelet j = '</span>,int2str(j-J_min+1)])
+0113            locate = get(h,<span class="string">'title'</span>);
+0114            pos = get(locate,<span class="string">'position'</span>);
+0115            pos(1,2) = pos(1,2)+0.7;
+0116            pos(1,1) = pos(1,1)-0.7;
+0117            set(locate,<span class="string">'pos'</span>,pos);
+0118            v = caxis;
+0119            temp = max(abs(v));
+0120            caxis([-temp temp]*plot_caxis_scale);
+0121            zoom(zoomfactor)
+0122        <span class="keyword">end</span>
+0123    <span class="keyword">end</span>
+0124       <span class="keyword">if</span> Spin &gt; 0
+0125        f_wav_rot = ssht_inverse(flm_wav_rot, L, <span class="string">'spin'</span>, Spin);
+0126        ind = ind + 1;
+0127        <span class="keyword">if</span> ind &lt;= maxfigs
+0128            h = subplot(ny, nx, ind);
+0129            ssht_plot_sphere(real(f_wav_rot), L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0130            title(h, [<span class="string">'Spin Directional Wavelet j = '</span>,int2str(j-J_min+1), <span class="string">', real part'</span>])
+0131            locate = get(h,<span class="string">'title'</span>);
+0132            pos = get(locate,<span class="string">'position'</span>);
+0133            pos(1,2) = pos(1,2)+0.7;
+0134            pos(1,1) = pos(1,1)-0.7;
+0135            set(locate,<span class="string">'pos'</span>,pos);
+0136            v = caxis;
+0137            temp = max(abs(v));
+0138            caxis([-temp temp]*plot_caxis_scale)
+0139            zoom(zoomfactor)
+0140 
+0141        <span class="keyword">end</span>
+0142        ind = ind + 1;
+0143        <span class="keyword">if</span> ind &lt;= maxfigs
+0144            h = subplot(ny, nx, ind);
+0145            ssht_plot_sphere(imag(f_wav_rot), L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0146            title(h, [<span class="string">'Spin Directional Wavelet j = '</span>,int2str(j-J_min+1), <span class="string">', imag part'</span>])
+0147            locate = get(h,<span class="string">'title'</span>);
+0148            pos = get(locate,<span class="string">'position'</span>);
+0149            pos(1,2) = pos(1,2)+0.7;
+0150            pos(1,1) = pos(1,1)-0.7;
+0151            set(locate,<span class="string">'pos'</span>,pos);
+0152            v = caxis;
+0153            temp = max(abs(v));
+0154            caxis([-temp temp]*plot_caxis_scale)
+0155            zoom(zoomfactor)
+0156            
+0157        <span class="keyword">end</span>
+0158        
+0159        ind = ind + 1;
+0160        <span class="keyword">if</span> ind &lt;= maxfigs
+0161            h = subplot(ny, nx, ind);
+0162            ssht_plot_sphere(abs(f_wav_rot), L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0163            title(h, [<span class="string">'Spin Directional Wavelet j = '</span>,int2str(j-J_min+1), <span class="string">', abs part'</span>])
+0164            locate = get(h,<span class="string">'title'</span>);
+0165            pos = get(locate,<span class="string">'position'</span>); 
+0166            pos(1,2) = pos(1,2)+0.7;
+0167            pos(1,1) = pos(1,1)-0.7;
+0168            set(locate,<span class="string">'pos'</span>,pos);
+0169            v = caxis;
+0170            temp = max(abs(v));
+0171            caxis([-temp temp]*plot_caxis_scale)
+0172            zoom(zoomfactor)
+0173        <span class="keyword">end</span> 
+0174       <span class="keyword">end</span>
+0175 <span class="keyword">end</span>
+0176 <span class="comment">%***** step 1b) compute the scaling coefficients (no j-dependence except J_min)</span>
+0177 scal_l = zeros(L^2,1);
+0178 <span class="keyword">for</span> l = 0:L-1, 
+0179 <span class="comment">%scal_l(l^2+l+1,1) = kappa0(l+1);</span>
+0180 scal_l(l^2+l+1,1) = phi_l(l+1);
+0181 <span class="keyword">end</span>
+0182 <span class="comment">%%%  f_scal = ssht_inverse(scal_l, L, 'Reality', true);</span>
+0183 
+0184 <span class="comment">%**** 2nd) s2let_analysis_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters);</span>
+0185 <span class="comment">% Generate flmn of complex signal</span>
+0186 disp(<span class="string">' '</span>)
+0187 disp(<span class="string">'Signal Analysis: '</span>)
+0188 disp(<span class="string">'Directional wavelet analysis of complex signals in Wigner space (i.e. flm to flmn)'</span>)
+0189 <span class="comment">%zeros((2*N-1)*(L*L-N*(N-1)/3), 1);</span>
+0190 <span class="comment">%(see  so3_core_inverse_via_ssht.m for the size)</span>
+0191 <span class="comment">%offset = 0;</span>
+0192 ind_ln=0; 
+0193 ind = 0;
+0194 ind_lmn = 0;
+0195 <span class="keyword">for</span> j = J_min:J,
+0196  flmn{j-J_min+1} = zeros((2*N-1)*L*L,1);
+0197  <span class="keyword">for</span> n = -N+1:N-1,
+0198     <span class="keyword">for</span> el = abs(n):L-1,
+0199         ind_ln = ssht_elm2ind(el, n);   <span class="comment">%for l and n</span>
+0200         psi = 8.*pi*pi/(2.*el+1) *conj(wav_lm{j-J_min+1}(ind_ln));  <span class="comment">%</span>
+0201         <span class="keyword">for</span> m = -el:el,
+0202         ind = ssht_elm2ind(el, m); 
+0203         ind_lmn = so3_elmn2ind(el,m,n,L,N);
+0204         flmn{j-J_min+1}(ind_lmn) =  flm_gen(ind) * psi; 
+0205 <span class="comment">%        flmn(offset+ind) =  flm_gen(ind) * psi;</span>
+0206         <span class="keyword">end</span>
+0207     <span class="keyword">end</span>
+0208  <span class="keyword">end</span>
+0209 <span class="comment">% offset =  offset+ (2*N-1)*L*L ;    % i.e. for (padded, complex)</span>
+0210 <span class="comment">%! Remark about offset in C-code: offset += so3_sampling_flmn_size (L, N)</span>
+0211 <span class="comment">%! C code: so3_sampling_flmn_size (L, N)</span>
+0212 <span class="comment">%! Padded :  if Real: N*L*L; if Complex: (2*N-1)*L*L</span>
+0213 <span class="comment">%! Compact:  if Real: N*(6*L*L-(N-1)*(2*N-1))/6; if Complex:(2*N-1)*(3*L*L-N*(N-1))/3;</span>
+0214 <span class="comment">%! Both of these are based on the fact that the sum</span>
+0215 <span class="comment">%! over n*n from 1 to N-1 is (N-1)*N*(2*N-1)/6.%so3_sampling_flmn_size(&amp;so3_parameters);</span>
+0216 <span class="keyword">end</span>
+0217 <span class="comment">%% Scaling function</span>
+0218 disp(<span class="string">'Compute scaling function f_scal_lm=flm_gen(lm_ind) * phi '</span>)
+0219 <span class="comment">%f_scal_lm = zeros(L^2,1)</span>
+0220 lm_ind=0;
+0221 <span class="keyword">for</span> j = J_min:J, 
+0222  <span class="keyword">for</span> el = 0:L-1,   
+0223   <span class="comment">%phi = sqrt(4.0*pi/(2.*el+1)) * kappa0(el+1);</span>
+0224   phi = sqrt(4.0*pi/(2.*el+1)) * phi_l(el+1);  <span class="comment">%</span>
+0225   <span class="keyword">for</span> m = -el:el, 
+0226   lm_ind=ssht_elm2ind(el, m);
+0227   f_scal_lm(lm_ind) = flm_gen(lm_ind) * phi;
+0228   <span class="keyword">end</span>
+0229  <span class="keyword">end</span>
+0230 <span class="keyword">end</span>
+0231     
+0232 <span class="comment">% Compute inverse then forward transform.</span>
+0233 disp(<span class="string">'so3_forward (i.e. f to flmn) and so3_inverse (i.e. flmn to f): '</span>);
+0234 <span class="keyword">for</span> j = J_min:J, 
+0235 f_wav = so3_inverse(flmn{j-J_min+1}, L, N);  <span class="comment">%i.e. so3_core_inverse_via_ssht -&gt; f_wav[nalpha*nbeta*ngamma*sizeof(f)]</span>
+0236 <span class="comment">% f_wav+offset = so3_inverse(flmn+offset_lmn, L, N);</span>
+0237 <span class="comment">% where in C code: offset_lmn += so3_sampling_flmn_size</span>
+0238 <span class="comment">%                  offset += so3_sampling_f_size</span>
+0239 flmn_syn{j-J_min+1} = so3_forward(f_wav, L, N);<span class="comment">%i.e. so3_core_forward_via_ssht -&gt; input funcion on the sphere and output flmn harmonic coefficient</span>
+0240 <span class="comment">% Compute maximum error in harmonic space.</span>
+0241 disp(<span class="string">'Check the error of so3_forward (i.e. f to flmn) and so3_inverse (i.e. flmn to f): '</span>);
+0242 maxerr = max(abs(flmn_syn{j-J_min+1} - flmn{j-J_min+1}))
+0243 <span class="keyword">end</span>
+0244 
+0245 <span class="comment">% void s2let_synthesis_cur_lmn2lm(</span>
+0246 disp(<span class="string">' '</span>);
+0247 disp(<span class="string">'Signal synthesis: '</span>);
+0248 <span class="comment">% Compute flm_syn</span>
+0249 disp(<span class="string">'Compute flm_wav_syn from flmn_syn'</span>);
+0250 <span class="comment">%offset = 0;</span>
+0251 ind_ln =0; 
+0252 ind=0; 
+0253 ind_lmn=0; 
+0254 flm_wav_syn=zeros(L^2,1);
+0255 <span class="keyword">for</span> j = J_min:J, 
+0256  <span class="keyword">for</span> n = -N+1:N-1,
+0257     <span class="keyword">for</span> el = abs(n):L-1,
+0258         ind_ln = ssht_elm2ind(el, n);   <span class="comment">%for l and n</span>
+0259         psi = (wav_lm{j-J_min+1}(ind_ln));  <span class="comment">% no ((2*el+1)/(8.*pi*pi)) in C</span>
+0260         <span class="keyword">for</span> m = -el:el,
+0261         ind = ssht_elm2ind(el, m);   <span class="comment">%for positive m</span>
+0262         ind_lmn = so3_elmn2ind(el,m,n,L,N);
+0263 <span class="comment">%        flm_test_wav(ind) =flm_test_wav(ind)+ flmn(offset+ind_lmn)* psi;   % sum over m (c.f. n)</span>
+0264         flm_wav_syn(ind) =flm_wav_syn(ind)+ flmn{j-J_min+1}(ind_lmn)* psi;   <span class="comment">% sum over m (c.f. n)</span>
+0265         <span class="keyword">end</span> 
+0266     <span class="keyword">end</span>
+0267  <span class="keyword">end</span>
+0268 <span class="comment">% offset =  offset+ (2*N-1)*L*L ;    % i.e. for (padded, complex)</span>
+0269 <span class="keyword">end</span>
+0270 disp(<span class="string">'Compute flm_scal_syn '</span>)
+0271 <span class="comment">%% For scaling function - sum over m:</span>
+0272 flm_scal_syn=zeros(L^2,1);
+0273 lm_ind=0;  
+0274 <span class="comment">%for j = J_min:J,</span>
+0275  <span class="keyword">for</span> el = 0:L-1,
+0276  <span class="comment">% phi = sqrt(4.*pi/(2.*el+1)) * kappa0(el+1);</span>
+0277    phi = sqrt(4.*pi/(2.*el+1)) * phi_l(el+1);  <span class="comment">%</span>
+0278   <span class="keyword">for</span> m = -el:el, 
+0279   lm_ind=ssht_elm2ind(el, m);
+0280   flm_scal_syn(lm_ind) =  flm_scal_syn(lm_ind)+ flm_gen(lm_ind) * phi;
+0281   <span class="keyword">end</span>
+0282  <span class="keyword">end</span>
+0283 <span class="comment">%end</span>
+0284 <span class="comment">% f_scal_l=sum(flm_test_scal)</span>
+0285 
+0286 
+0287 disp(<span class="string">'Summing flm_wav_syn+flm_scal_syn '</span>)
+0288 disp(<span class="string">'then '</span>)
+0289 disp(<span class="string">'Compute the re-constructed function via ssht_inverse '</span>)
+0290 
+0291  flm_test=flm_scal_syn+flm_wav_syn;
+0292  f_test_syn = ssht_inverse(flm_test, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>); 
+0293 
+0294 
+0295 disp(<span class="string">'Done- check results '</span>)
+0296 disp(<span class="string">'Check the difference between flm_gen and flm_test: '</span>)
+0297 maxerr = max(abs(flm_gen - flm_test))
+0298 <span class="comment">%disp('Check the difference between f_gen and f_test_syn: ')</span>
+0299 <span class="comment">%maxerr = max(abs(f_gen - f_test_syn))</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

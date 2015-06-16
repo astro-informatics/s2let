@@ -62,7 +62,7 @@ args = p.Results;
 
 % For curvelets, azimuthal/directional band-limit N always equals to L           
 N = args.L ; 
-Nj=N;
+Nj= N;
 band_limit = args.L;
 J = s2let_jmax(args.L, args.B);
 

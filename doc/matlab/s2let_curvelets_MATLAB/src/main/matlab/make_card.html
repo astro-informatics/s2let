@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of make_card</title>
+  <meta name="keywords" content="make_card">
+  <meta name="description" content="MAKE_CARD turns a set of strings into a valid FITS card">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; make_card.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>make_card
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>MAKE_CARD turns a set of strings into a valid FITS card</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function card=make_card(keyword,value) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MAKE_CARD turns a set of strings into a valid FITS card
+Make keyword field 8 bytes long</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="fitswrite.html" class="code" title="function fitswrite(data, filename, parname, parval)">fitswrite</a>	Author: R. G. Abraham, Institute of Astronomy, Cambridge University</li><li><a href="s2let_hpx_write_real_spin_maps.html" class="code" title="function s2let_hpx_write_real_spin_maps(fQ, fU, filename)">s2let_hpx_write_real_spin_maps</a>	s2let_hpx_rite_real_map</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function card=make_card(keyword,value)</a>
+0002 <span class="comment">%MAKE_CARD turns a set of strings into a valid FITS card</span>
+0003 <span class="comment">%Make keyword field 8 bytes long</span>
+0004 lk=length(keyword);
+0005 <span class="keyword">if</span> (lk &gt; 8) &amp; (nargin&gt;1)
+0006     error(<span class="string">'Keyword must be less than or equal to 8 characters!'</span>)
+0007 <span class="keyword">elseif</span> (lk &lt; 8 )
+0008     keyword=[keyword,setstr(ones(1,8-lk)*32)];
+0009 <span class="keyword">end</span>;
+0010 
+0011 <span class="comment">%Deal with both straight keyword and keyword/value pair</span>
+0012 <span class="keyword">if</span> (nargin==1)
+0013     <span class="comment">%Keyword without a value</span>
+0014     card=keyword;    
+0015 <span class="keyword">else</span>
+0016     <span class="comment">%Key/value pair has an equal sign and space at bytes 9 and 10</span>
+0017     card=[keyword,<span class="string">'= '</span>];
+0018 
+0019     <span class="comment">%Now output the value. The FITS standard wants things to start</span>
+0020     <span class="comment">%in different columns depending on what type of data the</span>
+0021     <span class="comment">%value holds, according to the following rules:</span>
+0022     <span class="comment">%</span>
+0023     <span class="comment">%  Logical: T or F in column 30</span>
+0024     <span class="comment">%</span>
+0025     <span class="comment">%  Character string: A beginning quote in column 11 and an</span>
+0026     <span class="comment">%  ending quote between columns 20 and 80.</span>
+0027     <span class="comment">%</span>
+0028     <span class="comment">%  Real part of an integer or floating point number: right</span>
+0029     <span class="comment">%  justified, ending in column 30.</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">%  Imaginary part: right justified, ending in</span>
+0032     <span class="comment">%  column 50, starting after column 30 (NB. I won't bother</span>
+0033     <span class="comment">%  to support an imaginary part in this M-file, and will</span>
+0034     <span class="comment">%  let some radio astronomer who needs it add it if they want).</span>
+0035 
+0036     <span class="keyword">if</span> isstr(value)
+0037           <span class="comment">%Test for logical. If logical it goes in column 30</span>
+0038         <span class="keyword">if</span> (length(value)==1) &amp; (strmatch(upper(value),<span class="string">'T'</span>) | strmatch(upper(value),<span class="string">'F'</span>))
+0039              card=[card,setstr(ones(1,19)*32),value];    
+0040         <span class="keyword">else</span>    
+0041             <span class="comment">%Value must be a character string. Pad if less than 8</span>
+0042             <span class="comment">%characters long.</span>
+0043             lv=length(value);
+0044             <span class="keyword">if</span> (lv &gt; 70)
+0045            error(<span class="string">'Value must be less than 70 characters long!'</span>)
+0046             <span class="keyword">elseif</span> (lv &lt; 10 )
+0047              value=[value,setstr(ones(1,8-lv)*32)];
+0048             <span class="keyword">end</span>;
+0049             card=[card,<span class="string">''''</span>,value,<span class="string">''''</span>];
+0050         <span class="keyword">end</span>;    
+0051     <span class="keyword">else</span>
+0052         <span class="comment">%Value must be a number. Convert to a string. Maximum</span>
+0053         <span class="comment">%precision is set to 10 digits</span>
+0054         value=num2str(value,10);
+0055         lv=length(value);
+0056     
+0057         <span class="comment">%Write this out so it will end on column 30</span>
+0058         card=[card,setstr(ones(1,20-lv)*32),value];    
+0059     <span class="keyword">end</span>;
+0060 <span class="keyword">end</span>;
+0061 
+0062 <span class="comment">%Now pad the output to make it exactly 80 bytes long</span>
+0063 card=[card,setstr(ones(1,80-length(card))*32)];</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

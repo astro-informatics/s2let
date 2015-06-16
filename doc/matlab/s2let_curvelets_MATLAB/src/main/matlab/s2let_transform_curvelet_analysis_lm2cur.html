@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_transform_curvelet_analysis_lm2cur</title>
+  <meta name="keywords" content="s2let_transform_curvelet_analysis_lm2cur">
+  <meta name="description" content="s2let_transform_analysis_lm2cur">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_transform_curvelet_analysis_lm2cur.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_transform_curvelet_analysis_lm2cur
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_transform_analysis_lm2cur</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_transform_analysis_lm2cur
+ input in harmonic space (i.e. harmonic to Wigner space via analysis_lm2lmn),
+ output in curvelet space (i.e. Wigner space to curvelet space via SO3_inverse).
+
+ Default usage :
+
+   [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, &lt;options&gt;)
+
+ flm_init is the input field in harmonic space,
+ f_cur contains the output curvelet contributions,
+ f_scal contains the output scaling contributions,
+
+ Option :
+  'B'               = { Dilation factor; B &gt; 1 (default=2) }
+  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }
+  'J_min'           = { Minimum curvelet scale to consider;
+  'Spin'               = { Spin; (default=0) }
+                        0 &lt;= J_min &lt; log_B(L) (default=0) }
+  'Reality'         = { false        [do not assume corresponding signal f real (default)],
+                        true         [assume f real (improves performance)] }
+  'Upsample'        = { false        [multiresolution algorithm (default)],
+                        true       [full resolution curvelets] }
+  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+                               curvelets and scaling function.],
+                        false [Apply the usual normalisation factors such
+                               that the curvelets fulfil the admissibility
+                               condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the curvelets
+                       should be lowered from (default = 0)]
+  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],
+                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }
+
+ -----------------------------------------------------------
+ Log: 
+ -  constructed by Jennifer Y H Chan on 5th June 2015  
+ -----------------------------------------------------------
+ S2LET package to perform wavelet transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>	</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_curvelet_analysis_lm2lmn</a>	s2let_transform_analysis_lm2lmn</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_transform_via_cur2lm_randflm_MATLAB.html" class="code" title="">s2let_curvelet_transform_via_cur2lm_randflm_MATLAB</a>	s2let_curvelet_matlab_prototype</li><li><a href="s2let_demo8_Curvelet_Mollweide_randSignals.html" class="code" title="">s2let_demo8_Curvelet_Mollweide_randSignals</a>	s2let_demo8_Curvelet_Mollweide_randSignals</li><li><a href="s2let_fulltest_curvelet.html" class="code" title="">s2let_fulltest_curvelet</a>	s2let_fulltest</li><li><a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>	s2let_transform_curvelet_analysis_px2cur</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)</a>
+0002 
+0003 <span class="comment">% s2let_transform_analysis_lm2cur</span>
+0004 <span class="comment">% input in harmonic space (i.e. harmonic to Wigner space via analysis_lm2lmn),</span>
+0005 <span class="comment">% output in curvelet space (i.e. Wigner space to curvelet space via SO3_inverse).</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Default usage :</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, &lt;options&gt;)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% flm_init is the input field in harmonic space,</span>
+0012 <span class="comment">% f_cur contains the output curvelet contributions,</span>
+0013 <span class="comment">% f_scal contains the output scaling contributions,</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Option :</span>
+0016 <span class="comment">%  'B'               = { Dilation factor; B &gt; 1 (default=2) }</span>
+0017 <span class="comment">%  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }</span>
+0018 <span class="comment">%  'J_min'           = { Minimum curvelet scale to consider;</span>
+0019 <span class="comment">%  'Spin'               = { Spin; (default=0) }</span>
+0020 <span class="comment">%                        0 &lt;= J_min &lt; log_B(L) (default=0) }</span>
+0021 <span class="comment">%  'Reality'         = { false        [do not assume corresponding signal f real (default)],</span>
+0022 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
+0023 <span class="comment">%  'Upsample'        = { false        [multiresolution algorithm (default)],</span>
+0024 <span class="comment">%                        true       [full resolution curvelets] }</span>
+0025 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
+0026 <span class="comment">%                               curvelets and scaling function.],</span>
+0027 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
+0028 <span class="comment">%                               that the curvelets fulfil the admissibility</span>
+0029 <span class="comment">%                               condition (default)]}</span>
+0030 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0031 <span class="comment">%                       option indicates which spin number the curvelets</span>
+0032 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0033 <span class="comment">%  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],</span>
+0034 <span class="comment">%                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% -----------------------------------------------------------</span>
+0037 <span class="comment">% Log:</span>
+0038 <span class="comment">% -  constructed by Jennifer Y H Chan on 5th June 2015</span>
+0039 <span class="comment">% -----------------------------------------------------------</span>
+0040 <span class="comment">% S2LET package to perform wavelet transform on the Sphere.</span>
+0041 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0042 <span class="comment">% See LICENSE.txt for license details</span>
+0043 <span class="comment">% -----------------------------------------------------------</span>
+0044 
+0045 sz = length(flm_init(:));
+0046 Lguessed = sqrt(sz);
+0047 
+0048 p = inputParser;
+0049 p.addRequired(<span class="string">'flm_init'</span>, @isnumeric);
+0050 p.addParamValue(<span class="string">'B'</span>, 2, @isnumeric);
+0051 p.addParamValue(<span class="string">'L'</span>, Lguessed, @isnumeric);
+0052 p.addParamValue(<span class="string">'J_min'</span>, 0, @isnumeric);
+0053 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0054 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0055 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
+0056 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0057 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0058 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
+0059 p.parse(flm_init, varargin{:});
+0060 args = p.Results;
+0061 
+0062 <span class="comment">% For curvelets, azimuthal/directional band-limit N always equals to L</span>
+0063 N = args.L ; 
+0064 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0065 
+0066 <span class="comment">% ---------------</span>
+0067 <span class="comment">% Tile curvelets:</span>
+0068 <span class="comment">% ---------------</span>
+0069 <span class="comment">% Call curvelet- and scaling-function- generating functions</span>
+0070 [cur_lm scal_l] = <a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>(args.B, args.L, args.J_min,<span class="keyword">...</span>
+0071                                         <span class="string">'Spin'</span>, args.Spin,<span class="keyword">...</span>
+0072                                         <span class="string">'SpinLowered'</span>, args.SpinLowered, <span class="keyword">...</span>
+0073                                         <span class="string">'SpinLoweredFrom'</span>, args.SpinLoweredFrom);
+0074 
+0075 <span class="comment">% -----------------</span>
+0076 <span class="comment">% Signal analysis:</span>
+0077 <span class="comment">% -----------------</span>
+0078 <span class="comment">% Decompose the signals in harmonic space using curvelets</span>
+0079 <span class="comment">% Then perform Wigner transform (lm2lmn -  Call matlab function s2let_transform_analysis_lm2lmn)</span>
+0080 [f_cur_lmn, f_scal_lm] = <a href="s2let_transform_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_curvelet_analysis_lm2lmn</a>(flm_init, cur_lm, scal_l,<span class="keyword">...</span>
+0081                                                                 <span class="string">'B'</span>,args.B, <span class="string">'L'</span>, args.L, <span class="string">'J_min'</span>, args.J_min, <span class="keyword">...</span>
+0082                                                                 <span class="string">'Spin'</span>, args.Spin,<span class="string">'Reality'</span>, args.Reality,<span class="keyword">...</span>
+0083                                                                 <span class="string">'Upsample'</span>, args.Upsample, <span class="keyword">...</span>
+0084                                                                 <span class="string">'SpinLowered'</span>, args.SpinLowered, <span class="keyword">...</span>
+0085                                                                 <span class="string">'SpinLoweredFrom'</span>,  args.SpinLoweredFrom, <span class="keyword">...</span>
+0086                                                                 <span class="string">'Sampling'</span>, args.Sampling);
+0087 
+0088 <span class="comment">% -----------------</span>
+0089 <span class="comment">% Transform to pixel space:</span>
+0090 <span class="comment">% -----------------</span>
+0091 <span class="comment">% Scaling function contribution:</span>
+0092 f_scal = ssht_inverse(f_scal_lm, args.L, <span class="string">'Spin'</span>, args.Spin, <span class="keyword">...</span>
+0093                       <span class="string">'Method'</span>, args.Sampling, <span class="string">'Reality'</span>, args.Reality);                  
+0094 <span class="comment">% Curvelet kernel conrtribution:</span>
+0095 <span class="keyword">for</span> j = args.J_min:J,  
+0096  f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, args.L, N , <span class="keyword">...</span>
+0097                         <span class="string">'Sampling'</span>, args.Sampling,<span class="string">'Reality'</span>, args.Reality) ;
+0098 <span class="keyword">end</span>
+0099 
+0100 <span class="comment">% Clear array:</span>
+0101 flm_int = 0;
+0102 
+0103 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

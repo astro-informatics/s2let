@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo6</title>
+  <meta name="keywords" content="s2let_demo6">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo6.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo6
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_hpx2mw.html" class="code" title="function f_mw = s2let_hpx2mw(f, varargin)">s2let_hpx2mw</a>	s2let_hpx2mw</li><li><a href="s2let_hpx_map2alm_spin.html" class="code" title="function [flmQ, flmU] = s2let_hpx_map2alm_spin(fQ, fU, varargin)">s2let_hpx_map2alm_spin</a>	</li><li><a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>	s2let_hpx_read_real_map</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>	s2let_transform_analysis_mw</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 
+0002 mapTfile = <span class="string">'../../../../ebsep/data/wmap_T_rot.fits'</span>;
+0003 mapQfile = <span class="string">'../../../../ebsep/data/wmap_Q_rot.fits'</span>;
+0004 mapUfile = <span class="string">'../../../../ebsep/data/wmap_U_rot.fits'</span>;
+0005 maskTfile = <span class="string">'../../../../ebsep/data/wmap_T_mask_rot.fits'</span>;
+0006 maskQUfile = <span class="string">'../../../../ebsep/data/wmap_QU_mask_rot.fits'</span>;
+0007 
+0008 [mapT_hpx, ~] = <a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>(mapTfile);
+0009 [maskT_hpx, ~] = <a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>(maskTfile);
+0010 [mapQ_hpx, ~] = <a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>(mapQfile);
+0011 [mapU_hpx, ~] = <a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>(mapUfile);
+0012 [maskQU_hpx, ~] = <a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>(maskQUfile);
+0013 
+0014 Spin = 2 
+0015 L = 192
+0016 B = 3
+0017 N = 3
+0018 J_min = 2
+0019 downsampling = false;
+0020 mode = 3;
+0021 PhiRot = pi;
+0022 threshold = -1;
+0023 
+0024 <span class="comment">% Analyse Q/U maps with Healpix routines to produce full-sky E/B alms</span>
+0025 [E_lm, B_lm] = <a href="s2let_hpx_map2alm_spin.html" class="code" title="function [flmQ, flmU] = s2let_hpx_map2alm_spin(fQ, fU, varargin)">s2let_hpx_map2alm_spin</a>(mapQ_hpx, mapU_hpx, <span class="string">'L'</span>, L);
+0026 
+0027 <span class="comment">% Compute full sky Q+iU and Q-iU maps from E/B alms</span>
+0028 [QpU_lm] = ebsep_compute_QpU_fullsky(E_lm, B_lm);
+0029 [QmU_lm] = ebsep_compute_QmU_fullsky(E_lm, B_lm);
+0030 QpU = ssht_inverse(QpU_lm, L, <span class="string">'spin'</span>, 2);
+0031 QmU = ssht_inverse(QmU_lm, L, <span class="string">'spin'</span>, -2);
+0032 maskQU = <a href="s2let_hpx2mw.html" class="code" title="function f_mw = s2let_hpx2mw(f, varargin)">s2let_hpx2mw</a>(maskQU_hpx, <span class="string">'L'</span>, L);
+0033 maskQU(maskQU &gt; threshold) = 1;
+0034 maskQU(maskQU &lt;= threshold) = 0;
+0035 maskQU_lm = ssht_forward(maskQU, L);
+0036 
+0037 [maskQU, mask_wav, mask_scal] = ebsep_sample_mask(maskQU_lm, B, L, J_min, <span class="string">'threshold'</span>, threshold, <span class="string">'Downsample'</span>, downsampling);
+0038 <span class="comment">%</span>
+0039 f = QpU .* maskQU;
+0040 <span class="comment">%f = QpU;</span>
+0041 <span class="comment">%</span>
+0042 
+0043 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0044 zoomfactor = 1.7;
+0045 ns = ceil(sqrt(2+J-J_min+1)) ;
+0046 ny = 3; <span class="comment">% ns - 1 + rem(2+J-J_min+1 , ns) ;</span>
+0047 nx = 3; <span class="comment">% ns;</span>
+0048 
+0049 maxfigs = nx*ny;
+0050 pltroot = <span class="string">'../../../figs'</span>
+0051 configstr = [<span class="string">'Spin'</span>,int2str(Spin),<span class="string">'_N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="string">'_Jmin'</span>,int2str(J_min)]
+0052 
+0053 [f_wav, f_scal] = <a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>(f, <span class="string">'B'</span>, B, <span class="string">'J_min'</span>, J_min, <span class="string">'N'</span>, N, <span class="string">'Upsample'</span>, ~downsampling);
+0054 
+0055 bl = L;
+0056 figure(<span class="string">'Position'</span>,[100 100 1300 1000])
+0057 subplot(nx, ny, 1);
+0058 ssht_plot_mollweide(f, L, <span class="string">'Mode'</span>, mode);
+0059 title(<span class="string">'Initial data'</span>)
+0060 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0061 v = caxis;
+0062 temp = max(abs(v));
+0063 caxis([-temp temp])
+0064 subplot(nx, ny, 2);
+0065 <span class="keyword">if</span> downsampling
+0066     bl = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(J_min-1,J_min,B,L), L ]);
+0067 <span class="keyword">end</span>
+0068 ssht_plot_mollweide(f_scal .* mask_scal, bl, <span class="string">'Mode'</span>, mode);
+0069 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0070 v = caxis;
+0071 temp = max(abs(v));
+0072 caxis([-temp temp])
+0073 title(<span class="string">'Scaling fct'</span>)
+0074 ind = 3
+0075 <span class="keyword">for</span> j = J_min:J
+0076     <span class="keyword">for</span> en = 1:N
+0077         ind = ind + 1
+0078         <span class="keyword">if</span> ind &lt;= maxfigs
+0079             subplot(nx, ny, ind);
+0080             <span class="keyword">if</span> downsampling
+0081                 bl = min([<a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j, J_min, B, L), L]);
+0082             <span class="keyword">end</span>
+0083             ssht_plot_mollweide(f_wav{j-J_min+1,en}.*mask_wav{j-J_min+1,1}, bl, <span class="string">'Mode'</span>, mode);
+0084             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0085             v = caxis;
+0086             temp = max(abs(v));
+0087             caxis([-temp temp])
+0088             title([<span class="string">'Wavelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
+0089          <span class="keyword">end</span>
+0090     <span class="keyword">end</span>
+0091 <span class="keyword">end</span>
+0092 
+0093 fname = [pltroot,<span class="string">'/s2let_demo6_'</span>, configstr, <span class="string">'_wmap_unmasked.png'</span>]
+0094 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0095 
+0096</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

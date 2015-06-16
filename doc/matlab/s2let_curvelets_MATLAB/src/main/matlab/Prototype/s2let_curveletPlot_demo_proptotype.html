@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_curveletPlot_demo_proptotype</title>
+  <meta name="keywords" content="s2let_curveletPlot_demo_proptotype">
+  <meta name="description" content="s2let_demo7">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="../index.html">matlab</a> &gt; <a href="index.html">Prototype</a> &gt; s2let_curveletPlot_demo_proptotype.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab/Prototype&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_curveletPlot_demo_proptotype
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo7</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo7
+ -----------------------------------------------------------
+ Curvelets (PROTOTYPE):
+ Compute and plot the harmonic tiling and the curvelet kernels.
+
+ ------ About this demo -------- 
+ This is the prototype MATLAB code for construction and plot making of curvelets.
+ Curvelets are constructed using
+ [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);
+ with the condition of
+    m = el (so to obtain the hyperbolic scaling relation);
+ and the implemention of the conjugate relation: 
+   % for positive m
+   ind_pm = ssht_elm2ind(el, m);
+   % Curvelet coefficients: 
+   flm(ind_pm) = kappa(j+1,el+1);
+   %for negative m 
+   ind_nm = ssht_elm2ind(el, -m);
+   flm(ind_nm) = (-1)^m * conj(flm(ind_pm));
+ -----------------------------------------------------------
+ Log: 
+ -  Last modified on 6th Jan 2015 : Debug completed. 
+ -----------------------------------------------------------
+ S2LET package to perform wavelet transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo7</span>
+0002 <span class="comment">% -----------------------------------------------------------</span>
+0003 <span class="comment">% Curvelets (PROTOTYPE):</span>
+0004 <span class="comment">% Compute and plot the harmonic tiling and the curvelet kernels.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% ------ About this demo --------</span>
+0007 <span class="comment">% This is the prototype MATLAB code for construction and plot making of curvelets.</span>
+0008 <span class="comment">% Curvelets are constructed using</span>
+0009 <span class="comment">% [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);</span>
+0010 <span class="comment">% with the condition of</span>
+0011 <span class="comment">%    m = el (so to obtain the hyperbolic scaling relation);</span>
+0012 <span class="comment">% and the implemention of the conjugate relation:</span>
+0013 <span class="comment">%   % for positive m</span>
+0014 <span class="comment">%   ind_pm = ssht_elm2ind(el, m);</span>
+0015 <span class="comment">%   % Curvelet coefficients:</span>
+0016 <span class="comment">%   flm(ind_pm) = kappa(j+1,el+1);</span>
+0017 <span class="comment">%   %for negative m</span>
+0018 <span class="comment">%   ind_nm = ssht_elm2ind(el, -m);</span>
+0019 <span class="comment">%   flm(ind_nm) = (-1)^m * conj(flm(ind_pm));</span>
+0020 <span class="comment">% -----------------------------------------------------------</span>
+0021 <span class="comment">% Log:</span>
+0022 <span class="comment">% -  Last modified on 6th Jan 2015 : Debug completed.</span>
+0023 <span class="comment">% -----------------------------------------------------------</span>
+0024 <span class="comment">% S2LET package to perform wavelet transform on the Sphere.</span>
+0025 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0026 <span class="comment">% See LICENSE.txt for license details</span>
+0027 <span class="comment">% -----------------------------------------------------------</span>
+0028 
+0029 Spin = 0;
+0030 B = 2;   
+0031 L = 16;
+0032 <span class="comment">% For curvelets: m=l, the azimuthal band limit N = overall band limit L</span>
+0033 N= L; 
+0034 
+0035 <span class="comment">% Minimum and maximum scale probed by wavelets</span>
+0036 J_min = 2;
+0037 J = s2let_jmax(L, B);  <span class="comment">% J = ceil(log L/ log B)</span>
+0038 
+0039 zoomfactor = 1.4;
+0040 plot_caxis_scale = 2
+0041 type = <span class="string">'colour'</span>;
+0042 lighting = true;
+0043 
+0044 <span class="comment">%ns = ceil(sqrt(2+J-J_min+1)) ;</span>
+0045 <span class="comment">%nx = ns - 1 + rem(2+J-J_min + 1, ns) ;</span>
+0046 <span class="comment">%ny = ns;</span>
+0047 nx = 3
+0048 ny = 4
+0049 
+0050 maxfigs = nx*ny;
+0051 pltroot = <span class="string">'../../../figs'</span>
+0052 configstr = [<span class="string">'Spin'</span>,int2str(Spin),<span class="string">'_N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="string">'_Jmin'</span>,int2str(J_min)]
+0053 
+0054 
+0055 <span class="comment">% Rotate function on the sphere such that x-axis -&gt; z-axis  (beta =pi/2)</span>
+0056 <span class="comment">% (i.e. curvelets lie on the sphere top)</span>
+0057 alpha = pi 
+0058 beta = pi/2 
+0059 gamma = 0
+0060 <span class="comment">% Precompute Wigner small-d functions</span>
+0061 d = zeros(L, 2*L-1, 2*L-1);
+0062 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);
+0063 <span class="keyword">for</span> el = 1:L-1
+0064     d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, beta);
+0065 <span class="keyword">end</span>
+0066 
+0067 [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);
+0068 <span class="comment">% where</span>
+0069 <span class="comment">% kappa0 = scaling function with kappa0[l]= sqrt(k_lambda[1+Jmin*L])</span>
+0070 <span class="comment">% kappa[l+jL] = wavelet generating functions = sqrt(k_lambda[1+(j+1)*L]-k_lambda[1+j*L])</span>
+0071 
+0072 <span class="comment">%</span>
+0073 <span class="comment">% Plot the tiling of curvelets in harmonic space (i.e. the same as plotting the axisymmetric wavelets):</span>
+0074 <span class="comment">% s2let_plot_axisym_tiling(B, L, J_min);</span>
+0075 <span class="comment">%</span>
+0076 <span class="comment">% fname = ['s2let_d7_', configstr, '_tiling.png']</span>
+0077 <span class="comment">% print('-r500', '-dpng', fname)</span>
+0078 <span class="comment">% movefile(fname,'/Users/jenniferyhchan/WaveletsCode_PhD/s2let/figs/tiling')</span>
+0079 <span class="comment">%</span>
+0080 
+0081 <span class="comment">%</span>
+0082 <span class="comment">% Plot curvelets on the sphere</span>
+0083 <span class="comment">%</span>
+0084 figure(<span class="string">'Position'</span>,[100 100 1200 600])
+0085 flm = zeros(L^2,1);
+0086 ind_pm = 0;
+0087 ind_nm = 0;
+0088 ind=0;
+0089 <span class="keyword">for</span> j = J_min:J
+0090 <span class="keyword">for</span> el = 0:L-1
+0091    m = el;
+0092    <span class="comment">%for positive m</span>
+0093    ind_pm = ssht_elm2ind(el, m);
+0094    <span class="comment">% Curvelet coefficients:</span>
+0095    flm(ind_pm) = kappa(j+1,el+1);
+0096    <span class="comment">%for negative m</span>
+0097    ind_nm = ssht_elm2ind(el, -m);
+0098    flm(ind_nm) = (-1)^m * conj(flm(ind_pm));
+0099 <span class="keyword">end</span>
+0100 
+0101 <span class="comment">% Rotate the wavelets coefficients</span>
+0102    flm_rot = ssht_rotate_flm(flm, d, alpha, gamma);
+0103 
+0104    <span class="keyword">if</span> Spin == 0
+0105 <span class="comment">% Compute the function (non-rotated):</span>
+0106 <span class="comment">%       f = ssht_inverse(flm, L, 'Reality', true);</span>
+0107 <span class="comment">% check imaginary components:</span>
+0108 <span class="comment">% f = ssht_inverse(flm, L, 'Reality', false);</span>
+0109 <span class="comment">% max(abs(imag(f(:))))</span>
+0110 <span class="comment">% 1.1232e-14</span>
+0111 <span class="comment">% i.e. imaginary components are negligible</span>
+0112 
+0113 <span class="comment">% Compute the function (rotated):</span>
+0114        f_rot = ssht_inverse(flm_rot, L, <span class="string">'Reality'</span>, true);
+0115        
+0116        ind = ind + 1;
+0117        <span class="keyword">if</span> ind &lt;= maxfigs
+0118            h = subplot(ny, nx, ind);
+0119 <span class="comment">% Plot the non-rotated function:</span>
+0120 <span class="comment">%           ssht_plot_sphere(f, L, 'Type', type, 'Lighting', lighting);</span>
+0121 
+0122 <span class="comment">% Plot the rotated function on the sphere</span>
+0123            ssht_plot_sphere(f_rot, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0124 
+0125            title(h, [<span class="string">'Curvelet j = '</span>,int2str(j-J_min+1)])
+0126            locate = get(h,<span class="string">'title'</span>);
+0127            pos = get(locate,<span class="string">'position'</span>);
+0128            pos(1,2) = pos(1,2)+0.7;
+0129            pos(1,1) = pos(1,1)-0.7;
+0130            set(locate,<span class="string">'pos'</span>,pos);
+0131            v = caxis;
+0132            temp = max(abs(v));
+0133            caxis([-temp temp]*plot_caxis_scale)
+0134            zoom(zoomfactor)
+0135 <span class="comment">% view along the x-axis</span>
+0136 <span class="comment">%           view([-90,0])</span>
+0137        <span class="keyword">end</span>
+0138    <span class="keyword">end</span>
+0139 <span class="keyword">end</span>
+0140 
+0141 colormap(jet)
+0142 <span class="comment">%%fname = [pltroot,'/s2let_demo7_', configstr, '_cur_jet.png']</span>
+0143 fname = [<span class="string">'s2let_demo7_'</span>, configstr, <span class="string">'_cur_jet.png'</span>]
+0144 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0145 
+0146 <span class="comment">%colormap(hot)</span>
+0147 <span class="comment">%%fname = [pltroot,'/s2let_demo7_', configstr, '_cur_hot.png']</span>
+0148 <span class="comment">%fname = ['s2let_demo7_', configstr, '_cur_hot.png']</span>
+0149 <span class="comment">%print('-r200', '-dpng', fname)</span>
+0150 
+0151 
+0152 <span class="comment">%% Plot scaling function which has no directional (i.e. m) dependence,</span>
+0153 <span class="comment">%% the same as the axisymmetric wavelets and directional wavelets</span>
+0154 figure(<span class="string">'Position'</span>,[100 100 300 300])
+0155 h=subplot(1, 1, 1);
+0156 flm = zeros(L^2,1);
+0157 <span class="keyword">for</span> l = 0:L-1
+0158      flm(l^2+l+1,1) = kappa0(l+1);
+0159 <span class="keyword">end</span>
+0160 f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0161 
+0162 ssht_plot_sphere(f, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>,  lighting);
+0163 title(h,<span class="string">'Scaling fct'</span>)
+0164 locate = get(h,<span class="string">'title'</span>);
+0165 pos = get(locate,<span class="string">'position'</span>);
+0166 pos(1,2) = pos(1,2)+0.7;
+0167 pos(1,1) = pos(1,1)-0.7;
+0168 set(locate,<span class="string">'pos'</span>,pos);
+0169 zoom(1.2)
+0170 v = caxis;
+0171 temp = max(abs(v));
+0172 caxis([-temp temp]*plot_caxis_scale)
+0173 
+0174 colormap(jet)
+0175 <span class="comment">%%fname = [pltroot,'/s2let_demo7_', configstr, '_scal_jet.png']</span>
+0176 fname = [<span class="string">'s2let_demo7_'</span>, configstr, <span class="string">'_scal_jet.png'</span>]
+0177 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0178 
+0179 <span class="comment">% colormap(hot)</span>
+0180 <span class="comment">%%fname = [pltroot,'/s2let_demo7_', configstr, '_scal_hot.png']</span>
+0181 <span class="comment">%fname = ['s2let_demo7_', configstr, '_scal_hot.png']</span>
+0182 <span class="comment">%print('-r200', '-dpng', fname)</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

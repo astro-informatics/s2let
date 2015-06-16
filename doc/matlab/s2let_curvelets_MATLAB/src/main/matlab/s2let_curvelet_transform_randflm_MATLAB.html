@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_curvelet_transform_randflm_MATLAB</title>
+  <meta name="keywords" content="s2let_curvelet_transform_randflm_MATLAB">
+  <meta name="description" content="s2let_curvelet_matlab_prototype">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_curvelet_transform_randflm_MATLAB.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_curvelet_transform_randflm_MATLAB
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_curvelet_matlab_prototype</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_curvelet_matlab_prototype
+ Run curvelet analysis and synthesis 
+ of randomly generated signals f</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>	</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_curvelet_matlab_prototype</span>
+0002 <span class="comment">% Run curvelet analysis and synthesis</span>
+0003 <span class="comment">% of randomly generated signals f</span>
+0004 
+0005 clear all;
+0006 close all;
+0007 
+0008 <span class="comment">% Main parameters</span>
+0009 Spin = 0;
+0010 L = 16;
+0011 N = L; <span class="comment">% For curvelets: N=L  %N=1 for axisymmetric curvelets</span>
+0012 B = 2;
+0013 J_min = 1;  <span class="comment">%N.B. J_min = 2 : NOT EXACT</span>
+0014 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);  <span class="comment">%=ceil(log L/ log B);</span>
+0015 
+0016 disp(<span class="string">'Generates random band-limited function'</span>)
+0017 flm_gen = zeros(L^2,1);
+0018 flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
+0019 flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
+0020 
+0021 disp(<span class="string">'Construct the corresponding signal on the sphere'</span>)
+0022 f_gen = ssht_inverse(flm_gen, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0023 
+0024 
+0025 <span class="comment">% ---------------</span>
+0026 <span class="comment">% Tile curvelets:</span>
+0027 <span class="comment">% ---------------</span>
+0028 <span class="comment">%***** step 1a) call curvelet- and scaling-function- generating functions</span>
+0029 disp(<span class="string">'Tile curvelets in harmonic space (cur_lm, scal_l)'</span>)
+0030 [psi_lm phi_l] = <a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>(B, L, N, Spin, J_min);
+0031 <span class="keyword">for</span> j = J_min:J, 
+0032  cur_lm{j-J_min+1} = psi_lm(:,j+1);  
+0033 <span class="keyword">end</span>
+0034 <span class="comment">%***** step 1b) compute the scaling coefficients (no j-dependence except on J_min)</span>
+0035 scal_l = zeros(L^2,1);
+0036 <span class="keyword">for</span> l = 0:L-1,
+0037 scal_l(l^2+l+1,1) = phi_l(l+1);
+0038 <span class="keyword">end</span>
+0039 
+0040 
+0041 <span class="comment">% -----------------</span>
+0042 <span class="comment">% Signal analysis: (harmonic to pixel space)</span>
+0043 <span class="comment">% -----------------</span>
+0044 <span class="comment">% Call matlab function analysis_lm2cur</span>
+0045 [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen,  <span class="keyword">...</span>
+0046                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0047                                                   <span class="string">'Spin'</span>, Spin, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0048                                                   <span class="string">'N'</span>, N, <span class="string">'Upsample'</span>, false, <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0049                                               
+0050 <span class="comment">% -----------------</span>
+0051 <span class="comment">% Signal synthesis: (pixel to harmonic space)</span>
+0052 <span class="comment">% -----------------</span>
+0053 <span class="comment">% Call s2let_transform_synthesis_cur2lm</span>
+0054 <span class="comment">% Call s2let_transform_synthesis_lmn2lm</span>
+0055 [flm_cur_syn, flm_scal_syn] = s2let_transform_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, <span class="keyword">...</span>
+0056                                                                cur_lm, scal_l, flm_gen, <span class="keyword">...</span>
+0057                                                                <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0058                                                                <span class="string">'N'</span>, N, <span class="string">'Upsample'</span>, false, <span class="string">'Spin'</span>, 0);
+0059 
+0060 disp(<span class="string">'Compute the re-constructed function via ssht_inverse '</span>);
+0061 f_rec = ssht_inverse(flm_rec, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>); 
+0062 
+0063 disp(<span class="string">'Both analysis and synthesis are done! '</span>);
+0064 disp(<span class="string">''</span>);
+0065 disp(<span class="string">'- Test exact transform: check the difference between flm_gen and flm_rec:'</span>);
+0066 maxerr = max(abs(flm_gen - flm_rec))
+0067 <span class="comment">%disp('Check the difference between f_gen and f_rec: ');</span>
+0068 <span class="comment">%maxerr = max(abs(f_gen - f_rec))</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

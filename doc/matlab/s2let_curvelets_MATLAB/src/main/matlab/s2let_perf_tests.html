@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_perf_tests</title>
+  <meta name="keywords" content="s2let_perf_tests">
+  <meta name="description" content="s2let_perf_tests">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_perf_tests.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_perf_tests
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_perf_tests</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_perf_tests</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_perf_tests</span>
+0002 
+0003 ell = [ 4 8 16 32 64 128 256 512 1024 2048 4096 ];
+0004 accuracy = [ <span class="keyword">...</span>
+0005     2.5e-15 <span class="keyword">...</span><span class="comment"> % 4</span>
+0006     3.97e-15 <span class="keyword">...</span><span class="comment"> % 8</span>
+0007     8.0e-15 <span class="keyword">...</span><span class="comment"> % 16</span>
+0008     2.1e-14 <span class="keyword">...</span><span class="comment"> % 32</span>
+0009     4.10e-14 <span class="keyword">...</span><span class="comment"> % 64</span>
+0010     7.32e-14 <span class="keyword">...</span><span class="comment"> % 128</span>
+0011     1.38e-13 <span class="keyword">...</span><span class="comment"> % 256</span>
+0012     2.31e-13 <span class="keyword">...</span><span class="comment"> % 512</span>
+0013     5.2e-13 <span class="keyword">...</span><span class="comment"> % 1024</span>
+0014     9.3e-13 <span class="keyword">...</span><span class="comment"> % 2048</span>
+0015     2.0e-12 <span class="keyword">...</span><span class="comment"> % 4096</span>
+0016     ];
+0017 speed = [ <span class="keyword">...</span>
+0018     0.00019 <span class="keyword">...</span><span class="comment">  % 4</span>
+0019     0.00038 <span class="keyword">...</span><span class="comment"> % 8</span>
+0020     0.00160 <span class="keyword">...</span><span class="comment"> % 16</span>
+0021     0.0060 <span class="keyword">...</span><span class="comment"> % 32</span>
+0022     0.047 <span class="keyword">...</span><span class="comment"> % 64</span>
+0023     0.32 <span class="keyword">...</span><span class="comment"> % 128</span>
+0024     2.5 <span class="keyword">...</span><span class="comment"> % 256</span>
+0025     20.5 <span class="keyword">...</span><span class="comment"> % 512</span>
+0026     195 <span class="keyword">...</span><span class="comment"> % 1024</span>
+0027     1750 <span class="keyword">...</span><span class="comment"> % 2048</span>
+0028     15000 <span class="keyword">...</span><span class="comment"> % 4096</span>
+0029     ];
+0030 accuracy_multires = [ <span class="keyword">...</span>
+0031     2.5e-15 <span class="keyword">...</span><span class="comment"> % 4</span>
+0032     3.91e-15 <span class="keyword">...</span><span class="comment"> % 8</span>
+0033     8.0e-15 <span class="keyword">...</span><span class="comment"> % 16</span>
+0034     2.1e-14 <span class="keyword">...</span><span class="comment"> % 32</span>
+0035     3.97e-14 <span class="keyword">...</span><span class="comment"> % 64</span>
+0036     7.32e-14 <span class="keyword">...</span><span class="comment"> % 128</span>
+0037     1.37e-13 <span class="keyword">...</span><span class="comment"> % 256</span>
+0038     2.37e-13 <span class="keyword">...</span><span class="comment"> % 512</span>
+0039     5.3e-13 <span class="keyword">...</span><span class="comment"> % 1024</span>
+0040     9.3e-13 <span class="keyword">...</span><span class="comment"> % 2048</span>
+0041     2.0e-12 <span class="keyword">...</span><span class="comment"> % 4096</span>
+0042     ];
+0043 speed_multires = [ <span class="keyword">...</span>
+0044     0.00021 <span class="keyword">...</span><span class="comment">  % 4</span>
+0045     0.00040 <span class="keyword">...</span><span class="comment"> % 8</span>
+0046     0.00105 <span class="keyword">...</span><span class="comment"> % 16</span>
+0047     0.00300 <span class="keyword">...</span><span class="comment"> % 32</span>
+0048     0.018 <span class="keyword">...</span><span class="comment"> % 64</span>
+0049     0.1 <span class="keyword">...</span><span class="comment"> % 128</span>
+0050     0.75 <span class="keyword">...</span><span class="comment"> % 256</span>
+0051     5.2 <span class="keyword">...</span><span class="comment"> % 512</span>
+0052     45.0 <span class="keyword">...</span><span class="comment"> % 1024</span>
+0053     400 <span class="keyword">...</span><span class="comment"> % 2048</span>
+0054     3000 <span class="keyword">...</span><span class="comment"> % 4096</span>
+0055     ];
+0056 nb_samples = ell;
+0057 nb_samples_pow = str2mat(<span class="string">'t04'</span>, <span class="string">'t08'</span>, <span class="string">'t16'</span>, <span class="string">'t32'</span>, <span class="string">'t64'</span>, <span class="string">'t28'</span>, <span class="string">'t56'</span>, <span class="string">'t12'</span>, <span class="string">'t24'</span>, <span class="string">'t48'</span>, <span class="string">'t96'</span>);
+0058 
+0059 figure(<span class="string">'Position'</span>,[100 100 700 600])
+0060 
+0061 subplot(2,1,1)
+0062 loglog( nb_samples, (1e-15)*ell, <span class="string">'red'</span>,<span class="string">'LineWidth'</span>, 2 )
+0063 hold on
+0064 loglog( nb_samples, accuracy, <span class="string">'--oblack'</span>, <span class="string">'LineWidth'</span>, 2, <span class="string">'MarkerSize'</span>,10)
+0065 loglog( nb_samples, accuracy_multires, <span class="string">'-oblack'</span>, <span class="string">'LineWidth'</span>, 2, <span class="string">'MarkerSize'</span>,10)
+0066 grid on
+0067 xlabel(<span class="string">'x1'</span>,<span class="string">'FontSize'</span>,20)
+0068 ylabel(<span class="string">'y1'</span>,<span class="string">'FontSize'</span>,20)
+0069 set(gca,<span class="string">'XTick'</span>,nb_samples,<span class="string">'XTickLabel'</span>,nb_samples_pow,<span class="string">'FontSize'</span>,20)
+0070 set(gca,<span class="string">'YTick'</span>,[1e-16 1e-15 1e-14 1e-13 1e-12 1e-11] ,<span class="string">'FontSize'</span>,20)
+0071 axis([3e0 5300 1e-15 1e-11])
+0072 grid minor
+0073 <span class="comment">%title('Accuracy of overall transform','FontSize',20)</span>
+0074 
+0075 subplot(2,1,2)
+0076 loglog( nb_samples, (1e-6)*ell.^3, <span class="string">'red'</span>,<span class="string">'LineWidth'</span>, 2 )
+0077 hold on
+0078 loglog( nb_samples, speed, <span class="string">'--oblack'</span>, <span class="string">'LineWidth'</span>, 2, <span class="string">'MarkerSize'</span>,10)
+0079 loglog( nb_samples, speed_multires, <span class="string">'-oblack'</span>, <span class="string">'LineWidth'</span>, 2, <span class="string">'MarkerSize'</span>,10)
+0080 grid on
+0081 xlabel(<span class="string">'x2'</span>,<span class="string">'FontSize'</span>,20)
+0082 ylabel(<span class="string">'y2'</span>,<span class="string">'FontSize'</span>,20)
+0083 axis([3e0 5300 1e-5 1e5])
+0084 set(gca,<span class="string">'YTick'</span>,[1e-6 1e-4 1e-2  1e0 1e2 1e4 1e6] ,<span class="string">'FontSize'</span>,20)
+0085 set(gca,<span class="string">'XTick'</span>,nb_samples,<span class="string">'XTickLabel'</span>,nb_samples_pow,<span class="string">'FontSize'</span>,20)
+0086 grid minor
+0087 <span class="comment">%title('Speed of overall transform','FontSize',20)</span>
+0088</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

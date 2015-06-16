@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_spin_curvelet_transform_via_px2cur_randf_MATLAB</title>
+  <meta name="keywords" content="s2let_spin_curvelet_transform_via_px2cur_randf_MATLAB">
+  <meta name="description" content="s2let_curvelet_matlab_prototype">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_spin_curvelet_transform_via_px2cur_randf_MATLAB.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_spin_curvelet_transform_via_px2cur_randf_MATLAB
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_curvelet_matlab_prototype</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_curvelet_matlab_prototype
+ Run curvelet analysis and synthesis 
+ of randomly generated signals f</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>	s2let_transform_spin_curvelet_analysis_lm2cur</li><li><a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>	s2let_transform_spin_curvelet_synthesis_lm2cur</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_curvelet_matlab_prototype</span>
+0002 <span class="comment">% Run curvelet analysis and synthesis</span>
+0003 <span class="comment">% of randomly generated signals f</span>
+0004 
+0005 clear all;
+0006 close all;
+0007 
+0008 <span class="comment">% Main parameters</span>
+0009 Spin = 0;
+0010 L = 16;
+0011 N = L; <span class="comment">% For curvelets: N=L  %N=1 for axisymmetric curvelets</span>
+0012 B = 2;
+0013 J_min = 1;  <span class="comment">%N.B. J_min = 2 : NOT EXACT</span>
+0014 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);  <span class="comment">%=ceil(log L/ log B);</span>
+0015 
+0016 <span class="comment">%{</span>
+0017 disp(<span class="string">'Generates random band-limited function'</span>)
+0018 flm_gen = zeros(L^2,1);
+0019 flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
+0020 flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
+0021 
+0022 disp(<span class="string">'Construct the corresponding signal on the sphere'</span>)
+0023 f_gen = ssht_inverse(flm_gen, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0024 <span class="comment">%}</span>
+0025 
+0026 
+0027 disp(<span class="string">'----------- '</span>);
+0028 flm_gen = zeros(L^2,1);
+0029 disp(<span class="string">'read from file flm_init'</span>); 
+0030 fid= fopen(<span class="string">'/Users/jenniferyhchan/WaveletsCode_PhD/s2let_curvelets_MATLAB/1_cur_flm_randgen_mw_test.dat'</span>);
+0031 rawData=fscanf(fid, <span class="string">'%f, %f'</span>,[2 256]);
+0032 fclose(fid);
+0033 complexData=complex(rawData(1,:),rawData(2,:));
+0034 flm_gen= complexData.' ;  <span class="comment">% Non-conjugate transpose</span>
+0035 disp(<span class="string">'Construct the corresponding signal via ssht_inverse'</span>); 
+0036 f_gen = ssht_inverse(flm_gen, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0037 disp(<span class="string">'---------'</span>); 
+0038 
+0039 
+0040 disp(<span class="string">' ** Curvelet transform: full resolution (Upsample: true): '</span>);
+0041 disp(<span class="string">'Curvelet analysis (px2cur) ...'</span>);
+0042 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen,<span class="keyword">...</span>
+0043                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0044                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0045                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0046                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0047                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0048                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0049 disp(<span class="string">'Curvelet synthesis (cur2px) ...'</span>);
+0050 f_rec = <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0051                                                        <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0052                                                        <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0053                                                        <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0054                                                        <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0055                                                        <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0056                                                        <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0057 
+0058 disp(<span class="string">'- Test exact transform:'</span>);
+0059 disp(<span class="string">'Check the difference between f_gen and f_rec: '</span>);
+0060 maxerr = max(abs(f_gen(:) - f_rec(:)))
+0061 
+0062                                                    
+0063 disp(<span class="string">'----------- '</span>);                                             
+0064 disp(<span class="string">' Curvelet transform: multiresolution (Upsample: false): '</span>);
+0065 disp(<span class="string">'Curvelet analysis (px2cur) ...'</span>);
+0066 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen,<span class="keyword">...</span>
+0067                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0068                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0069                                                     <span class="string">'Upsample'</span>, false, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0070                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0071                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0072                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0073 disp(<span class="string">'Curvelet synthesis (cur2px) ...'</span>);
+0074 f_rec = <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0075                                                        <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0076                                                        <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0077                                                        <span class="string">'Upsample'</span>, false, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0078                                                        <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0079                                                        <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0080                                                        <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0081 
+0082 
+0083 disp(<span class="string">'----------- '</span>);
+0084 disp(<span class="string">'- Test exact transform:'</span>);
+0085 disp(<span class="string">'Check the difference between f_gen and f_rec: '</span>);
+0086 maxerr = max(abs(f_gen(:) - f_rec(:)))
+0087 
+0088</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

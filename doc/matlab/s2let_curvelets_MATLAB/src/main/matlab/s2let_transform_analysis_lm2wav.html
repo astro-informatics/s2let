@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_transform_analysis_lm2wav</title>
+  <meta name="keywords" content="s2let_transform_analysis_lm2wav">
+  <meta name="description" content="s2let_transform_analysis_lm2wav">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_transform_analysis_lm2wav.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_transform_analysis_lm2wav
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_transform_analysis_lm2wav</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [f_wav, f_scal] = s2let_transform_analysis_lm2wav(flm, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_transform_analysis_lm2wav
+ Compute spin directional wavelet transform, input in harmonic space,
+ output in pixel space.
+
+ Default usage :
+
+   [f_wav, f_scal] = s2let_transform_analysis_lm2wav(flm, &lt;options&gt;)
+
+ flm is the input field in harmonic space,
+ f_wav contains the output wavelet contributions,
+ f_scal contains the output scaling contributions,
+
+ Option :
+  'B'               = { Dilation factor; B &gt; 1 (default=2) }
+  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }
+  'N'               = { Azimuthal/directional band-limit; N &gt; 1 (default=L) }
+  'Spin'               = { Spin; (default=0) }
+  'J_min'           = { Minimum wavelet scale to consider;
+                        0 &lt;= J_min &lt; log_B(L) (default=0) }
+  'Upsample'      = { false        [multiresolution algorithm (default)],
+                      true       [full resolution wavelets] }
+  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],
+                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }
+  'Reality'         = { false        [do not assume corresponding signal f real (default)],
+                        true         [assume f real (improves performance)] }
+  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+                               wavelets and scaling function.],
+                        false [Apply the usual normalisation factors such
+                               that the wavelets fulfil the admissibility
+                               condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the wavelets
+                       should be lowered from (default = 0)]
+
+ S2LET package to perform Wavelets transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_mw_vec2arr.html" class="code" title="function arr = s2let_mw_vec2arr(vec)">s2let_mw_vec2arr</a>	</li><li><a href="s2let_mwss_vec2arr.html" class="code" title="function arr = s2let_mwss_vec2arr(vec)">s2let_mwss_vec2arr</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_fulltest.html" class="code" title="">s2let_fulltest</a>	s2let_fulltest</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [f_wav, f_scal] = s2let_transform_analysis_lm2wav(flm, varargin)</a>
+0002 
+0003 <span class="comment">% s2let_transform_analysis_lm2wav</span>
+0004 <span class="comment">% Compute spin directional wavelet transform, input in harmonic space,</span>
+0005 <span class="comment">% output in pixel space.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Default usage :</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   [f_wav, f_scal] = s2let_transform_analysis_lm2wav(flm, &lt;options&gt;)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% flm is the input field in harmonic space,</span>
+0012 <span class="comment">% f_wav contains the output wavelet contributions,</span>
+0013 <span class="comment">% f_scal contains the output scaling contributions,</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Option :</span>
+0016 <span class="comment">%  'B'               = { Dilation factor; B &gt; 1 (default=2) }</span>
+0017 <span class="comment">%  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }</span>
+0018 <span class="comment">%  'N'               = { Azimuthal/directional band-limit; N &gt; 1 (default=L) }</span>
+0019 <span class="comment">%  'Spin'               = { Spin; (default=0) }</span>
+0020 <span class="comment">%  'J_min'           = { Minimum wavelet scale to consider;</span>
+0021 <span class="comment">%                        0 &lt;= J_min &lt; log_B(L) (default=0) }</span>
+0022 <span class="comment">%  'Upsample'      = { false        [multiresolution algorithm (default)],</span>
+0023 <span class="comment">%                      true       [full resolution wavelets] }</span>
+0024 <span class="comment">%  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],</span>
+0025 <span class="comment">%                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }</span>
+0026 <span class="comment">%  'Reality'         = { false        [do not assume corresponding signal f real (default)],</span>
+0027 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
+0028 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
+0029 <span class="comment">%                               wavelets and scaling function.],</span>
+0030 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
+0031 <span class="comment">%                               that the wavelets fulfil the admissibility</span>
+0032 <span class="comment">%                               condition (default)]}</span>
+0033 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0034 <span class="comment">%                       option indicates which spin number the wavelets</span>
+0035 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
+0038 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0039 <span class="comment">% See LICENSE.txt for license details</span>
+0040 
+0041 sz = length(flm(:));
+0042 Lguessed = sqrt(sz);
+0043 
+0044 p = inputParser;
+0045 p.addRequired(<span class="string">'flm'</span>, @isnumeric);
+0046 p.addParamValue(<span class="string">'B'</span>, 2, @isnumeric);
+0047 p.addParamValue(<span class="string">'L'</span>, Lguessed, @isnumeric);
+0048 p.addParamValue(<span class="string">'J_min'</span>, 0, @isnumeric);
+0049 p.addParamValue(<span class="string">'N'</span>, Lguessed, @isnumeric);
+0050 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0051 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
+0052 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
+0053 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0054 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0055 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0056 p.parse(flm, varargin{:});
+0057 args = p.Results;
+0058 
+0059 flm_vec = flm(:);
+0060 
+0061 <span class="keyword">if</span>(all(isreal(flm_vec)))
+0062   flm_vec = complex(flm_vec,0);
+0063 <span class="keyword">end</span>
+0064 
+0065 [f_wav_vec, f_scal_vec] = s2let_transform_analysis_lm2wav_mex(flm_vec, args.B, args.L, args.J_min, <span class="keyword">...</span>
+0066                                                               args.N, args.Spin, <span class="keyword">...</span>
+0067                                                               args.Reality, args.Upsample, <span class="keyword">...</span>
+0068                                                               args.SpinLowered, args.SpinLoweredFrom, <span class="keyword">...</span>
+0069                                                               args.Sampling);
+0070 
+0071 <span class="keyword">if</span> strcmp(args.Sampling, <span class="string">'MWSS'</span>)
+0072     f_scal = <a href="s2let_mwss_vec2arr.html" class="code" title="function arr = s2let_mwss_vec2arr(vec)">s2let_mwss_vec2arr</a>(f_scal_vec);
+0073 
+0074     J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0075     f_wav = cell(J+1-args.J_min, args.N);
+0076     offset = 0;
+0077     <span class="keyword">for</span> j = args.J_min:J
+0078       <span class="keyword">for</span> en = 1:args.N
+0079         <span class="keyword">if</span> args.Upsample
+0080           band_limit = args.L;
+0081         <span class="keyword">else</span>
+0082           band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
+0083         <span class="keyword">end</span>
+0084         temp = zeros(band_limit+1, 2*band_limit);
+0085         <span class="keyword">for</span> t = 1:band_limit+1
+0086             <span class="keyword">for</span> p = 1:2*band_limit
+0087                 ind = offset + (t-1) * 2 * band_limit + p;
+0088                 temp(t,p) = f_wav_vec(1,ind);
+0089             <span class="keyword">end</span>
+0090         <span class="keyword">end</span>
+0091         f_wav{j+1-args.J_min, en} = temp;
+0092         offset = offset + (band_limit+1) * 2*band_limit;
+0093       <span class="keyword">end</span>
+0094     <span class="keyword">end</span>
+0095 <span class="keyword">else</span>
+0096     f_scal = <a href="s2let_mw_vec2arr.html" class="code" title="function arr = s2let_mw_vec2arr(vec)">s2let_mw_vec2arr</a>(f_scal_vec);
+0097 
+0098     J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0099     f_wav = cell(J+1-args.J_min, args.N);
+0100     offset = 0;
+0101     <span class="keyword">for</span> j = args.J_min:J
+0102       <span class="keyword">for</span> en = 1:args.N
+0103         <span class="keyword">if</span> args.Upsample
+0104           band_limit = args.L;
+0105         <span class="keyword">else</span>
+0106           band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
+0107         <span class="keyword">end</span>
+0108         temp = zeros(band_limit, 2*band_limit-1);
+0109         <span class="keyword">for</span> t = 1:band_limit
+0110             <span class="keyword">for</span> p = 1:2*band_limit-1
+0111                 ind = offset + (t-1) * ( 2 * band_limit - 1) + p;
+0112                 temp(t,p) = f_wav_vec(1,ind);
+0113             <span class="keyword">end</span>
+0114         <span class="keyword">end</span>
+0115         f_wav{j+1-args.J_min, en} = temp;
+0116         offset = offset + band_limit * (2*band_limit-1);
+0117       <span class="keyword">end</span>
+0118     <span class="keyword">end</span>
+0119 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

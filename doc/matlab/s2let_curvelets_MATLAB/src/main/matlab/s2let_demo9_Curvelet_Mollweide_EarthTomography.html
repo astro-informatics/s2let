@@ -1,0 +1,372 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo9_Curvelet_Mollweide_EarthTomography</title>
+  <meta name="keywords" content="s2let_demo9_Curvelet_Mollweide_EarthTomography">
+  <meta name="description" content="s2let_demo9">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo9_Curvelet_Mollweide_EarthTomography.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo9_Curvelet_Mollweide_EarthTomography
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo9</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo9
+ -----------------------------------------------------------
+ Plot curvelet coefficients on multiple Mollweide projections.
+ The function generates one plot of the scaling function
+ contribution and a grid of plots for each orientation of
+ each scale of the wavelet contributions. 
+ -----------------------------------------------------------
+ S2LET package to perform Wavelets on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details
+ 
+ Modified S2LET package to perform Curvelets on the Sphere.
+ -----------------------------------------------------------
+ wav is cell array with all the wavelet coefficients.
+ its first index is the wavelet scale j, the second
+ index is the orientation g, and each element is a
+ function on the sphere in MW sampling.
+ scal is the corresponding scaling function contribution
+ (i.e. just a single function on the sphere).
+ B is the wavelet parameter.
+ L is the angular band-limit.
+ N is the orientational band-limit.
+ J_min is the first wavelet scale in wav.
+
+ Options consist of parameter type and value pairs.
+ Valid options include:
+  'Spin'            = { non-negative integers (default=0) }
+  'Reality'         = { false        [do not assume f real (default)],
+                        true         [assume f real (improves performance)] }
+  'Upsample'        = { false        [multiresolution algorithm (default)],
+                        true       [full resolution curvelets] }
+  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+                               curvelets and scaling function.],
+                        false [Apply the usual normalisation factors such
+                               that the curvelets fulfil the admissibility
+                               condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the curvelets
+                       should be lowered from (default = 0)]
+  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],
+                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }
+
+
+ FOR ssht_plot_mollweide(f, L, &lt;options&gt;)
+ where f is the sampled function and L is the harmonic band-limit.
+ Options consist of parameter type and value pairs.  Valid options
+ include:
+  'Method'          = { 'MW'         [McEwen &amp; Wiaux sampling (default)],
+                        'MWSS'       [McEwen &amp; Wiaux symmetric sampling],
+                        'DH'         [Driscoll &amp; Healy sampling],
+                        'GL'         [Gauss-Legendre sampling] }
+  'ColourBar'       = { false        [do not add colour bar (default)],
+                        true         [add colour bar] }
+  'Mode'            = { 0            Plot amplitude, or modulus is f complex (default),
+                        1            Plot real part,
+                        2            Plot imaginaty part,
+                        3            Plot modulus and arrows for real/img angle }
+  'Spin'            = { non-negative integers (default=0) }
+ -----------------------------------------------------------
+ Log: 
+ -  constructed by Jennifer Y H Chan on 5th June 2015  
+ -----------------------------------------------------------
+ S2LET package to perform wavelet transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>	s2let_transform_curvelet_analysis_px2cur</li><li><a href="s2let_transform_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2px</a>	s2let_transform_curvelet_synthesis_cur2px</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo9</span>
+0002 <span class="comment">% -----------------------------------------------------------</span>
+0003 <span class="comment">% Plot curvelet coefficients on multiple Mollweide projections.</span>
+0004 <span class="comment">% The function generates one plot of the scaling function</span>
+0005 <span class="comment">% contribution and a grid of plots for each orientation of</span>
+0006 <span class="comment">% each scale of the wavelet contributions.</span>
+0007 <span class="comment">% -----------------------------------------------------------</span>
+0008 <span class="comment">% S2LET package to perform Wavelets on the Sphere.</span>
+0009 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0010 <span class="comment">% See LICENSE.txt for license details</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Modified S2LET package to perform Curvelets on the Sphere.</span>
+0013 <span class="comment">% -----------------------------------------------------------</span>
+0014 <span class="comment">% wav is cell array with all the wavelet coefficients.</span>
+0015 <span class="comment">% its first index is the wavelet scale j, the second</span>
+0016 <span class="comment">% index is the orientation g, and each element is a</span>
+0017 <span class="comment">% function on the sphere in MW sampling.</span>
+0018 <span class="comment">% scal is the corresponding scaling function contribution</span>
+0019 <span class="comment">% (i.e. just a single function on the sphere).</span>
+0020 <span class="comment">% B is the wavelet parameter.</span>
+0021 <span class="comment">% L is the angular band-limit.</span>
+0022 <span class="comment">% N is the orientational band-limit.</span>
+0023 <span class="comment">% J_min is the first wavelet scale in wav.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Options consist of parameter type and value pairs.</span>
+0026 <span class="comment">% Valid options include:</span>
+0027 <span class="comment">%  'Spin'            = { non-negative integers (default=0) }</span>
+0028 <span class="comment">%  'Reality'         = { false        [do not assume f real (default)],</span>
+0029 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
+0030 <span class="comment">%  'Upsample'        = { false        [multiresolution algorithm (default)],</span>
+0031 <span class="comment">%                        true       [full resolution curvelets] }</span>
+0032 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
+0033 <span class="comment">%                               curvelets and scaling function.],</span>
+0034 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
+0035 <span class="comment">%                               that the curvelets fulfil the admissibility</span>
+0036 <span class="comment">%                               condition (default)]}</span>
+0037 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0038 <span class="comment">%                       option indicates which spin number the curvelets</span>
+0039 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0040 <span class="comment">%  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],</span>
+0041 <span class="comment">%                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% FOR ssht_plot_mollweide(f, L, &lt;options&gt;)</span>
+0045 <span class="comment">% where f is the sampled function and L is the harmonic band-limit.</span>
+0046 <span class="comment">% Options consist of parameter type and value pairs.  Valid options</span>
+0047 <span class="comment">% include:</span>
+0048 <span class="comment">%  'Method'          = { 'MW'         [McEwen &amp; Wiaux sampling (default)],</span>
+0049 <span class="comment">%                        'MWSS'       [McEwen &amp; Wiaux symmetric sampling],</span>
+0050 <span class="comment">%                        'DH'         [Driscoll &amp; Healy sampling],</span>
+0051 <span class="comment">%                        'GL'         [Gauss-Legendre sampling] }</span>
+0052 <span class="comment">%  'ColourBar'       = { false        [do not add colour bar (default)],</span>
+0053 <span class="comment">%                        true         [add colour bar] }</span>
+0054 <span class="comment">%  'Mode'            = { 0            Plot amplitude, or modulus is f complex (default),</span>
+0055 <span class="comment">%                        1            Plot real part,</span>
+0056 <span class="comment">%                        2            Plot imaginaty part,</span>
+0057 <span class="comment">%                        3            Plot modulus and arrows for real/img angle }</span>
+0058 <span class="comment">%  'Spin'            = { non-negative integers (default=0) }</span>
+0059 <span class="comment">% -----------------------------------------------------------</span>
+0060 <span class="comment">% Log:</span>
+0061 <span class="comment">% -  constructed by Jennifer Y H Chan on 5th June 2015</span>
+0062 <span class="comment">% -----------------------------------------------------------</span>
+0063 <span class="comment">% S2LET package to perform wavelet transform on the Sphere.</span>
+0064 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0065 <span class="comment">% See LICENSE.txt for license details</span>
+0066 <span class="comment">% -----------------------------------------------------------</span>
+0067 
+0068 clear all;
+0069 close all ;
+0070 
+0071 load(<span class="string">'EGM2008_Topography_flms_L0128'</span>);
+0072 L = 16; 
+0073 flm_gen = flm(1:L^2,1);
+0074 f_gen = ssht_inverse(flm_gen, L, <span class="string">'Reality'</span>, true);
+0075      
+0076 <span class="comment">% ---------------</span>
+0077 <span class="comment">% Define curvelet parameters:</span>
+0078 <span class="comment">% ---------------</span>
+0079 Spin = 0;
+0080 B = 6;   
+0081 N= L;     <span class="comment">% Since m=l, the azimuthal band limit N = overall band limit L</span>
+0082 J_min = 1; <span class="comment">% minimum and maximum scale probed by wavelets</span>
+0083 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);  <span class="comment">%=ceil(log L/ log B);</span>
+0084 
+0085 
+0086 <span class="comment">% ================================================</span>
+0087 <span class="comment">% FULL RESOLUTION PLOT (Upsample: true)</span>
+0088 <span class="comment">% -----------------</span>
+0089 <span class="comment">% Signal analysis:</span>
+0090 <span class="comment">% -----------------</span>
+0091 <span class="comment">% Call matlab function analysis_lm2cur</span>
+0092 <span class="comment">%{</span>
+0093 [f_cur, f_scal] = s2let_transform_analysis_lm2cur(flm_gen,  <span class="keyword">...</span>
+0094                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0095                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0096                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0097                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0098                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0099                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0100                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0101                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0102 <span class="comment">%}</span>
+0103 [f_cur, f_scal] = <a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>(f_gen,  <span class="keyword">...</span>
+0104                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0105                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0106                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0107                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0108                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0109                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0110                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0111                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0112 
+0113 
+0114 <span class="comment">%----  Debug:</span>
+0115 <span class="comment">% figure</span>
+0116 <span class="comment">% ssht_plot_mollweide(f_scal, L, 'Mode', 1);</span>
+0117 <span class="comment">% whos f_scal</span>
+0118                                               
+0119 f_cur_new = cell(J+1-J_min, 2*N-1);  
+0120 <span class="keyword">for</span> j = J_min:J 
+0121    <span class="keyword">for</span> en = 1: 2*N-1 
+0122    f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
+0123    <span class="keyword">end</span>
+0124 <span class="keyword">end</span>   
+0125 <span class="comment">% figure</span>
+0126 <span class="comment">% ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);</span>
+0127 
+0128 zoomfactor =1.;  <span class="comment">%1.6;</span>
+0129 ns = ceil(sqrt(2+J-J_min+1)) ;
+0130 ny = 16;  <span class="comment">%4 % ns - 1 + rem(2+J-J_min+1 , ns) ;</span>
+0131 nx = 4;   <span class="comment">%3 % ns;</span>
+0132 
+0133 maxfigs = nx*ny;
+0134 pltroot = <span class="string">'../../../figs'</span> ; 
+0135 configstr = [<span class="string">'N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="string">'_Jmin'</span>,int2str(J_min)]; 
+0136 
+0137 figure(<span class="string">'Position'</span>,[100 100 1400 1200]) <span class="comment">%100 100 1300 1000</span>
+0138 subplot(ny, nx, 1);
+0139 <span class="comment">% --- plot initial data --- %</span>
+0140 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
+0141 <span class="comment">%</span>
+0142 title(<span class="string">'Initial data'</span>)
+0143 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0144 v = caxis;
+0145 temp = max(abs(v));
+0146 caxis([-temp temp])
+0147 <span class="comment">%</span>
+0148 subplot(ny, nx, 2);
+0149 <span class="comment">% --- plot scaling function contributions --- %</span>
+0150 ssht_plot_mollweide(f_scal, L, <span class="string">'Mode'</span>, 1);
+0151 <span class="comment">%</span>
+0152 title(<span class="string">'Scaling fct'</span>)
+0153 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0154 v = caxis;
+0155 temp = max(abs(v));
+0156 caxis([-temp temp])
+0157 <span class="comment">% --- plot curvelet kernel contributions --- %</span>
+0158 ind = 2;
+0159 <span class="keyword">for</span> j = J_min:J
+0160     <span class="keyword">for</span> en = 1: 2*N-1 <span class="comment">%N</span>
+0161         ind = ind + 1;
+0162         <span class="keyword">if</span> ind &lt;= maxfigs
+0163             subplot(ny, nx, ind);
+0164             <span class="comment">%</span>
+0165             ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, L, <span class="string">'Mode'</span>, 1);
+0166             <span class="comment">%</span>
+0167             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0168             v = caxis;
+0169             temp = max(abs(v));
+0170             caxis([-temp temp])
+0171             title([<span class="string">'Curvelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
+0172         <span class="keyword">end</span>
+0173     <span class="keyword">end</span>
+0174 <span class="keyword">end</span>
+0175 colormap(jet)
+0176 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_curvelet_EarthTomo_fullres.png'</span>]
+0177 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0178 
+0179 
+0180 <span class="comment">%{</span>
+0181 [f_cur, f_scal] = <a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>(f_gen,  <span class="keyword">...</span>
+0182                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0183                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0184                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0185                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0186                                                   <span class="string">'Upsample'</span>, false, <span class="keyword">...</span>
+0187                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0188                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0189                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0190                                               
+0191 <span class="comment">% MULTI-RESOLUTION PLOT</span>
+0192 figure(<span class="string">'Position'</span>,[100 100 1300 1000])
+0193 subplot(ny, nx, 1);
+0194 <span class="comment">%</span>
+0195 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
+0196 title(<span class="string">'Initial data'</span>)
+0197 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0198 v = caxis;
+0199 temp = max(abs(v));
+0200 caxis([-temp temp])
+0201 subplot(ny, nx, 2);
+0202 <span class="comment">%</span>
+0203 ssht_plot_mollweide(f_scal, L, <span class="string">'Mode'</span>, 1);
+0204 <span class="comment">%</span>
+0205 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0206 v = caxis;
+0207 temp = max(abs(v));
+0208 caxis([-temp temp])
+0209 title(<span class="string">'Scaling fct'</span>)
+0210 ind = 2; 
+0211 <span class="keyword">for</span> j = J_min:J
+0212 <span class="comment">%    for en = 1:2*N-1</span>
+0213         ind = ind + 1 ; 
+0214         <span class="keyword">if</span> ind &lt;= maxfigs
+0215             subplot(ny, nx, ind);
+0216             <span class="comment">% f_cur is numeric</span>
+0217             <span class="comment">%            ssht_plot_mollweide(f_cur{j-J_min+1,en}, L, 'Mode', 1);</span>
+0218             <span class="comment">%ssht_plot_mollweide(f_cur{j-J_min+1}(:), L, 'Mode', 1);</span>
+0219             <span class="comment">%</span>
+0220             ssht_plot_sphere(f_cur{j-J_min+1}(:), L);
+0221             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0222             v = caxis;
+0223             temp = max(abs(v));
+0224             caxis([-temp temp])
+0225             title([<span class="string">'Wavelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
+0226         <span class="keyword">end</span>
+0227 <span class="comment">%    end</span>
+0228 <span class="keyword">end</span>
+0229 
+0230 colormap(jet)
+0231 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_curvelet_EarthTomo_multires.png'</span>]
+0232 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0233 <span class="comment">%}</span>
+0234 
+0235 <span class="comment">% ----------</span>
+0236 <span class="comment">% Compare reconstructed signal with the initial signals:</span>
+0237 <span class="comment">% ----------</span>
+0238 
+0239 f_rec = <a href="s2let_transform_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0240                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0241                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0242                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0243                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0244                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0245                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0246                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0247                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0248 
+0249 figure(<span class="string">'Position'</span>,[100 100 900 200]) 
+0250 subplot(2, 2, 1);
+0251 ssht_plot_mollweide(f_gen,L);
+0252 title(<span class="string">'initial signal'</span>)
+0253 hold on
+0254 subplot(2, 2, 2);
+0255 ssht_plot_mollweide(f_rec,L);
+0256 title(<span class="string">'reconstructed signal'</span>)
+0257 check_error = max(abs(f_gen(:)-f_rec(:)))
+0258                            
+0259 <span class="comment">%fname = [pltroot,'/s2let_demo9_', configstr, '_curvelet_EarthTomo_multires_Int_Rec_signal.png']</span>
+0260 <span class="comment">%print('-r200', '-dpng', fname)</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

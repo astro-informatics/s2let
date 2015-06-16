@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_hpx_sampling_ring</title>
+  <meta name="keywords" content="s2let_hpx_sampling_ring">
+  <meta name="description" content="s2let_hpx_sampling_ring">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_hpx_sampling_ring.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_hpx_sampling_ring
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_hpx_sampling_ring</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [thetas, phis] = s2let_hpx_sampling_ring(nside) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_hpx_sampling_ring 
+ Compute the Healpix sampling nodes
+ Default usage :
+
+   [thetas, phis] = s2let_hpx_sampling_ring(nside)
+
+ nside is the input Healpix resolution,
+ thetas contains the colatitudes of the nodes,
+ phis contains the longitudes of the nodes.
+
+ S2LET package to perform Wavelets transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_hpx_plot_mollweide.html" class="code" title="function s2let_hpx_plot_mollweide(f)">s2let_hpx_plot_mollweide</a>	s2let_hpx_plot_mollweide</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [theta, phi] = healpix_pix2ang_ring(ipix, nside)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [thetas, phis] = s2let_hpx_sampling_ring(nside)</a>
+0002 
+0003 <span class="comment">% s2let_hpx_sampling_ring</span>
+0004 <span class="comment">% Compute the Healpix sampling nodes</span>
+0005 <span class="comment">% Default usage :</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   [thetas, phis] = s2let_hpx_sampling_ring(nside)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% nside is the input Healpix resolution,</span>
+0010 <span class="comment">% thetas contains the colatitudes of the nodes,</span>
+0011 <span class="comment">% phis contains the longitudes of the nodes.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
+0014 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0015 <span class="comment">% See LICENSE.txt for license details</span>
+0016 
+0017 <span class="comment">%     npix = 12 * nside^2;</span>
+0018 <span class="comment">%     thetas = zeros(npix,1);</span>
+0019 <span class="comment">%     phis = zeros(npix,1);</span>
+0020 <span class="comment">%     for i = 1:npix</span>
+0021 <span class="comment">%        [t,p] = healpix_pix2ang_ring(i, nside);</span>
+0022 <span class="comment">%        thetas(i) = t;</span>
+0023 <span class="comment">%        phis(i) = p;</span>
+0024 <span class="comment">%     end</span>
+0025 
+0026     npix = 12 * nside^2;
+0027     ipix = 1:npix;
+0028     nl2 = 2 * nside;
+0029     ncap = 2  * nside * (nside - 1);  <span class="comment">% points in each polar cap, =0 for nside =1</span>
+0030 
+0031     thetas = zeros(npix,1);
+0032     phis = zeros(npix,1);
+0033     
+0034     ind = (ipix &lt;= ncap); <span class="comment">% North polar cap</span>
+0035         hip   = ipix(ind) .* 0.5;
+0036         fihip = fix(hip);
+0037         iring = fix( sqrt( hip - sqrt(fihip) ) ) + 1 ;<span class="comment">% counted from North pole</span>
+0038         iphi  = ipix(ind) - 2*iring.*(iring - 1) ;
+0039 
+0040         thetas(ind) = acos( 1.0 - iring.^2.0 ./ (3.0*nside^2.0) );
+0041         phis(ind)   = (iphi - 0.5) .* pi ./ (2.0.*iring);
+0042 
+0043     ind = (ipix &lt;= nl2*(5*nside+1) &amp; ipix &gt; ncap); <span class="comment">% Equatorial region</span>
+0044 
+0045        ip    = ipix(ind) - ncap - 1;
+0046        nl4   = 4*nside;
+0047        iring = floor( ip / nl4 ) + nside; <span class="comment">% counted from North pole</span>
+0048        iphi  = mod(ip,nl4) + 1;
+0049 
+0050        fodd  = 0.5 * (1 + mod(iring+nside,2)) ; <span class="comment">% 1 if iring+nside is odd, 1/2 otherwise</span>
+0051        thetas(ind) = acos( (nl2 - iring) ./ (1.5*nside) );
+0052        phis(ind)   = (iphi - fodd) * pi /(2.0*nside);
+0053 
+0054     ind = (ipix &gt; nl2*(5*nside+1) &amp; ipix &gt; ncap); <span class="comment">% South polar cap</span>
+0055 
+0056        ip    = npix - ipix(ind) + 1;
+0057        hip   = ip*0.5;
+0058        fihip = round(hip);
+0059        iring = floor( sqrt( hip - sqrt(fihip) ) ) + 1 ; <span class="comment">% counted from South pole</span>
+0060        iphi  = 4*iring + 1 - (ip - 2*iring.*(iring-1));
+0061 
+0062        thetas(ind) = acos( -1.0 + iring.^2 ./ (3.0*nside^2) );
+0063        phis(ind)   = (iphi - 0.5) * pi ./ (2.0*iring);
+0064 
+0065 <span class="keyword">end</span>
+0066 
+0067 <a name="_sub1" href="#_subfunctions" class="code">function [theta, phi] = healpix_pix2ang_ring(ipix, nside)</a>
+0068 
+0069     npix = 12 * nside^2;
+0070     nl2 = 2 * nside;
+0071     ncap = 2  * nside * (nside - 1);  <span class="comment">% points in each polar cap, =0 for nside =1</span>
+0072 
+0073     <span class="keyword">if</span> (ipix &lt;= ncap)
+0074         hip   = ipix * 0.5;
+0075         fihip = fix(hip);
+0076         iring = fix( sqrt( hip - sqrt(fihip) ) ) + 1 ;<span class="comment">% counted from North pole</span>
+0077         iphi  = ipix - 2*iring*(iring - 1) ;
+0078 
+0079         theta = acos( 1.0 - iring^2.0 / (3.0*nside^2.0) );
+0080         phi   = (iphi - 0.5) * pi/(2.0*iring);
+0081 
+0082     <span class="keyword">elseif</span> (ipix &lt;= nl2*(5*nside+1)) <span class="comment">% Equatorial region ------</span>
+0083 
+0084        ip    = ipix - ncap - 1;
+0085        nl4   = 4*nside;
+0086        iring = floor( ip / nl4 ) + nside; <span class="comment">% counted from North pole</span>
+0087        iphi  = mod(ip,nl4) + 1;
+0088 
+0089        fodd  = 0.5 * (1 + mod(iring+nside,2)) ; <span class="comment">% 1 if iring+nside is odd, 1/2 otherwise</span>
+0090        theta = acos( (nl2 - iring) / (1.5*nside) );
+0091        phi   = (iphi - fodd) * pi /(2.0*nside);
+0092 
+0093     <span class="keyword">else</span> <span class="comment">% South Polar cap -----------------------------------</span>
+0094 
+0095        ip    = npix - ipix + 1;
+0096        hip   = ip*0.5;
+0097        fihip = round(hip);
+0098        iring = floor( sqrt( hip - sqrt(fihip) ) ) + 1 ; <span class="comment">% counted from South pole</span>
+0099        iphi  = 4*iring + 1 - (ip - 2*iring*(iring-1));
+0100 
+0101        theta = acos( -1.0 + iring^2 / (3.0*nside^2) );
+0102        phi   = (iphi - 0.5) * pi/(2.0*iring);
+0103 
+0104     <span class="keyword">end</span>
+0105 
+0106 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

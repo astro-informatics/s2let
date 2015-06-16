@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo7_Spin_Curvelet_Plot_Funcs_and_Tiling</title>
+  <meta name="keywords" content="s2let_demo7_Spin_Curvelet_Plot_Funcs_and_Tiling">
+  <meta name="description" content="s2let_demo7_Curvelet_Plot_Funcs_and_Tiling">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo7_Spin_Curvelet_Plot_Funcs_and_Tiling.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo7_Spin_Curvelet_Plot_Funcs_and_Tiling
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo7_Curvelet_Plot_Funcs_and_Tiling</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo7_Curvelet_Plot_Funcs_and_Tiling
+ ------ About this demo -------- 
+ 1a) Compute and plot the harmonic tiling and the wavelet kernels.
+ 1b) Plot the scaling function and curvelet functions in real space. 
+ 2)  Plot the curvelets on the Sphere. 
+ 
+ Curvelets and the scaling function are generated via the matlab function 
+  &quot;s2let_curvelet_tiling(B, L, J_min, &lt;options&gt;)&quot;.  
+ External matlab function  
+  &quot;s2let_plot_cur_tiling(B, L, J_min, 'spin', Spin);&quot; is used to accomplish 1a) and 1b) 
+  &quot;s2let_plot_cur_on_sphere&quot; is called to accomplish 2). 
+ -----------------------------------------------------------
+ Log: 
+ -  constructed by Jennifer Y H Chan on 5th June 2014  
+ -----------------------------------------------------------
+ S2LET package to perform wavelet transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details
+ 
+ Modified S2LET package to perform Curvelets on the Sphere.
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_plot_spin_curvelet_on_sphere.html" class="code" title="function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_spin_curvelet_on_sphere</a>	</li><li><a href="s2let_plot_spin_curvelet_tiling.html" class="code" title="function s2let_plot_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_plot_spin_curvelet_tiling</a>	s2let_plot_spin_curvelet_tiling</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo7_Curvelet_Plot_Funcs_and_Tiling</span>
+0002 <span class="comment">% ------ About this demo --------</span>
+0003 <span class="comment">% 1a) Compute and plot the harmonic tiling and the wavelet kernels.</span>
+0004 <span class="comment">% 1b) Plot the scaling function and curvelet functions in real space.</span>
+0005 <span class="comment">% 2)  Plot the curvelets on the Sphere.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Curvelets and the scaling function are generated via the matlab function</span>
+0008 <span class="comment">%  &quot;s2let_curvelet_tiling(B, L, J_min, &lt;options&gt;)&quot;.</span>
+0009 <span class="comment">% External matlab function</span>
+0010 <span class="comment">%  &quot;s2let_plot_cur_tiling(B, L, J_min, 'spin', Spin);&quot; is used to accomplish 1a) and 1b)</span>
+0011 <span class="comment">%  &quot;s2let_plot_cur_on_sphere&quot; is called to accomplish 2).</span>
+0012 <span class="comment">% -----------------------------------------------------------</span>
+0013 <span class="comment">% Log:</span>
+0014 <span class="comment">% -  constructed by Jennifer Y H Chan on 5th June 2014</span>
+0015 <span class="comment">% -----------------------------------------------------------</span>
+0016 <span class="comment">% S2LET package to perform wavelet transform on the Sphere.</span>
+0017 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0018 <span class="comment">% See LICENSE.txt for license details</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Modified S2LET package to perform Curvelets on the Sphere.</span>
+0021 <span class="comment">% -----------------------------------------------------------</span>
+0022 clear all;
+0023 
+0024 <span class="comment">% ---------------</span>
+0025 <span class="comment">% Define curvelet parameters:</span>
+0026 <span class="comment">% ---------------</span>
+0027 Spin = 2;
+0028 B = 2;   <span class="comment">% for dyadic sampling</span>
+0029 L = 64;
+0030 N= L;     <span class="comment">% Since m=l, the azimuthal band limit N = overall band limit L</span>
+0031 J_min = 2; <span class="comment">% minimum and maximum scale probed by wavelets</span>
+0032 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B); <span class="comment">%=ceil(log L/ log B);</span>
+0033 
+0034 <span class="comment">% ---------------</span>
+0035 <span class="comment">% Plot the tiling of scaling function and curvelets in harmonic space:</span>
+0036 <span class="comment">% And plot the scaling function and curvelet functions in real space:</span>
+0037 <span class="comment">% ---------------</span>
+0038 disp(<span class="string">' - Plot the tiling of curvelets'</span>);
+0039 <a href="s2let_plot_spin_curvelet_tiling.html" class="code" title="function s2let_plot_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_plot_spin_curvelet_tiling</a>(B, L, J_min,<span class="keyword">...</span>
+0040                           <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0041                           <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0042                           <span class="string">'SpinLoweredFrom'</span>, 0);
+0043                
+0044 <span class="comment">% ---------------</span>
+0045 <span class="comment">% Plot the curvelets on the sphere:</span>
+0046 <span class="comment">% Define Euler angles (for rotation):</span>
+0047 <span class="comment">% ---------------</span>
+0048 alpha =  pi ;
+0049 beta = pi/2 ;
+0050 gamma = 0 ;
+0051 disp(<span class="string">' - Plot the curvelets on the sphere'</span>);
+0052 
+0053 <a href="s2let_plot_spin_curvelet_on_sphere.html" class="code" title="function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_spin_curvelet_on_sphere</a>(alpha, beta, gamma, B, L, J_min, <span class="keyword">...</span>
+0054                                 <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0055                                 <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0056                                 <span class="string">'SpinLoweredFrom'</span>, 0);
+0057 
+0058</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

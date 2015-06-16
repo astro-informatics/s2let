@@ -43,13 +43,13 @@ function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-len = size(f_cur);
+len = length(f_cur);
 temp = f_cur{len};
 sz = size(temp);
-if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
-    Lguessed = min([sz(1) sz(2)])
+if sz(1) == 2*sz(2)-1 || sz(1) == sz(3)
+    Lguessed = sz(2); 
 else
-    Lguessed = min([sz(1) sz(2)])-1   
+    Lguessed = (sz(3)+1)/2 ;
 end
 
 p = inputParser;

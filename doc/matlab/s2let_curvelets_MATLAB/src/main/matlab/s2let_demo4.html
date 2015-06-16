@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo4</title>
+  <meta name="keywords" content="s2let_demo4">
+  <meta name="description" content="s2let_demo4">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo4.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo4
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo4</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo4
+ Analyse Earth tomography data as a real MW map.
+ Compute the wavelet maps and plot them.
+ Plot 1 : multiresolution wavelet scales
+ Plot 2 : full resolution wavelet scales
+
+ S2LET package to perform Wavelets on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>	s2let_transform_analysis_mw</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo4</span>
+0002 <span class="comment">% Analyse Earth tomography data as a real MW map.</span>
+0003 <span class="comment">% Compute the wavelet maps and plot them.</span>
+0004 <span class="comment">% Plot 1 : multiresolution wavelet scales</span>
+0005 <span class="comment">% Plot 2 : full resolution wavelet scales</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% S2LET package to perform Wavelets on the Sphere.</span>
+0008 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0009 <span class="comment">% See LICENSE.txt for license details</span>
+0010 
+0011 load(<span class="string">'EGM2008_Topography_flms_L0128'</span>);
+0012 f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0013 
+0014 <span class="comment">%inputfile = 'data/earth_tomo_mw_128.fits';</span>
+0015 <span class="comment">%[f, L] = s2let_mw_read_real_map(inputfile);</span>
+0016 
+0017 B = 6;
+0018 N = 3;
+0019 J_min = 1;
+0020 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0021 
+0022 zoomfactor = 1.6;
+0023 ns = ceil(sqrt(2+J-J_min+1)) ;
+0024 ny = 4; <span class="comment">% ns - 1 + rem(2+J-J_min+1 , ns) ;</span>
+0025 nx = 3; <span class="comment">% ns;</span>
+0026 
+0027 maxfigs = nx*ny;
+0028 pltroot = <span class="string">'../../../figs'</span>
+0029 configstr = [<span class="string">'N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="string">'_Jmin'</span>,int2str(J_min)]
+0030 
+0031 [f_wav, f_scal] = <a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>(f, <span class="string">'B'</span>, B, <span class="string">'J_min'</span>, J_min, <span class="string">'N'</span>, N, <span class="string">'Upsample'</span>, true, <span class="string">'Spin'</span>, 0);
+0032 
+0033 <span class="comment">% FULL-RESOLUTION PLOT</span>
+0034 figure(<span class="string">'Position'</span>,[100 100 1300 1000])
+0035 subplot(ny, nx, 1);
+0036 ssht_plot_mollweide(f, L, <span class="string">'Mode'</span>, 1);
+0037 title(<span class="string">'Initial data'</span>)
+0038 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0039 v = caxis;
+0040 temp = max(abs(v));
+0041 caxis([-temp temp])
+0042 subplot(ny, nx, 2);
+0043 ssht_plot_mollweide(f_scal, L, <span class="string">'Mode'</span>, 1);
+0044 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0045 v = caxis;
+0046 temp = max(abs(v));
+0047 caxis([-temp temp])
+0048 title(<span class="string">'Scaling fct'</span>)
+0049 ind = 2;
+0050 <span class="keyword">for</span> j = J_min:J
+0051     <span class="keyword">for</span> en = 1:N
+0052         ind = ind + 1;
+0053         <span class="keyword">if</span> ind &lt;= maxfigs
+0054             subplot(ny, nx, ind);
+0055             ssht_plot_mollweide(f_wav{j-J_min+1,en}, L, <span class="string">'Mode'</span>, 1);
+0056             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0057             v = caxis;
+0058             temp = max(abs(v));
+0059             caxis([-temp temp])
+0060             title([<span class="string">'Wavelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
+0061         <span class="keyword">end</span>
+0062     <span class="keyword">end</span>
+0063 <span class="keyword">end</span>
+0064 
+0065 colormap(jet)
+0066 fname = [pltroot,<span class="string">'/s2let_demo4_'</span>, configstr, <span class="string">'_earth_multires.png'</span>]
+0067 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0068 
+0069 
+0070 
+0071 
+0072 [f_wav, f_scal] = <a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>(f, <span class="string">'B'</span>, B, <span class="string">'J_min'</span>, J_min, <span class="string">'N'</span>, N, <span class="string">'Upsample'</span>, false, <span class="string">'Spin'</span>, 0);
+0073 
+0074 <span class="comment">% MULTI-RESOLUTION PLOT</span>
+0075 figure(<span class="string">'Position'</span>,[100 100 1300 1000])
+0076 subplot(ny, nx, 1);
+0077 ssht_plot_mollweide(f, L, <span class="string">'Mode'</span>, 1);
+0078 title(<span class="string">'Initial data'</span>)
+0079 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0080 v = caxis;
+0081 temp = max(abs(v));
+0082 caxis([-temp temp])
+0083 subplot(ny, nx, 2);
+0084 bl = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(J_min-1,J_min,B,L) L ]);
+0085 ssht_plot_mollweide(f_scal, bl, <span class="string">'Mode'</span>, 1);
+0086 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0087 v = caxis;
+0088 temp = max(abs(v));
+0089 caxis([-temp temp])
+0090 title(<span class="string">'Scaling fct'</span>)
+0091 ind = 2;
+0092 <span class="keyword">for</span> j = J_min:J
+0093     <span class="keyword">for</span> en = 1:N
+0094         ind = ind + 1;
+0095         <span class="keyword">if</span> ind &lt;= maxfigs
+0096             subplot(ny, nx, ind);
+0097             bl =  min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,J_min,B,L) L ]);
+0098             ssht_plot_mollweide(f_wav{j-J_min+1,en}, bl, <span class="string">'Mode'</span>, 1);
+0099             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0100             v = caxis;
+0101             temp = max(abs(v));
+0102             caxis([-temp temp])
+0103             title([<span class="string">'Wavelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
+0104         <span class="keyword">end</span>
+0105     <span class="keyword">end</span>
+0106 <span class="keyword">end</span>
+0107 
+0108 
+0109 fname = [pltroot,<span class="string">'/s2let_demo4_'</span>, configstr, <span class="string">'_earth_fullres.png'</span>]
+0110 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0111 
+0112 
+0113</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

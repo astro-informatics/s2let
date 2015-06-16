@@ -83,7 +83,7 @@ flm_init= ssht_forward(f_init, args.L, 'Spin', args.Spin,  'Reality', args.Reali
                                                                 'SpinLowered', args.SpinLowered, ...
                                                                 'SpinLoweredFrom',  args.SpinLoweredFrom, ...
                                                                 'Sampling', args.Sampling);
-
+                                                         
 
                                                       
 % Clear arrary memory:

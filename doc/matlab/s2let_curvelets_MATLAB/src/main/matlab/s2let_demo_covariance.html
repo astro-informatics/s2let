@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo_covariance</title>
+  <meta name="keywords" content="s2let_demo_covariance">
+  <meta name="description" content="s2let_demo_covariance - Run covariance demo.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo_covariance.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo_covariance
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo_covariance - Run covariance demo.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo_covariance - Run covariance demo.
+
+ Demo to compare theoretical covariance of wavelet coefficients with
+ empirical data from using our transform functions. The empirical
+ covariance is computed for several sets of harmonic coefficients,
+ and the theoretical covariance is compared to the mean of those
+ calculations in units of its standard deviation.
+
+ Default usage is given by
+
+   s2let_demo_covariance
+
+ Authors: Martin Büttner (m.buettner.d@gmail.com)
+          Jason McEwen (www.jasonmcewen.org)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>	s2let_transform_analysis_mw</li><li><a href="s2let_wavelet_tiling.html" class="code" title="function [psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min, varargin)">s2let_wavelet_tiling</a>	s2let_wavelet_tiling - Compute tiling in harmonic space.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo_covariance - Run covariance demo.</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Demo to compare theoretical covariance of wavelet coefficients with</span>
+0004 <span class="comment">% empirical data from using our transform functions. The empirical</span>
+0005 <span class="comment">% covariance is computed for several sets of harmonic coefficients,</span>
+0006 <span class="comment">% and the theoretical covariance is compared to the mean of those</span>
+0007 <span class="comment">% calculations in units of its standard deviation.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Default usage is given by</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   s2let_demo_covariance</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Authors: Martin Büttner (m.buettner.d@gmail.com)</span>
+0014 <span class="comment">%          Jason McEwen (www.jasonmcewen.org)</span>
+0015 
+0016 <span class="comment">% S2LET package to perform Wavelet transforms on the sphere.</span>
+0017 <span class="comment">% Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen</span>
+0018 <span class="comment">% See LICENSE.txt for license details</span>
+0019 
+0020 clear all;
+0021 
+0022 <span class="comment">% Define parameters</span>
+0023 B = 2;
+0024 L = 16;
+0025 N = L;
+0026 Spin = 0;
+0027 J_min = 2;
+0028 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0029 
+0030 var_flm = 1; <span class="comment">% Should we use the actual variance var(flmn) of each</span>
+0031              <span class="comment">% realization here instead?</span>
+0032 
+0033 <span class="comment">% Compute theoretical covariance of wavelet coefficients.</span>
+0034 <span class="comment">% The covariance &lt;Wj(rho)Wj*(rho)&gt; is given by the following expression:</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% sigma^2 Sum(l,n) |Psij_ln|^2</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% Where sigma^2 is the variance of the harmonic coefficients and Psij_lm</span>
+0039 <span class="comment">% are the harmonic coefficients of the j-th wavelet.</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">% A similar expression applies for the scaling function coefficients.</span>
+0042 
+0043 [psi_lm, phi_l] = <a href="s2let_wavelet_tiling.html" class="code" title="function [psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min, varargin)">s2let_wavelet_tiling</a>(B, L, N, Spin, J_min);
+0044 
+0045 covar_W_phi_theory = 0;
+0046 <span class="keyword">for</span> el = 0:L-1
+0047     covar_W_phi_theory = covar_W_phi_theory + phi_l(el+1) * phi_l(el+1)';
+0048 <span class="keyword">end</span>
+0049 
+0050 covar_W_psi_theory = zeros(J-J_min+1,1);
+0051 <span class="keyword">for</span> j = J_min:J
+0052     ind = 1;
+0053     <span class="keyword">for</span> el = 0:L-1
+0054         <span class="keyword">for</span> n = -el:el
+0055             covar_W_psi_theory(j-J_min+1) = covar_W_psi_theory(j-J_min+1) + psi_lm(ind,j+1) * psi_lm(ind,j+1)';
+0056             ind = ind + 1;
+0057         <span class="keyword">end</span>
+0058     <span class="keyword">end</span>
+0059 <span class="keyword">end</span>
+0060 
+0061 covar_W_phi_theory = covar_W_phi_theory .* var_flm
+0062 covar_W_psi_theory = covar_W_psi_theory .* var_flm
+0063 
+0064 runs = 100;
+0065 <span class="keyword">if</span> J_min == 0
+0066     <span class="comment">% Ergodicity fails for J_min = 0, because the scaling function will</span>
+0067     <span class="comment">% only cover f00. Hence &lt;flm flm*&gt; will be 0 in that case and the</span>
+0068     <span class="comment">% scaling coefficients will all be the same. So, if we do have</span>
+0069     <span class="comment">% J_min = 0, we take the variance over all realisations instead (of</span>
+0070     <span class="comment">% course, we then won't have a standard deviation to compare it to the</span>
+0071     <span class="comment">% theoretical variance).</span>
+0072     f_scals = zeros(runs,1);
+0073 <span class="keyword">else</span>
+0074     covar_W_phi_data = zeros(1, runs);
+0075 <span class="keyword">end</span>
+0076 
+0077 covar_W_psi_data = zeros(J-J_min+1, runs);
+0078 
+0079 
+0080 <span class="keyword">for</span> i = 1:runs
+0081     <span class="comment">% Generate normally distributed random flmn of complex signal</span>
+0082     <span class="comment">% with mean 0 and variance 1</span>
+0083     flm = zeros(L^2 - Spin^2, 1);
+0084     flm = [zeros(Spin^2,1); (randn(size(flm)) + 1i*randn(size(flm)))/sqrt(2)*sqrt(var_flm)];
+0085 
+0086     <span class="comment">% Compute inverse then forward transform.</span>
+0087     f = ssht_inverse(flm, L, <span class="string">'Spin'</span>, Spin);
+0088 
+0089     [f_wav, f_scal] = <a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>(complex(real(f), imag(f)), <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'N'</span>, N,    <span class="keyword">...</span>
+0090                                                   <span class="string">'Spin'</span>, Spin, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0091                                                   <span class="string">'Upsample'</span>, true);
+0092 
+0093     <span class="keyword">if</span> J_min == 0
+0094         f_scals(i) = f_scal(1);
+0095     <span class="keyword">else</span>
+0096         covar_W_phi_data(i) = var(f_scal(:));
+0097     <span class="keyword">end</span>
+0098 
+0099     <span class="keyword">for</span> j = J_min:J
+0100         f_wav_j = f_wav{j-J_min+1};
+0101         covar_W_psi_data(j-J_min+1,i) = var(f_wav_j(:));
+0102     <span class="keyword">end</span>
+0103 <span class="keyword">end</span>
+0104 
+0105 <span class="keyword">if</span> J_min == 0
+0106     covar_W_phi_data = var(f_scals(:))
+0107     W_phi_error_absolute = abs(covar_W_phi_data - covar_W_phi_theory)
+0108 <span class="keyword">else</span>
+0109     mean_covar_W_phi_data = mean(covar_W_phi_data)
+0110     std_covar_W_phi_data = std(covar_W_phi_data)
+0111     W_phi_error_in_std = abs(mean_covar_W_phi_data - covar_W_phi_theory)/std_covar_W_phi_data
+0112 <span class="keyword">end</span>
+0113 
+0114 mean_covar_W_psi_data = mean(covar_W_psi_data,2)
+0115 std_covar_W_psi_data = std(covar_W_psi_data,0,2)
+0116 W_psi_error_in_std = abs(mean_covar_W_psi_data - covar_W_psi_theory)./std_covar_W_psi_data</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

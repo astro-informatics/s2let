@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_plot_wavs</title>
+  <meta name="keywords" content="s2let_plot_wavs">
+  <meta name="description" content="s2let_plot_wavs">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_plot_wavs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_plot_wavs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_plot_wavs</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_plot_wavs</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_plot_wavs</span>
+0002 
+0003 load(<span class="string">'kappas_spline'</span>);
+0004 load(<span class="string">'kappas_s2dw'</span>);
+0005 load(<span class="string">'kappas_need'</span>);
+0006 
+0007 B = 3;
+0008 J_min = 2;
+0009 L = 128;
+0010 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0011 Jmax = 3;
+0012 
+0013 ns = ceil(sqrt(2+J-J_min+1)) ;
+0014 nx = 1;
+0015 ny = 3;
+0016 
+0017 
+0018 
+0019 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0020 xi = 0:0.01:L-1;
+0021 x = 0:L-1;
+0022 
+0023 
+0024 figure(<span class="string">'Position'</span>,[100 100 900 450])
+0025 yi = interp1(x,kappa0_spline,xi,<span class="string">'pchip'</span>);
+0026 semilogx(xi, yi, <span class="string">'-.r'</span>, <span class="string">'LineWidth'</span>, 2);
+0027 hold on;
+0028 yi = interp1(x,kappa0_s2dw,xi,<span class="string">'pchip'</span>);
+0029 plot(xi, yi, <span class="string">'-k'</span>, <span class="string">'LineWidth'</span>, 2);
+0030 yi = interp1(x,kappa0_need,xi,<span class="string">'pchip'</span>);
+0031 plot(xi, yi, <span class="string">'--b'</span>, <span class="string">'LineWidth'</span>, 2);
+0032 <span class="keyword">for</span> j = J_min:J  
+0033   colour = rand(1,3)*0.9;
+0034   yi = interp1(x, kappa_spline(j+1,:), xi,<span class="string">'pchip'</span>);
+0035   plot(xi, yi, <span class="string">'-.r'</span>, <span class="string">'LineWidth'</span>, 2)<span class="comment">%, 'Color', colour);</span>
+0036   yi = interp1(x, kappa_s2dw(j+1,:), xi,<span class="string">'pchip'</span>);
+0037   plot(xi, yi, <span class="string">'-k'</span>, <span class="string">'LineWidth'</span>, 2)<span class="comment">%, 'Color', colour);</span>
+0038   yi = interp1(x, kappa_need(j+1,:), xi,<span class="string">'pchip'</span>);
+0039   plot(xi, yi, <span class="string">'--b'</span>, <span class="string">'LineWidth'</span>, 2)<span class="comment">%, 'Color', colour);</span>
+0040 <span class="keyword">end</span>
+0041 axis([1 L -0.05 1.15]);
+0042 set(gca,<span class="string">'XTick'</span>,2.^[0:(J+2)]);
+0043 hleg1 = legend(<span class="string">'B-Spline'</span>, <span class="string">'SD'</span>, <span class="string">'Needlet'</span>);
+0044 set(hleg1, <span class="string">'Position'</span>, [.15,.25,.1,.2]);
+0045 
+0046 
+0047 [thetas, phis, n, ntheta, nphi] = ssht_sampling(L);
+0048 figure(<span class="string">'Position'</span>,[100 100 900 200]) 
+0049 
+0050 h = subplot(nx, ny, 1);
+0051 hold on
+0052 flm = zeros(L^2,1);
+0053 <span class="keyword">for</span> l = 0:L-1
+0054     flm(l^2+l+1,1) = kappa0_spline(l+1);
+0055 <span class="keyword">end</span>     
+0056 f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0057 plot(thetas, f(:,1), <span class="string">'-.r'</span>, <span class="string">'LineWidth'</span>, 2)
+0058 mx = 1.1*max(f(:,1));
+0059 axis([0 2. -mx/8 mx ])
+0060 flm = zeros(L^2,1);
+0061 <span class="keyword">for</span> l = 0:L-1
+0062     flm(l^2+l+1,1) = kappa0_s2dw(l+1);
+0063 <span class="keyword">end</span>     
+0064 f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0065 plot(thetas, f(:,1), <span class="string">'-k'</span>, <span class="string">'LineWidth'</span>, 2)
+0066    
+0067 flm = zeros(L^2,1);
+0068 <span class="keyword">for</span> l = 0:L-1
+0069     flm(l^2+l+1,1) = kappa0_need(l+1);
+0070 <span class="keyword">end</span>     
+0071 f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0072 plot(thetas, f(:,1), <span class="string">'--b'</span>, <span class="string">'LineWidth'</span>, 2)
+0073    
+0074    
+0075 <span class="keyword">for</span> j = J_min:Jmax
+0076    h = subplot(nx, ny, j-J_min+2);
+0077    hold on
+0078    flm = zeros(L^2,1);
+0079     <span class="keyword">for</span> l = 0:L-1
+0080         flm(l^2+l+1,1) = kappa_spline(j+1,l+1);
+0081     <span class="keyword">end</span>  
+0082    f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0083    plot(thetas, f(:,1), <span class="string">'-.r'</span>, <span class="string">'LineWidth'</span>, 2) 
+0084     mx = 1.1*max(f(:,1));
+0085     axis([0 2. -mx/7 mx ])
+0086    flm = zeros(L^2,1);
+0087     <span class="keyword">for</span> l = 0:L-1
+0088         flm(l^2+l+1,1) = kappa_s2dw(j+1,l+1);
+0089     <span class="keyword">end</span>  
+0090    f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0091    plot(thetas, f(:,1), <span class="string">'-k'</span>, <span class="string">'LineWidth'</span>, 2) 
+0092    flm = zeros(L^2,1);
+0093     <span class="keyword">for</span> l = 0:L-1
+0094         flm(l^2+l+1,1) = kappa_need(j+1,l+1);
+0095     <span class="keyword">end</span>  
+0096    f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0097    plot(thetas, f(:,1), <span class="string">'--b'</span>, <span class="string">'LineWidth'</span>, 2) 
+0098 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

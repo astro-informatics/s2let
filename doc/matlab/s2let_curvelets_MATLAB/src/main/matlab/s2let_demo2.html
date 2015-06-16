@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo2</title>
+  <meta name="keywords" content="s2let_demo2">
+  <meta name="description" content="s2let_demo2">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo2</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo2
+ Compute and plot the harmonic tiling and the wavelet kernels.
+
+ S2LET package to perform Wavelets on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_plot_axisym_tiling.html" class="code" title="function s2let_plot_axisym_tiling(B, L, J_min)">s2let_plot_axisym_tiling</a>	plot_axisym_tiling - Plot tiling in harmonic space.</li><li><a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>	s2let_axisym_tiling - Compute tiling in harmonic space.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo2</span>
+0002 <span class="comment">% Compute and plot the harmonic tiling and the wavelet kernels.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% S2LET package to perform Wavelets on the Sphere.</span>
+0005 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0006 <span class="comment">% See LICENSE.txt for license details</span>
+0007 
+0008 B = 2;
+0009 zoomfactor = 1.4;
+0010 J_min = 2;
+0011 L = 128;
+0012 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0013 type = <span class="string">'colour'</span>;
+0014 lighting = true;
+0015 
+0016 ns = ceil(sqrt(2+J-J_min+1)) ;
+0017 nx = ns - 1 + rem(2+J-J_min + 1, ns) ;
+0018 ny = ns;
+0019 
+0020 [kappa kappa0] = <a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>(B, L, J_min);
+0021 
+0022 <a href="s2let_plot_axisym_tiling.html" class="code" title="function s2let_plot_axisym_tiling(B, L, J_min)">s2let_plot_axisym_tiling</a>(B, L, J_min);
+0023 
+0024 figure(<span class="string">'Position'</span>,[100 100 1100 700])
+0025 
+0026 h=subplot(nx, ny, 1);
+0027 flm = zeros(L^2,1);
+0028 <span class="keyword">for</span> l = 0:L-1
+0029     flm(l^2+l+1,1) = kappa0(l+1);
+0030 <span class="keyword">end</span>
+0031 f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0032 ssht_plot_sphere(f, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0033 zoom(zoomfactor)
+0034 v = caxis;
+0035 temp = max(abs(v));
+0036 caxis([-temp temp])
+0037 <span class="comment">%title('k0')</span>
+0038 locate = get(h,<span class="string">'title'</span>);
+0039 pos = get(locate,<span class="string">'position'</span>);
+0040 pos(1,2) = pos(1,2)+0.7;
+0041 pos(1,1) = pos(1,1)-0.7;
+0042 set(locate,<span class="string">'pos'</span>,pos);
+0043 
+0044 <span class="keyword">for</span> j = J_min:5
+0045    h=subplot(nx, ny, j-J_min+2);
+0046    flm = zeros(L^2,1);
+0047     <span class="keyword">for</span> l = 0:L-1
+0048         flm(l^2+l+1,1) = kappa(j+1,l+1);
+0049     <span class="keyword">end</span>
+0050    f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0051    ssht_plot_sphere(f, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0052    v = caxis;
+0053    temp = max(abs(v));
+0054    caxis([-temp temp])
+0055    colormap(jet)
+0056    <span class="comment">%title(['j',int2str(j)-J_min+1])</span>
+0057    locate = get(h,<span class="string">'title'</span>);
+0058    pos = get(locate,<span class="string">'position'</span>);
+0059    pos(1,2) = pos(1,2)+0.7;
+0060    pos(1,1) = pos(1,1)-0.7;
+0061    set(locate,<span class="string">'pos'</span>,pos);
+0062    zoom(zoomfactor)
+0063 <span class="keyword">end</span>
+0064 
+0065 
+0066</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo3</title>
+  <meta name="keywords" content="s2let_demo3">
+  <meta name="description" content="s2let_demo3">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo3.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo3
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo3</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo3
+ Analyse some CMB simulation from a valid HEALPIX map
+ Compute the output wavelets as Healpix maps and plot them.
+
+ S2LET package to perform Wavelets on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_hpx_alm2map.html" class="code" title="function f = s2let_hpx_alm2map(flm, nside, varargin)">s2let_hpx_alm2map</a>	s2let_axisym_synthesis</li><li><a href="s2let_hpx_map2alm.html" class="code" title="function flm = s2let_hpx_map2alm(f, varargin)">s2let_hpx_map2alm</a>	s2let_hpx_axisym_analysis</li><li><a href="s2let_hpx_plot_mollweide.html" class="code" title="function s2let_hpx_plot_mollweide(f)">s2let_hpx_plot_mollweide</a>	s2let_hpx_plot_mollweide</li><li><a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>	s2let_hpx_read_real_map</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_axisym_analysis_hpx.html" class="code" title="function [f_wav, f_scal] = s2let_transform_axisym_analysis_hpx(f, varargin)">s2let_transform_axisym_analysis_hpx</a>	s2let_transform_axisym_analysis_hpx</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo3</span>
+0002 <span class="comment">% Analyse some CMB simulation from a valid HEALPIX map</span>
+0003 <span class="comment">% Compute the output wavelets as Healpix maps and plot them.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% S2LET package to perform Wavelets on the Sphere.</span>
+0006 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0007 <span class="comment">% See LICENSE.txt for license details</span>
+0008 
+0009 L = 192;
+0010 B = 3;
+0011 J_min = 2;
+0012 nside_recon = 128;
+0013 s2let_path = <span class="string">'.'</span>
+0014 inputfile = strcat(s2let_path,<span class="string">'/data/somecmbsimu_hpx_128.fits'</span>)
+0015 
+0016 <span class="comment">% Read the file</span>
+0017 [f_ini, nside] = <a href="s2let_hpx_read_real_map.html" class="code" title="function [healpixmap, nside]= s2let_hpx_read_real_map(file)">s2let_hpx_read_real_map</a>(inputfile);
+0018 
+0019 <span class="comment">% Band limit the data</span>
+0020 flm = <a href="s2let_hpx_map2alm.html" class="code" title="function flm = s2let_hpx_map2alm(f, varargin)">s2let_hpx_map2alm</a>(f_ini, <span class="string">'L'</span>, L);
+0021 f = <a href="s2let_hpx_alm2map.html" class="code" title="function f = s2let_hpx_alm2map(flm, nside, varargin)">s2let_hpx_alm2map</a>(flm, nside_recon, <span class="string">'L'</span>, L);
+0022 
+0023 <span class="comment">% Perform decomposition</span>
+0024 [f_wav, f_scal] = <a href="s2let_transform_axisym_analysis_hpx.html" class="code" title="function [f_wav, f_scal] = s2let_transform_axisym_analysis_hpx(f, varargin)">s2let_transform_axisym_analysis_hpx</a>(f,<span class="string">'B'</span>,B,<span class="string">'L'</span>,L,<span class="string">'J_min'</span>,J_min);
+0025 
+0026 <span class="comment">% Plot</span>
+0027 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0028 zoomfactor = 1.2;
+0029 ns = ceil(sqrt(2+J-J_min+1)) ;
+0030 ny = ns - 1 ;
+0031 nx = ns ;
+0032 figure(<span class="string">'Position'</span>,[100 100 1300 1000])
+0033 
+0034 subplot(nx, ny, 1);
+0035 <a href="s2let_hpx_plot_mollweide.html" class="code" title="function s2let_hpx_plot_mollweide(f)">s2let_hpx_plot_mollweide</a>(f);
+0036 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0037 title(<span class="string">'Initial band-limited data'</span>)
+0038 
+0039 subplot(nx, ny, 2);
+0040 <a href="s2let_hpx_plot_mollweide.html" class="code" title="function s2let_hpx_plot_mollweide(f)">s2let_hpx_plot_mollweide</a>(f_scal);
+0041 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0042 title(<span class="string">'Scaling fct'</span>)
+0043 
+0044 <span class="keyword">for</span> j = J_min:J
+0045    subplot(nx, ny, j-J_min+3);
+0046    <a href="s2let_hpx_plot_mollweide.html" class="code" title="function s2let_hpx_plot_mollweide(f)">s2let_hpx_plot_mollweide</a>(f_wav{j-J_min+1});
+0047    campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0048    title([<span class="string">'Wavelet scale : '</span>,int2str(j)-J_min+1])
+0049 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

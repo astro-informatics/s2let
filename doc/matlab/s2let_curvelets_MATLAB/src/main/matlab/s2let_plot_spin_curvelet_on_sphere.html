@@ -1,0 +1,313 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_plot_spin_curvelet_on_sphere</title>
+  <meta name="keywords" content="s2let_plot_spin_curvelet_on_sphere">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_plot_spin_curvelet_on_sphere.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_plot_spin_curvelet_on_sphere
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">
+ s2let_plot_cur_on_sphere -
+ Plot curvelet coefficients on multiple spheres.
+
+ This function
+ i) compute the j-th curvelet, rotated by rho=(alpha, beta, gamma) in
+ harmonic space and reconstruct it on the sphere.
+ ii) generates one plot of the scaling function contribution and
+ a grid of plots for each orientation of each scale of the
+ curvelet contributions.
+
+ Default usage :
+
+   s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, &lt;options&gt;)
+
+ (alpha, beta, gamma) are the Euler's angles for rotationing the sphere.
+ B is the wavelet dilation factor 
+ L is the angular band-limit.
+ J_min is the first curvelet scale in cur.
+
+ Option :
+  'N'               = { Azimuthal band-limit; N &gt; 0 , and should =L for curvelets; (default = L) }
+  'Spin'            = { Spin number; Spin &gt;= 0 (default = 0) }
+  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+                              wavelets and scaling function.],
+                        false [Apply the usual normalisation factors such
+                              that the wavelets fulfil the admissibility
+                               condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the wavelets
+                       should be lowered from (default = 0)]
+  'Reality'         = { false        [do not assume corresponding signal f real (default)],
+                        true         [assume f real (improves performance)] }
+  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],
+                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }
+
+
+ j is the order of the curvelet under consideration (depends on B)
+ rho=(alpha, beta, gamma) is the rotation in SO(3) by which to rotate
+ the curvelet
+ L if harmonic band-limit for the reconstruction on the sphere
+ psi_j is the reconstructed curvelet on the sphere, at resolution L
+
+ ---------------------------------------------------------
+ S2LET package to perform wavelet transforms on the sphere.
+ Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen
+ See LICENSE.txt for license details
+
+ Modified S2LET package to perform curvelet transforms on the Sphere.
+ ---------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_spin_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_spin_curvelet_tiling</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_demo7_Spin_Curvelet_Plot_Funcs_and_Tiling.html" class="code" title="">s2let_demo7_Spin_Curvelet_Plot_Funcs_and_Tiling</a>	s2let_demo7_Curvelet_Plot_Funcs_and_Tiling</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% s2let_plot_cur_on_sphere -</span>
+0004 <span class="comment">% Plot curvelet coefficients on multiple spheres.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% This function</span>
+0007 <span class="comment">% i) compute the j-th curvelet, rotated by rho=(alpha, beta, gamma) in</span>
+0008 <span class="comment">% harmonic space and reconstruct it on the sphere.</span>
+0009 <span class="comment">% ii) generates one plot of the scaling function contribution and</span>
+0010 <span class="comment">% a grid of plots for each orientation of each scale of the</span>
+0011 <span class="comment">% curvelet contributions.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Default usage :</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, &lt;options&gt;)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% (alpha, beta, gamma) are the Euler's angles for rotationing the sphere.</span>
+0018 <span class="comment">% B is the wavelet dilation factor</span>
+0019 <span class="comment">% L is the angular band-limit.</span>
+0020 <span class="comment">% J_min is the first curvelet scale in cur.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Option :</span>
+0023 <span class="comment">%  'N'               = { Azimuthal band-limit; N &gt; 0 , and should =L for curvelets; (default = L) }</span>
+0024 <span class="comment">%  'Spin'            = { Spin number; Spin &gt;= 0 (default = 0) }</span>
+0025 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
+0026 <span class="comment">%                              wavelets and scaling function.],</span>
+0027 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
+0028 <span class="comment">%                              that the wavelets fulfil the admissibility</span>
+0029 <span class="comment">%                               condition (default)]}</span>
+0030 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0031 <span class="comment">%                       option indicates which spin number the wavelets</span>
+0032 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0033 <span class="comment">%  'Reality'         = { false        [do not assume corresponding signal f real (default)],</span>
+0034 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
+0035 <span class="comment">%  'Sampling'        = { 'MW'           [McEwen &amp; Wiaux sampling (default)],</span>
+0036 <span class="comment">%                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% j is the order of the curvelet under consideration (depends on B)</span>
+0040 <span class="comment">% rho=(alpha, beta, gamma) is the rotation in SO(3) by which to rotate</span>
+0041 <span class="comment">% the curvelet</span>
+0042 <span class="comment">% L if harmonic band-limit for the reconstruction on the sphere</span>
+0043 <span class="comment">% psi_j is the reconstructed curvelet on the sphere, at resolution L</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% ---------------------------------------------------------</span>
+0046 <span class="comment">% S2LET package to perform wavelet transforms on the sphere.</span>
+0047 <span class="comment">% Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen</span>
+0048 <span class="comment">% See LICENSE.txt for license details</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% Modified S2LET package to perform curvelet transforms on the Sphere.</span>
+0051 <span class="comment">% ---------------------------------------------------------</span>
+0052 
+0053 <span class="comment">% Parse arguments.</span>
+0054 p = inputParser;
+0055 p.addRequired(<span class="string">'alpha'</span>, @isnumeric);
+0056 p.addRequired(<span class="string">'beta'</span>, @isnumeric);
+0057 p.addRequired(<span class="string">'gamma'</span>, @isnumeric);
+0058 p.addRequired(<span class="string">'B'</span>, @isnumeric);
+0059 p.addRequired(<span class="string">'L'</span>, @isnumeric);
+0060 p.addRequired(<span class="string">'J_min'</span>, @isnumeric);
+0061 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0062 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0063 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0064 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0065 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
+0066 p.parse(alpha, beta, gamma, B, L, J_min, varargin{:});
+0067 args = p.Results;
+0068 
+0069 B = args.B ; 
+0070 L = args. L; 
+0071 N = L;
+0072 J_min = args.J_min; 
+0073 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0074 
+0075 <span class="comment">% Precompute Wigner small-d functions</span>
+0076 d = zeros(L, 2*L-1, 2*L-1);
+0077 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, args.beta);  <span class="comment">%el_min, beta);</span>
+0078 <span class="keyword">for</span> el = 1:L-1  <span class="comment">%el_min:L-1  %</span>
+0079     d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, args.beta);
+0080 <span class="keyword">end</span>
+0081 
+0082 <span class="comment">%[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...</span>
+0083 [cur_lm scal_l] = <a href="s2let_spin_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_spin_curvelet_tiling</a>(B, L, J_min, <span class="keyword">...</span>
+0084                                              <span class="string">'Spin'</span>, args.Spin, <span class="keyword">...</span>
+0085                                              <span class="string">'SpinLowered'</span>, args.SpinLowered,<span class="keyword">...</span>
+0086                                              <span class="string">'SpinLoweredFrom'</span>, args.SpinLoweredFrom);
+0087                                     
+0088                                     
+0089 original_spin = 0 ;  <span class="comment">% if we don't use spin-lowered wavelets (default).</span>
+0090 <span class="keyword">if</span> (args.SpinLowered ~= 0) <span class="comment">% For spin-lowered curvelet:</span>
+0091 original_spin= args.SpinLoweredFrom; 
+0092 <span class="keyword">end</span> 
+0093 el_min = max(abs(args.Spin), abs(original_spin));
+0094 
+0095 
+0096 <span class="comment">% Define plotting parameters</span>
+0097 zoomfactor = 1.4;
+0098 plot_caxis_scale = 2;
+0099 type = <span class="string">'colour'</span>;
+0100 lighting = true;
+0101 nx = 3;
+0102 ny = 4;
+0103 maxfigs = nx*ny;
+0104 pltroot = <span class="string">'../../../figs/'</span> ;
+0105 configstr = [<span class="string">'Spin'</span>,int2str(args.Spin),<span class="keyword">...</span>
+0106              <span class="string">'_N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="keyword">...</span>
+0107              <span class="string">'_Jmin'</span>,int2str(J_min)];
+0108 
+0109 <span class="comment">%</span>
+0110 <span class="comment">% curvelets:</span>
+0111 <span class="comment">%</span>
+0112 figure(<span class="string">'Position'</span>,[100 100 1200 600])
+0113 ind=0;
+0114 <span class="keyword">for</span> j = J_min:J,
+0115 <span class="comment">%% Rotate the curvelets coefficients</span>
+0116    flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, args.alpha, args.gamma);
+0117   <span class="keyword">if</span> args.Spin == 0
+0118    <span class="comment">% Compute the function (rotated):</span>
+0119    f_cur_rot = ssht_inverse(flm_cur_rot, L, <span class="string">'Method'</span>, args.Sampling, <span class="string">'Spin'</span>, args.Spin, <span class="string">'Reality'</span>, args.Reality);
+0120    ind = ind + 1;
+0121     <span class="keyword">if</span> ind &lt;= maxfigs
+0122      h = subplot(ny, nx, ind);
+0123      <span class="comment">%% Plot the rotated function on the sphere</span>
+0124      ssht_plot_sphere(f_cur_rot, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0125      title(h, [<span class="string">'Curvelet j = '</span>,int2str(j-J_min+1)])
+0126      locate = get(h,<span class="string">'title'</span>);
+0127      pos = get(locate,<span class="string">'position'</span>);
+0128      pos(1,2) = pos(1,2)+0.7;
+0129      pos(1,1) = pos(1,1)-0.7;
+0130      set(locate,<span class="string">'pos'</span>,pos);
+0131      v = caxis;
+0132      temp = max(abs(v));
+0133      caxis([-temp temp]*plot_caxis_scale);
+0134      zoom(zoomfactor)
+0135     <span class="keyword">end</span>
+0136    <span class="keyword">end</span>
+0137 
+0138    <span class="keyword">if</span> args.Spin &gt; 0
+0139     f_cur_rot = ssht_inverse(flm_cur_rot, L, <span class="string">'Method'</span>, args.Sampling,<span class="keyword">...</span>
+0140                              <span class="string">'Spin'</span>, args.Spin,<span class="string">'Reality'</span>,  args.Reality);
+0141     ind = ind + 1;
+0142      <span class="keyword">if</span> ind &lt;= maxfigs
+0143       h = subplot(ny, nx, ind);
+0144       ssht_plot_sphere(real(f_cur_rot), L,  <span class="string">'Type'</span>, type,<span class="string">'Lighting'</span>, lighting);
+0145       title(h, [<span class="string">'Spin Curvelet j = '</span>,int2str(j-J_min+1), <span class="string">', real part'</span>])
+0146       locate = get(h,<span class="string">'title'</span>);
+0147       pos = get(locate,<span class="string">'position'</span>);
+0148       pos(1,2) = pos(1,2)+0.7;
+0149       pos(1,1) = pos(1,1)-0.7;
+0150       set(locate,<span class="string">'pos'</span>,pos);
+0151       v = caxis;
+0152       temp = max(abs(v));
+0153       caxis([-temp temp]*plot_caxis_scale)
+0154       zoom(zoomfactor)
+0155      <span class="keyword">end</span>
+0156 
+0157     ind = ind + 1;
+0158     <span class="keyword">if</span> ind &lt;= maxfigs
+0159      h = subplot(ny, nx, ind);
+0160      ssht_plot_sphere(imag(f_cur_rot), L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0161      title(h, [<span class="string">'Spin Curvelet j = '</span>,int2str(j-J_min+1), <span class="string">', imag part'</span>])
+0162      locate = get(h,<span class="string">'title'</span>);
+0163      pos = get(locate,<span class="string">'position'</span>);
+0164      pos(1,2) = pos(1,2)+0.7;
+0165      pos(1,1) = pos(1,1)-0.7;
+0166      set(locate,<span class="string">'pos'</span>,pos);
+0167      v = caxis;
+0168      temp = max(abs(v));
+0169      caxis([-temp temp]*plot_caxis_scale)
+0170      zoom(zoomfactor)
+0171     <span class="keyword">end</span>
+0172 
+0173     ind = ind + 1;
+0174     <span class="keyword">if</span> ind &lt;= maxfigs
+0175      h = subplot(ny, nx, ind);
+0176      ssht_plot_sphere(abs(f_cur_rot), L, <span class="string">'Type'</span>, type,<span class="string">'Lighting'</span>, lighting);
+0177      title(h, [<span class="string">'Spin Curvelet j = '</span>,int2str(j-J_min+1), <span class="string">', abs part'</span>])
+0178      locate = get(h,<span class="string">'title'</span>);
+0179      pos = get(locate,<span class="string">'position'</span>);
+0180      pos(1,2) = pos(1,2)+0.7;
+0181      pos(1,1) = pos(1,1)-0.7;
+0182      set(locate,<span class="string">'pos'</span>,pos);
+0183      v = caxis;
+0184      temp = max(abs(v));
+0185      caxis([-temp temp]*plot_caxis_scale)
+0186      zoom(zoomfactor)
+0187     <span class="keyword">end</span>
+0188    <span class="keyword">end</span>
+0189 <span class="keyword">end</span>
+0190 <span class="comment">% output as png file</span>
+0191 colormap(jet)
+0192 fname = [pltroot,<span class="string">'s2let_plotfn_'</span>, configstr, <span class="string">'_cur_jet.png'</span>]
+0193 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0194 
+0195 <span class="comment">%</span>
+0196 <span class="comment">%  Scaling functions</span>
+0197 <span class="comment">%</span>
+0198 figure(<span class="string">'Position'</span>,[100 100 300 300])
+0199 h=subplot(1, 1, 1);
+0200 f = ssht_inverse(scal_l, L, <span class="string">'Reality'</span>, true);
+0201 ssht_plot_sphere(f, L, <span class="string">'Type'</span>, type, <span class="string">'Lighting'</span>, lighting);
+0202 <span class="comment">%</span>
+0203 title(h,<span class="string">'Scaling function'</span>)
+0204 locate = get(h,<span class="string">'title'</span>);
+0205 pos = get(locate,<span class="string">'position'</span>);
+0206 pos(1,2) = pos(1,2)+0.7;
+0207 pos(1,1) = pos(1,1)-0.7;
+0208 set(locate,<span class="string">'pos'</span>,pos);
+0209 zoom(1.2)
+0210 v = caxis;
+0211 temp = max(abs(v));
+0212 caxis([-temp temp]*plot_caxis_scale)
+0213 <span class="comment">% output as png file</span>
+0214 colormap(jet)
+0215 fname = [pltroot,<span class="string">'s2let_plotfn_'</span>, configstr, <span class="string">'_scal_jet.png'</span>] 
+0216 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0217</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

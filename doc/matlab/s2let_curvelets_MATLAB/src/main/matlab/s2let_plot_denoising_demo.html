@@ -1,0 +1,337 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_plot_denoising_demo</title>
+  <meta name="keywords" content="s2let_plot_denoising_demo">
+  <meta name="description" content="% Preparation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_plot_denoising_demo.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_plot_denoising_demo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Preparation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Preparation</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>	s2let_mw_read_real_map</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Preparation</span>
+0002 
+0003 <span class="comment">% How many sigmas of the spin signal data should be contained in the</span>
+0004 <span class="comment">% color bar.</span>
+0005 sigmas = 2;
+0006 
+0007 position = [ 500 500 1000 800 ];
+0008 set(0, <span class="string">'DefaultFigurePosition'</span>, position);
+0009 plot_root = <span class="string">'../../../figs/'</span>;
+0010 plot_size = [0 0 23 13];
+0011 
+0012 <span class="comment">% Set working directory to script's location</span>
+0013 <span class="comment">% (assumed to be src/main/matlab)</span>
+0014 
+0015 cd(fileparts(mfilename(<span class="string">'fullpath'</span>)))
+0016 
+0017 <span class="comment">%% Plot spin map results</span>
+0018 
+0019 [f_Q, L] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_real_input.fits'</span>);
+0020 [f_Q_noise, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_real_noise.fits'</span>);
+0021 [f_Q_input_noise, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_real_input_noise.fits'</span>);
+0022 [f_Q_denoised, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_real_denoised.fits'</span>);
+0023 
+0024 f_error = log(abs(f_Q_denoised./f_Q - 1));
+0025 
+0026 mean_f = mean(f_Q_input_noise(:));
+0027 stddev_f = std(f_Q_input_noise(:));
+0028 range = [mean_f-sigmas*stddev_f mean_f+sigmas*stddev_f];
+0029 
+0030 figure
+0031 ssht_plot_mollweide(f_Q, L, <span class="string">'Mode'</span>, 1)
+0032 colorbar;
+0033 caxis(range);
+0034 title(<span class="string">'Spin signal (Q) - Input map'</span>);
+0035 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0036 colormap(jet);
+0037 fname = [plot_root, <span class="string">'denoising_spin_signal_Q_input.png'</span>];
+0038 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0039 
+0040 figure
+0041 ssht_plot_mollweide(f_Q_noise, L, <span class="string">'Mode'</span>, 1)
+0042 colorbar;
+0043 caxis(range);
+0044 title(<span class="string">'Spin signal (Q) - Noise map'</span>);
+0045 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0046 colormap(jet);
+0047 fname = [plot_root, <span class="string">'denoising_spin_signal_Q_noise.png'</span>];
+0048 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0049 
+0050 figure
+0051 ssht_plot_mollweide(f_Q_input_noise, L, <span class="string">'Mode'</span>, 1)
+0052 colorbar;
+0053 caxis(range);
+0054 title(<span class="string">'Spin signal (Q) - Input map with added noise'</span>);
+0055 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0056 colormap(jet);
+0057 fname = [plot_root, <span class="string">'denoising_spin_signal_Q_input_noise.png'</span>];
+0058 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0059 
+0060 figure
+0061 ssht_plot_mollweide(f_Q_denoised, L, <span class="string">'Mode'</span>, 1)
+0062 colorbar;
+0063 caxis(range);
+0064 title(<span class="string">'Spin signal (Q) - Denoised map'</span>);
+0065 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0066 colormap(jet);
+0067 fname = [plot_root, <span class="string">'denoising_spin_signal_Q_denoised.png'</span>];
+0068 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0069 
+0070 figure
+0071 ssht_plot_mollweide(f_error, L, <span class="string">'Mode'</span>, 1)
+0072 colorbar;
+0073 title(<span class="string">'Spin signal (Q) - Logarithmic relative error'</span>);
+0074 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0075 colormap(jet);
+0076 fname = [plot_root, <span class="string">'denoising_spin_signal_Q_error.png'</span>];
+0077 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0078 
+0079 [f_U, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_imag_input.fits'</span>);
+0080 [f_U_noise, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_imag_noise.fits'</span>);
+0081 [f_U_input_noise, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_imag_input_noise.fits'</span>);
+0082 [f_U_denoised, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/spin_signal_imag_denoised.fits'</span>);
+0083 
+0084 f_error = log(abs(f_U_denoised./f_U - 1));
+0085 
+0086 mean_f = mean(f_U_input_noise(:));
+0087 stddev_f = std(f_U_input_noise(:));
+0088 range = [mean_f-sigmas*stddev_f mean_f+sigmas*stddev_f];
+0089 
+0090 figure
+0091 ssht_plot_mollweide(f_U, L, <span class="string">'Mode'</span>, 1)
+0092 colorbar;
+0093 caxis(range);
+0094 title(<span class="string">'Spin signal (U) - Input map'</span>);
+0095 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0096 colormap(jet);
+0097 fname = [plot_root, <span class="string">'denoising_spin_signal_U_input.png'</span>];
+0098 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0099 
+0100 figure
+0101 ssht_plot_mollweide(f_U_noise, L, <span class="string">'Mode'</span>, 1)
+0102 colorbar;
+0103 caxis(range);
+0104 title(<span class="string">'Spin signal (U) - Noise map'</span>);
+0105 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0106 colormap(jet);
+0107 fname = [plot_root, <span class="string">'denoising_spin_signal_U_noise.png'</span>];
+0108 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0109 
+0110 figure
+0111 ssht_plot_mollweide(f_U_input_noise, L, <span class="string">'Mode'</span>, 1)
+0112 colorbar;
+0113 caxis(range);
+0114 title(<span class="string">'Spin signal (U) - Input map with added noise'</span>);
+0115 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0116 colormap(jet);
+0117 fname = [plot_root, <span class="string">'denoising_spin_signal_U_input_noise.png'</span>];
+0118 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0119 
+0120 figure
+0121 ssht_plot_mollweide(f_U_denoised, L, <span class="string">'Mode'</span>, 1)
+0122 colorbar;
+0123 caxis(range);
+0124 title(<span class="string">'Spin signal (U) - Denoised map'</span>);
+0125 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0126 colormap(jet);
+0127 fname = [plot_root, <span class="string">'denoising_spin_signal_U_denoised.png'</span>];
+0128 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0129 
+0130 figure
+0131 ssht_plot_mollweide(f_error, L, <span class="string">'Mode'</span>, 1)
+0132 colorbar;
+0133 title(<span class="string">'Spin signal (U) - Logarithmic relative error'</span>);
+0134 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0135 colormap(jet);
+0136 fname = [plot_root, <span class="string">'denoising_spin_signal_U_error.png'</span>];
+0137 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0138 
+0139 <span class="comment">%% Plot Q + iU map</span>
+0140 
+0141 subL = 64;
+0142 
+0143 f_QU = f_Q + 1i*f_U;
+0144 f_QU_noise = f_Q_noise + 1i*f_U_noise;
+0145 f_QU_input_noise = f_Q_input_noise + 1i*f_U_input_noise;
+0146 f_QU_denoised = f_Q_denoised + 1i*f_U_denoised;
+0147 
+0148 f_error = log(abs(f_QU_denoised./f_QU - 1));
+0149 
+0150 mean_f = abs(mean(f_QU_input_noise(:)));
+0151 stddev_f = abs(std(f_QU_input_noise(:)));
+0152 range = [0 mean_f+sigmas*stddev_f];
+0153 
+0154 figure
+0155 ssht_plot_mollweide(f_QU, L, <span class="string">'Mode'</span>, 3, <span class="string">'SubL'</span>, subL)
+0156 colorbar;
+0157 caxis(range);
+0158 title(<span class="string">'Spin signal (Q + iU) - Input map'</span>);
+0159 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0160 colormap(jet);
+0161 fname = [plot_root, <span class="string">'denoising_spin_signal_QU_input.png'</span>];
+0162 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0163 
+0164 figure
+0165 ssht_plot_mollweide(f_QU_noise, L, <span class="string">'Mode'</span>, 3, <span class="string">'SubL'</span>, subL)
+0166 colorbar;
+0167 caxis(range);
+0168 title(<span class="string">'Spin signal (Q + iU) - Noise map'</span>);
+0169 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0170 colormap(jet);
+0171 fname = [plot_root, <span class="string">'denoising_spin_signal_QU_noise.png'</span>];
+0172 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0173 
+0174 figure
+0175 ssht_plot_mollweide(f_QU_input_noise, L, <span class="string">'Mode'</span>, 3, <span class="string">'SubL'</span>, subL)
+0176 colorbar;
+0177 caxis(range);
+0178 title(<span class="string">'Spin signal (Q + iU) - Input map with added noise'</span>);
+0179 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0180 colormap(jet);
+0181 fname = [plot_root, <span class="string">'denoising_spin_signal_QU_input_noise.png'</span>];
+0182 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0183 
+0184 figure
+0185 ssht_plot_mollweide(f_QU_denoised, L, <span class="string">'Mode'</span>, 3, <span class="string">'SubL'</span>, subL)
+0186 colorbar;
+0187 caxis(range);
+0188 title(<span class="string">'Spin signal (Q + iU) - Denoised map'</span>);
+0189 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0190 colormap(jet);
+0191 fname = [plot_root, <span class="string">'denoising_spin_signal_QU_denoised.png'</span>];
+0192 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0193 
+0194 figure
+0195 ssht_plot_mollweide(f_error, L, <span class="string">'Mode'</span>, 1)
+0196 colorbar;
+0197 title(<span class="string">'Spin signal (Q + iU) - Logarithmic relative error'</span>);
+0198 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0199 colormap(jet);
+0200 fname = [plot_root, <span class="string">'denoising_spin_signal_QU_error.png'</span>];
+0201 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0202 
+0203 
+0204 <span class="comment">%% Plot real map results</span>
+0205 
+0206 [f, L] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/real_signal_input.fits'</span>);
+0207 [f_noise, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/real_signal_noise.fits'</span>);
+0208 [f_input_noise, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/real_signal_input_noise.fits'</span>);
+0209 [f_denoised, ~] = <a href="s2let_mw_read_real_map.html" class="code" title="function [mwmaparr, L]= s2let_mw_read_real_map(file)">s2let_mw_read_real_map</a>(<span class="string">'../../../data/real_signal_denoised.fits'</span>);
+0210 
+0211 <span class="comment">% Precompute Wigner small-d functions</span>
+0212 sqrt_tbl = sqrt([0:2*(L-1)+1])';
+0213 signs = ones(L+1,1);
+0214 signs(2:2:end) = -1;
+0215 
+0216 d = zeros(L, 2*L-1, 2*L-1);
+0217 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, 0, <span class="keyword">...</span>
+0218   <span class="string">'SqrtTable'</span>, sqrt_tbl, <span class="string">'SignTable'</span>, signs);
+0219 <span class="keyword">for</span> el = 1:L-1
+0220   d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, 0, <span class="keyword">...</span>
+0221      <span class="string">'SqrtTable'</span>, sqrt_tbl, <span class="string">'SignTable'</span>, signs);
+0222 <span class="keyword">end</span>
+0223 
+0224 <span class="comment">% Rotate maps by 180°</span>
+0225 f = ssht_inverse(ssht_rotate_flm(ssht_forward(f, L, <span class="string">'Reality'</span>, true), d, pi, 0), L, <span class="string">'Reality'</span>, true);
+0226 f_noise = ssht_inverse(ssht_rotate_flm(ssht_forward(f_noise, L, <span class="string">'Reality'</span>, true), d, pi, 0), L, <span class="string">'Reality'</span>, true);
+0227 f_input_noise = ssht_inverse(ssht_rotate_flm(ssht_forward(f_input_noise, L, <span class="string">'Reality'</span>, true), d, pi, 0), L, <span class="string">'Reality'</span>, true);
+0228 f_denoised = ssht_inverse(ssht_rotate_flm(ssht_forward(f_denoised, L, <span class="string">'Reality'</span>, true), d, pi, 0), L, <span class="string">'Reality'</span>, true);
+0229 
+0230 f_error = log(abs(f_denoised./f - 1));
+0231 
+0232 figure
+0233 ssht_plot_mollweide(f, L, <span class="string">'Mode'</span>, 1)
+0234 colorbar;
+0235 title(<span class="string">'Real signal - Input map'</span>);
+0236 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0237 colormap(jet);
+0238 fname = [plot_root, <span class="string">'denoising_real_signal_input.png'</span>];
+0239 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0240 
+0241 figure
+0242 ssht_plot_mollweide(f_noise, L, <span class="string">'Mode'</span>, 1)
+0243 colorbar;
+0244 title(<span class="string">'Real signal - Noise map'</span>);
+0245 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0246 colormap(jet);
+0247 fname = [plot_root, <span class="string">'denoising_real_signal_noise.png'</span>];
+0248 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0249 
+0250 figure
+0251 ssht_plot_mollweide(f_input_noise, L, <span class="string">'Mode'</span>, 1)
+0252 colorbar;
+0253 title(<span class="string">'Real signal - Input map with added noise'</span>);
+0254 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0255 colormap(jet);
+0256 fname = [plot_root, <span class="string">'denoising_real_signal_input_noise.png'</span>];
+0257 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0258 
+0259 figure
+0260 ssht_plot_mollweide(f_denoised, L, <span class="string">'Mode'</span>, 1)
+0261 colorbar;
+0262 title(<span class="string">'Real signal - Denoised map'</span>);
+0263 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0264 colormap(jet);
+0265 fname = [plot_root, <span class="string">'denoising_real_signal_denoised.png'</span>];
+0266 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0267 
+0268 figure
+0269 ssht_plot_mollweide(f_error, L, <span class="string">'Mode'</span>, 1)
+0270 colorbar;
+0271 title(<span class="string">'Real signal - Logarithmic relative error'</span>);
+0272 set(gcf, <span class="string">'PaperUnits'</span>, <span class="string">'centimeters'</span>, <span class="string">'PaperPosition'</span>, plot_size);
+0273 colormap(jet);
+0274 fname = [plot_root, <span class="string">'denoising_real_signal_error.png'</span>];
+0275 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0276 
+0277 
+0278 <span class="comment">%% Clean up</span>
+0279 
+0280 close all
+0281 
+0282 clear position plot_root plot_size
+0283 clear f f_noise f_input_noise f_denoised f_error
+0284 clear f_Q f_Q_noise f_Q_input_noise f_Q_denoised
+0285 clear f_U f_U_noise f_U_input_noise f_U_denoised
+0286 clear f_QU f_QU_noise f_QU_input_noise f_QU_denoised
+0287 clear L
+0288 clear fname
+0289 clear d el signs sqrt_tbl
+0290 clear sigmas mean_f stddev_f range</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

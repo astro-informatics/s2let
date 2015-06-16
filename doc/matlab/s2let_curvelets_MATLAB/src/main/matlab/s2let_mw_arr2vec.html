@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_mw_arr2vec</title>
+  <meta name="keywords" content="s2let_mw_arr2vec">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_mw_arr2vec.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_mw_arr2vec
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function vec = s2let_mw_arr2vec(arr) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>	s2let_transform_analysis_mw</li><li><a href="s2let_transform_axisym_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_axisym_analysis_mw(f, varargin)">s2let_transform_axisym_analysis_mw</a>	s2let_transform_axisym_analysis_mw</li><li><a href="s2let_transform_axisym_synthesis_mw.html" class="code" title="function f = s2let_transform_axisym_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_axisym_synthesis_mw</a>	s2let_transform_axisym_synthesis_mw</li><li><a href="s2let_transform_synthesis_lm2wav.html" class="code" title="function flm = s2let_transform_synthesis_lm2wav(f_wav, f_scal, varargin)">s2let_transform_synthesis_lm2wav</a>	s2let_transform_synthesis_lm2wav</li><li><a href="s2let_transform_synthesis_mw.html" class="code" title="function f = s2let_transform_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_synthesis_mw</a>	s2let_transform_synthesis_mw</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function vec = s2let_mw_arr2vec(arr)</a>
+0002 
+0003 sz = size(arr);
+0004 
+0005 <span class="keyword">if</span> sz(1) == 2*sz(2)-1  <span class="comment">% array 2L-1 x L</span>
+0006     
+0007     L = sz(2);
+0008     vec = zeros(L*(2*L-1),1);
+0009     <span class="keyword">for</span> t = 1:L
+0010         <span class="keyword">for</span> p = 1:2*L-1
+0011             vec((t-1)*(2*L-1)+p,1) = arr(p,t);
+0012         <span class="keyword">end</span>
+0013     <span class="keyword">end</span>
+0014     
+0015 <span class="keyword">end</span>
+0016 
+0017 <span class="keyword">if</span> sz(2) == 2*sz(1)-1  <span class="comment">% array L x 2L-1</span>
+0018     
+0019     L = sz(1);
+0020     vec = zeros(L*(2*L-1),1);
+0021     <span class="keyword">for</span> t = 1:L
+0022         <span class="keyword">for</span> p = 1:2*L-1
+0023             vec((t-1)*(2*L-1)+p,1) = arr(t,p);
+0024         <span class="keyword">end</span>
+0025     <span class="keyword">end</span>
+0026     
+0027 <span class="keyword">end</span>
+0028 
+0029 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

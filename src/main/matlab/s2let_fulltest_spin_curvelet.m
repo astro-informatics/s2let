@@ -39,22 +39,6 @@ disp('Construct the corresponding spin signal on the sphere')
 f_spin_gen_cur = ssht_inverse(flm_gen_cur, L, 'Spin', Spin, 'Method', 'MW');
 flm_spin_gen_cur = ssht_forward(f_spin_gen_cur, L, 'Spin', Spin, 'Method', 'MW');
 
-
-
-disp('===== TEST ====')
-disp('- CHECK also: the Spin Curvelet Transform of spin signals in MW sampling with default parameters:')
-disp('ana_px2cur: Perform (spin) curvelet transform with default parameters')
-[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_spin_gen_cur,...
-                                                                'Upsample', true,...
-                                                                'Spin', Spin);
-disp('syn_cur2px: Perform inverse transform (cur2px) with default parameters')
-f_rec_spin_px2cur=  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, ...
-                                                                  'Upsample', true,...
-                                                                  'Spin', Spin);
-default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur(:)))
-disp('===== TEST END====')
-
-
 disp('==============')
 disp('Complex Signals, Full resolution tests start (Upsample: true):')
 disp('==============')

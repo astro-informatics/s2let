@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_hpx_write_real_spin_maps</title>
+  <meta name="keywords" content="s2let_hpx_write_real_spin_maps">
+  <meta name="description" content="s2let_hpx_rite_real_map">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_hpx_write_real_spin_maps.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_hpx_write_real_spin_maps
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>s2let_hpx_rite_real_map</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function s2let_hpx_write_real_spin_maps(fQ, fU, filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_hpx_rite_real_map 
+ Write a real Healpix map to a FITS file
+ Default usage :
+
+   s2let_hpx_write_real_spin_maps(fQ, fU, file)
+
+ f the Healpix map to be written,
+ file the name of the output FITS file.
+
+ S2LET package to perform Wavelets transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>	MAKE_CARD turns a set of strings into a valid FITS card</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_hpxtest.html" class="code" title="">s2let_hpxtest</a>	s2let_hpxtest</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function hrec=make_header_record(card_matrix)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s2let_hpx_write_real_spin_maps(fQ, fU, filename)</a>
+0002 
+0003 <span class="comment">% s2let_hpx_rite_real_map</span>
+0004 <span class="comment">% Write a real Healpix map to a FITS file</span>
+0005 <span class="comment">% Default usage :</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   s2let_hpx_write_real_spin_maps(fQ, fU, file)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% f the Healpix map to be written,</span>
+0010 <span class="comment">% file the name of the output FITS file.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
+0013 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0014 <span class="comment">% See LICENSE.txt for license details</span>
+0015 
+0016 sz = size(fQ);
+0017 szb = max([sz(1), sz(2)]);
+0018 nside = floor(sqrt(szb/12.0));
+0019 
+0020 
+0021 [nrow, ncol]=size(fQ);
+0022 
+0023 header_cards = [<a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'SIMPLE'</span>,<span class="string">'T'</span>);       <span class="keyword">...</span>
+0024       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'BITPIX'</span>,16);       <span class="keyword">...</span>
+0025       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS'</span>,0);          <span class="keyword">...</span>
+0026       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'EXTEND'</span>,<span class="string">'T'</span>);        <span class="keyword">...</span>
+0027       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'END'</span>);];
+0028   
+0029 [nrowbis,ncolbis] = size(header_cards);
+0030 n_blanks = 36 - rem(nrowbis,36);
+0031 blank_line = setstr(ones(1,80)*32);
+0032 header_cards2 = [header_cards; repmat(blank_line,n_blanks,1)];
+0033 
+0034 npix = 12*nside*nside;
+0035 
+0036 header_cards2 = [header_cards2;       <span class="keyword">...</span>
+0037       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'XTENSION'</span>,<span class="string">'BINTABLE'</span>);        <span class="keyword">...</span>
+0038       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'BITPIX'</span>,8);        <span class="keyword">...</span>
+0039       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS'</span>,2);          <span class="keyword">...</span>
+0040       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS1'</span>,16);      <span class="keyword">...</span>
+0041       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS2'</span>,ncol);      <span class="keyword">...</span>
+0042       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'PCOUNT'</span>,0);        <span class="keyword">...</span>
+0043       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'GCOUNT'</span>,1);        <span class="keyword">...</span>
+0044       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TFIELDS'</span>,2);        <span class="keyword">...</span>
+0045       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TTYPE1'</span>,<span class="string">'Q_POLARISATION'</span>);        <span class="keyword">...</span>
+0046       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TFORM1'</span>,<span class="string">'1D'</span>);        <span class="keyword">...</span>
+0047       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TUNIT1'</span>,<span class="string">' '</span>);        <span class="keyword">...</span>
+0048       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TTYPE2'</span>,<span class="string">'U_POLARISATION'</span>);        <span class="keyword">...</span>
+0049       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TFORM2'</span>,<span class="string">'1D'</span>);        <span class="keyword">...</span>
+0050       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TUNIT2'</span>,<span class="string">' '</span>);        <span class="keyword">...</span>
+0051       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'EXTNAME'</span>,<span class="string">'BINTABLE'</span>);        <span class="keyword">...</span>
+0052       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'POLCCONV'</span>,<span class="string">'COSMO'</span>);        <span class="keyword">...</span>
+0053       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'PIXTYPE'</span>,<span class="string">'HEALPIX'</span>);        <span class="keyword">...</span>
+0054       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'ORDERING'</span>,<span class="string">'RING'</span>);        <span class="keyword">...</span>
+0055       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NSIDE'</span>, nside);        <span class="keyword">...</span>
+0056       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NPIX'</span>, npix);        <span class="keyword">...</span>
+0057       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'OBJECT'</span>, <span class="string">'FULLSKY'</span>);        <span class="keyword">...</span>
+0058       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'FIRTSPIX'</span>, 0);        <span class="keyword">...</span>
+0059       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'LASTPIX'</span>, npix-1);        <span class="keyword">...</span>
+0060       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'INDXSCHM'</span>, <span class="string">'IMPLICIT'</span>);        <span class="keyword">...</span>
+0061       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'BAD_DATA'</span>, -1.63750E+30);        <span class="keyword">...</span>
+0062       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'END'</span>)];
+0063 
+0064 header_record = <a href="#_sub1" class="code" title="subfunction hrec=make_header_record(card_matrix)">make_header_record</a>(header_cards2);
+0065 <span class="comment">%[ncards,dummy]=size(header_cards);</span>
+0066 <span class="comment">%fprintf(header_record(1,:));</span>
+0067 
+0068 fid=fopen(filename,<span class="string">'w'</span>); 
+0069 fwrite(fid,header_record',<span class="string">'char'</span>);
+0070 fwrite(fid, [fQ; fU], <span class="string">'double'</span>, 0, <span class="string">'B'</span>);
+0071 fclose(fid);
+0072 
+0073 <a name="_sub1" href="#_subfunctions" class="code">function hrec=make_header_record(card_matrix)</a>
+0074 
+0075 [nrow,ncol] = size(card_matrix);
+0076 n_blanks = 36 - rem(nrow,36);
+0077 blank_line = setstr(ones(1,80)*32);
+0078 hrec = [card_matrix; repmat(blank_line,n_blanks,1)];</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

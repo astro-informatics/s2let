@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of fitswrite</title>
+  <meta name="keywords" content="fitswrite">
+  <meta name="description" content="Author: R. G. Abraham, Institute of Astronomy, Cambridge University">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; fitswrite.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>fitswrite
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Author: R. G. Abraham, Institute of Astronomy, Cambridge University</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function fitswrite(data, filename, parname, parval) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Author: R. G. Abraham, Institute of Astronomy, Cambridge University
+        abraham@ast.cam.ac.uk
+Improved by Boris Leistedt bo be compatible with MW and HEALPIX maps</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>	MAKE_CARD turns a set of strings into a valid FITS card</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_hpx_write_real_map.html" class="code" title="function s2let_hpx_write_real_map(f, file)">s2let_hpx_write_real_map</a>	s2let_hpx_rite_real_map</li><li><a href="s2let_mw_write_real_map.html" class="code" title="function s2let_mw_write_real_map(f, file)">s2let_mw_write_real_map</a>	s2let_mw_write_real_map</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function hrec=make_header_record(card_matrix)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function fitswrite(data, filename, parname, parval)</a>
+0002 <span class="comment">%Author: R. G. Abraham, Institute of Astronomy, Cambridge University</span>
+0003 <span class="comment">%        abraham@ast.cam.ac.uk</span>
+0004 <span class="comment">%Improved by Boris Leistedt bo be compatible with MW and HEALPIX maps</span>
+0005 
+0006 [nrow,ncol]=size(data);
+0007 header_cards = [<a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'SIMPLE'</span>,<span class="string">'T'</span>);       <span class="keyword">...</span>
+0008       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'BITPIX'</span>,16);       <span class="keyword">...</span>
+0009       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS'</span>,0);          <span class="keyword">...</span>
+0010       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'EXTEND'</span>,<span class="string">'T'</span>);        <span class="keyword">...</span>
+0011       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'END'</span>);];
+0012   
+0013 [nrowbis,ncolbis] = size(header_cards);
+0014 n_blanks = 36 - rem(nrowbis,36);
+0015 blank_line = setstr(ones(1,80)*32);
+0016 header_cards2 = [header_cards; repmat(blank_line,n_blanks,1)];
+0017 
+0018 header_cards2 = [header_cards2;       <span class="keyword">...</span>
+0019       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'XTENSION'</span>,<span class="string">'BINTABLE'</span>);        <span class="keyword">...</span>
+0020       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'BITPIX'</span>,8);        <span class="keyword">...</span>
+0021       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS'</span>,2);          <span class="keyword">...</span>
+0022       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS1'</span>,4);      <span class="keyword">...</span>
+0023       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'NAXIS2'</span>,ncol);      <span class="keyword">...</span>
+0024       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'PCOUNT'</span>,0);        <span class="keyword">...</span>
+0025       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'GCOUNT'</span>,1);        <span class="keyword">...</span>
+0026       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TFIELDS'</span>,1);        <span class="keyword">...</span>
+0027       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TTYPE1'</span>,<span class="string">'SIGNAL'</span>);        <span class="keyword">...</span>
+0028       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TFORM1'</span>,<span class="string">'1E'</span>);        <span class="keyword">...</span>
+0029       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'TUNIT1'</span>,<span class="string">' '</span>);        <span class="keyword">...</span>
+0030       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'EXTNAME'</span>,<span class="string">'BINTABLE'</span>);        <span class="keyword">...</span>
+0031       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(parname, parval);        <span class="keyword">...</span>
+0032       <a href="make_card.html" class="code" title="function card=make_card(keyword,value)">make_card</a>(<span class="string">'END'</span>)];
+0033 
+0034 header_record = <a href="#_sub1" class="code" title="subfunction hrec=make_header_record(card_matrix)">make_header_record</a>(header_cards2);
+0035 <span class="comment">%[ncards,dummy]=size(header_cards);</span>
+0036 <span class="comment">%fprintf(header_record(1,:));</span>
+0037 
+0038 fid=fopen(filename,<span class="string">'W'</span>);
+0039 fwrite(fid,header_record',<span class="string">'char'</span>);
+0040 
+0041 <span class="comment">% try to figure out if we need to swap bytes. This is</span>
+0042 <span class="comment">% imperfect as I don't know the endian-ness of each</span>
+0043 <span class="comment">% architecture, so I'm only looking for ones I know for</span>
+0044 <span class="comment">% sure are big-endian.</span>
+0045 friend = computer;
+0046 <span class="keyword">if</span> strmatch(friend,<span class="string">'PCWIN'</span>)
+0047    bswap = <span class="string">'b'</span>;
+0048 <span class="keyword">elseif</span> strmatch(friend,<span class="string">'LNX86'</span>)
+0049    bswap = <span class="string">'b'</span>;   
+0050 <span class="keyword">elseif</span> strmatch(friend,<span class="string">'ALPHA'</span>)
+0051    bswap = <span class="string">'b'</span>;
+0052 <span class="keyword">else</span>
+0053    bswap = <span class="string">'l'</span>;
+0054 <span class="keyword">end</span>
+0055 
+0056 fwrite(fid, data, <span class="string">'single'</span>, 0, <span class="string">'B'</span>);
+0057 <span class="comment">%fwrite(fid,data,'single',bswap);</span>
+0058 fclose(fid);
+0059 
+0060 
+0061 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0062 
+0063 
+0064 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0065 
+0066 <a name="_sub1" href="#_subfunctions" class="code">function hrec=make_header_record(card_matrix)</a>
+0067 
+0068 [nrow,ncol] = size(card_matrix);
+0069 n_blanks = 36 - rem(nrow,36);
+0070 blank_line = setstr(ones(1,80)*32);
+0071 hrec = [card_matrix; repmat(blank_line,n_blanks,1)];
+0072</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

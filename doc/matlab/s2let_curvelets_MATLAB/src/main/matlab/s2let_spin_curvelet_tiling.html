@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_spin_curvelet_tiling</title>
+  <meta name="keywords" content="s2let_spin_curvelet_tiling">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_spin_curvelet_tiling.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_spin_curvelet_tiling
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">
+ s2let_spin_curvelet_tiling - Compute tiling in harmonic space.
+
+ Default usage :
+
+   [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, &lt;options&gt;)
+
+ cur_lm is an array containing the curvelets spherical harmonic coefficients.
+ scal_l is an array containing the scaling function spherical harmonic coefficients (l only).
+ B is the wavelet parameter,
+ L is the harmonic band-limit;
+ J_min the first wavelet to be used.
+  
+ % Valid options include:
+
+  'Spin'        = { Spin; (default=0) }
+  'SpinLowered' = { true  [Apply normalisation factors for spin-lowered
+                           wavelets and scaling function.],
+                    false [Apply the usual normalisation factors such
+                           that the wavelets fulfil the admissibility
+                           condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the wavelets
+                       should be lowered from (default = 0)]
+
+ -----------------------------------------------------------
+ Log: 
+ -  constructed by Jennifer Y H Chan on 5th June 2015  
+ -----------------------------------------------------------
+ S2LET package to perform wavelets transform on the Sphere.
+ Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>	s2let_axisym_tiling - Compute tiling in harmonic space.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="s2let_demo_spin_curvelet_covariance.html" class="code" title="">s2let_demo_spin_curvelet_covariance</a>	s2let_demo_spin_curvelet_covariance</li><li><a href="s2let_fulltest_spin_curvelet.html" class="code" title="">s2let_fulltest_spin_curvelet</a>	s2let_fulltest</li><li><a href="s2let_plot_spin_curvelet_on_sphere.html" class="code" title="function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_spin_curvelet_on_sphere</a>	</li><li><a href="s2let_plot_spin_curvelet_tiling.html" class="code" title="function s2let_plot_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_plot_spin_curvelet_tiling</a>	s2let_plot_spin_curvelet_tiling</li><li><a href="s2let_spin_curvelet_transform_via_lmn2lm_randflm_MATLAB.html" class="code" title="">s2let_spin_curvelet_transform_via_lmn2lm_randflm_MATLAB</a>	s2let_curvelet_matlab_prototype</li><li><a href="s2let_transform_spin_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_spin_curvelet_analysis_lm2cur</a>	s2let_transform_analysis_lm2cur</li><li><a href="s2let_transform_spin_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2lm</a>	s2let_transform_spin_curvelet_synthesis_cur2lm</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% s2let_spin_curvelet_tiling - Compute tiling in harmonic space.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Default usage :</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, &lt;options&gt;)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% cur_lm is an array containing the curvelets spherical harmonic coefficients.</span>
+0010 <span class="comment">% scal_l is an array containing the scaling function spherical harmonic coefficients (l only).</span>
+0011 <span class="comment">% B is the wavelet parameter,</span>
+0012 <span class="comment">% L is the harmonic band-limit;</span>
+0013 <span class="comment">% J_min the first wavelet to be used.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% % Valid options include:</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%  'Spin'        = { Spin; (default=0) }</span>
+0018 <span class="comment">%  'SpinLowered' = { true  [Apply normalisation factors for spin-lowered</span>
+0019 <span class="comment">%                           wavelets and scaling function.],</span>
+0020 <span class="comment">%                    false [Apply the usual normalisation factors such</span>
+0021 <span class="comment">%                           that the wavelets fulfil the admissibility</span>
+0022 <span class="comment">%                           condition (default)]}</span>
+0023 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0024 <span class="comment">%                       option indicates which spin number the wavelets</span>
+0025 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% -----------------------------------------------------------</span>
+0028 <span class="comment">% Log:</span>
+0029 <span class="comment">% -  constructed by Jennifer Y H Chan on 5th June 2015</span>
+0030 <span class="comment">% -----------------------------------------------------------</span>
+0031 <span class="comment">% S2LET package to perform wavelets transform on the Sphere.</span>
+0032 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0033 <span class="comment">% See LICENSE.txt for license details</span>
+0034 <span class="comment">% -----------------------------------------------------------</span>
+0035 
+0036 p = inputParser;
+0037 p.addRequired(<span class="string">'B'</span>, @isnumeric);
+0038 p.addRequired(<span class="string">'L'</span>,  @isnumeric);
+0039 p.addRequired(<span class="string">'J_min'</span>, @isnumeric);
+0040 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0041 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0042 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0043 p.parse(B, L, J_min, varargin{:});
+0044 args = p.Results;
+0045 
+0046 <span class="comment">% For curvelets: N = L;</span>
+0047 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0048 Spin = args.Spin; 
+0049 original_spin = 0 ;  <span class="comment">% if we don't use spin-lowered wavelets (default).</span>
+0050 
+0051 <span class="comment">% For spin-lowered curvelet: (i.e. use scalar curvelets for the transform : spin =0, SpinLoweredFrom = e.g. 2)</span>
+0052 <span class="keyword">if</span> (args.SpinLowered ~= 0) 
+0053 original_spin= args.SpinLoweredFrom; 
+0054 <span class="keyword">end</span> 
+0055 
+0056 <span class="comment">% ----------</span>
+0057 <span class="comment">% Curvelet directional component s_lm</span>
+0058 <span class="comment">% ----------</span>
+0059 signs = zeros(L,1); 
+0060 s_lm = zeros(L^2,1); 
+0061 <span class="comment">% Perform precomputation.</span>
+0062 <span class="keyword">for</span> (m=1:2:L-1) 
+0063     signs(m)   = -1.0;
+0064     signs(m+1) = 1.0;
+0065 <span class="keyword">end</span> 
+0066 <span class="comment">% Skip the s_00 component as it is zero</span>
+0067 <span class="keyword">for</span> el = 1:L-1 
+0068     <span class="comment">% N.B. for curvelets, m = el;</span>
+0069     <span class="comment">% N.B. the condition : m &lt; N is satisfied;</span>
+0070     m = el; 
+0071     <span class="comment">% for positive m</span>
+0072     ind_pm = ssht_elm2ind(el, m);
+0073     s_lm(ind_pm)= sqrt(1./2.);
+0074     <span class="comment">% for negative m</span>
+0075     ind_nm = ssht_elm2ind(el, -m);
+0076     s_lm(ind_nm)= signs(m)*conj(s_lm(ind_pm));
+0077 <span class="keyword">end</span>
+0078 
+0079 <span class="comment">% `````````````</span>
+0080 <span class="comment">% Check the zero-mean condition for the curvelet directional components</span>
+0081 <span class="comment">% `````````````</span>
+0082 <span class="comment">%{</span>
+0083 ind = 1; 
+0084 error_on_slm_tiling = 0; 
+0085 <span class="comment">% % Skip the s_00 component as it is zero</span>
+0086 <span class="keyword">for</span> el = 0:L-1
+0087 sum = 0.; 
+0088 <span class="keyword">for</span> m= -el:el
+0089  sum = sum + s_lm(ind)*conj(s_lm(ind));
+0090  ind = ind +1; 
+0091 <span class="keyword">end</span>
+0092 <span class="keyword">end</span>
+0093 error_on_slm_tiling = error_on_slm_tiling +sum - 1.0
+0094 <span class="comment">%}</span>
+0095 
+0096 el_min = max(abs(Spin), abs(original_spin));
+0097 <span class="comment">% ----------</span>
+0098 <span class="comment">% Curvelet angular components:</span>
+0099 <span class="comment">% ----------</span>
+0100 [kappa kappa0] =  <a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>(B, L, J_min);
+0101 <span class="keyword">for</span> j = J_min:J
+0102  ind_pm = 0; <span class="comment">% el_min*el_min +1 ;</span>
+0103  ind_nm = 0; <span class="comment">% el_min*el_min +1 ;</span>
+0104  <span class="keyword">for</span> el = el_min:L-1  <span class="comment">% abs(args.Spin):L-1 %  can start from 1 as s_00 is zero, but will change to el_min for spin curvelets.</span>
+0105      m = el; 
+0106      <span class="comment">% for positive m</span>
+0107      ind_pm = ssht_elm2ind(el, m); 
+0108      cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
+0109      <span class="comment">% for negative m</span>
+0110      ind_nm = ssht_elm2ind(el, -m); 
+0111      cur_lm{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm{j-J_min+1}(ind_pm)) ; 
+0112      
+0113      <span class="comment">% if SpinLowered == true</span>
+0114      <span class="keyword">if</span> (args.SpinLowered ~= 0)  
+0115       s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, <span class="string">'original_spin'</span>,original_spin);
+0116       cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
+0117       cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
+0118      <span class="keyword">end</span> 
+0119 
+0120  <span class="keyword">end</span>
+0121 <span class="keyword">end</span> 
+0122 
+0123 <span class="comment">% ----------</span>
+0124 <span class="comment">% Scaling Function</span>
+0125 <span class="comment">% ----------</span>
+0126 scal_l = zeros(L^2,1);
+0127 <span class="keyword">for</span> el = el_min:L-1  <span class="comment">%abs(args.Spin):L-1   % 0:L-1</span>
+0128     scal_l(el^2+el+1,1) = sqrt((2*el+1)/(4.0*pi)) *kappa0(el+1); 
+0129     <span class="comment">% if SpinLowered == true</span>
+0130     <span class="keyword">if</span> (args.SpinLowered ~= 0)  
+0131      s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, <span class="string">'original_spin'</span>,original_spin);
+0132      scal_l(el^2+el+1,1) = scal_l(el^2+el+1,1) *s2let_spin_lowered_norm_factor ;
+0133     <span class="keyword">end</span> 
+0134 <span class="keyword">end</span>
+0135 
+0136 
+0137 <span class="comment">% `````````````</span>
+0138 <span class="comment">% Check admissibility condition</span>
+0139 <span class="comment">% (OR use the external MATLAB function 's2let_check_cur_tiling.m'</span>
+0140 <span class="comment">%  error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min))</span>
+0141 <span class="comment">% `````````````</span>
+0142 <span class="comment">%{</span>
+0143 <span class="comment">% Scaling function</span>
+0144 identity = zeros(1,L);
+0145 <span class="keyword">for</span> el=abs(args.Spin):L-1
+0146     identity(1,el+1) = identity(1,el+1)+(4.*pi/(2*el+1))*scal_l(el^2+el+1,1)*conj(scal_l(el^2+el+1,1)); 
+0147 <span class="keyword">end</span>
+0148 <span class="comment">% Curvelet functions</span>
+0149 <span class="keyword">for</span> j= J_min: J 
+0150     ind = args.Spin*args.Spin + 1;
+0151     <span class="keyword">for</span> el=abs(args.Spin):L-1
+0152         <span class="keyword">for</span> m= -el:el
+0153            identity(1,el+1) = identity(1,el+1)+(8.*pi^2/(2*el+1))* cur_lm{j-J_min+1}(1,ind)*conj(cur_lm{j-J_min+1}(1,ind));
+0154            ind = ind + 1;
+0155         <span class="keyword">end</span>
+0156     <span class="keyword">end</span>
+0157 <span class="keyword">end</span>
+0158 error_on_cur_tiling = 0;
+0159 <span class="keyword">for</span> el=abs(args.Spin):L-1
+0160     error_on_cur_tiling = error_on_cur_tiling + identity(1,el+1) - 1.0
+0161 <span class="keyword">end</span>
+0162 <span class="comment">%}</span>
+0163 
+0164 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

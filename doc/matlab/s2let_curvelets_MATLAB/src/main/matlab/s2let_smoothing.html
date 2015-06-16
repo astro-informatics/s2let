@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_smoothing</title>
+  <meta name="keywords" content="s2let_smoothing">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">s2let_curvelets_MATLAB</a> &gt; <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_smoothing.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for s2let_curvelets_MATLAB/src/main/matlab&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_smoothing
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function map_sm = s2let_smoothing(map, L, fwhm, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function map_sm = s2let_smoothing(map, L, fwhm, varargin)</a>
+0002 
+0003 p = inputParser;
+0004 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0005 p.addParamValue(<span class="string">'Method'</span>, <span class="string">'MW'</span>, @ischar);
+0006 p.parse(varargin{:});
+0007 args = p.Results;
+0008 
+0009 map_lm = ssht_forward(map, L, <span class="string">'Reality'</span>, true, <span class="string">'Method'</span>, args.Method);
+0010 map_sm_lm = zeros(size(map_lm));
+0011 sigma = fwhm / 2.355;
+0012     
+0013 ind = 1;
+0014 <span class="keyword">for</span> el = 0:L-1
+0015     <span class="keyword">for</span> m = -el:el
+0016         map_sm_lm(ind) = map_lm(ind) * exp(-el*(el+1) * sigma^2 / 2);
+0017         ind = ind+1;
+0018     <span class="keyword">end</span>
+0019 <span class="keyword">end</span>
+0020 
+0021 map_sm = ssht_inverse(map_sm_lm, L, <span class="string">'Reality'</span>, args.Reality, <span class="string">'Method'</span>, args.Method);</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
