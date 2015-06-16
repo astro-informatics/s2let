@@ -50,7 +50,7 @@ original_spin = 0 ;  % if we don't use spin-lowered wavelets (default).
 
 % For spin-lowered curvelet: (i.e. use scalar curvelets for the transform : spin =0, SpinLoweredFrom = e.g. 2)
 if (args.SpinLowered ~= 0) 
-original_spin= args.SpinLoweredFrom; 
+original_spin= args.SpinLoweredFrom;
 end 
 
 % ----------

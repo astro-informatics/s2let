@@ -77,19 +77,31 @@ band_limit = args.L;
 % -----------------
 % disp('ana_lm2lmn: Curvelet analysis of complex signals from harmonic to Wigner space (i.e. flm to flmn)')
  
-
 for j = args.J_min:J,
   if (args.Upsample == 0)  %i.e. false (default) => multi-resolution
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit;
-  end 
-  % f_cur_lmn{j-args.J_min+1} = zeros((2*N-1)*args.L*args.L,1);
+  end
   f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
   ind_ln=0;
   ind_lm = 0;
   ind_lmn = 0;
-  for en = -Nj+1:Nj-1,
-   for el = max(abs(args.Spin),abs(en)):band_limit-1,
+  %
+  if (args.Reality == 0) %i.e. false (default) => complex
+   for en = -Nj+1:Nj-1,
+    for el = max(abs(args.Spin),abs(en)):band_limit-1,
+     ind_ln = ssht_elm2ind(el, en);
+     psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
+     for m = -el:el,
+      ind_lm = ssht_elm2ind(el, m);
+      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+      f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
+     end
+     end
+   end
+  else % i.e.(args.Reality == 1) %i.e. true => real
+   for en = 1-mod(Nj,2):Nj-1,
+    for el = en:band_limit-1,
      ind_ln = ssht_elm2ind(el, en);
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,
@@ -98,9 +110,12 @@ for j = args.J_min:J,
       f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
      end
     end
-  end
+   end
+  end % end if loop for Reality Option
 end
 
+
+   
 % -----------------
 % Scaling function contribution: 
 % -----------------
@@ -108,15 +123,28 @@ end
 if (args.Upsample == 0)   %i.e. false (default) => multi-resolution 
    band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
 end
-f_scal_lm = zeros(band_limit^2,1);  %band_limit*(2*band_limit-1) for MW; (band_limit+1)*2*band_limit for MWSS
+f_scal_lm = zeros(band_limit^2,1);
+% ToDO Check: band_limit*(2*band_limit-1) for MW; (band_limit+1)*2*band_limit for MWSS
 lm_ind=0;
-for el = abs(args.Spin):band_limit-1, 
+if (args.Reality == 0) %i.e. false (default) => complex
+ for el = abs(args.Spin):band_limit-1,
    phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);
    for m = -el:el,
     lm_ind=ssht_elm2ind(el, m);
     f_scal_lm(lm_ind) = flm_init(lm_ind) * phi;
    end
-end
-
+ end
+else   %  i.e. (args.Reality == 1); true => real
+ for el = 0 :band_limit-1,
+   phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);
+   for m = -el:el,
+    lm_ind=ssht_elm2ind(el, m);
+    f_scal_lm(lm_ind) = flm_init(lm_ind) * phi;
+   end
+ end
+end  % end if-loop for Reality Option
+   
+   
+   
 end
 
