@@ -65,7 +65,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../../../../matlabicon.gif)">
-<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>	s2let_axisym_tiling - Compute tiling in harmonic space.</li></ul>
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_spin_lowered_normalization.html" class="code" title="function s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, varargin)">s2let_spin_lowered_normalization</a>	s2let_spin_lowered_normalization(el, original_spin)</li><li><a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>	s2let_axisym_tiling - Compute tiling in harmonic space.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../../../matlabicon.gif)">
 <li><a href="s2let_demo_spin_curvelet_covariance.html" class="code" title="">s2let_demo_spin_curvelet_covariance</a>	s2let_demo_spin_curvelet_covariance</li><li><a href="s2let_fulltest_spin_curvelet.html" class="code" title="">s2let_fulltest_spin_curvelet</a>	s2let_fulltest</li><li><a href="s2let_plot_spin_curvelet_on_sphere.html" class="code" title="function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_spin_curvelet_on_sphere</a>	</li><li><a href="s2let_plot_spin_curvelet_tiling.html" class="code" title="function s2let_plot_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_plot_spin_curvelet_tiling</a>	s2let_plot_spin_curvelet_tiling</li><li><a href="s2let_spin_curvelet_transform_via_lmn2lm_randflm_MATLAB.html" class="code" title="">s2let_spin_curvelet_transform_via_lmn2lm_randflm_MATLAB</a>	s2let_curvelet_matlab_prototype</li><li><a href="s2let_transform_spin_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_spin_curvelet_analysis_lm2cur</a>	s2let_transform_analysis_lm2cur</li><li><a href="s2let_transform_spin_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2lm</a>	s2let_transform_spin_curvelet_synthesis_cur2lm</li></ul>
@@ -126,7 +126,7 @@ This function is called by:
 0050 
 0051 <span class="comment">% For spin-lowered curvelet: (i.e. use scalar curvelets for the transform : spin =0, SpinLoweredFrom = e.g. 2)</span>
 0052 <span class="keyword">if</span> (args.SpinLowered ~= 0) 
-0053 original_spin= args.SpinLoweredFrom; 
+0053 original_spin= args.SpinLoweredFrom;
 0054 <span class="keyword">end</span> 
 0055 
 0056 <span class="comment">% ----------</span>
@@ -188,7 +188,7 @@ This function is called by:
 0112      
 0113      <span class="comment">% if SpinLowered == true</span>
 0114      <span class="keyword">if</span> (args.SpinLowered ~= 0)  
-0115       s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, <span class="string">'original_spin'</span>,original_spin);
+0115       s2let_spin_lowered_norm_factor = <a href="s2let_spin_lowered_normalization.html" class="code" title="function s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, varargin)">s2let_spin_lowered_normalization</a>(el, <span class="string">'original_spin'</span>,original_spin);
 0116       cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
 0117       cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
 0118      <span class="keyword">end</span> 
@@ -204,7 +204,7 @@ This function is called by:
 0128     scal_l(el^2+el+1,1) = sqrt((2*el+1)/(4.0*pi)) *kappa0(el+1); 
 0129     <span class="comment">% if SpinLowered == true</span>
 0130     <span class="keyword">if</span> (args.SpinLowered ~= 0)  
-0131      s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, <span class="string">'original_spin'</span>,original_spin);
+0131      s2let_spin_lowered_norm_factor = <a href="s2let_spin_lowered_normalization.html" class="code" title="function s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, varargin)">s2let_spin_lowered_normalization</a>(el, <span class="string">'original_spin'</span>,original_spin);
 0132      scal_l(el^2+el+1,1) = scal_l(el^2+el+1,1) *s2let_spin_lowered_norm_factor ;
 0133     <span class="keyword">end</span> 
 0134 <span class="keyword">end</span>
@@ -238,6 +238,6 @@ This function is called by:
 0162 <span class="comment">%}</span>
 0163 
 0164 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Tue 16-Jun-2015 21:37:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

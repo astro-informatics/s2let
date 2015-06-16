@@ -181,44 +181,81 @@ This function is called by:
 0095      band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
 0096      Nj =  band_limit;
 0097  <span class="keyword">end</span>
-0098  <span class="keyword">for</span> en = -Nj+1:Nj-1,
-0099   <span class="keyword">for</span> el = max(abs(args.Spin),abs(en)):band_limit-1,
-0100    ind_ln = ssht_elm2ind(el, en);
-0101    psi = (cur_lm{j-args.J_min+1}(ind_ln));
-0102    <span class="keyword">for</span> m = -el:el,
-0103     ind_lm = ssht_elm2ind(el, m);
-0104     ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
-0105     flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
-0106    <span class="keyword">end</span>
-0107   <span class="keyword">end</span>
-0108  <span class="keyword">end</span>
-0109 <span class="keyword">end</span>
-0110 
-0111 <span class="comment">% -----------------</span>
-0112 <span class="comment">% Adding the scaling function contribution:</span>
-0113 <span class="comment">% -----------------</span>
-0114 <span class="comment">% disp('syn_lmn2lm:  Compute flm_scal_syn ');</span>
-0115 <span class="keyword">if</span> (args.Upsample ~= 1)  <span class="comment">%false =&gt; multi-resolution</span>
-0116    band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
-0117 <span class="keyword">end</span>
-0118 lm_ind=0;
-0119 <span class="keyword">for</span> el = abs(args.Spin): band_limit-1,
-0120   phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
-0121   <span class="keyword">for</span> m = -el:el,
-0122    lm_ind=ssht_elm2ind(el, m);
-0123    flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
-0124   <span class="keyword">end</span>
-0125 <span class="keyword">end</span>
-0126 
-0127 
-0128 
-0129 <span class="keyword">end</span>
-0130 
-0131 
-0132 
-0133 
-0134 
-0135</pre></div>
-<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0098  <span class="keyword">if</span> (args.Reality == 0) <span class="comment">%i.e. false (default) =&gt; complex</span>
+0099   <span class="keyword">for</span> en = -Nj+1:Nj-1,
+0100    <span class="keyword">for</span> el = max(abs(args.Spin),abs(en)):band_limit-1,
+0101    ind_ln = ssht_elm2ind(el, en);
+0102    psi = (cur_lm{j-args.J_min+1}(ind_ln));
+0103     <span class="keyword">for</span> m = -el:el,
+0104      ind_lm = ssht_elm2ind(el, m);
+0105      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+0106      flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+0107     <span class="keyword">end</span>
+0108    <span class="keyword">end</span>
+0109   <span class="keyword">end</span>
+0110  <span class="keyword">else</span> <span class="comment">% i.e.(args.Reality == 1) %i.e. true =&gt; real</span>
+0111   <span class="keyword">for</span> en = 1-mod(Nj,2):Nj-1, 
+0112    <span class="keyword">for</span> el = en:band_limit-1,    
+0113     ind_ln = ssht_elm2ind(el, en);
+0114     psi = cur_lm{j-args.J_min+1}(ind_ln);
+0115    
+0116     <span class="keyword">if</span> (en)
+0117     ind_ln = ssht_elm2ind(el, -en);
+0118     npsi = cur_lm{j-args.J_min+1}(ind_ln);
+0119     <span class="keyword">end</span> 
+0120    
+0121     <span class="keyword">for</span> m = -el:el,
+0122      ind_lm = ssht_elm2ind(el, m);
+0123      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,<span class="string">'Reality'</span>, args.Reality);
+0124      flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+0125      <span class="keyword">if</span> (en)
+0126       ind_lmn = so3_elmn2ind(el,-m,en,band_limit,Nj,<span class="string">'Reality'</span>, args.Reality);
+0127       <span class="keyword">if</span> (mod((m+en),2) == 1) 
+0128          sign = -1; 
+0129       <span class="keyword">else</span>  <span class="comment">%i.e. (mod((m+n),2) == 0)</span>
+0130          sign = 1; 
+0131       <span class="keyword">end</span> 
+0132       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lmn))* npsi; 
+0133      <span class="keyword">end</span>
+0134     <span class="keyword">end</span> <span class="comment">% end m-loop for Reality Option</span>
+0135    <span class="keyword">end</span> <span class="comment">% end el-loop for Reality Option</span>
+0136   <span class="keyword">end</span> <span class="comment">% end en-loop for Reality Option</span>
+0137  <span class="keyword">end</span>  <span class="comment">% end if-loop for Reality Option</span>
+0138 <span class="keyword">end</span> <span class="comment">% end j-loop</span>
+0139 
+0140 <span class="comment">% -----------------</span>
+0141 <span class="comment">% Adding the scaling function contribution:</span>
+0142 <span class="comment">% -----------------</span>
+0143 <span class="comment">% disp('syn_lmn2lm:  Compute flm_scal_syn ');</span>
+0144 <span class="keyword">if</span> (args.Upsample ~= 1)  <span class="comment">%false =&gt; multi-resolution</span>
+0145    band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
+0146 <span class="keyword">end</span>
+0147 lm_ind=0;
+0148 <span class="keyword">if</span> (args.Reality == 0) <span class="comment">%i.e. false (default) =&gt; complex</span>
+0149  <span class="keyword">for</span> el = abs(args.Spin): band_limit-1,
+0150   phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
+0151   <span class="keyword">for</span> m = -el:el,
+0152    lm_ind=ssht_elm2ind(el, m);
+0153    flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
+0154   <span class="keyword">end</span>
+0155  <span class="keyword">end</span> 
+0156 <span class="keyword">else</span>   <span class="comment">%  i.e. (args.Reality == 1); true =&gt; real</span>
+0157  <span class="keyword">for</span> el = 0 :band_limit-1,
+0158   phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
+0159   <span class="keyword">for</span> m = -el:el,
+0160    lm_ind=ssht_elm2ind(el, m);
+0161    flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
+0162   <span class="keyword">end</span>
+0163  <span class="keyword">end</span> 
+0164 <span class="keyword">end</span>  <span class="comment">% end if-loop for Reality Option</span>
+0165 
+0166 <span class="keyword">end</span>
+0167 
+0168 
+0169 
+0170 
+0171 
+0172</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 21:37:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

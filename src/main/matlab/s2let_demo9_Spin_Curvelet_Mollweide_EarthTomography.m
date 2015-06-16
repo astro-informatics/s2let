@@ -69,7 +69,7 @@ clear all;
 close all ;
 
 load('EGM2008_Topography_flms_L0128');
-L = 64; 
+L = 32;   % To see the multi-resoluition effect i.e. Upsample = false, L >=64) 
 flm_gen = flm(1:L^2,1);
 Spin = 0; 
 f_gen = ssht_inverse(flm_gen, L, 'Spin', Spin, 'Reality', false);
@@ -87,7 +87,7 @@ J =s2let_jmax(L, B);  %=ceil(log L/ log B);
 % ---------------
 % Define Plotting  parameters: 
 % ---------------
-zoomfactor =1.;  %1.6;
+zoomfactor =1.1;  %1.6;
 ns = ceil(sqrt(2+J-J_min+1)) ;
 ny = 16;  %4 % ns - 1 + rem(2+J-J_min+1 , ns) ;
 nx = 4;   %3 % ns;
@@ -96,6 +96,100 @@ maxfigs = nx*ny;
 pltroot = '../../../figs' ; 
 configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]; 
 
+% ================================================
+% FULL RESOLUTION PLOT (Upsample: true)
+% ================================================
+% Signal analysis: 
+% -----------------
+[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_gen,  ...
+                                                  'B', B, 'L', L, ...
+                                                  'J_min', J_min, ...
+                                                  'Spin', Spin, ...
+                                                  'Reality', false, ...
+                                                  'Upsample', true, ...
+                                                  'SpinLowered', false, ...
+                                                  'SpinLoweredFrom', 0,...
+                                                  'Sampling', 'MW');
+                                              
+f_cur_new = cell(J+1-J_min, 2*N-1);  
+for j = J_min:J 
+   for en = 1: 2*N-1 
+   f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
+   end
+end   
+% figure
+% ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);
+
+
+figure('Position',[20 20 1700 1400]) %100 100 1300 1000
+subplot(ny, nx, 1);
+% --- plot initial data --- % 
+ssht_plot_mollweide(f_gen, L, 'Mode', 1);
+%
+title('Initial data')
+campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+v = caxis;
+temp = max(abs(v));
+caxis([-temp temp])
+% 
+subplot(ny, nx, 2);
+% --- plot scaling function contributions --- % 
+ssht_plot_mollweide(f_scal, L, 'Mode', 1);
+%
+title('Scaling fct')
+campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+v = caxis;
+temp = max(abs(v));
+caxis([-temp temp])
+% --- plot curvelet kernel contributions --- % 
+ind = 2;
+for j = J_min:J
+	for en = 1: 2*N-1 %N
+		ind = ind + 1;
+        if ind <= maxfigs
+            subplot(ny, nx, ind);
+            %
+            ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, L, 'Mode', 1);
+            %
+            campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+            v = caxis;
+            temp = max(abs(v));
+            caxis([-temp temp])
+            title(['Curvelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)],'FontSize', 10)
+        end
+	end
+end
+colormap(jet)
+fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_fullres.png']
+print('-r200', '-dpng', fname)
+
+
+% ---------- 
+% Compare reconstructed signal with the initial signals: 
+% ---------- 
+f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, ...
+                                                  'B', B, 'L', L, ...
+                                                  'J_min', J_min, ...
+                                                  'Spin', Spin, ...
+                                                  'Reality', false, ...
+                                                  'Upsample', true, ...
+                                                  'SpinLowered', false, ...
+                                                  'SpinLoweredFrom', 0,...
+                                                  'Sampling', 'MW');
+
+figure('Position',[100 100 900 200]) 
+subplot(2, 2, 1);
+ssht_plot_mollweide(f_gen, L, 'Mode', 1);
+title('initial signal')
+hold on
+subplot(2, 2, 2);
+ssht_plot_mollweide(f_rec,L, 'Mode', 1);
+title('reconstructed signal')
+fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_Fullres_Int_Rec_signal.png']
+print('-r200', '-dpng', fname)
+% Check error:
+check_error = max(abs(f_gen(:)-f_rec(:)))
+                           
 
 % ================================================
 % MULTI-RESOLUTION PLOT (Upsample: false)
@@ -109,8 +203,9 @@ configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_mi
                                                   'SpinLowered', false, ...
                                                   'SpinLoweredFrom', 0,...
                                                   'Sampling', 'MW');  
-                                        
-figure('Position',[100 100 1500 1300]) %100 100 1300 1000
+
+                                              
+figure('Position',[20 20 1700 1400]) %100 100 1300 1000
 subplot(ny, nx, 1);
 % --- plot initial data --- % 
 ssht_plot_mollweide(f_gen, L, 'Mode', 1);
@@ -146,7 +241,7 @@ for j = J_min:J
             v = caxis;
             temp = max(abs(v));
             caxis([-temp temp])
-            title(['Curvelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
+            title(['Curvelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)], 'FontSize', 10)
         end
 	end
 end
@@ -182,98 +277,3 @@ check_error = max(abs(f_gen(:)-f_rec(:)))
 fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 print('-r200', '-dpng', fname)
 
-
-% ================================================
-% FULL RESOLUTION PLOT (Upsample: true)
-% ================================================
-% Signal analysis: 
-% -----------------
-[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_gen,  ...
-                                                  'B', B, 'L', L, ...
-                                                  'J_min', J_min, ...
-                                                  'Spin', Spin, ...
-                                                  'Reality', false, ...
-                                                  'Upsample', true, ...
-                                                  'SpinLowered', false, ...
-                                                  'SpinLoweredFrom', 0,...
-                                                  'Sampling', 'MW');
-                                              
-f_cur_new = cell(J+1-J_min, 2*N-1);  
-for j = J_min:J 
-   for en = 1: 2*N-1 
-   f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
-   end
-end   
-% figure
-% ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);
-
-
-figure('Position',[100 100 1500 1300]) %100 100 1300 1000
-subplot(ny, nx, 1);
-% --- plot initial data --- % 
-ssht_plot_mollweide(f_gen, L, 'Mode', 1);
-%
-title('Initial data')
-campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-v = caxis;
-temp = max(abs(v));
-caxis([-temp temp])
-% 
-subplot(ny, nx, 2);
-% --- plot scaling function contributions --- % 
-ssht_plot_mollweide(f_scal, L, 'Mode', 1);
-%
-title('Scaling fct')
-campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-v = caxis;
-temp = max(abs(v));
-caxis([-temp temp])
-% --- plot curvelet kernel contributions --- % 
-ind = 2;
-for j = J_min:J
-	for en = 1: 2*N-1 %N
-		ind = ind + 1;
-        if ind <= maxfigs
-            subplot(ny, nx, ind);
-            %
-            ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, L, 'Mode', 1);
-            %
-            campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-            v = caxis;
-            temp = max(abs(v));
-            caxis([-temp temp])
-            title(['Curvelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)])
-        end
-	end
-end
-colormap(jet)
-fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_fullres.png']
-print('-r200', '-dpng', fname)
-
-
-% ---------- 
-% Compare reconstructed signal with the initial signals: 
-% ---------- 
-f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, ...
-                                                  'B', B, 'L', L, ...
-                                                  'J_min', J_min, ...
-                                                  'Spin', Spin, ...
-                                                  'Reality', false, ...
-                                                  'Upsample', true, ...
-                                                  'SpinLowered', false, ...
-                                                  'SpinLoweredFrom', 0,...
-                                                  'Sampling', 'MW');
-
-figure('Position',[100 100 900 200]) 
-subplot(2, 2, 1);
-ssht_plot_mollweide(f_gen, L, 'Mode', 1);
-title('initial signal')
-hold on
-subplot(2, 2, 2);
-ssht_plot_mollweide(f_rec,L, 'Mode', 1);
-title('reconstructed signal')
-fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_Fullres_Int_Rec_signal.png']
-print('-r200', '-dpng', fname)
-% Check error:
-check_error = max(abs(f_gen(:)-f_rec(:)))
-                           

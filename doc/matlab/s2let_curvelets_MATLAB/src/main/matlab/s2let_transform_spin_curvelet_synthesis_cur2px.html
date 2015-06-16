@@ -128,13 +128,13 @@ This function is called by:
 0043 <span class="comment">% See LICENSE.txt for license details</span>
 0044 <span class="comment">% -----------------------------------------------------------</span>
 0045 
-0046 len = size(f_cur);
+0046 len = length(f_cur);
 0047 temp = f_cur{len};
 0048 sz = size(temp);
-0049 <span class="keyword">if</span> sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
-0050     Lguessed = min([sz(1) sz(2)])
+0049 <span class="keyword">if</span> sz(1) == 2*sz(2)-1 || sz(1) == sz(3)
+0050     Lguessed = sz(2); 
 0051 <span class="keyword">else</span>
-0052     Lguessed = min([sz(1) sz(2)])-1   
+0052     Lguessed = (sz(3)+1)/2 ;
 0053 <span class="keyword">end</span>
 0054 
 0055 p = inputParser;
@@ -180,6 +180,6 @@ This function is called by:
 0095 flm_rec = 0; 
 0096 
 0097 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Tue 16-Jun-2015 21:37:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

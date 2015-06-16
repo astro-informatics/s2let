@@ -82,7 +82,21 @@ for j = args.J_min:J,
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit;
   end
+% for the case SO3_STORAGE_PADDED:
+  if (args.Reality == 0) %i.e. false (default) => complex signals
   f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
+  else %i.e. real signals
+  f_cur_lmn{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
+  end 
+%{
+% TODO: in the future add option for SO3_STORAGE: 
+% for the case SO3_STORAGE_COMPACT:
+  if ((args.Reality == 0) && (args.Storage =='Compact') )
+  f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*(3*band_limit^2-Nj*(Nj-1)/3,1);
+  else if ((args.Reality == 1) && (args.Storage =='Compact') )
+  f_cur_lmn{j-args.J_min+1} = zeros(Nj*(6*band_limit^2-(Nj-1)*(2*Nj-1))/6,1);  
+  end 
+%} 
   ind_ln=0;
   ind_lm = 0;
   ind_lmn = 0;
@@ -106,7 +120,7 @@ for j = args.J_min:J,
      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
      for m = -el:el,
       ind_lm = ssht_elm2ind(el, m);
-      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
       f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
      end
     end

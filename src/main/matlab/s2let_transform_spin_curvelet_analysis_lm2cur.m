@@ -87,6 +87,14 @@ J = s2let_jmax(args.L, args.B);
                                                                 'SpinLowered', args.SpinLowered, ...
                                                                 'SpinLoweredFrom',  args.SpinLoweredFrom, ...
                                                                 'Sampling', args.Sampling);
+% disp('--check the size of f_cur_lmn--')
+ % (2N-1)*L^2 for complex signals -> so3_storage_padded
+ %  N*L^2 for real signals  -> so3_storage_padded
+%whos f_cur_lmn
+%len= length(f_cur_lmn)
+%temp = f_cur_lmn{len};
+%sz = size(temp)
+%disp('--------')
 
 % -----------------                                                     
 % Transform to pixel space:
@@ -103,13 +111,12 @@ f_scal = ssht_inverse(f_scal_lm, band_limit,  ...
 % Curvelets:
 for j = args.J_min:J,     
 if (args.Upsample == 0)  % i.e. false (default) => multi-resolution 
-     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+     band_limit = min([s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
      Nj = band_limit;  
 end
 f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, ...
-                        'Sampling', args.Sampling,'Reality', args.Reality) ;
+                        'Sampling', args.Sampling, 'Reality', args.Reality) ;
 end
-
 
 % Clear array
 cur_lm = 0; 

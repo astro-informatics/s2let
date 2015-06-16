@@ -68,228 +68,286 @@ This function is called by:
 0017 Spin = 2 
 0018 J_min = 1; 
 0019 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
-0020 
+0020 disp(<span class="string">'-------------'</span>)
 0021 <span class="comment">% ------------------------</span>
-0022 <span class="comment">% Test curvelets:</span>
+0022 <span class="comment">% Tile curvelets:</span>
 0023 <span class="comment">% ------------------------</span>
 0024 disp(<span class="string">'Checks the harmonic tiling of curvelets'</span>)
 0025 [cur_lm scal_l] = <a href="s2let_spin_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_spin_curvelet_tiling</a>(B, L, J_min, <span class="keyword">...</span>
 0026                                             <span class="string">'Spin'</span>, Spin, <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0);
 0027 error_on_cur_tiling = <a href="s2let_check_cur_tiling.html" class="code" title="function error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min)">s2let_check_cur_tiling</a>(cur_lm, scal_l, L, Spin, J, J_min)
 0028 
-0029 
-0030 <span class="comment">% Generate random (spin) signals:</span>
-0031 disp(<span class="string">'-------------'</span>)
-0032 disp(<span class="string">'Generate band-limited function'</span>)
-0033 flm_gen_cur = zeros(L^2,1);
-0034 flm_gen_cur = rand(size(flm_gen_cur)) + sqrt(-1)*rand(size(flm_gen_cur));
-0035 flm_gen_cur = 2.*(flm_gen_cur - (1+sqrt(-1))./2);
-0036 disp(<span class="string">'Construct the corresponding signal on the sphere'</span>)
-0037 f_gen_cur = ssht_inverse(flm_gen_cur, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0029 <span class="comment">% -------------------------</span>
+0030 disp(<span class="string">'Generate random band-limited (complex) function'</span>)
+0031 <span class="comment">% -------------------------</span>
+0032 flm_gen_cur = zeros(L^2,1);
+0033 flm_gen_cur = rand(size(flm_gen_cur)) + sqrt(-1)*rand(size(flm_gen_cur));
+0034 flm_gen_cur = 2.*(flm_gen_cur - (1+sqrt(-1))./2);
+0035 disp(<span class="string">'Construct the corresponding signal on the sphere'</span>)
+0036 f_gen_cur = ssht_inverse(flm_gen_cur, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0037 <span class="comment">% -------------------------</span>
 0038 disp(<span class="string">'Construct the corresponding spin signal on the sphere'</span>)
-0039 f_spin_gen_cur = ssht_inverse(flm_gen_cur, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
-0040 flm_spin_gen_cur = ssht_forward(f_spin_gen_cur, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
-0041 
+0039 <span class="comment">% -------------------------</span>
+0040 f_spin_gen_cur = ssht_inverse(flm_gen_cur, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0041 flm_spin_gen_cur = ssht_forward(f_spin_gen_cur, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
 0042 
 0043 
-0044 disp(<span class="string">'===== TEST ===='</span>)
-0045 disp(<span class="string">'- CHECK also: the Spin Curvelet Transform of spin signals in MW sampling with default parameters:'</span>)
-0046 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform with default parameters'</span>)
-0047 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur,<span class="keyword">...</span>
-0048                                                                 <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
-0049                                                                 <span class="string">'Spin'</span>, Spin);
-0050 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
-0051 f_rec_spin_px2cur=  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
-0052                                                                   <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
-0053                                                                   <span class="string">'Spin'</span>, Spin);
-0054 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur(:)))
-0055 disp(<span class="string">'===== TEST END===='</span>)
-0056 
-0057 
-0058 disp(<span class="string">'=============='</span>)
-0059 disp(<span class="string">'Complex Signals, Full resolution tests start (Upsample: true):'</span>)
-0060 disp(<span class="string">'=============='</span>)
-0061 <span class="comment">% Test: signal reconstruction in harmonic space:</span>
-0062 disp(<span class="string">'ana_lm2lmn : Perform (spin) harmonic-to-Wigner transform (lm2lmn) with custom parameters'</span>)
-0063 [f_cur_lmn, f_scal_lm]= <a href="s2let_transform_spin_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_spin_curvelet_analysis_lm2lmn</a>(flm_spin_gen_cur, cur_lm, scal_l, <span class="keyword">...</span>
-0064                                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
-0065                                                                      <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0066                                                                      <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0067                                                                      <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
-0068                                                                      <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
-0069                                                                      <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0070 disp(<span class="string">'syn_lmn2lm : Perform inverse transform (lmn2lm) with custom parameters'</span>)
-0071 flm_rec_spin_lmn2lm_custom = <a href="s2let_transform_spin_curvelet_synthesis_lmn2lm.html" class="code" title="function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin)">s2let_transform_spin_curvelet_synthesis_lmn2lm</a>(f_cur_lmn, f_scal_lm, cur_lm, scal_l,<span class="keyword">...</span>
-0072                                                                       <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
-0073                                                                       <span class="string">'Spin'</span>, Spin,  <span class="keyword">...</span>
-0074                                                                       <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0075                                                                       <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
-0076                                                                       <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
-0077                                                                       <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0078 
-0079 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lmn2lm_custom))
-0080 
-0081 disp(<span class="string">'-------------'</span>)
-0082 <span class="comment">% Test: signal reconstruction in pixel space (from hamonic space):</span>
-0083 disp(<span class="string">'ana_lm2cur: Perform (spin) harmonic-to-curvelet transform (lm2cur) with custom parameters'</span>)
-0084 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_spin_curvelet_analysis_lm2cur</a>(flm_spin_gen_cur, <span class="keyword">...</span>
-0085                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
-0086                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>,true);
-0087 disp(<span class="string">'syn_cur2lm:  Perform inverse transform (cur2lm) with custom parameters'</span>)
-0088 flm_rec_spin_lm2cur_custom = <a href="s2let_transform_spin_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,<span class="keyword">...</span>
-0089                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
-0090                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>, true);
-0091 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lm2cur_custom))
-0092 
-0093 disp(<span class="string">'-------------'</span>)
-0094 <span class="comment">% Test: signal reconstruction in pixel space (from pixel space):</span>
-0095 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform (px2cur) with custom parameters'</span>)
-0096 <span class="comment">% c.f. s2let_transform_analysis_mw.m for directional wavelet</span>
-0097 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur ,<span class="keyword">...</span>
-0098                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0099                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0100                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0101                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0102                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0103                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0104 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with custom parameters'</span>)
-0105 <span class="comment">% c.f. s2let_transform_synthesis_mw.m for directional wavelet</span>
-0106 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
-0107                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0108                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0109                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0110                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0111                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0112                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0113 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
-0114 
-0115 disp(<span class="string">''</span>)
-0116 disp(<span class="string">' - CHECK also: the Spin Curvelet Transform of spin signals in MW sampling with default parapmeters:'</span>)
-0117 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform with default parameters'</span>)
-0118 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur,<span class="keyword">...</span>
-0119                                                                 <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0120                                                                 <span class="string">'Upsample'</span>, true);
-0121 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
-0122 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
-0123                                                                 <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0124                                                                 <span class="string">'Upsample'</span>, true);
-0125 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
-0126 
-0127 disp(<span class="string">''</span>)
-0128 disp(<span class="string">' -CHECK also: the Spin Curvelet Transform of scalar signalsin MW sampling with default parapmeters:'</span>)
-0129 disp(<span class="string">'ana_px2cur: Perform (scalar) curvelet transform with default parameters'</span>)
-0130 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen_cur,<span class="keyword">...</span>
-0131                                                                 <span class="string">'Upsample'</span>, true);
-0132 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
-0133 f_rec_spin_px2cur =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
-0134                                                                 <span class="string">'Upsample'</span>, true);
-0135 default = max(abs(f_gen_cur(:)-f_rec_spin_px2cur(:)))
-0136 
-0137 
-0138 disp(<span class="string">''</span>)
-0139 disp(<span class="string">'=============='</span>)
-0140 disp(<span class="string">'Complex Signals, multi-resolution tests start (Upsample: false):'</span>)
-0141 disp(<span class="string">'=============='</span>)
-0142 <span class="comment">% Test: signal reconstruction in harmonic space:</span>
-0143 disp(<span class="string">'ana_lm2lmn : Perform (spin) harmonic-to-Wigner transform (lm2lmn) with custom parameters'</span>)
-0144 [f_cur_lmn, f_scal_lm]= <a href="s2let_transform_spin_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_spin_curvelet_analysis_lm2lmn</a>(flm_spin_gen_cur, cur_lm, scal_l, <span class="keyword">...</span>
-0145                                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
-0146                                                                      <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0147                                                                      <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0148                                                                      <span class="string">'Upsample'</span>, false,<span class="keyword">...</span>
-0149                                                                      <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
-0150                                                                      <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0151 disp(<span class="string">'syn_lmn2lm : Perform inverse transform (lmn2lm) with custom parameters'</span>)
-0152 flm_rec_spin_lmn2lm_custom = <a href="s2let_transform_spin_curvelet_synthesis_lmn2lm.html" class="code" title="function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin)">s2let_transform_spin_curvelet_synthesis_lmn2lm</a>(f_cur_lmn, f_scal_lm, cur_lm, scal_l,<span class="keyword">...</span>
-0153                                                                       <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
-0154                                                                       <span class="string">'Spin'</span>, Spin,  <span class="keyword">...</span>
-0155                                                                       <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0156                                                                       <span class="string">'Upsample'</span>, false,<span class="keyword">...</span>
-0157                                                                       <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
-0158                                                                       <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0159 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lmn2lm_custom))
-0160 
-0161 disp(<span class="string">'-------------'</span>)
-0162 <span class="comment">% Test: signal reconstruction in pixel space:</span>
-0163 disp(<span class="string">'ana_lm2cur: Perform (spin) harmonic-to-curvelet transform (lm2cur) with custom parameters'</span>)
-0164 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_spin_curvelet_analysis_lm2cur</a>(flm_spin_gen_cur, <span class="keyword">...</span>
-0165                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
-0166                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>,false);
-0167 disp(<span class="string">'syn_cur2lm:  Perform inverse transform (cur2lm) with custom parameters'</span>)
-0168 flm_rec_spin_lm2cur_custom = <a href="s2let_transform_spin_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,<span class="keyword">...</span>
-0169                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
-0170                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>, false);
-0171 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lm2cur_custom))
-0172 
-0173 disp(<span class="string">'-------------'</span>)
-0174 <span class="comment">% Test: signal reconstruction in pixel space:</span>
-0175 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform (px2cur) with custom parameters'</span>)
-0176 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur ,<span class="keyword">...</span>
-0177                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0178                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0179                                                     <span class="string">'Upsample'</span>, false, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0180                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0181                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0182                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0183 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with custom parameters'</span>)
-0184 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
-0185                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0186                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0187                                                     <span class="string">'Upsample'</span>, false, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
-0188                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0189                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0190                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0191 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
-0192 
-0193 disp(<span class="string">''</span>)
-0194 disp(<span class="string">'- CHECK also: the Spin Curvelet Transform of spin signals in MW sampling with default parameters:'</span>)
-0195 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform with default parameters'</span>)
-0196 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur,<span class="keyword">...</span>
-0197                                                                 <span class="string">'Spin'</span>, Spin);
-0198 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
-0199 f_rec_spin_px2cur=  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
-0200                                                                   <span class="string">'Spin'</span>, Spin);
-0201 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur(:)))
-0202 
-0203 disp(<span class="string">''</span>)
-0204 disp(<span class="string">'- CHECK also: the Spin Curvelet Transform of scalar signalsin MW sampling with default parameters:'</span>)
-0205 disp(<span class="string">'ana_px2cur: Perform (scalar) curvelet transform with default parameters'</span>)
-0206 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen_cur);
-0207 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
-0208 f_rec_spin_px2cur =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal);
-0209 default = max(abs(f_gen_cur(:)-f_rec_spin_px2cur(:)))
-0210 
-0211 <span class="comment">%{</span>
-0212 <span class="comment">% -------------------------</span>
-0213 disp(<span class="string">'Constraint on flms to generate real signal'</span>)
-0214 <span class="comment">% -------------------------</span>
-0215 <span class="keyword">for</span> el = 0:L-1
-0216 ind = el*el + el + 1;
-0217 flm_gen_cur(ind,1) = real(flm_gen_cur(ind,1));
-0218 <span class="keyword">for</span> m = 1:el
-0219 ind_pm = el*el + el + m + 1;
-0220 ind_nm = el*el + el - m + 1;
-0221 flm_gen_cur(ind_nm,1) = (-1)^m * conj(flm_gen_cur(ind_pm,1));
-0222 <span class="keyword">end</span>
-0223 <span class="keyword">end</span>
-0224 disp(<span class="string">'Construct the corresponding real signal on the sphere'</span>)
-0225 f_real_cur = ssht_inverse(flm_gen_cur, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>, <span class="string">'Reality'</span>, true);
-0226 
-0227 
-0228 disp(<span class="string">'Perform multiresolution real curvelet transform (analysis and synthesis) with default parameters'</span>)
-0229 [f_cur, f_scal] = s2let_transform_analysis_cur_mw(f_real_cur, <span class="string">'N'</span>, N, <span class="string">'Reality'</span>, true);
-0230 f_rec_usingcur = s2let_transform_synthesis_cur_mw(f_cur, f_scal, <span class="string">'N'</span>, N, <span class="string">'Reality'</span>, true);
-0231 default = max(max(abs(f_real_cur-f_rec_usingcur)))
-0232 
-0233 <span class="comment">%disp('Perform full resolution real curvelet transform with default parameters')</span>
-0234 <span class="comment">%[f_cur, f_scal] = s2let_transform_analysis_cur_mw(f_real_cur, 'N', N, 'Reality', true, 'Upsample', true);</span>
-0235 <span class="comment">%f_rec_usingcur = s2let_transform_synthesis_cur_mw(f_cur, f_scal, 'N', N, 'Reality', true, 'Upsample', true);</span>
-0236 <span class="comment">%default = max(max(abs(f_real_cur-f_rec_usingcur)))</span>
-0237 
-0238 <span class="comment">%}</span>
-0239 
-0240 
-0241</pre></div>
-<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0044 disp(<span class="string">'=============='</span>)
+0045 disp(<span class="string">'Complex Signals, Full resolution tests start (Upsample: true):'</span>)
+0046 disp(<span class="string">'=============='</span>)
+0047 <span class="comment">% Test: signal reconstruction in harmonic space:</span>
+0048 disp(<span class="string">'ana_lm2lmn : Perform (spin) harmonic-to-Wigner transform (lm2lmn) with custom parameters'</span>)
+0049 [f_cur_lmn, f_scal_lm]= <a href="s2let_transform_spin_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_spin_curvelet_analysis_lm2lmn</a>(flm_spin_gen_cur, cur_lm, scal_l, <span class="keyword">...</span>
+0050                                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0051                                                                      <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0052                                                                      <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0053                                                                      <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
+0054                                                                      <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
+0055                                                                      <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0056 disp(<span class="string">'syn_lmn2lm : Perform inverse transform (lmn2lm) with custom parameters'</span>)
+0057 flm_rec_spin_lmn2lm_custom = <a href="s2let_transform_spin_curvelet_synthesis_lmn2lm.html" class="code" title="function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin)">s2let_transform_spin_curvelet_synthesis_lmn2lm</a>(f_cur_lmn, f_scal_lm, cur_lm, scal_l,<span class="keyword">...</span>
+0058                                                                       <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0059                                                                       <span class="string">'Spin'</span>, Spin,  <span class="keyword">...</span>
+0060                                                                       <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0061                                                                       <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
+0062                                                                       <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
+0063                                                                       <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0064 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lmn2lm_custom))
+0065 
+0066 disp(<span class="string">'-------------'</span>)
+0067 <span class="comment">% Test: signal reconstruction in pixel space (from hamonic space):</span>
+0068 disp(<span class="string">'ana_lm2cur: Perform (spin) harmonic-to-curvelet transform (lm2cur) with custom parameters'</span>)
+0069 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_spin_curvelet_analysis_lm2cur</a>(flm_spin_gen_cur, <span class="keyword">...</span>
+0070                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0071                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>,true);
+0072 disp(<span class="string">'syn_cur2lm:  Perform inverse transform (cur2lm) with custom parameters'</span>)
+0073 flm_rec_spin_lm2cur_custom = <a href="s2let_transform_spin_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,<span class="keyword">...</span>
+0074                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0075                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>, true);
+0076 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lm2cur_custom))
+0077 
+0078 disp(<span class="string">'-------------'</span>)
+0079 <span class="comment">% Test: signal reconstruction in pixel space (from pixel space):</span>
+0080 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform (px2cur) with custom parameters'</span>)
+0081 <span class="comment">% c.f. s2let_transform_analysis_mw.m for directional wavelet</span>
+0082 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur ,<span class="keyword">...</span>
+0083                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0084                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0085                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0086                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0087                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0088                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0089 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with custom parameters'</span>)
+0090 <span class="comment">% c.f. s2let_transform_synthesis_mw.m for directional wavelet</span>
+0091 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0092                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0093                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0094                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0095                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0096                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0097                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0098 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
+0099 
+0100 disp(<span class="string">''</span>)
+0101 disp(<span class="string">' - CHECK also: the Spin Curvelet Transform of spin signals in MW sampling with default parapmeters:'</span>)
+0102 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform with default parameters'</span>)
+0103 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur,<span class="keyword">...</span>
+0104                                                                 <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0105                                                                 <span class="string">'Upsample'</span>, true);
+0106 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
+0107 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0108                                                                 <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0109                                                                 <span class="string">'Upsample'</span>, true);
+0110 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
+0111 
+0112 disp(<span class="string">''</span>)
+0113 disp(<span class="string">' -CHECK also: the Spin Curvelet Transform of scalar signalsin MW sampling with default parapmeters:'</span>)
+0114 disp(<span class="string">'ana_px2cur: Perform (scalar) curvelet transform with default parameters'</span>)
+0115 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen_cur,<span class="keyword">...</span>
+0116                                                                 <span class="string">'Upsample'</span>, true);
+0117 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
+0118 f_rec_spin_px2cur =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0119                                                                 <span class="string">'Upsample'</span>, true);
+0120 default = max(abs(f_gen_cur(:)-f_rec_spin_px2cur(:)))
+0121 
+0122 
+0123 disp(<span class="string">''</span>)
+0124 disp(<span class="string">'=============='</span>)
+0125 disp(<span class="string">'Complex Signals, multi-resolution tests start (Upsample: false):'</span>)
+0126 disp(<span class="string">'=============='</span>)
+0127 <span class="comment">% Test: signal reconstruction in harmonic space:</span>
+0128 disp(<span class="string">'ana_lm2lmn : Perform (spin) harmonic-to-Wigner transform (lm2lmn) with custom parameters'</span>)
+0129 [f_cur_lmn, f_scal_lm]= <a href="s2let_transform_spin_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_spin_curvelet_analysis_lm2lmn</a>(flm_spin_gen_cur, cur_lm, scal_l, <span class="keyword">...</span>
+0130                                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0131                                                                      <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0132                                                                      <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0133                                                                      <span class="string">'Upsample'</span>, false,<span class="keyword">...</span>
+0134                                                                      <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
+0135                                                                      <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0136 disp(<span class="string">'syn_lmn2lm : Perform inverse transform (lmn2lm) with custom parameters'</span>)
+0137 flm_rec_spin_lmn2lm_custom = <a href="s2let_transform_spin_curvelet_synthesis_lmn2lm.html" class="code" title="function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin)">s2let_transform_spin_curvelet_synthesis_lmn2lm</a>(f_cur_lmn, f_scal_lm, cur_lm, scal_l,<span class="keyword">...</span>
+0138                                                                       <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0139                                                                       <span class="string">'Spin'</span>, Spin,  <span class="keyword">...</span>
+0140                                                                       <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0141                                                                       <span class="string">'Upsample'</span>, false,<span class="keyword">...</span>
+0142                                                                       <span class="string">'SpinLowered'</span>, false,  <span class="string">'SpinLoweredFrom'</span>, 0, <span class="keyword">...</span>
+0143                                                                       <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0144 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lmn2lm_custom))
+0145 
+0146 disp(<span class="string">'-------------'</span>)
+0147 <span class="comment">% Test: signal reconstruction in pixel space:</span>
+0148 disp(<span class="string">'ana_lm2cur: Perform (spin) harmonic-to-curvelet transform (lm2cur) with custom parameters'</span>)
+0149 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_spin_curvelet_analysis_lm2cur</a>(flm_spin_gen_cur, <span class="keyword">...</span>
+0150                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0151                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>,false);
+0152 disp(<span class="string">'syn_cur2lm:  Perform inverse transform (cur2lm) with custom parameters'</span>)
+0153 flm_rec_spin_lm2cur_custom = <a href="s2let_transform_spin_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_spin_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,<span class="keyword">...</span>
+0154                                                                 <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0155                                                                 <span class="string">'Spin'</span>, Spin, <span class="string">'Upsample'</span>, false);
+0156 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lm2cur_custom))
+0157 
+0158 disp(<span class="string">'-------------'</span>)
+0159 <span class="comment">% Test: signal reconstruction in pixel space:</span>
+0160 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform (px2cur) with custom parameters'</span>)
+0161 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur ,<span class="keyword">...</span>
+0162                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0163                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0164                                                     <span class="string">'Upsample'</span>, false, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0165                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0166                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0167                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0168 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with custom parameters'</span>)
+0169 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0170                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0171                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0172                                                     <span class="string">'Upsample'</span>, false, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0173                                                     <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0174                                                     <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0175                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0176 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
+0177 
+0178 disp(<span class="string">''</span>)
+0179 disp(<span class="string">'- CHECK also: the Spin Curvelet Transform of spin signals in MW sampling with default parameters:'</span>)
+0180 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform with default parameters'</span>)
+0181 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur,<span class="keyword">...</span>
+0182                                                                 <span class="string">'Spin'</span>, Spin);
+0183 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
+0184 f_rec_spin_px2cur=  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0185                                                                   <span class="string">'Spin'</span>, Spin);
+0186 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur(:)))
+0187 
+0188 disp(<span class="string">''</span>)
+0189 disp(<span class="string">'- CHECK also: the Spin Curvelet Transform of scalar signals in MW sampling with default parameters:'</span>)
+0190 disp(<span class="string">'ana_px2cur: Perform (scalar) curvelet transform with default parameters'</span>)
+0191 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen_cur);
+0192 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
+0193 f_rec_spin_px2cur =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal);
+0194 default = max(abs(f_gen_cur(:)-f_rec_spin_px2cur(:)))
+0195 
+0196 
+0197 disp(<span class="string">' '</span>)
+0198 disp(<span class="string">'=============='</span>)
+0199 disp(<span class="string">'REAL Signals TEST'</span>)
+0200 disp(<span class="string">'=============='</span>)
+0201 <span class="comment">% -------------------------</span>
+0202 disp(<span class="string">'Constraint on flms to generate real signal'</span>)
+0203 <span class="comment">% -------------------------</span>
+0204 <span class="keyword">for</span> el = 0:L-1
+0205 ind = el*el + el + 1;
+0206 flm_gen_cur(ind,1) = real(flm_gen_cur(ind,1));
+0207 <span class="keyword">for</span> m = 1:el
+0208 ind_pm = el*el + el + m + 1;
+0209 ind_nm = el*el + el - m + 1;
+0210 flm_gen_cur(ind_nm,1) = (-1)^m * conj(flm_gen_cur(ind_pm,1));
+0211 <span class="keyword">end</span>
+0212 <span class="keyword">end</span>
+0213 <span class="comment">% checkReal=isreal(flm_gen_cur)</span>
+0214 disp(<span class="string">'Construct the corresponding real signal on the sphere'</span>)
+0215 f_real_gen = ssht_inverse(flm_gen_cur, L, <span class="string">'Method'</span>, <span class="string">'MW'</span>, <span class="string">'Reality'</span>, true);
+0216 <span class="comment">% checkReal=isreal(f_real_gen)</span>
+0217 <span class="comment">% flm_real_gen = ssht_forward(f_real_gen, L, 'Method', 'MW', 'Reality', true);</span>
+0218 <span class="comment">% checkReal=isreal(flm_real_gen)</span>
+0219 
+0220 disp(<span class="string">'ana_px2cur: Perform (REAL) curvelet transform (px2cur) with custom parameters'</span>)
+0221 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_real_gen ,<span class="keyword">...</span>
+0222                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0223                                                     <span class="string">'J_min'</span>, J_min,  <span class="keyword">...</span>
+0224                                                     <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0225                                                     <span class="string">'Reality'</span>, true,<span class="keyword">...</span>
+0226                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0227 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with custom parameters'</span>)
+0228 f_rec_real_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0229                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0230                                                     <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0231                                                     <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0232                                                     <span class="string">'Reality'</span>,true,<span class="keyword">...</span>
+0233                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0234 default = max(abs(f_real_gen(:)- f_rec_real_px2cur_custom(:)))
+0235 
+0236 
+0237 disp(<span class="string">''</span>)
+0238 disp(<span class="string">'- CHECK also: the REAL Curvelet Transform of scalar signals in MW sampling with default parameters:'</span>)
+0239 disp(<span class="string">'ana_px2cur: Perform (scalar) curvelet transform with default parameters'</span>)
+0240 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_real_gen ,<span class="string">'Reality'</span>, true);
+0241 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with default parameters'</span>)
+0242 f_rec_real_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="string">'Reality'</span>,true);
+0243 default = max(abs(f_real_gen(:)- f_rec_real_px2cur_custom(:)))
+0244 
+0245 
+0246 disp(<span class="string">''</span>)
+0247 disp(<span class="string">'=============='</span>)
+0248 disp(<span class="string">'TEST curvelets transform with SpinLowered setting:'</span>)
+0249 disp(<span class="string">'=============='</span>)
+0250 <span class="comment">% ------------------------</span>
+0251 <span class="comment">% Test curvelets:</span>
+0252 <span class="comment">% ------------------------</span>
+0253 disp(<span class="string">'Tile curvelets (SpinLowered: True, SpinLoweredFrom: Spin)'</span>)
+0254 [cur_lm scal_l] = <a href="s2let_spin_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_spin_curvelet_tiling</a>(B, L, J_min, <span class="keyword">...</span>
+0255                                             <span class="string">'Spin'</span>, 0, <span class="string">'SpinLowered'</span>, true,  <span class="string">'SpinLoweredFrom'</span>, 2);
+0256 
+0257 <span class="comment">% Test: signal reconstruction in harmonic space:</span>
+0258 disp(<span class="string">'ana_lm2lmn : Perform (spin) harmonic-to-Wigner transform (lm2lmn) with custom parameters'</span>)
+0259 [f_cur_lmn, f_scal_lm]= <a href="s2let_transform_spin_curvelet_analysis_lm2lmn.html" class="code" title="function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)">s2let_transform_spin_curvelet_analysis_lm2lmn</a>(flm_spin_gen_cur, cur_lm, scal_l, <span class="keyword">...</span>
+0260                                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0261                                                                      <span class="string">'Spin'</span>, 0, <span class="keyword">...</span>
+0262                                                                      <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0263                                                                      <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
+0264                                                                      <span class="string">'SpinLowered'</span>, true,  <span class="string">'SpinLoweredFrom'</span>, 2,<span class="keyword">...</span>
+0265                                                                      <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0266 disp(<span class="string">'syn_lmn2lm : Perform inverse transform (lmn2lm) with custom parameters'</span>)
+0267 flm_rec_spin_lmn2lm_custom = <a href="s2let_transform_spin_curvelet_synthesis_lmn2lm.html" class="code" title="function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin)">s2let_transform_spin_curvelet_synthesis_lmn2lm</a>(f_cur_lmn, f_scal_lm, cur_lm, scal_l,<span class="keyword">...</span>
+0268                                                                       <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0269                                                                       <span class="string">'Spin'</span>, Spin,  <span class="keyword">...</span>
+0270                                                                       <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0271                                                                       <span class="string">'Upsample'</span>, true,<span class="keyword">...</span>
+0272                                                                       <span class="string">'SpinLowered'</span>, true,  <span class="string">'SpinLoweredFrom'</span>, 2, <span class="keyword">...</span>
+0273                                                                       <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0274 default = max(abs(flm_spin_gen_cur - flm_rec_spin_lmn2lm_custom))
+0275 disp(<span class="string">'-------------'</span>)
+0276 <span class="comment">% Test: signal reconstruction in pixel space (in mw sampling):</span>
+0277 disp(<span class="string">'ana_px2cur: Perform (spin) curvelet transform (px2cur) with custom parameters'</span>)
+0278 <span class="comment">% c.f. s2let_transform_analysis_mw.m for directional wavelet</span>
+0279 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_spin_gen_cur ,<span class="keyword">...</span>
+0280                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0281                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, 0, <span class="keyword">...</span>
+0282                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0283                                                     <span class="string">'SpinLowered'</span>, true, <span class="keyword">...</span>
+0284                                                     <span class="string">'SpinLoweredFrom'</span>, 2,<span class="keyword">...</span>
+0285                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0286 disp(<span class="string">'syn_cur2px: Perform inverse transform (cur2px) with custom parameters'</span>)
+0287 <span class="comment">% c.f. s2let_transform_synthesis_mw.m for directional wavelet</span>
+0288 f_rec_spin_px2cur_custom =  <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0289                                                     <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0290                                                     <span class="string">'J_min'</span>, J_min, <span class="string">'Spin'</span>, 0, <span class="keyword">...</span>
+0291                                                     <span class="string">'Upsample'</span>, true, <span class="string">'Reality'</span>, false,<span class="keyword">...</span>
+0292                                                     <span class="string">'SpinLowered'</span>, true, <span class="keyword">...</span>
+0293                                                     <span class="string">'SpinLoweredFrom'</span>, 2,<span class="keyword">...</span>
+0294                                                     <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0295 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
+0296 
+0297 
+0298 
+0299</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 21:37:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

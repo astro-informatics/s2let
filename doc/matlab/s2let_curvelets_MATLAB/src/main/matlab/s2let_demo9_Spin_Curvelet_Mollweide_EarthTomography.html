@@ -98,7 +98,7 @@
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../../../../matlabicon.gif)">
-<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>	s2let_transform_spin_curvelet_analysis_lm2cur</li><li><a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>	s2let_transform_spin_curvelet_synthesis_lm2cur</li></ul>
+<li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>	s2let_transform_spin_curvelet_analysis_lm2cur</li><li><a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>	s2let_transform_spin_curvelet_synthesis_lm2cur</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../../../matlabicon.gif)">
 </ul>
@@ -178,192 +178,214 @@ This function is called by:
 0069 close all ;
 0070 
 0071 load(<span class="string">'EGM2008_Topography_flms_L0128'</span>);
-0072 L = 16; 
+0072 L = 32;   <span class="comment">% To see the multi-resoluition effect i.e. Upsample = false, L &gt;=64)</span>
 0073 flm_gen = flm(1:L^2,1);
-0074 Spin = 2; 
+0074 Spin = 0; 
 0075 f_gen = ssht_inverse(flm_gen, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Reality'</span>, false);
 0076 
 0077 
 0078 <span class="comment">% ---------------</span>
 0079 <span class="comment">% Define curvelet parameters:</span>
 0080 <span class="comment">% ---------------</span>
-0081 Spin = 2;
+0081 Spin = 0;
 0082 B = 6;   
 0083 N= L;     <span class="comment">% Since m=l, the azimuthal band limit N = overall band limit L</span>
 0084 J_min = 1; <span class="comment">% minimum and maximum scale probed by wavelets</span>
 0085 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);  <span class="comment">%=ceil(log L/ log B);</span>
 0086 
-0087 
-0088 <span class="comment">% ================================================</span>
-0089 <span class="comment">% FULL RESOLUTION PLOT (Upsample: true)</span>
-0090 <span class="comment">% -----------------</span>
-0091 <span class="comment">% Signal analysis:</span>
-0092 <span class="comment">% -----------------</span>
-0093 <span class="comment">% Call matlab function analysis_lm2cur</span>
-0094 <span class="comment">%{</span>
-0095 [f_cur, f_scal] = s2let_transform_spin_analysis_lm2cur(flm_gen,  <span class="keyword">...</span>
-0096                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0097                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
-0098                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0099                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
-0100                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
-0101                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0102                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0103                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0104 <span class="comment">%}</span>
-0105 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen,  <span class="keyword">...</span>
-0106                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0107                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
-0108                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0109                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
-0110                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
-0111                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0112                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0113                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0114                                               
-0115 f_cur_new = cell(J+1-J_min, 2*N-1);  
-0116 <span class="keyword">for</span> j = J_min:J 
-0117    <span class="keyword">for</span> en = 1: 2*N-1 
-0118    f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
-0119    <span class="keyword">end</span>
-0120 <span class="keyword">end</span>   
-0121 <span class="comment">% figure</span>
-0122 <span class="comment">% ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);</span>
+0087 <span class="comment">% ---------------</span>
+0088 <span class="comment">% Define Plotting  parameters:</span>
+0089 <span class="comment">% ---------------</span>
+0090 zoomfactor =1.1;  <span class="comment">%1.6;</span>
+0091 ns = ceil(sqrt(2+J-J_min+1)) ;
+0092 ny = 16;  <span class="comment">%4 % ns - 1 + rem(2+J-J_min+1 , ns) ;</span>
+0093 nx = 4;   <span class="comment">%3 % ns;</span>
+0094 
+0095 maxfigs = nx*ny;
+0096 pltroot = <span class="string">'../../../figs'</span> ; 
+0097 configstr = [<span class="string">'N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="string">'_Jmin'</span>,int2str(J_min)]; 
+0098 
+0099 <span class="comment">% ================================================</span>
+0100 <span class="comment">% FULL RESOLUTION PLOT (Upsample: true)</span>
+0101 <span class="comment">% ================================================</span>
+0102 <span class="comment">% Signal analysis:</span>
+0103 <span class="comment">% -----------------</span>
+0104 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen,  <span class="keyword">...</span>
+0105                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0106                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0107                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0108                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0109                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0110                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0111                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0112                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0113                                               
+0114 f_cur_new = cell(J+1-J_min, 2*N-1);  
+0115 <span class="keyword">for</span> j = J_min:J 
+0116    <span class="keyword">for</span> en = 1: 2*N-1 
+0117    f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:), L, 2*L-1);
+0118    <span class="keyword">end</span>
+0119 <span class="keyword">end</span>   
+0120 <span class="comment">% figure</span>
+0121 <span class="comment">% ssht_plot_mollweide(f_cur_new{1, 1}, L, 'Mode', 1);</span>
+0122 
 0123 
-0124 zoomfactor =1.;  <span class="comment">%1.6;</span>
-0125 ns = ceil(sqrt(2+J-J_min+1)) ;
-0126 ny = 16;  <span class="comment">%4 % ns - 1 + rem(2+J-J_min+1 , ns) ;</span>
-0127 nx = 4;   <span class="comment">%3 % ns;</span>
-0128 
-0129 maxfigs = nx*ny;
-0130 pltroot = <span class="string">'../../../figs'</span> ; 
-0131 configstr = [<span class="string">'N'</span>,int2str(N),<span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="string">'_Jmin'</span>,int2str(J_min)]; 
-0132 
-0133 figure(<span class="string">'Position'</span>,[100 100 1400 1200]) <span class="comment">%100 100 1300 1000</span>
-0134 subplot(ny, nx, 1);
-0135 <span class="comment">% --- plot initial data --- %</span>
-0136 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
-0137 <span class="comment">%</span>
-0138 title(<span class="string">'Initial data'</span>)
-0139 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-0140 v = caxis;
-0141 temp = max(abs(v));
-0142 caxis([-temp temp])
-0143 <span class="comment">%</span>
-0144 subplot(ny, nx, 2);
-0145 <span class="comment">% --- plot scaling function contributions --- %</span>
-0146 ssht_plot_mollweide(f_scal, L, <span class="string">'Mode'</span>, 1);
-0147 <span class="comment">%</span>
-0148 title(<span class="string">'Scaling fct'</span>)
-0149 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-0150 v = caxis;
-0151 temp = max(abs(v));
-0152 caxis([-temp temp])
-0153 <span class="comment">% --- plot curvelet kernel contributions --- %</span>
-0154 ind = 2;
-0155 <span class="keyword">for</span> j = J_min:J
-0156     <span class="keyword">for</span> en = 1: 2*N-1 <span class="comment">%N</span>
-0157         ind = ind + 1;
-0158         <span class="keyword">if</span> ind &lt;= maxfigs
-0159             subplot(ny, nx, ind);
-0160             <span class="comment">%</span>
-0161             ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, L, <span class="string">'Mode'</span>, 1);
-0162             <span class="comment">%</span>
-0163             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-0164             v = caxis;
-0165             temp = max(abs(v));
-0166             caxis([-temp temp])
-0167             title([<span class="string">'Curvelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
-0168         <span class="keyword">end</span>
-0169     <span class="keyword">end</span>
-0170 <span class="keyword">end</span>
-0171 colormap(jet)
-0172 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_spin_curvelet_EarthTomo_fullres.png'</span>]
-0173 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
-0174 
-0175 
-0176 
-0177 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen,  <span class="keyword">...</span>
-0178                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0179                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
-0180                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0181                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
-0182                                                   <span class="string">'Upsample'</span>, false, <span class="keyword">...</span>
-0183                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0184                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0185                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0186                                               
-0187 <span class="comment">% MULTI-RESOLUTION PLOT</span>
-0188 figure(<span class="string">'Position'</span>,[100 100 1300 1000])
-0189 subplot(ny, nx, 1);
-0190 <span class="comment">%</span>
-0191 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
-0192 title(<span class="string">'Initial data'</span>)
-0193 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-0194 v = caxis;
-0195 temp = max(abs(v));
-0196 caxis([-temp temp])
-0197 subplot(ny, nx, 2);
-0198 <span class="comment">%</span>
-0199 ssht_plot_mollweide(f_scal, L, <span class="string">'Mode'</span>, 1);
-0200 <span class="comment">%</span>
-0201 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-0202 v = caxis;
-0203 temp = max(abs(v));
-0204 caxis([-temp temp])
-0205 title(<span class="string">'Scaling fct'</span>)
-0206 ind = 2; 
-0207 <span class="keyword">for</span> j = J_min:J
-0208 <span class="comment">%    for en = 1:2*N-1</span>
-0209         ind = ind + 1 ; 
-0210         <span class="keyword">if</span> ind &lt;= maxfigs
-0211             subplot(ny, nx, ind);
-0212             <span class="comment">% f_cur is numeric</span>
-0213             <span class="comment">%            ssht_plot_mollweide(f_cur{j-J_min+1,en}, L, 'Mode', 1);</span>
-0214             <span class="comment">%ssht_plot_mollweide(f_cur{j-J_min+1}(:), L, 'Mode', 1);</span>
-0215             <span class="comment">%</span>
-0216             ssht_plot_sphere(f_cur{j-J_min+1}(:), L);
-0217             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
-0218             v = caxis;
-0219             temp = max(abs(v));
-0220             caxis([-temp temp])
-0221             title([<span class="string">'Wavelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)])
-0222         <span class="keyword">end</span>
-0223 <span class="comment">%    end</span>
-0224 <span class="keyword">end</span>
-0225 
-0226 colormap(jet)
-0227 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_spin_curvelet_EarthTomo_multires.png'</span>]
-0228 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
-0229 
-0230 
-0231 <span class="comment">% ----------</span>
-0232 <span class="comment">% Compare reconstructed signal with the initial signals:</span>
-0233 <span class="comment">% ----------</span>
-0234 
-0235 f_rec = <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
-0236                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
-0237                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
-0238                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
-0239                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
-0240                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
-0241                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
-0242                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
-0243                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
-0244 
-0245 figure(<span class="string">'Position'</span>,[100 100 900 200]) 
-0246 subplot(2, 2, 1);
-0247 ssht_plot_mollweide(f_gen,L);
-0248 title(<span class="string">'initial signal'</span>)
-0249 hold on
-0250 subplot(2, 2, 2);
-0251 ssht_plot_mollweide(f_rec,L);
-0252 title(<span class="string">'reconstructed signal'</span>)
-0253 <span class="comment">% Check error:</span>
-0254 check_error = max(abs(f_gen(:)-f_rec(:)))
-0255                            
-0256 <span class="comment">%fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires_Int_Rec_signal.png']</span>
-0257 <span class="comment">%print('-r200', '-dpng', fname)</span></pre></div>
-<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0124 figure(<span class="string">'Position'</span>,[20 20 1700 1400]) <span class="comment">%100 100 1300 1000</span>
+0125 subplot(ny, nx, 1);
+0126 <span class="comment">% --- plot initial data --- %</span>
+0127 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
+0128 <span class="comment">%</span>
+0129 title(<span class="string">'Initial data'</span>)
+0130 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0131 v = caxis;
+0132 temp = max(abs(v));
+0133 caxis([-temp temp])
+0134 <span class="comment">%</span>
+0135 subplot(ny, nx, 2);
+0136 <span class="comment">% --- plot scaling function contributions --- %</span>
+0137 ssht_plot_mollweide(f_scal, L, <span class="string">'Mode'</span>, 1);
+0138 <span class="comment">%</span>
+0139 title(<span class="string">'Scaling fct'</span>)
+0140 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0141 v = caxis;
+0142 temp = max(abs(v));
+0143 caxis([-temp temp])
+0144 <span class="comment">% --- plot curvelet kernel contributions --- %</span>
+0145 ind = 2;
+0146 <span class="keyword">for</span> j = J_min:J
+0147     <span class="keyword">for</span> en = 1: 2*N-1 <span class="comment">%N</span>
+0148         ind = ind + 1;
+0149         <span class="keyword">if</span> ind &lt;= maxfigs
+0150             subplot(ny, nx, ind);
+0151             <span class="comment">%</span>
+0152             ssht_plot_mollweide(f_cur_new{j-J_min+1, en}, L, <span class="string">'Mode'</span>, 1);
+0153             <span class="comment">%</span>
+0154             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0155             v = caxis;
+0156             temp = max(abs(v));
+0157             caxis([-temp temp])
+0158             title([<span class="string">'Curvelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)],<span class="string">'FontSize'</span>, 10)
+0159         <span class="keyword">end</span>
+0160     <span class="keyword">end</span>
+0161 <span class="keyword">end</span>
+0162 colormap(jet)
+0163 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_spin_curvelet_EarthTomo_fullres.png'</span>]
+0164 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0165 
+0166 
+0167 <span class="comment">% ----------</span>
+0168 <span class="comment">% Compare reconstructed signal with the initial signals:</span>
+0169 <span class="comment">% ----------</span>
+0170 f_rec = <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0171                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0172                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0173                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0174                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0175                                                   <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0176                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0177                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0178                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0179 
+0180 figure(<span class="string">'Position'</span>,[100 100 900 200]) 
+0181 subplot(2, 2, 1);
+0182 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
+0183 title(<span class="string">'initial signal'</span>)
+0184 hold on
+0185 subplot(2, 2, 2);
+0186 ssht_plot_mollweide(f_rec,L, <span class="string">'Mode'</span>, 1);
+0187 title(<span class="string">'reconstructed signal'</span>)
+0188 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_spin_curvelet_EarthTomo_Fullres_Int_Rec_signal.png'</span>]
+0189 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0190 <span class="comment">% Check error:</span>
+0191 check_error = max(abs(f_gen(:)-f_rec(:)))
+0192                            
+0193 
+0194 <span class="comment">% ================================================</span>
+0195 <span class="comment">% MULTI-RESOLUTION PLOT (Upsample: false)</span>
+0196 <span class="comment">% ================================================</span>
+0197 [f_cur, f_scal] = <a href="s2let_transform_spin_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_spin_curvelet_analysis_px2cur</a>(f_gen,  <span class="keyword">...</span>
+0198                                                   <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0199                                                   <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0200                                                   <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0201                                                   <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0202                                                   <span class="string">'Upsample'</span>, false, <span class="keyword">...</span>
+0203                                                   <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0204                                                   <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0205                                                   <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);  
+0206 
+0207                                               
+0208 figure(<span class="string">'Position'</span>,[20 20 1700 1400]) <span class="comment">%100 100 1300 1000</span>
+0209 subplot(ny, nx, 1);
+0210 <span class="comment">% --- plot initial data --- %</span>
+0211 ssht_plot_mollweide(f_gen, L, <span class="string">'Mode'</span>, 1);
+0212 <span class="comment">%</span>
+0213 title(<span class="string">'Initial data'</span>)
+0214 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0215 v = caxis;
+0216 temp = max(abs(v));
+0217 caxis([-temp temp])
+0218 <span class="comment">%</span>
+0219 subplot(ny, nx, 2);
+0220 <span class="comment">% --- plot scaling function contributions --- %</span>
+0221 bl = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(J_min-1,J_min,B,L) L ]);
+0222 ssht_plot_mollweide(f_scal, bl, <span class="string">'Mode'</span>, 1);
+0223 <span class="comment">%</span>
+0224 title(<span class="string">'Scaling fct'</span>)
+0225 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0226 v = caxis;
+0227 temp = max(abs(v));
+0228 caxis([-temp temp])
+0229 <span class="comment">% --- plot curvelet kernel contributions --- %</span>
+0230 ind = 2;
+0231 <span class="keyword">for</span> j = J_min:J
+0232     <span class="keyword">for</span> en = 1: 2*N-1 <span class="comment">%N</span>
+0233         ind = ind + 1;
+0234         <span class="keyword">if</span> ind &lt;= maxfigs
+0235             subplot(ny, nx, ind);
+0236             <span class="comment">%</span>
+0237             bl =  min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,J_min,B,L) L ]);
+0238             ssht_plot_mollweide(reshape(f_cur{j-J_min+1}(en,:), bl, 2*bl-1), bl, <span class="string">'Mode'</span>, 1);
+0239             <span class="comment">%</span>
+0240             campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
+0241             v = caxis;
+0242             temp = max(abs(v));
+0243             caxis([-temp temp])
+0244             title([<span class="string">'Curvelet scale j='</span>,int2str(j)-J_min+1,<span class="string">', n='</span>,int2str(en)], <span class="string">'FontSize'</span>, 10)
+0245         <span class="keyword">end</span>
+0246     <span class="keyword">end</span>
+0247 <span class="keyword">end</span>
+0248 colormap(jet)
+0249 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_spin_curvelet_EarthTomo_multires.png'</span>]
+0250 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0251 
+0252 
+0253 <span class="comment">% ----------</span>
+0254 <span class="comment">% Compare reconstructed signal with the initial signals:</span>
+0255 <span class="comment">% ----------</span>
+0256 f_rec = <a href="s2let_transform_spin_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_spin_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0257                                                        <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0258                                                        <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0259                                                        <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0260                                                        <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0261                                                        <span class="string">'Upsample'</span>, false, <span class="keyword">...</span>
+0262                                                        <span class="string">'SpinLowered'</span>, false, <span class="keyword">...</span>
+0263                                                        <span class="string">'SpinLoweredFrom'</span>, 0,<span class="keyword">...</span>
+0264                                                        <span class="string">'Sampling'</span>, <span class="string">'MW'</span>);
+0265 
+0266 figure(<span class="string">'Position'</span>,[100 100 900 200]) 
+0267 subplot(2, 2, 1);
+0268 ssht_plot_mollweide(f_gen,L, <span class="string">'Mode'</span>, 1);
+0269 title(<span class="string">'initial signal'</span>)
+0270 hold on
+0271 subplot(2, 2, 2);
+0272 ssht_plot_mollweide(f_rec,L, <span class="string">'Mode'</span>, 1);
+0273 title(<span class="string">'reconstructed signal'</span>)
+0274 <span class="comment">% Check error:</span>
+0275 check_error = max(abs(f_gen(:)-f_rec(:)))
+0276                            
+0277 fname = [pltroot,<span class="string">'/s2let_demo9_'</span>, configstr, <span class="string">'_spin_curvelet_EarthTomo_multires_Int_Rec_signal.png'</span>]
+0278 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname)
+0279</pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 21:37:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

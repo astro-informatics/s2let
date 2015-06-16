@@ -147,7 +147,7 @@ This function is called by:
 0062 
 0063 <span class="comment">% For curvelets, azimuthal/directional band-limit N always equals to L</span>
 0064 N = args.L ; 
-0065 Nj=N;
+0065 Nj= N;
 0066 band_limit = args.L;
 0067 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
 0068 
@@ -172,37 +172,44 @@ This function is called by:
 0087                                                                 <span class="string">'SpinLowered'</span>, args.SpinLowered, <span class="keyword">...</span>
 0088                                                                 <span class="string">'SpinLoweredFrom'</span>,  args.SpinLoweredFrom, <span class="keyword">...</span>
 0089                                                                 <span class="string">'Sampling'</span>, args.Sampling);
-0090 
-0091 <span class="comment">% -----------------</span>
-0092 <span class="comment">% Transform to pixel space:</span>
-0093 <span class="comment">% -----------------</span>
-0094 <span class="comment">% Scaling functions:</span>
-0095 <span class="keyword">if</span> (args.Upsample == 0)  <span class="comment">%false =&gt; multi-resolution</span>
-0096      band_limit = min([<a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
-0097 <span class="keyword">end</span>     
-0098 f_scal = ssht_inverse(f_scal_lm, band_limit,  <span class="keyword">...</span>
-0099                       <span class="string">'Method'</span>, args.Sampling, <span class="keyword">...</span>
-0100                       <span class="string">'Spin'</span>, 0, <span class="keyword">...</span>
-0101                       <span class="string">'Reality'</span>, args.Reality);          
-0102                   
-0103 <span class="comment">% Curvelets:</span>
-0104 <span class="keyword">for</span> j = args.J_min:J,     
-0105 <span class="keyword">if</span> (args.Upsample == 0)  <span class="comment">% i.e. false (default) =&gt; multi-resolution</span>
-0106      band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
-0107      Nj = band_limit;  
-0108 <span class="keyword">end</span>
-0109 f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, <span class="keyword">...</span>
-0110                         <span class="string">'Sampling'</span>, args.Sampling,<span class="string">'Reality'</span>, args.Reality) ;
-0111 <span class="keyword">end</span>
-0112 
-0113 
-0114 <span class="comment">% Clear array</span>
-0115 cur_lm = 0; 
-0116 scal_l = 0; 
-0117 f_cur_lmn =0; 
-0118 f_scal_lm =0;
-0119 
-0120 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 16-Jun-2015 10:12:26 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0090 <span class="comment">% disp('--check the size of f_cur_lmn--')</span>
+0091  <span class="comment">% (2N-1)*L^2 for complex signals -&gt; so3_storage_padded</span>
+0092  <span class="comment">%  N*L^2 for real signals  -&gt; so3_storage_padded</span>
+0093 <span class="comment">%whos f_cur_lmn</span>
+0094 <span class="comment">%len= length(f_cur_lmn)</span>
+0095 <span class="comment">%temp = f_cur_lmn{len};</span>
+0096 <span class="comment">%sz = size(temp)</span>
+0097 <span class="comment">%disp('--------')</span>
+0098 
+0099 <span class="comment">% -----------------</span>
+0100 <span class="comment">% Transform to pixel space:</span>
+0101 <span class="comment">% -----------------</span>
+0102 <span class="comment">% Scaling functions:</span>
+0103 <span class="keyword">if</span> (args.Upsample == 0)  <span class="comment">%false =&gt; multi-resolution</span>
+0104      band_limit = min([<a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
+0105 <span class="keyword">end</span>     
+0106 f_scal = ssht_inverse(f_scal_lm, band_limit,  <span class="keyword">...</span>
+0107                       <span class="string">'Method'</span>, args.Sampling, <span class="keyword">...</span>
+0108                       <span class="string">'Spin'</span>, 0, <span class="keyword">...</span>
+0109                       <span class="string">'Reality'</span>, args.Reality);          
+0110                   
+0111 <span class="comment">% Curvelets:</span>
+0112 <span class="keyword">for</span> j = args.J_min:J,     
+0113 <span class="keyword">if</span> (args.Upsample == 0)  <span class="comment">% i.e. false (default) =&gt; multi-resolution</span>
+0114      band_limit = min([<a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
+0115      Nj = band_limit;  
+0116 <span class="keyword">end</span>
+0117 f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, <span class="keyword">...</span>
+0118                         <span class="string">'Sampling'</span>, args.Sampling, <span class="string">'Reality'</span>, args.Reality) ;
+0119 <span class="keyword">end</span>
+0120 
+0121 <span class="comment">% Clear array</span>
+0122 cur_lm = 0; 
+0123 scal_l = 0; 
+0124 f_cur_lmn =0; 
+0125 f_scal_lm =0;
+0126 
+0127 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Tue 16-Jun-2015 21:37:37 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
