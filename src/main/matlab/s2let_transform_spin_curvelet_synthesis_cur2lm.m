@@ -69,9 +69,9 @@ args = p.Results;
 
 
 N= args.L;
+J = s2let_jmax(args.L, args.B);
 Nj=N;
 band_limit = args.L;
-J = s2let_jmax(args.L, args.B);
 
 % ---------------
 % Tile curvelets:
@@ -98,12 +98,16 @@ f_scal_lm_syn = ssht_forward(f_scal, band_limit, ...
                         
 % Curvelet contribution:
 for j = args.J_min:J,
- if (args.Upsample ==0)  %false => multi-resolution 
-     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-     Nj = band_limit;
- end
- f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , band_limit, Nj, ...
-                                            'Reality', args.Reality, 'Sampling', args.Sampling);
+    band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+    Nj = band_limit;
+    if (args.Upsample ==0)  %false => multi-resolution
+        f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , band_limit, Nj, ...
+                                                    'Reality', args.Reality, 'Sampling', args.Sampling);
+    else  % Upsample true => full-resolution
+        f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , args.L, Nj, ...
+                                                    'Reality', args.Reality, 'Sampling', args.Sampling);
+    end
+
 end
 
 

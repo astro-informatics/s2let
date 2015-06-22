@@ -242,7 +242,7 @@ disp('syn_cur2px: Perform inverse transform (cur2px) with default parameters')
 f_rec_real_px2cur_custom =  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, 'Reality',true);
 default = max(abs(f_real_gen(:)- f_rec_real_px2cur_custom(:)))
 
-
+%{
 disp('')
 disp('==============')
 disp('TEST curvelets transform with SpinLowered setting:')
@@ -293,7 +293,7 @@ f_rec_spin_px2cur_custom =  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur
                                                     'SpinLoweredFrom', 2,...
                                                     'Sampling', 'MW');
 default = max(abs(f_spin_gen_cur(:)-f_rec_spin_px2cur_custom(:)))
-
+%}
 
 
 

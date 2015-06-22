@@ -65,15 +65,7 @@ p.parse(f_cur_lmn, f_scal_lm, cur_lm, scal_l, varargin{:});
 args = p.Results;
 
 N = args.L ;
-Nj = N; 
-band_limit = args.L; 
-
-% Clear output :
-
-
-% Debug:
-% f_scal_plot = ssht_inverse(f_scal_lm, args.L, 'Reality', args.Reality);
-% ssht_plot_mollweide(f_scal_plot, args.L, 'Mode', 1);
+J = s2let_jmax(args.L, args.B);
 
 % ---------------
 % Signal synthesis: 
@@ -86,55 +78,57 @@ band_limit = args.L;
 % disp('syn_lmn2lm: Curvelet synthesis of complex signals from Wigner to harmonic space (flm_cur_syn from flmn_syn)');
 
 flm_rec = zeros(args.L^2,1);
-J = s2let_jmax(args.L, args.B);
 for j = args.J_min:J,
- ind_ln =0;
- ind_lm=0;
- ind_lmn=0;
- if (args.Upsample ~= 1)  %false => multi-resolution 
-     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-     Nj =  band_limit;
- end
- if (args.Reality == 0) %i.e. false (default) => complex
-  for en = -Nj+1:Nj-1,
-   for el = max(abs(args.Spin),abs(en)):band_limit-1,
-   ind_ln = ssht_elm2ind(el, en);
-   psi = (cur_lm{j-args.J_min+1}(ind_ln));
-    for m = -el:el,
-     ind_lm = ssht_elm2ind(el, m);
-     ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
-     flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+    ind_ln =0;
+    ind_lm=0;
+    ind_lmn=0;
+    band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+    Nj = band_limit;
+    if (args.Upsample ~= 0)  %true => full-resolution
+        band_limit = args.L;
     end
-   end
-  end
- else % i.e.(args.Reality == 1) %i.e. true => real
-  for en = 1-mod(Nj,2):Nj-1, 
-   for el = en:band_limit-1,    
-    ind_ln = ssht_elm2ind(el, en);
-    psi = cur_lm{j-args.J_min+1}(ind_ln);
-   
-    if (en)
-    ind_ln = ssht_elm2ind(el, -en);
-    npsi = cur_lm{j-args.J_min+1}(ind_ln);
-    end 
-   
-    for m = -el:el,
-     ind_lm = ssht_elm2ind(el, m);
-     ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
-     flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
-     if (en)
-      ind_lmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
-      if (mod((m+en),2) == 1) 
-         sign = -1; 
-      else  %i.e. (mod((m+n),2) == 0)     
-         sign = 1; 
-      end 
-      flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lmn))* npsi; 
-     end
-    end % end m-loop for Reality Option
-   end % end el-loop for Reality Option
-  end % end en-loop for Reality Option
- end  % end if-loop for Reality Option
+    if (args.Reality == 0) %i.e. false (default) => complex
+        for en = -Nj+1:Nj-1,
+            for el = max(abs(args.Spin),abs(en)):band_limit-1,
+                ind_ln = ssht_elm2ind(el, en);
+                psi = (cur_lm{j-args.J_min+1}(ind_ln));
+                for m = -el:el,
+                    ind_lm = ssht_elm2ind(el, m);
+                    if (args.Upsample == 0)  %false => multi-resolution
+                        ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+                    else
+                        ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+                    end % end the if-loop for upsample
+                    flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+                end
+            end
+        end
+    else % i.e.(args.Reality == 1) %i.e. true => real
+        for en = 1-mod(Nj,2):Nj-1, 
+            for el = en:band_limit-1,    
+                ind_ln = ssht_elm2ind(el, en);
+                psi = cur_lm{j-args.J_min+1}(ind_ln);
+                if (en)
+                    ind_ln = ssht_elm2ind(el, -en);
+                    npsi = cur_lm{j-args.J_min+1}(ind_ln);
+                end 
+                for m = -el:el,
+                    ind_lm = ssht_elm2ind(el, m);
+                    ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
+                    flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+                    if (en)
+                       ind_lmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
+                       if (mod((m+en),2) == 1) 
+                           sign = -1; 
+                       else  %i.e. (mod((m+n),2) == 0)     
+                           sign = 1; 
+                       end 
+                       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lmn))* npsi; 
+                    end
+                end % end m-loop for Reality Option
+            end % end el-loop for Reality Option
+        end % end en-loop for Reality Option
+    end  % end if-loop for Reality Option
 end % end j-loop
 
 % -----------------
@@ -143,24 +137,26 @@ end % end j-loop
 % disp('syn_lmn2lm:  Compute flm_scal_syn ');
 if (args.Upsample ~= 1)  %false => multi-resolution 
    band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
+else 
+    band_limit = args.L ; 
 end
 lm_ind=0;
 if (args.Reality == 0) %i.e. false (default) => complex
- for el = abs(args.Spin): band_limit-1,
-  phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
-  for m = -el:el,
-   lm_ind=ssht_elm2ind(el, m);
-   flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
-  end
- end 
+    for el = abs(args.Spin): band_limit-1,
+        phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
+        for m = -el:el,
+            lm_ind=ssht_elm2ind(el, m);
+            flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
+        end
+    end 
 else   %  i.e. (args.Reality == 1); true => real
- for el = 0 :band_limit-1,
-  phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
-  for m = -el:el,
-   lm_ind=ssht_elm2ind(el, m);
-   flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
-  end
- end 
+    for el = 0 :band_limit-1,
+        phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
+        for m = -el:el,
+            lm_ind=ssht_elm2ind(el, m);
+            flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
+        end
+    end 
 end  % end if-loop for Reality Option
 
 end

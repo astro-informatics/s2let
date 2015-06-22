@@ -15,7 +15,7 @@ CFITSIODIR	= ${CFITSIO}
 # Directory for HEALPIX (optional)
 HEALPIXDIR	= ${HEALPIX}
 # Directory for idl_export.h include (required for healpix)
-IDLINC = /Applications/exelis/idl82/external/include
+# IDLINC = /Applications/exelis/idl82/external/include
 
 # Directory for MATLAB (optional)
 MLAB	=  ${MATLAB}

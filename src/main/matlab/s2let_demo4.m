@@ -9,20 +9,23 @@
 % See LICENSE.txt for license details
 
 load('EGM2008_Topography_flms_L0128');
+L = 32;   % To see the multi-resoluition effect i.e. Upsample = false, L >=64) 
+flm = flm(1:L^2,1);
+Spin = 0; 
 f = ssht_inverse(flm, L, 'Reality', true);
 
 %inputfile = 'data/earth_tomo_mw_128.fits';
 %[f, L] = s2let_mw_read_real_map(inputfile);
 
-B = 6;
-N = 3;
-J_min = 1;
+B = 2;
+N = L; %to compare with curvelets
+J_min = 3; %1
 J = s2let_jmax(L, B);
 
-zoomfactor = 1.6;
+zoomfactor = 1.2;  %1.6;
 ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = 4; % ns - 1 + rem(2+J-J_min+1 , ns) ;
-nx = 3; % ns;
+ny = 4; %10 ;  % ns - 1 + rem(2+J-J_min+1 , ns) ;
+nx = 4; % 5 % ns;
 
 maxfigs = nx*ny;
 pltroot = '../../../figs'
@@ -66,8 +69,8 @@ colormap(jet)
 fname = [pltroot,'/s2let_demo4_', configstr, '_earth_multires.png']
 print('-r200', '-dpng', fname)
 
-
-
+% For debugging: 
+stop 
 
 [f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Upsample', false, 'Spin', 0);
 
