@@ -84,8 +84,15 @@ flm_init= ssht_forward(f_init, args.L, 'Spin', args.Spin,  'Reality', args.Reali
                                                                 'SpinLoweredFrom',  args.SpinLoweredFrom, ...
                                                                 'Sampling', args.Sampling);
                                                          
+% For debugging: 
+%disp('--check the size of f_cur--')
+%whos f_cur
+%len= length(f_cur)
+%temp = f_cur{len};
+%sz = size(temp)
+%disp('--------')
+% For L=N=16, real data: sz = 31  16 31  
 
-                                                      
 % Clear arrary memory:
 flm_init = 0;
 

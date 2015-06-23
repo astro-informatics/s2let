@@ -66,10 +66,10 @@
 % -----------------------------------------------------------
 
 clear all;
-close all ;
+% close all ;
 
 load('EGM2008_Topography_flms_L0128');
-L = 16; 
+L = 32; 
 flm_gen = flm(1:L^2,1);
 f_gen = ssht_inverse(flm_gen, L, 'Reality', true);
      
@@ -77,9 +77,9 @@ f_gen = ssht_inverse(flm_gen, L, 'Reality', true);
 % Define curvelet parameters: 
 % ---------------
 Spin = 0;
-B = 6;   
+B = 2;   
 N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
-J_min = 1; % minimum and maximum scale probed by wavelets 
+J_min = 3; % minimum and maximum scale probed by wavelets 
 J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
 
 
@@ -127,8 +127,8 @@ end
 
 zoomfactor =1.;  %1.6;
 ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = 16;  %4 % ns - 1 + rem(2+J-J_min+1 , ns) ;
-nx = 4;   %3 % ns;
+ny = 16; %16 %4 % ns - 1 + rem(2+J-J_min+1 , ns) ;
+nx = 4; %4  %3 % ns;
 
 maxfigs = nx*ny;
 pltroot = '../../../figs' ; 

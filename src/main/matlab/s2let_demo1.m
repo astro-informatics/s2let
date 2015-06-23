@@ -14,14 +14,19 @@ f = ssht_inverse(flm, L, 'Reality', true);
 %inputfile = 'data/earth_tomo_mw_128.fits';
 %[f, L] = s2let_mw_read_real_map(inputfile);
 
-B = 3;
-J_min = 2;
+B = 2; %3;
+J_min = 3; %2;
 J = s2let_jmax(L, B);
 
 zoomfactor = 1.2;
 ns = ceil(sqrt(2+J-J_min+1)) ;
 ny = ns - 1 + rem(2+J-J_min+1 , ns) ;
 nx = ns;
+
+maxfigs = nx*ny;
+pltroot = '../../../figs' ; 
+configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]; 
+
 
 % Perform decomposition
 [f_wav, f_scal] = s2let_transform_axisym_analysis_mw(f, 'B', B, 'J_min', J_min, 'Reality', true, 'Upsample', true);
@@ -50,7 +55,10 @@ temp = max(abs(v));
 caxis([-temp temp])
    %title(['Wavelet scale : ',int2str(j)-J_min+1])
 end
-
+colormap(jet)
+fname = [pltroot,'/s2let_demo1_', configstr, '_axisymmetric_EarthTomo_fullres.png']
+print('-r200', '-dpng', fname)
+colormap(hot)
 
 % Perform decomposition
 [f_wav, f_scal] = s2let_transform_axisym_analysis_mw(f, 'B', B, 'J_min', J_min, 'Reality', true);

@@ -106,7 +106,11 @@ for j = args.J_min:J,
            psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
            for m = -el:el,
                ind_lm = ssht_elm2ind(el, m);
-               ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+               if (args.Upsample == 0)  %false => multi-resolution
+                        ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+               else
+                        ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+               end % end the if-loop for upsample
                f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
            end
        end
@@ -125,8 +129,16 @@ for j = args.J_min:J,
    end
   end % end if loop for Reality Option
 end % end j-loop 
-
-
+% For debugging: 
+% disp('--check the size of f_cur_lmn--')
+ % (2N-1)*L^2 for complex signals -> so3_storage_padded
+ %  N*L^2 for real signals  -> so3_storage_padded
+%whos f_cur_lmn
+%len= length(f_cur_lmn)
+%temp = f_cur_lmn{len};
+%sz = size(temp)
+%disp('--------')
+% For L=N=16, real data: sz= 4096 1: 
    
 % -----------------
 % Scaling function contribution: 

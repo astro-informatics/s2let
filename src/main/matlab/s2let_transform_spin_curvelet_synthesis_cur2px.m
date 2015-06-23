@@ -43,6 +43,7 @@ function f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
+% f_cur(N-1 N, 2L-1)
 len = length(f_cur);
 temp = f_cur{len};
 sz = size(temp);

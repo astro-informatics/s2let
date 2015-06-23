@@ -1,20 +1,20 @@
-function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)
+function s2let_plot_spin_curvelet_on_sphere(B, L, J_min, varargin)
 %
 % s2let_plot_cur_on_sphere -
 % Plot curvelet coefficients on multiple spheres.
 %
 % This function
-% i) compute the j-th curvelet, rotated by rho=(alpha, beta, gamma) in
-% harmonic space and reconstruct it on the sphere.
+% i) compute the j-th curvelet, which has been rotated by the Euler's angles (alpha =pi, beta =pi/2, gamma=2) in
+% harmonic space (in s2let_spin_curvelet_tiling.m), 
+% and reconstruct it on the sphere.
 % ii) generates one plot of the scaling function contribution and
 % a grid of plots for each orientation of each scale of the
 % curvelet contributions.
 %
 % Default usage :
 %
-%   s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, <options>)
+%   s2let_plot_curvelet_on_sphere(B, L, J_min, <options>)
 %
-% (alpha, beta, gamma) are the Euler's angles for rotationing the sphere.
 % B is the wavelet dilation factor 
 % L is the angular band-limit.
 % J_min is the first curvelet scale in cur.
@@ -37,8 +37,6 @@ function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin
 %
 %
 % j is the order of the curvelet under consideration (depends on B)
-% rho=(alpha, beta, gamma) is the rotation in SO(3) by which to rotate
-% the curvelet
 % L if harmonic band-limit for the reconstruction on the sphere
 % psi_j is the reconstructed curvelet on the sphere, at resolution L
 %
@@ -52,9 +50,6 @@ function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin
 
 % Parse arguments.
 p = inputParser;
-p.addRequired('alpha', @isnumeric);
-p.addRequired('beta', @isnumeric);
-p.addRequired('gamma', @isnumeric);
 p.addRequired('B', @isnumeric);
 p.addRequired('L', @isnumeric);
 p.addRequired('J_min', @isnumeric);
@@ -63,7 +58,7 @@ p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.addParamValue('Reality', false, @islogical);
 p.addParamValue('Sampling', 'MW', @ischar);
-p.parse(alpha, beta, gamma, B, L, J_min, varargin{:});
+p.parse(B, L, J_min, varargin{:});
 args = p.Results;
 
 B = args.B ; 
@@ -72,27 +67,11 @@ N = L;
 J_min = args.J_min; 
 J = s2let_jmax(L, B);
 
-% Precompute Wigner small-d functions
-d = zeros(L, 2*L-1, 2*L-1);
-d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, args.beta);  %el_min, beta);
-for el = 1:L-1  %el_min:L-1  %
-    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, args.beta);
-end
-
-%[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...
 [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...
                                              'Spin', args.Spin, ...
                                              'SpinLowered', args.SpinLowered,...
                                              'SpinLoweredFrom', args.SpinLoweredFrom);
                                     
-                                    
-original_spin = 0 ;  % if we don't use spin-lowered wavelets (default). 
-if (args.SpinLowered ~= 0) % For spin-lowered curvelet: 
-original_spin= args.SpinLoweredFrom; 
-end 
-el_min = max(abs(args.Spin), abs(original_spin));
-
-
 % Define plotting parameters
 zoomfactor = 1.4;
 plot_caxis_scale = 2;
@@ -113,10 +92,12 @@ figure('Position',[100 100 1200 600])
 ind=0;
 for j = J_min:J,
 %% Rotate the curvelets coefficients
-   flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, args.alpha, args.gamma);
   if args.Spin == 0
-   % Compute the function (rotated):
-   f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', args.Sampling, 'Spin', args.Spin, 'Reality', args.Reality);
+   % Compute the curvelet functsions (from the roatated curvelet harmonic coefficients)
+   % where size(f_cur_rot)= [L, 2*L-1]
+   f_cur_rot = ssht_inverse(cur_lm{j-J_min+1}, L, ...
+                           'Method', args.Sampling, ...
+                           'Spin', args.Spin, 'Reality', true);
    ind = ind + 1;
     if ind <= maxfigs
      h = subplot(ny, nx, ind);
@@ -136,8 +117,11 @@ for j = J_min:J,
    end
 
    if args.Spin > 0
-    f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', args.Sampling,...
-                             'Spin', args.Spin,'Reality',  args.Reality);
+    % Compute the curvelet functsions (from the roatated curvelet harmonic coefficients cur_lm{j-J_min+1} whose size is (L^2,1)) 
+    % where size(f_cur_rot) = [L, 2L-1]  
+    f_cur_rot = ssht_inverse(cur_lm{j-J_min+1}, L, ...
+                            'Method', args.Sampling,...
+                            'Spin', args.Spin);            
     ind = ind + 1;
      if ind <= maxfigs
       h = subplot(ny, nx, ind);

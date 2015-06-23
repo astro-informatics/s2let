@@ -1,12 +1,12 @@
 function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)
 %
-% s2let_spin_curvelet_tiling - Compute tiling in harmonic space.
+% s2let_spin_curvelet_tiling - Tile scaling functions and curvelets in harmonic space.
 %
 % Default usage :
 %
 %   [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, <options>)
 %
-% cur_lm is an array containing the curvelets spherical harmonic coefficients.
+% cur_lm is an array containing the rotated curvelets spherical harmonic coefficients.
 % scal_l is an array containing the scaling function spherical harmonic coefficients (l only).
 % B is the wavelet parameter,
 % L is the harmonic band-limit;
@@ -46,11 +46,11 @@ args = p.Results;
 % For curvelets: N = L; 
 J = s2let_jmax(L, B);
 Spin = args.Spin; 
-original_spin = 0 ;  % if we don't use spin-lowered wavelets (default). 
-
 % For spin-lowered curvelet: (i.e. use scalar curvelets for the transform : spin =0, SpinLoweredFrom = e.g. 2)
 if (args.SpinLowered ~= 0) 
-original_spin= args.SpinLoweredFrom;
+    original_spin= args.SpinLoweredFrom;
+else 
+    original_spin = 0 ;  % if we don't use spin-lowered wavelets (default).    
 end 
 
 % ----------
@@ -105,20 +105,42 @@ for j = J_min:J
      m = el; 
      % for positive m
      ind_pm = ssht_elm2ind(el, m); 
-     cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
+     cur_lm_untrotated{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
      % for negative m
      ind_nm = ssht_elm2ind(el, -m); 
-     cur_lm{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm{j-J_min+1}(ind_pm)) ; 
+     cur_lm_untrotated{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm_untrotated{j-J_min+1}(ind_pm)) ; 
      
      % if SpinLowered == true 
      if (args.SpinLowered ~= 0)  
       s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
-      cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
-      cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
+      cur_lm_untrotated{j-J_min+1}(ind_pm) = cur_lm_untrotated{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
+      cur_lm_untrotated{j-J_min+1}(ind_nm) = cur_lm_untrotated{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
      end 
 
  end
-end 
+end
+
+% ---------------
+% Define Euler angles 
+% (for rotating the curvelets to the north pole):
+% ---------------
+alpha =  pi ;
+beta = pi/2 ;
+gamma = 0 ;
+% ---------------
+% Precompute Wigner small-d functions 
+% ---------------
+d = zeros(L, 2*L-1, 2*L-1);
+d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);
+for el = 1:L-1
+    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, beta);
+end
+%% Rotate the curvelets coefficients
+for j = J_min:J
+    cur_lm{j-J_min+1} = ssht_rotate_flm(cur_lm_untrotated{j-J_min+1}(:), d, alpha, gamma);
+end  
+% where cur_lm_untrotated{j-J_min+1} have sizes (1,L^2)
+% where cur_lm{j-J_min+1} have sizes (L^2,1)
 
 % ----------
 % Scaling Function

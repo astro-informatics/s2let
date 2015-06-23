@@ -62,7 +62,6 @@ args = p.Results;
 
 % For curvelets, azimuthal/directional band-limit N always equals to L           
 N = args.L ;
-band_limit = args.L;
 J = s2let_jmax(args.L, args.B);
 
 % ---------------
@@ -95,13 +94,16 @@ J = s2let_jmax(args.L, args.B);
 %sz = size(temp)
 %disp('--------')
 
+
 % -----------------                                                     
 % Transform to pixel space:
 % -----------------
 % Scaling functions:
 if (args.Upsample == 0)  %false => multi-resolution 
      band_limit = min([s2let_bandlimit(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
-end     
+else
+     band_limit = args.L ;
+end
 f_scal = ssht_inverse(f_scal_lm, band_limit,  ...
                       'Method', args.Sampling, ...
                       'Spin', 0, ...
@@ -110,16 +112,26 @@ f_scal = ssht_inverse(f_scal_lm, band_limit,  ...
 % Curvelets:
 for j = args.J_min:J,
     band_limit = min([s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-    Nj = band_limit;
-
+    Nj = band_limit; 
     if (args.Upsample == 0)  % i.e. false (default) => multi-resolution
         f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, band_limit, Nj, ...
                                             'Sampling', args.Sampling, 'Reality', args.Reality) ;
     else
         f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, args.L, Nj, ...
                                             'Sampling', args.Sampling, 'Reality', args.Reality) ;
+       %For debugging:                                 
+       % size(f_cur{j-args.J_min+1}) 
     end
 end
+% For debugging: 
+%disp('--check the size of f_cur--')
+%whos f_cur
+%len= length(f_cur)
+%temp = f_cur{len};
+%sz = size(temp)
+%disp('--------')
+% For L=N=16, real data: sz = 31  16 31  
+
 
 % Clear array
 cur_lm = 0; 

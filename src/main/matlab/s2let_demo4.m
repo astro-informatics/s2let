@@ -22,16 +22,60 @@ N = L; %to compare with curvelets
 J_min = 3; %1
 J = s2let_jmax(L, B);
 
-zoomfactor = 1.2;  %1.6;
+zoomfactor = 1.;  %1.6;
 ns = ceil(sqrt(2+J-J_min+1)) ;
-ny = 4; %10 ;  % ns - 1 + rem(2+J-J_min+1 , ns) ;
-nx = 4; % 5 % ns;
+ny = 16; %4 ;  % ns - 1 + rem(2+J-J_min+1 , ns) ;
+nx = 4; % 4 % ns;
 
 maxfigs = nx*ny;
 pltroot = '../../../figs'
 configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]
 
-[f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Upsample', true, 'Spin', 0);
+[f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Reality',true, 'Upsample', true, 'Spin', 0);
+
+% For debugging: 
+type = 'colour';
+zoomfactor = 1.4;
+plot_caxis_scale = 1; %2; 
+%
+figure('Position',[100 100 300 300])
+h=subplot(1, 1, 1);
+% Plot initial signals on the sphere 
+ssht_plot_sphere(f_gen, L, 'Type', type,...
+                 'ColourBar', false, 'Lighting', true);
+title(h,'Earth map')
+locate = get(h,'title');
+pos = get(locate,'position');
+pos(1,2) = pos(1,2)+0.7;
+pos(1,1) = pos(1,1)-0.7;
+set(locate,'pos',pos);
+zoom(1.2)
+v = caxis;
+temp = max(abs(v));
+caxis([-temp temp]*plot_caxis_scale)
+% Plot function on SO(3) by plotting a sphere for each value of gamma
+figure('Position',[100 100 1200 1800])
+for j = J_min:J 
+  % band_limit = min([ s2let_bandlimit(j,J_min,B,L) L ]);  
+  %% Compute sampling grids where ngamma = 2*band_limit -1 
+  % [alphas, betas, gammas, n, nalpha, nbeta, ngamma] = so3_sampling(band_limit, band_limit, 'Grid', true);
+  for i = 1:N    %ngamma,
+      h = subplot(ceil(N/6),6,i);
+      ssht_plot_sphere(real(f_wav{j-J_min+1,i}), L, 'Type', type,...
+                       'ColourBar', false, 'Lighting', true);
+      title(h, sprintf('g = %d; Re(f)', i-1))
+      locate = get(h,'title');
+      pos = get(locate,'Position');
+      pos(1,2) = pos(1,2)+0.7;
+      pos(1,1) = pos(1,1)-0.7;
+      set(locate,'pos',pos);
+      v = caxis;
+      temp = max(abs(v));
+      caxis([-temp temp]*plot_caxis_scale)
+      zoom(zoomfactor) 
+  end 
+end
+%}
 
 % FULL-RESOLUTION PLOT
 figure('Position',[100 100 1300 1000])

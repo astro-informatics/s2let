@@ -70,8 +70,6 @@ args = p.Results;
 
 N= args.L;
 J = s2let_jmax(args.L, args.B);
-Nj=N;
-band_limit = args.L;
 
 % ---------------
 % Tile curvelets:
@@ -88,7 +86,9 @@ band_limit = args.L;
 % Scaling functions:
 if (args.Upsample == 0)  %false => multi-resolution 
      band_limit = min([ s2let_bandlimit(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
-end    
+else
+     band_limit = args.L ;
+end
 f_scal_lm_syn = ssht_forward(f_scal, band_limit, ...
                             'Method', args.Sampling,...
                             'Spin', 0, ...

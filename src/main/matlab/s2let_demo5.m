@@ -5,9 +5,9 @@
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
-Spin = 1;
+Spin = 0;
 B = 2;
-J_min = 0; %2
+J_min = 2; %2
 L = 64;
 N = 64;
 J = s2let_jmax(L, B);
