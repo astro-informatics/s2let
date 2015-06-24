@@ -105,16 +105,16 @@ for j = J_min:J
      m = el; 
      % for positive m
      ind_pm = ssht_elm2ind(el, m); 
-     cur_lm_untrotated{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
+     cur_lm_unrotated{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
      % for negative m
      ind_nm = ssht_elm2ind(el, -m); 
-     cur_lm_untrotated{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm_untrotated{j-J_min+1}(ind_pm)) ; 
+     cur_lm_unrotated{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm_unrotated{j-J_min+1}(ind_pm)) ; 
      
      % if SpinLowered == true 
      if (args.SpinLowered ~= 0)  
       s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
-      cur_lm_untrotated{j-J_min+1}(ind_pm) = cur_lm_untrotated{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
-      cur_lm_untrotated{j-J_min+1}(ind_nm) = cur_lm_untrotated{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
+      cur_lm_unrotated{j-J_min+1}(ind_pm) = cur_lm_unrotated{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
+      cur_lm_unrotated{j-J_min+1}(ind_nm) = cur_lm_unrotated{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
      end 
 
  end
@@ -137,9 +137,9 @@ for el = 1:L-1
 end
 %% Rotate the curvelets coefficients
 for j = J_min:J
-    cur_lm{j-J_min+1} = ssht_rotate_flm(cur_lm_untrotated{j-J_min+1}(:), d, alpha, gamma);
+    cur_lm{j-J_min+1} = ssht_rotate_flm(cur_lm_unrotated{j-J_min+1}(:), d, alpha, gamma);
 end  
-% where cur_lm_untrotated{j-J_min+1} have sizes (1,L^2)
+% where cur_lm_unrotated{j-J_min+1} have sizes (1,L^2)
 % where cur_lm{j-J_min+1} have sizes (L^2,1)
 
 % ----------
