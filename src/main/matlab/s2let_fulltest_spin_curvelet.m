@@ -194,6 +194,7 @@ f_rec_spin_px2cur =  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_sca
 default = max(abs(f_gen_cur(:)-f_rec_spin_px2cur(:)))
 
 
+
 disp(' ')
 disp('==============')
 disp('REAL Signals TEST')
@@ -214,8 +215,9 @@ end
 disp('Construct the corresponding real signal on the sphere')
 f_real_gen = ssht_inverse(flm_gen_cur, L, 'Method', 'MW', 'Reality', true);
 % checkReal=isreal(f_real_gen)
-% flm_real_gen = ssht_forward(f_real_gen, L, 'Method', 'MW', 'Reality', true);
+flm_real_gen = ssht_forward(f_real_gen, L, 'Method', 'MW', 'Reality', true);
 % checkReal=isreal(flm_real_gen)
+
 
 disp('ana_px2cur: Perform (REAL) curvelet transform (px2cur) with custom parameters')
 [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_real_gen ,...

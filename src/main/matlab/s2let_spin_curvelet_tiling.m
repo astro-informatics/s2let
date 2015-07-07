@@ -43,9 +43,12 @@ p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.parse(B, L, J_min, varargin{:});
 args = p.Results;
 
+L = args. L;
+B = args.B;
+J_min = args.J_min;
+Spin = args.Spin;
 % For curvelets: N = L; 
 J = s2let_jmax(L, B);
-Spin = args.Spin; 
 % For spin-lowered curvelet: (i.e. use scalar curvelets for the transform : spin =0, SpinLoweredFrom = e.g. 2)
 if (args.SpinLowered ~= 0) 
     original_spin= args.SpinLoweredFrom;
@@ -124,8 +127,8 @@ end
 % Define Euler angles 
 % (for rotating the curvelets to the north pole):
 % ---------------
-alpha =  pi ;
-beta = pi/2 ;
+alpha =  0; %pi ;
+beta =  pi/2 ;
 gamma = 0 ;
 % ---------------
 % Precompute Wigner small-d functions 

@@ -19,7 +19,7 @@
 % 
 % Modified S2LET package to perform Curvelets on the Sphere.
 % -----------------------------------------------------------
-clear all;
+clear %all;
 
 % ---------------
 % Define curvelet parameters: 

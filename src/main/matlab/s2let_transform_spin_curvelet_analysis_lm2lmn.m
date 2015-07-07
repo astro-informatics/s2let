@@ -115,8 +115,28 @@ for j = args.J_min:J,
            end
        end
    end
-  else % i.e.(args.Reality == 1) %i.e. true => real
-   for en = 1-mod(Nj,2):Nj-1,
+  else % i.e.(args.Reality == 1) %i.e. true => real 
+   for el = 1:band_limit-1,
+      for m = -el:el, 
+          ind_lm = ssht_elm2ind(el, m);
+      % n =0th term:  
+          ind_lnzero = ssht_elm2ind(el, 0);
+          psizero = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_lnzero));
+          ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,'Reality', args.Reality);
+          f_cur_lmn{j-args.J_min+1}(ind_lmnzero) =  flm_init(ind_lm) *psizero; 
+       % n ~=0th term:  
+          for en = 1: Nj-1,
+              if (el >= en)
+              ind_ln = ssht_elm2ind(el, en);
+              psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
+              ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
+              f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
+              end
+          end 
+      end
+   end
+%{  
+   for en = 1: Nj-1, %1-mod(Nj,2):Nj-1,
        for el = en:band_limit-1,
            ind_ln = ssht_elm2ind(el, en);
            psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
@@ -126,7 +146,7 @@ for j = args.J_min:J,
                f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
            end
        end
-   end
+%}
   end % end if loop for Reality Option
 end % end j-loop 
 % For debugging: 

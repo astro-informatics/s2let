@@ -34,8 +34,10 @@ flm_gen = zeros(L^2,1);
 flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
 flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
 disp('Construct the corresponding signal on the sphere')
-f_gen = ssht_inverse(flm_gen, L, 'Spin', Spin, 'Method', 'MW');
-flm_gen= ssht_forward(f_gen, L, 'Spin', Spin, 'Method', 'MW');
+f_gen = ssht_inverse(flm_gen, L,'Method', 'MW');
+disp('Construct the corresponding spin signal on the sphere')
+f_spin_gen = ssht_inverse(flm_gen, L, 'Spin', Spin, 'Method', 'MW');
+flm_spin_gen= ssht_forward(f_spin_gen, L, 'Spin', Spin, 'Method', 'MW');
 
 %{
 flm_gen = zeros(L^2,1);
@@ -67,7 +69,7 @@ disp('Curvelet transform: full-resolution (Upsample: true): ');
 % -----------------
 % Call matlab function 's2let_transform_spin_curvelet_analysis_lm2lmn'
 disp('analysis_lm2lmn...')
-[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
+[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_spin_gen, cur_lm, scal_l, ...
                                                          'B', B, 'L', L, 'J_min', J_min,...
                                                          'Spin', Spin, ...
                                                          'Reality', false, ...
@@ -79,7 +81,7 @@ disp('analysis_lm2lmn...')
 % -----------------
 % Call matlab function 's2let_transform_spin_curvelet_synthesis_lmn2lm'
 disp('synthesis_lmn2lm...')
-flm_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
+flm_spin_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
                                                       'B', B, 'L', L, 'J_min', J_min,...
                                                       'Spin', Spin, ...
                                                       'Reality', false,...
@@ -88,12 +90,12 @@ flm_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, 
                                                       'Sampling', 'MW');
                                        
 disp('Compute the re-constructed function via ssht_inverse ');
-f_rec = ssht_inverse(flm_rec, L,  'Spin', Spin,'Method', 'MW'); 
+f_spin_rec = ssht_inverse(flm_spin_rec, L, 'Spin', Spin, 'Method', 'MW');
 disp('- Test exact transform:');
 disp('Check the difference between flm_gen and flm_rec:');
-maxerr = max(abs(flm_gen - flm_rec))
+maxerr = max(abs(flm_spin_gen - flm_spin_rec))
 disp('Check the difference between f_gen and f_rec: ');
-maxerr = max(abs(f_gen(:) - f_rec(:)))
+maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
 
 
 disp('----------- ');                                             
@@ -103,7 +105,7 @@ disp(' Curvelet transform: multiresolution (Upsample: false): ');
 % -----------------
 % Call matlab function 's2let_transform_spin_curvelet_analysis_lm2lmn'
 disp('analysis_lm2lmn...')
-[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
+[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_spin_gen, cur_lm, scal_l, ...
                                                          'B', B, 'L', L, 'J_min', J_min,...
                                                          'Spin', Spin, ...
                                                          'Reality', false, ...
@@ -115,7 +117,7 @@ disp('analysis_lm2lmn...')
 % -----------------
 % Call matlab function 's2let_transform_spin_curvelet_synthesis_lmn2lm'
 disp('synthesis_lmn2lm...')
-flm_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
+flm_spin_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
                                                       'B', B, 'L', L, 'J_min', J_min,...
                                                       'Spin', Spin, ...
                                                       'Reality', false,...
@@ -123,10 +125,95 @@ flm_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, 
                                                       'SpinLowered', false,  'SpinLoweredFrom', 0, ...
                                                       'Sampling', 'MW');
 
+disp('Compute the re-constructed function via ssht_inverse ');
+f_spin_rec = ssht_inverse(flm_spin_rec, L, 'Spin', Spin, 'Method', 'MW');
+disp('- Test exact transform:');
+disp('Check the difference between flm_gen and flm_rec:');
+maxerr = max(abs(flm_spin_gen - flm_spin_rec))
+disp('Check the difference between f_gen and f_rec: ');
+maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
+disp('----------- ');
+
+
+
+disp(' ')
+disp('=============================')
+disp('REAL Signals TEST')
+disp('=============================')
+% -------------------------
+disp('Constraint on flms to generate real signal')
+% -------------------------
+for el = 0:L-1
+ind = el*el + el + 1;
+flm_gen(ind,1) = real(flm_gen(ind,1));
+for m = 1:el
+ind_pm = el*el + el + m + 1;
+ind_nm = el*el + el - m + 1;
+flm_gen(ind_nm,1) = (-1)^m * conj(flm_gen(ind_pm,1));
+end
+end
+isreal(flm_gen)  %No
+
+% ---------------
+% Tile curvelets:
+% ---------------
+% Call curvelet- and scaling-function- generating functions 
+disp('curvelet_tiling: Tile curvelets in harmonic space (cur_lm, scal_l)')
+[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, 'Spin', 0);
+% -----------------
+% Signal analysis: (harmonic to wigner space) - Full resolution 
+% -----------------
+% Call matlab function 's2let_transform_spin_curvelet_analysis_lm2lmn'
+disp('analysis_lm2lmn...')
+[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
+                                                                       'B', B, 'L', L, 'J_min', J_min,...
+                                                                       'Reality', true, ...
+                                                                       'Upsample', false,...
+                                                                       'Sampling', 'MW');
+% -----------------
+% Signal synthesis: (pixel to harmonic space) - Full resolution 
+% -----------------
+% Call matlab function 's2let_transform_spin_curvelet_synthesis_lmn2lm'
+disp('synthesis_lmn2lm...')
+flm_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
+                                                          'B', B, 'L', L, 'J_min', J_min,...
+                                                          'Reality', true,...
+                                                          'Upsample', false,...
+                                                          'SpinLowered', false,  'SpinLoweredFrom', 0, ...
+                                                          'Sampling', 'MW');
+f_gen = ssht_inverse(flm_gen, L,'Method', 'MW');
+f_rec = ssht_inverse(flm_rec, L,'Method', 'MW');
 disp('- Test exact transform:');
 disp('Check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_gen - flm_rec))
 disp('Check the difference between f_gen and f_rec: ');
 maxerr = max(abs(f_gen(:) - f_rec(:)))
 disp('----------- ');
-
+% -----------------
+% Signal analysis: (harmonic to wigner space) - Multi-resolution 
+% -----------------
+% Call matlab function 's2let_transform_spin_curvelet_analysis_lm2lmn'
+disp('analysis_lm2lmn...')
+[f_cur_lmn, f_scal_lm] = s2let_transform_spin_curvelet_analysis_lm2lmn(flm_gen, cur_lm, scal_l, ...
+                                                                       'B', B, 'L', L, 'J_min', J_min,...
+                                                                       'Reality', true, ...
+                                                                       'Upsample', true,...
+                                                                       'Sampling', 'MW');
+% -----------------
+% Signal synthesis: (pixel to harmonic space) - Multi-resolution
+% -----------------
+% Call matlab function 's2let_transform_spin_curvelet_synthesis_lmn2lm'
+disp('synthesis_lmn2lm...')
+flm_rec  = s2let_transform_spin_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm, scal_l, ...
+                                                          'B', B, 'L', L, 'J_min', J_min,...
+                                                          'Reality', true,...
+                                                          'Upsample', true,...
+                                                          'Sampling', 'MW');
+f_gen = ssht_inverse(flm_gen, L,'Method', 'MW');
+f_rec = ssht_inverse(flm_rec, L,'Method', 'MW');
+disp('- Test exact transform:');
+disp('Check the difference between flm_gen and flm_rec:');
+maxerr = max(abs(flm_gen - flm_rec))
+disp('Check the difference between f_gen and f_rec: ');
+maxerr = max(abs(f_gen(:) - f_rec(:)))
+disp('----------- ');

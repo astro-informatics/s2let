@@ -251,7 +251,7 @@ end
 f_cur_new = cell(J+1-J_min, N);  
 for j = J_min:J 
    band_limit = min([ s2let_bandlimit(j,J_min,B,L) L ]);  
-   Nmax = band_limit
+   Nmax = band_limit; 
    for en = 1:2*Nmax-1     
        f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:,:), L, 2*L-1);
    end
@@ -301,7 +301,7 @@ fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_fullres.p
 print('-r200', '-dpng', fname)
 
 
-%{
+
 % ---------- 
 % Compare reconstructed signal with the initial signals: 
 % ---------- 
@@ -309,7 +309,7 @@ f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, ...
                                                       'B', B, 'L', L, ...
                                                       'J_min', J_min, ...
                                                       'Spin', Spin, ...
-                                                      'Reality', true, ...
+                                                      'Reality', false, ...
                                                       'Upsample', true, ...
                                                       'SpinLowered', false, ...
                                                       'SpinLoweredFrom', 0,...
@@ -389,7 +389,7 @@ colormap(jet)
 fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires.png']
 print('-r200', '-dpng', fname)
 
-%{
+
 % ---------- 
 % Compare reconstructed signal with the initial signals: 
 % ---------- 
@@ -417,7 +417,6 @@ check_error = max(abs(f_gen(:)-f_rec(:)))
 fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 print('-r200', '-dpng', fname)
 
-%}
 
 
 
@@ -425,7 +424,7 @@ print('-r200', '-dpng', fname)
 % ============
 % Directional wavelets
 % ============
-
+%{
 [f_wav, f_scal] = s2let_transform_analysis_mw(f_gen, 'B', B, 'J_min', J_min, ...
                                               'N', N, 'Reality',false,...
                                               'Upsample', true, 'Spin', 0);
@@ -464,3 +463,4 @@ end
 colormap(jet)
 fname = [pltroot,'/s2let_demo9_', configstr, '_directional_wavelets_EarthTomo_fullres.png']
 print('-r200', '-dpng', fname)
+%}

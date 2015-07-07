@@ -104,11 +104,43 @@ for j = args.J_min:J,
             end
         end
     else % i.e.(args.Reality == 1) %i.e. true => real
+        for el = 1:band_limit-1,    
+            for m = -el:el,
+                ind_lm = ssht_elm2ind(el, m);
+                % n=0 term:
+                 ind_lnzero = ssht_elm2ind(el, 0);
+                 ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,'Reality', args.Reality);
+                 psizero= cur_lm{j-args.J_min+1}(ind_lnzero);  
+                 flm_rec(ind_lm)=  flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmnzero)* psizero; 
+                % for n ~= 0 terms: 
+                 for en = 1:Nj-1,   %-mod(Nj,2)
+                % positive m and n 
+                     if (el >= en)
+                      ind_ln = ssht_elm2ind(el, en); 
+                      psi = cur_lm{j-args.J_min+1}(ind_ln);  
+                      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
+                      flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+                % negative m and n 
+        
+                       ind_lnn = ssht_elm2ind(el, -en); 
+                       npsi = cur_lm{j-args.J_min+1}(ind_lnn);
+                       ind_lmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
+                       if (mod((m+en),2) == 1) 
+                           sign = -1; 
+                       else  %i.e. (mod((m+n),2) == 0)     
+                           sign = 1; 
+                       end 
+                       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lmn))* npsi; 
+                     end   
+                 end % end en-loop for Reality Option
+            end % end em-loop for Reality Option
+        end % end el-loop for Reality Option                    
+%{
         for en = 1-mod(Nj,2):Nj-1, 
             for el = en:band_limit-1,    
                 ind_ln = ssht_elm2ind(el, en);
                 psi = cur_lm{j-args.J_min+1}(ind_ln);
-                if (en)
+                if (en ~= 0)
                     ind_ln = ssht_elm2ind(el, -en);
                     npsi = cur_lm{j-args.J_min+1}(ind_ln);
                 end 
@@ -116,7 +148,7 @@ for j = args.J_min:J,
                     ind_lm = ssht_elm2ind(el, m);
                     ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
                     flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
-                    if (en)
+                    if (en ~= 0)
                        ind_lmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
                        if (mod((m+en),2) == 1) 
                            sign = -1; 
@@ -128,6 +160,7 @@ for j = args.J_min:J,
                 end % end m-loop for Reality Option
             end % end el-loop for Reality Option
         end % end en-loop for Reality Option
+%}
     end  % end if-loop for Reality Option
 end % end j-loop
 
@@ -136,7 +169,7 @@ end % end j-loop
 % -----------------
 % disp('syn_lmn2lm:  Compute flm_scal_syn ');
 if (args.Upsample ~= 1)  %false => multi-resolution 
-   band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
+    band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
 else 
     band_limit = args.L ; 
 end
