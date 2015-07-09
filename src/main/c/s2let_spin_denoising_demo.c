@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   const double SNR_in = 10.0;  // Input SNR
   const int nsigma = 3;   // Number of sigmas for hard thresholding
   const int multires = 1; // Multiresolution flag
-  const int B = 2;        // Wavelet parameters
+  const double B = 2;        // Wavelet parameters //DOUBLE
   const int N = 4;        // Azimuthal band-limit
   const int J_min = 0;    // First wavelet scale to use
   const int spin = 2;     // Spin number
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
   printf(" - Input SNR : %f\n",SNR_in);
   printf(" - Sigma threshold : %i\n", nsigma);
   printf(" - Multiresolution flag : %i\n", multires);
-  printf(" - Wavelet parameter : %i\n", B);
+  printf(" - Wavelet parameter : %f\n", B); //DOUBLE
   printf(" - Total number of wavelets : %i\n", J);
   printf(" - First wavelet scale to be used : %i\n", J_min);
 

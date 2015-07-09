@@ -29,10 +29,11 @@ int main(int argc, char *argv[])
   printf("--------------------------------------------------\n");
 
   char fileroot[100];
-  int L, B, J_min;
+  int L, J_min;
+  double B; //DOUBLE
   if (sscanf(argv[1], "%s", fileroot) != 1)
     exit(-2);
-  if (sscanf(argv[2], "%i", &B) != 1)
+  if (sscanf(argv[2], "%f", &B) != 1.0) //DOUBLE
     exit(-2);
   if (sscanf(argv[3], "%i", &J_min) != 1)
     exit(-2);
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
 
   char params[100];
   char file[100];
-  sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
+  sprintf(params, "%d%s%f%s%d", L, "_", B, "_", J_min); //DOUBLE
   int j, offset = 0;
   printf("File root = %s\n",fileroot);
 

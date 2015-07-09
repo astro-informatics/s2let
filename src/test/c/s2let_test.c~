@@ -18,7 +18,7 @@
  * \param[in]  J_min First wavelet scale to be used.
  * \retval none
  */
-void s2let_tiling_axisym_test(int B, int L, int J_min)
+void s2let_tiling_axisym_test(double B, int L, int J_min) //DOUBLE
 {
   double *kappa, *kappa0;
 
@@ -74,7 +74,7 @@ void s2let_tiling_direction_test(int L, int N)
  * \param[in]  N Azimuthal band-limit.
  * \retval none
  */
-void s2let_tiling_wavelet_test(int B, int L, int J_min, int N)
+void s2let_tiling_wavelet_test(double B, int L, int J_min, int N) //DOUBLE
 {
   complex double *phi;
   double *psi;
@@ -148,7 +148,7 @@ void s2let_binomial_coefficient_test(int n_max)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_axisym_lm_wav_test(int B, int L, int J_min, int seed)
+void s2let_axisym_lm_wav_test(double B, int L, int J_min, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   double *wav_lm, *scal_lm;
@@ -208,7 +208,7 @@ void s2let_axisym_lm_wav_test(int B, int L, int J_min, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_axisym_lm_wav_multires_test(int B, int L, int J_min, int seed)
+void s2let_axisym_lm_wav_multires_test(double B, int L, int J_min, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   double *wav_lm, *scal_lm;
@@ -270,7 +270,7 @@ void s2let_axisym_lm_wav_multires_test(int B, int L, int J_min, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_wav_transform_harmonic_test(int B, int L, int J_min, int N, int seed)
+void s2let_wav_transform_harmonic_test(double B, int L, int J_min, int N, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   complex double *psi;
@@ -332,7 +332,7 @@ void s2let_wav_transform_harmonic_test(int B, int L, int J_min, int N, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_axisym_wav_test(int B, int L, int J_min, int seed)
+void s2let_axisym_wav_test(double B, int L, int J_min, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   int spin = 0;
@@ -392,7 +392,7 @@ void s2let_axisym_wav_test(int B, int L, int J_min, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_axisym_wav_real_test(int B, int L, int J_min, int seed)
+void s2let_axisym_wav_real_test(double B, int L, int J_min, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   int verbosity = 0;
@@ -453,7 +453,7 @@ void s2let_axisym_wav_real_test(int B, int L, int J_min, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_axisym_wav_multires_test(int B, int L, int J_min, int seed)
+void s2let_axisym_wav_multires_test(double B, int L, int J_min, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   int spin = 0;
@@ -514,7 +514,7 @@ void s2let_axisym_wav_multires_test(int B, int L, int J_min, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_axisym_wav_multires_real_test(int B, int L, int J_min, int seed)
+void s2let_axisym_wav_multires_real_test(double B, int L, int J_min, int seed) //DOUBLE
 {
   clock_t time_start, time_end;
   int verbosity = 0;
@@ -578,7 +578,7 @@ void s2let_axisym_wav_multires_real_test(int B, int L, int J_min, int seed)
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int seed)
+void s2let_wav_transform_mw_test(double B, int L, int J_min, int N, int seed) //DOUBLE
 {
     clock_t time_start, time_end;
     int spin = 0;
@@ -631,7 +631,7 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int seed)
     free(f_scal);
 }
 
-void s2let_transform_performance_test(int B, int J_min, int NREPEAT, int NSCALE, int seed)
+void s2let_transform_performance_test(double B, int J_min, int NREPEAT, int NSCALE, int seed) //DOUBLE
 {
   complex double *f, *flm, *flm_rec, *f_rec, *f_wav, *f_scal;
   clock_t time_start, time_end;
@@ -700,7 +700,7 @@ void s2let_transform_performance_test(int B, int J_min, int NREPEAT, int NSCALE,
 
 
 
-void s2let_transform_performance_multires_test(int B, int J_min, int NREPEAT, int NSCALE, int seed)
+void s2let_transform_performance_multires_test(double B, int J_min, int NREPEAT, int NSCALE, int seed) //DOUBLE
 {
   complex double *f, *flm, *flm_rec, *f_rec, *f_wav, *f_scal;
   clock_t time_start, time_end;
@@ -770,7 +770,7 @@ void s2let_transform_performance_multires_test(int B, int J_min, int NREPEAT, in
 
 
 
-void s2let_transform_lm_performance_test(int B, int J_min, int NREPEAT, int NSCALE, int seed)
+void s2let_transform_lm_performance_test(double B, int J_min, int NREPEAT, int NSCALE, int seed) //DOUBLE
 {
   complex double *flm, *flm_rec, *f_wav_lm, *f_scal_lm;
   clock_t time_start, time_end;
@@ -839,7 +839,7 @@ void s2let_transform_lm_performance_test(int B, int J_min, int NREPEAT, int NSCA
 
 
 
-void s2let_transform_lm_performance_multires_test(int B, int J_min, int NREPEAT, int NSCALE, int seed)
+void s2let_transform_lm_performance_multires_test(double B, int J_min, int NREPEAT, int NSCALE, int seed) //DOUBLE
 {
   complex double *flm, *flm_rec, *f_wav_lm, *f_scal_lm;
   clock_t time_start, time_end;
@@ -911,7 +911,7 @@ int main(int argc, char *argv[])
 {
   const int L = 32;
   const int N = 16;
-  const int B = 3;
+  const double B = 3.0; //DOUBLE
   const int J_min = 2;
 
   const int seed = (int)(10000.0*(double)clock()/(double)CLOCKS_PER_SEC);
@@ -921,7 +921,7 @@ int main(int argc, char *argv[])
   printf("Testing S2LET facilities with the MW sampling\n");
   printf("=====================================================================\n");
   printf("PARAMETERS: ");
-  printf("L = %i  N = %i  B = %i  l_wav_min = %i  seed = %i\n", L, N, B, l_min, seed);
+  printf("L = %i  N = %i  B = %f  l_wav_min = %i  seed = %i\n", L, N, B, l_min, seed); //DOUBLE
   s2let_switch_wavtype(3);
   printf("---------------------------------------------------------------------\n");
   printf("> Testing logfact binomial coefficient implementation...\n");

@@ -12,7 +12,7 @@
 #define ABS(a) ((a) > (0.0) ? (a) : (-(a)))
 
 
-double s2let_math_kappa0_quadtrap_s2dw(double a, double b, int n, int B);
+double s2let_math_kappa0_quadtrap_s2dw(double a, double b, int n, double B); //DOUBLE
 
 double s2let_math_kappa0_quadtrap_needlet(double a, double b, int n);
 

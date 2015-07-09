@@ -31,8 +31,9 @@ int main(int argc, char *argv[])
   char fileroot[100];
   if (sscanf(argv[1], "%s", fileroot) != 1)
     exit(-2);
-  int multires, B, J_min, L;
-  if (sscanf(argv[2], "%i", &B) != 1)
+  int multires, J_min, L;
+  double B; //DOUBLE
+  if (sscanf(argv[2], "%f", &B) != 1.0) //DOUBLE
     exit(-2);
   if (sscanf(argv[3], "%i", &J_min) != 1)
     exit(-2);
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
 
   printf("Parameters for wavelet transform :\n");
   int J = s2let_j_max(&parameters);
-  printf("- Wavelet parameter : %i\n", B);
+  printf("- Wavelet parameter : %f\n", B); //DOUBLE
   printf("- Total number of wavelets : %i\n", J);
   printf("- First wavelet scale to be used : %i\n", J_min);
   printf("- Band-limit for the map : %i\n", L);
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
   // Input rootname for the FITS files
   char file[100];
   char params[100];
-  sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
+  sprintf(params, "%d%s%f%s%d", L, "_", B, "_", J_min); //DOUBLE
   int j, bl, offset = 0;
   printf("File root = %s\n",fileroot);
 

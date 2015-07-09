@@ -34,8 +34,9 @@ int main(int argc, char *argv[])
   printf("Input HEALPIX map : %s\n",file);
   const int nside = s2let_fits_hpx_read_nside(file);
   printf("- Detected bandlimit nside = %i\n",nside);
-  int L, B, J_min;
-  if (sscanf(argv[2], "%i", &B) != 1)
+  int L, J_min;
+  double B; //DOUBLE
+  if (sscanf(argv[2], "%f", &B) != 1.0) //DOUBLE
     exit(-2);
   if (sscanf(argv[3], "%i", &J_min) != 1)
     exit(-2);
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
   printf("Parameters for wavelet transform :\n");
   printf("- Wavelet parameter : %i\n", L);
   int J = s2let_j_max(&parameters);
-  printf("- Wavelet parameter : %i\n", B);
+  printf("- Wavelet parameter : %f\n", B); //DOUBLE
   printf("- Total number of wavelets : %i\n", J);
   printf("- First wavelet scale to be used : %i\n", J_min);
 
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
   printf("Writing wavelet maps to FITS files\n");
   char outfile[100];
   char params[100];
-  sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
+  sprintf(params, "%d%s%f%s%d", L, "_", B, "_", J_min); //DOUBLE
   int j; // Explicitly compute the maximum wavelet scale
   int offset = 0; // Start with the first wavelet
   char fileroot[100];

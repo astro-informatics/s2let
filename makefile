@@ -20,8 +20,8 @@ IDLINC = /Applications/exelis/idl82/external/include
 # Directory for MATLAB (optional)
 MLAB	=  ${MATLAB}
 # Directory for DOXYGEN (optional)
-#DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen
-DOXYGEN_PATH = doxygen
+DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen
+#DOXYGEN_PATH = doxygen
 
 UNAME 	:= $(shell uname)
 

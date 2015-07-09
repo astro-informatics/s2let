@@ -27,7 +27,7 @@ N = int(data_L_N['N'][0])
 J = int(data_L_N['J'][0])
 J_min = int(data_L_N['J_min'][0])
 spin = int(data_L_N['spin'][0])
-B = int(data_L_N['B'][0])
+B = double(data_L_N['B'][0]) #DOUBLE
 outname = 's='+str(spin)+', N='+str(N)+', B='+str(B)+', Jmin='+str(J_min)+', J='+str(J) 
 
 ind1 = (data_L_N['multires'] == 1)

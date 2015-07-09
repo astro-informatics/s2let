@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 nside = 128
 L = 128
 J_min = 1
-B = 3
+B = 3. #DOUBLE
 J = pys2let_j_max(B, L, J_min)
 
 # The filename of some random healpix map
-fname = '/Users/bl/Dropbox/Astrodata/SDSS/Fields/Planck_EBV_256rQ.fits'
+fname = '/Users/keir/Documents/s2let_ilc/simu_data/camb_simu_map.fits'
+#fname = '/Users/bl/Dropbox/Astrodata/SDSS/Fields/Planck_EBV_256rQ.fits'
 #fname = '/Users/bl/Dropbox/Wavelets/s2let/data/somecmbsimu_hpx_128.fits'
 
 # Read healpix map and compute alms. 

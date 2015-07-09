@@ -5,18 +5,20 @@ import math
 import matplotlib.pyplot as plt
 
 nside = 64
-L = 128
-J_min = 1
-B = 3
+L = 1024
+J_min = 4
+B = 1.5 #DOUBLE
 N = 3 # Number of directions
 spin = 0 # are we dealing with spin signals? set to 0 for temperature. if non-zero, plotting routines must be changed!
-upsample = 1 # 1 means all scales at full resolution L # 0 means multiresolution wavelet transform
+upsample = 0 # 1 means all scales at full resolution L # 0 means multiresolution wavelet transform
 
+scal_lmax = B**J_min
 J = pys2let_j_max(B, L, J_min) # Compute maximum scale
 print 'Jmax = ', J
 
 # The filename of some random healpix map
-fname = '/Users/bl/Dropbox/Astrodata/SDSS/Fields/Planck_EBV_256rQ.fits'
+fname = '/Users/keir/Documents/s2let_ilc/simu_data/camb_simu_map.fits'
+#fname = '/Users/bl/Dropbox/Astrodata/SDSS/Fields/Planck_EBV_256rQ.fits'
 #fname = '/Users/bl/Dropbox/Wavelets/s2let/data/somecmbsimu_hpx_128.fits'
 
 # Read healpix map and compute alms.
@@ -56,7 +58,7 @@ def myplot(f, L, ax, title=''):
     ntheta = len(thetas)
     nphi = len(phis)
     arr = f.reshape((ntheta, nphi)) # Convert the input MW 1D array into 2D array with rows for theta and columns for phi. As simple as that!
-    ax.imshow(arr.astype(float)) # Don't forget to convert to float, otherwise imshow will complain about complex numbers. For polalisation we will have to look into other operations (real part, imag part, angle).
+    ax.imshow(arr.astype(float),interpolation='none') # Don't forget to convert to float, otherwise imshow will complain about complex numbers. For polalisation we will have to look into other operations (real part, imag part, angle).
 
     # This is to undersample the grid of x/yticklabels.
     if L > 10:
@@ -78,12 +80,15 @@ def myplot(f, L, ax, title=''):
 
 
 # Plot equiangular map
-fig, ax = plt.subplots(1,1)
+'''fig, ax = plt.subplots(1,1)
 myplot(f_mw, L, ax, 'Input map converted to MW')
 fig, ax = plt.subplots(1,1)
 myplot(f_mw_rec, L, ax, 'Input map converted to MW (reconstructed)')
-fig.savefig('test_directional_python_wrappers_1.png')
+fig.savefig('test_directional_python_wrappers_1.png')'''
 
+# Plot scaling function map
+fig, ax = plt.subplots(1,1)
+myplot(f_scal, scal_lmax, ax, title='Scaling function map') #NEEDS CORRECTING
 
 # Create giant array figure
 fig, axs = plt.subplots(J-J_min+1, N, figsize=(4*N, 3*(J-J_min)))

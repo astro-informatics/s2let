@@ -26,6 +26,7 @@ typedef unsigned int IDL_ULONG;
 #elif IDL_SIZEOF_C_LONG == 4
 typedef long IDL_LONG;
 typedef unsigned long IDL_ULONG;
+typedef double IDL_DOUBLE; //DOUBLE
 #else
 #error "IDL_LONG not defined --- unexpected value of IDL_SIZEOF_C_LONG"
 #endif
@@ -37,7 +38,7 @@ int s2let_idl_axisym_hpx_wav_analysis_real(int argc, void* argv[])
   double *f_scal = (double *) argv[1];
   double *f = (double *) argv[2];
   IDL_INT *nside = (IDL_INT *) argv[3];
-  IDL_INT *B = (IDL_INT *) argv[4];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[4]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[5];
   IDL_INT *J_min = (IDL_INT *) argv[6];
 
@@ -56,7 +57,7 @@ int s2let_idl_axisym_hpx_wav_synthesis_real(int argc, void* argv[])
   double *f_wav = (double *) argv[1];
   double *f_scal = (double *) argv[2];
   IDL_INT *nside = (IDL_INT *) argv[3];
-  IDL_INT *B = (IDL_INT *) argv[4];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[4]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[5];
   IDL_INT *J_min = (IDL_INT *) argv[6];
 

@@ -140,7 +140,7 @@ void s2let_transform_axisym_hpx_test(double *accuracy, double *timing, int nside
  * \param[in]  seed Random seed.
  * \retval none
  */
-void s2let_transform_axisym_hpx_wav_test(double *accuracy, double *timing, int nside, int B, int L, int J_min, int seed)
+void s2let_transform_axisym_hpx_wav_test(double *accuracy, double *timing, int nside, double B, int L, int J_min, int seed) //DOUBLE
 {
   s2let_parameters_t parameters = {};
   parameters.B = B;
@@ -369,7 +369,7 @@ int main(int argc, char *argv[])
 {
 
   int L = 64, spin = 2;
-  const int B = 2;
+  const double B = 2.0; //DOUBLE
   const int J_min = 0;
   s2let_parameters_t parameters = {};
   parameters.B = B;
@@ -385,7 +385,7 @@ int main(int argc, char *argv[])
   printf("Testing S2LET facilities with the HEALPIX sampling \n");
   printf("==========================================================\n");
   printf("PARAMETERS: ");
-  printf("  L = %i   B = %i   nside = %i   seed = %i\n", L, B, nside, seed);
+  printf("  L = %i   B = %f   nside = %i   seed = %i\n", L, B, nside, seed); //DOUBLE
   printf("----------------------------------------------------------\n");
   printf("> Testing IO functions for MW sampling...\n");
   s2let_mw_io_test(L, seed);

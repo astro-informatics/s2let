@@ -7,7 +7,7 @@ import os
 names = ['L', 's', 'B', 'N']
 L = 512
 for spin in [0, 2]:
-    for B in [2, 3]:
+    for B in [2., 3.]: #DOUBLE
         for N in [2, 5]:
             params = [L, spin, B, N]
             outfilename = '_'.join(['timings', 'errors'] + [nm+str(x) for nm, x in zip(names, params)] ) + '.csv'

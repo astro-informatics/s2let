@@ -34,8 +34,9 @@ int main(int argc, char *argv[])
   printf("Input MW map : %s\n",file);
   const int L = s2let_fits_mw_read_bandlimit(file);
   printf("- Detected bandlimit L = %i\n",L);
-  int B, J_min, multires;
-  if (sscanf(argv[2], "%i", &B) != 1)
+  int J_min, multires;
+  double B; //DOUBLE
+  if (sscanf(argv[2], "%f", &B) != 1.0) //DOUBLE
     exit(-2);
   if (sscanf(argv[3], "%i", &J_min) != 1)
     exit(-2);
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
   printf("Parameters for wavelet transform :\n");
   int J = s2let_j_max(&parameters);
   printf("- Multiresolution flag : %i\n", multires);
-  printf("- Wavelet parameter : %i\n", B);
+  printf("- Wavelet parameter : %f\n", B); //DOUBLE
   printf("- Total number of wavelets : %i\n", J);
   printf("- First wavelet scale to be used : %i\n", J_min);
 
@@ -75,7 +76,7 @@ int main(int argc, char *argv[])
   printf("Writing wavelet maps to FITS files\n");
   char outfile[100];
   char params[100];
-  sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
+  sprintf(params, "%d%s%f%s%d", L, "_", B, "_", J_min); //DOUBLE
   int j, bl; // Explicitly compute the maximum wavelet scale
   int offset = 0; // Start with the first wavelet
   char fileroot[100];

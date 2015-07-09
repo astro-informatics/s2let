@@ -53,7 +53,8 @@ int main(int argc, char **argv)
 {
     s2let_parameters_t parameters = {};
     int verbosity = parameters.verbosity = 0;
-    int Lmax, L, useLasN, N, L0, B, J_min, spin;
+    int Lmax, L, useLasN, N, L0, J_min, spin;
+    double B; //DOUBLE
     complex *flm, *flm_rec, *f, *f_rec;;
     complex *f_wav, *f_scal;
     int seed;
@@ -75,7 +76,7 @@ int main(int argc, char **argv)
     parameters.spin = spin = 0;
     parameters.J_min = J_min = 0;
     seed = 1;
-    parameters.B = B = 2;
+    parameters.B = B = 2.0;
     if (argc > 1)
         Lmax = atoi(argv[1]);
     if (argc > 2)
@@ -163,7 +164,7 @@ int main(int argc, char **argv)
                 avg_error += get_max_error(flm, flm_rec, L*L)/NREPEAT;
             }
 
-            printf("%d;%d;%d;%d;%d;%d;%d;%f;%f;%f;%f;%e\n",
+            printf("%d;%d;%d;%d;%f;%d;%d;%f;%f;%f;%f;%e\n",
                    multires,
            spin,
                    L,
@@ -175,7 +176,7 @@ int main(int argc, char **argv)
                    min_duration_forward,
                    avg_duration_inverse,
                    avg_duration_forward,
-                   avg_error);
+                   avg_error); //DOUBLE
 
             L *= 2;
 
@@ -200,7 +201,7 @@ double get_max_error(complex double *expected, complex double *actual, int n)
 
     for (i = 0; i < n; ++i)
     {
-        error = cabs(expected[i] - actual[i]);
+        error = cabs(expected[i] - actual[i]) / expected[i]; //Change to get percentage error
         maxError = MAX(error, maxError);
     }
 

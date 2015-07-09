@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   const double SNR_in = 10.0;  // Input SNR
   const int nsigma = 3;   // Number of sigmas for hard thresholding
   const int multires = 1; // Multiresolution flag
-  const int B = 2;        // Wavelet parameters
+  const double B = 2.0;        // Wavelet parameters //DOUBLE
   const int J_min = 0;    // First wavelet scale to use
 
   char outfile[100];
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
   printf(" - Input SNR : %f\n",SNR_in);
   printf(" - Sigma threshold : %i\n", nsigma);
   printf(" - Multiresolution flag : %i\n", multires);
-  printf(" - Wavelet parameter : %i\n", B);
+  printf(" - Wavelet parameter : %f\n", B); //DOUBLE
   printf(" - Total number of wavelets : %i\n", J);
   printf(" - First wavelet scale to be used : %i\n", J_min);
 
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
   remove(outfile); // In case the file exists
   s2let_fits_mw_write_map(outfile, g, L); // Now write the map to fits file
   char params[100];
-  sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
+  sprintf(params, "%d%s%f%s%d", L, "_", B, "_", J_min); //DOUBLE
   sprintf(outfile, "%s%s%s", "data/earth_tomo_mw_128", "_denoised", ".fits");
   printf(" Outfile = %s\n",outfile);
   remove(outfile); // In case the file exists

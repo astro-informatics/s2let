@@ -50,7 +50,7 @@ void s2let_switch_wavtype(int typenum)
  */
 int s2let_bandlimit(int j, const s2let_parameters_t *parameters)
 {
-    int B = parameters->B;
+    double B = parameters->B; //DOUBLE
     int L = parameters->L;
     // int J_min = parameters->J_min;
 
@@ -82,7 +82,7 @@ int s2let_bandlimit(int j, const s2let_parameters_t *parameters)
  */
 int s2let_L0(int j, const s2let_parameters_t *parameters)
 {
-    int B = parameters->B;
+    double B = parameters->B; //DOUBLE
 
     switch (s2let_kernel)
     {
@@ -107,7 +107,7 @@ int s2let_L0(int j, const s2let_parameters_t *parameters)
  */
 int s2let_j_max(const s2let_parameters_t *parameters)
 {
-  int B = parameters->B;
+  double B = parameters->B; //DOUBLE
   int L = parameters->L;
 
   return ceil(log(L) / log(B));
@@ -135,13 +135,13 @@ void s2let_tiling_axisym_allocate(double **kappa, double **kappa0, const s2let_p
 void s2let_tiling_phi2_s2dw(double *phi2, const s2let_parameters_t *parameters)
 {
     int L = parameters->L;
-    int B = parameters->B;
+    double B = parameters->B; //DOUBLE
 
     int j, l;
     int J = s2let_j_max(parameters);
     int n = 300;
 
-    double kappanorm = s2let_math_kappa0_quadtrap_s2dw(1.0 / (double)B, 1.0, n, B);
+    double kappanorm = s2let_math_kappa0_quadtrap_s2dw(1.0 / B, 1.0, n, B); //DOUBLE
     for (j = 0; j <= J+1; j++){
         for (l = 0; l < L; l++){
             if (l < pow(B,j-1)) {
@@ -158,7 +158,7 @@ void s2let_tiling_phi2_s2dw(double *phi2, const s2let_parameters_t *parameters)
 void s2let_tiling_phi2_needlet(double *phi2, const s2let_parameters_t *parameters)
 {
     int L = parameters->L;
-    int B = parameters->B;
+    double B = parameters->B; //DOUBLE
 
     int j, l;
     int J = s2let_j_max(parameters);
@@ -183,7 +183,7 @@ void s2let_tiling_phi2_needlet(double *phi2, const s2let_parameters_t *parameter
 void s2let_tiling_phi2_spline(double *phi2, const s2let_parameters_t *parameters)
 {
     int L = parameters->L;
-    int B = parameters->B;
+    double B = parameters->B; //DOUBLE
 
     int j = 0, l;
     int J = s2let_j_max(parameters);
@@ -192,7 +192,7 @@ void s2let_tiling_phi2_spline(double *phi2, const s2let_parameters_t *parameters
         phi2[l+(J+1-j)*L] = 1.0;
     }
     for (j = 1; j <= J+1; j++){
-        double bl = (double) L / (double) pow(B, j-2);
+        double bl = (double) L / pow(B, j-2); //DOUBLE
         phi2[(J+1-j)*L] = 1.0;
         for (l = 1; l < L; l++){
             if (l > bl)

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
   printf("--------------------------------------------------\n");
 
   const int L = 256;    // Harmonic band-limit
-  const int B = 4;      // Wavelet parameters
+  const double B = 4.0;      // Wavelet parameters //DOUBLE
   const int J_min = 2;  // First wavelet scale to use
   s2let_parameters_t parameters = {};
   parameters.B = B;
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
   // Output the wavelets to FITS files
   char outfile[100];
   char params[100];
-  sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
+  sprintf(params, "%d%s%f%s%d", L, "_", B, "_", J_min); //DOUBLE
   int j, J = s2let_j_max(&parameters); // Explicitly compute the maximum wavelet scale
   int offset = 0; // Start with the first wavelet
   for(j = J_min; j <= J; j++){

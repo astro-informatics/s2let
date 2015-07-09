@@ -89,9 +89,9 @@ typedef struct {
     /*!
      * Wavelet parameter which determines the scale factor between
      * consecutive wavelet scales.
-     * \var int B
+     * \var double B
      */
-    int B;
+    double B; //DOUBLE
 
     /*!
      * Upper harmonic band-limit. Only flmn with l < L will be stored

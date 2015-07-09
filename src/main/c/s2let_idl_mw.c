@@ -26,6 +26,7 @@ typedef unsigned int IDL_ULONG;
 #elif IDL_SIZEOF_C_LONG == 4
 typedef long IDL_LONG;
 typedef unsigned long IDL_ULONG;
+typedef double IDL_DOUBLE; //DOUBLE
 #else
 #error "IDL_LONG not defined --- unexpected value of IDL_SIZEOF_C_LONG"
 #endif
@@ -37,7 +38,7 @@ int s2let_idl_transform_axisym_wav_analysis_mw_real(int argc, void* argv[])
   double *f_wav = (double *) argv[0];
   double *f_scal = (double *) argv[1];
   double *f = (double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -60,7 +61,7 @@ int s2let_idl_transform_axisym_wav_synthesis_mw_real(int argc, void* argv[])
   double *f = (double *) argv[0];
   double *f_wav = (double *) argv[1];
   double *f_scal = (double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -84,7 +85,7 @@ int s2let_idl_transform_axisym_wav_analysis_mw(int argc, void* argv[])
   complex double *f_wav = (complex double *) argv[0];
   complex double *f_scal = (complex double *) argv[1];
   complex double *f = (complex double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -107,7 +108,7 @@ int s2let_idl_transform_axisym_wav_synthesis_mw(int argc, void* argv[])
   complex double *f = (complex double *) argv[0];
   complex double *f_wav = (complex double *) argv[1];
   complex double *f_scal = (complex double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -131,7 +132,7 @@ int s2let_idl_transform_axisym_wav_analysis_mw_multires(int argc, void* argv[])
   complex double *f_wav = (complex double *) argv[0];
   complex double *f_scal = (complex double *) argv[1];
   complex double *f = (complex double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -154,7 +155,7 @@ int s2let_idl_transform_axisym_wav_synthesis_mw_multires(int argc, void* argv[])
   complex double *f = (complex double *) argv[0];
   complex double *f_wav = (complex double *) argv[1];
   complex double *f_scal = (complex double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -177,7 +178,7 @@ int s2let_idl_transform_axisym_wav_analysis_mw_multires_real(int argc, void* arg
   double *f_wav = (double *) argv[0];
   double *f_scal = (double *) argv[1];
   double *f = (double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 
@@ -200,7 +201,7 @@ int s2let_idl_transform_axisym_wav_synthesis_mw_multires_real(int argc, void* ar
   double *f = (double *) argv[0];
   double *f_wav = (double *) argv[1];
   double *f_scal = (double *) argv[2];
-  IDL_INT *B = (IDL_INT *) argv[3];
+  IDL_DOUBLE *B = (IDL_DOUBLE *) argv[3]; //DOUBLE
   IDL_INT *L = (IDL_INT *) argv[4];
   IDL_INT *J_min = (IDL_INT *) argv[5];
 

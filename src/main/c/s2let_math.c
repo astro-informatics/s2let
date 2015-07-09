@@ -11,9 +11,9 @@
 /*!
  * Tiling function for S2DW wavelets
  */
-double f_s2dw(double k, long B)
+double f_s2dw(double k, double B) //DOUBLE
 {
-  double t = (k - (1 / (double)B)) * (2.0 * B / (double)(B-1)) - 1;
+  double t = (k - (1.0 / B)) * (2.0 * B / (B-1.0)) - 1.0; //DOUBLE
   return exp(-2.0 / (1.0 - pow(t, 2.0))) / k;
 }
 
@@ -54,7 +54,7 @@ double s2let_math_spline_scalingfct(double x, double y){
 /*!
  * Computes smooth "Schwartz" functions for scale-discretised wavelets
  */
-double s2let_math_kappa0_quadtrap_s2dw(double a, double b, int n, int B)
+double s2let_math_kappa0_quadtrap_s2dw(double a, double b, int n, double B) //DOUBLE
 {
   double sum = 0;
   double f1, f2;
