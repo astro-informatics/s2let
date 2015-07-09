@@ -65,7 +65,7 @@
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-clear all;
+clear; % all;
 % close all ;
 
 load('EGM2008_Topography_flms_L0128');
@@ -80,8 +80,8 @@ B = 2;
 Spin = 0; 
 N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
 J_min = 3; % minimum and maximum scale probed by wavelets 
-J =s2let_jmax(L, B);  %=ceil(log L/ log B);  
-
+J =s2let_jmax(L, B);  %=ceil(log L/ log B);   
+ 
 % ---------------
 % Define Plotting  parameters: 
 % ---------------
@@ -114,11 +114,13 @@ end
 % Signal analysis: 
 % -----------------
 upsample = true ; 
+reality = false;
+% 
 [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_gen,  ...
                                                   'B', B, 'L', L, ...
                                                   'J_min', J_min, ...
                                                   'Spin', Spin, ...
-                                                  'Reality', false, ...
+                                                  'Reality', reality, ...
                                                   'Upsample', upsample , ...
                                                   'SpinLowered', false, ...
                                                   'SpinLoweredFrom', 0,...
@@ -251,11 +253,17 @@ end
 f_cur_new = cell(J+1-J_min, N);  
 for j = J_min:J 
    band_limit = min([ s2let_bandlimit(j,J_min,B,L) L ]);  
-   Nmax = band_limit
-   for en = 1:2*Nmax-1     
+   Nj = band_limit; 
+   if (reality == false) %i.e. false (default) => complex signals
+         enmax = 2*Nj-1; 
+   else %i.e. real signals
+         enmax = Nj; 
+   end 
+   for en = 1:enmax     
        f_cur_new{j-J_min+1, en} = reshape(f_cur{j-J_min+1}(en,:,:), L, 2*L-1);
    end
 end
+
 figure('Position',[20 20 1700 1400]) %100 100 1300 1000
 subplot(ny, nx, 1);
 % --- plot initial data --- % 
@@ -280,8 +288,13 @@ caxis([-temp temp])
 ind = 2;
 for j = J_min:J  
     band_limit = min([ s2let_bandlimit(j,J_min,B,L) L ]);  
-    Nmax = band_limit; 
-	for en = 1: 2*Nmax-1 %N
+    Nj = band_limit; 
+    if (reality == false) %i.e. false (default) => complex signals
+        enmax = 2*Nj-1; 
+    else %i.e. real signals
+        enmax = Nj; 
+    end 
+	for en = 1: enmax
 		ind = ind + 1;
         if ind <= maxfigs
             subplot(ny, nx, ind);
@@ -294,14 +307,16 @@ for j = J_min:J
             caxis([-temp temp])
             title(['Curvelet scale j=',int2str(j)-J_min+1,', n=',int2str(en)],'FontSize', 10)
         end
-	end
+    end
+    
+    
 end
 colormap(jet)
 fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_fullres.png']
 print('-r200', '-dpng', fname)
 
 
-%{
+
 % ---------- 
 % Compare reconstructed signal with the initial signals: 
 % ---------- 
@@ -309,8 +324,8 @@ f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, ...
                                                       'B', B, 'L', L, ...
                                                       'J_min', J_min, ...
                                                       'Spin', Spin, ...
-                                                      'Reality', true, ...
-                                                      'Upsample', true, ...
+                                                      'Reality', reality, ...
+                                                      'Upsample', upsample, ...
                                                       'SpinLowered', false, ...
                                                       'SpinLoweredFrom', 0,...
                                                  	  'Sampling', 'MW');
@@ -332,15 +347,18 @@ check_error = max(abs(f_gen(:)-f_rec(:)))
 % ================================================
 % MULTI-RESOLUTION PLOT (Upsample: false)
 % ================================================
+
+reality = false;
+upsample = false; 
 [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_gen,  ...
-                                                  'B', B, 'L', L, ...
-                                                  'J_min', J_min, ...
-                                                  'Spin', Spin, ...
-                                                  'Reality', true, ...
-                                                  'Upsample', false, ...
-                                                  'SpinLowered', false, ...
-                                                  'SpinLoweredFrom', 0,...
-                                                  'Sampling', 'MW');  
+                                                                'B', B, 'L', L, ...
+                                                                'J_min', J_min, ...
+                                                                'Spin', Spin, ...
+                                                                'Reality', reality, ...
+                                                                'Upsample', upsample, ...
+                                                                'SpinLowered', false, ...
+                                                                'SpinLoweredFrom', 0,...
+                                                                'Sampling', 'MW');  
 
                                               
 figure('Position',[20 20 1700 1400]) %100 100 1300 1000
@@ -368,8 +386,13 @@ caxis([-temp temp])
 ind = 2;
 for j = J_min:J
     band_limit = min([ s2let_bandlimit(j,J_min,B,L) L ]);  
-    Nmax = band_limit;
-	for en = 1: 2*Nmax-1   %2*N-1 %N
+    Nj = band_limit; 
+    if (reality == false) %i.e. false (default) => complex signals
+        enmax = 2*Nj-1; 
+    else %i.e. real signals
+        enmax = Nj; 
+    end 
+	for en = 1: enmax   %2*N-1 %N
 		ind = ind + 1;
         if ind <= maxfigs
             subplot(ny, nx, ind);
@@ -389,7 +412,7 @@ colormap(jet)
 fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires.png']
 print('-r200', '-dpng', fname)
 
-%{
+
 % ---------- 
 % Compare reconstructed signal with the initial signals: 
 % ---------- 
@@ -397,7 +420,7 @@ f_rec = s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, ...
                                                        'B', B, 'L', L, ...
                                                        'J_min', J_min, ...
                                                        'Spin', Spin, ...
-                                                       'Reality', true, ...
+                                                       'Reality', reality, ...
                                                        'Upsample', false, ...
                                                        'SpinLowered', false, ...
                                                        'SpinLoweredFrom', 0,...
@@ -417,11 +440,7 @@ check_error = max(abs(f_gen(:)-f_rec(:)))
 fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_multires_Int_Rec_signal.png']
 print('-r200', '-dpng', fname)
 
-%}
-
-
-
-
+%{
 % ============
 % Directional wavelets
 % ============
@@ -464,3 +483,5 @@ end
 colormap(jet)
 fname = [pltroot,'/s2let_demo9_', configstr, '_directional_wavelets_EarthTomo_fullres.png']
 print('-r200', '-dpng', fname)
+%}
+%}

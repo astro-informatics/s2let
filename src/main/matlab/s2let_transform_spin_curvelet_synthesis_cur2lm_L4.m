@@ -131,52 +131,50 @@ d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
 end
 
 for j = args.J_min:J,
-    band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-    Nj = band_limit; 
+  band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+  Nj = band_limit; 
   % for the case SO3_STORAGE_PADDED:
-    if (args.Reality == 0) %i.e. false (default) => complex signals
-        if (args.Upsample ~= 0) 
-            f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*args.L^2,1); 
-        else 
-            f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
-        end 
-%  ind_lml = 0;
-%  ind_lmnl =0; 
-%  ind_lmn = 0;
-        for el = abs(args.Spin):(band_limit-1) %0: args.L-1  % max(abs(args.Spin),abs(en))
-            for m = -el:el
-                if (args.Upsample == 0)  %false => multi-resolution
-                         ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj);
-                         ind_lmnl = so3_elmn2ind(el,m,-el,band_limit,Nj);
-                else
-                         ind_lml = so3_elmn2ind(el,m,el,args.L,Nj);
-                         ind_lmnl = so3_elmn2ind(el,m,-el,args.L,Nj);
-                end % end the if-loop for upsample
-                en_max = min(el, Nj-1); 
-                for en = -en_max:en_max
+  if (args.Reality == 0) %i.e. false (default) => complex signals
+      if (args.Upsample ~= 0) 
+          f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*args.L^2,1); 
+      else 
+          f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
+      end 
+  else %i.e. real signals
+      if (args.Upsample ~= 0) 
+          f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros(Nj*args.L^2,1);  
+      else
+          f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
+      end
+  end 
+  ind_lmk = 0;
+  ind_lmn = 0;
+  for el = abs(args.Spin):(band_limit-1) %0: args.L-1  % max(abs(args.Spin),abs(en))
+      for m = -el:el
+          en_max = min(el, Nj-1); 
+          if (args.Reality == 0) %i.e. false (default) => complex
+             for k = -en_max:en_max
+                 if (args.Upsample == 0)  %false => multi-resolution
+                         ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj);
+                 else
+                         ind_lmk = so3_elmn2ind(el,m,k,args.L,Nj);
+                 end % end the if-loop for upsample
+                 for en = -en_max:en_max
                      %  Dlmn = exp(-1i*m*alpha) * d(el+1,m+L,n+L) * exp(-1i*n*gamma);
-                     Dlln = exp(-1i*el*alpha) * d(el+1,el+args.L,en+args.L) * exp(-1i*en*gamma);
-                     Dl_nl_n = exp(-1i*-el*alpha) * d(el+1,-el+args.L,en+args.L) * exp(-1i*en*gamma);
+                     Dlkn = exp(-1i*k*alpha) * d(el+1,k+args.L,en+args.L) * exp(-1i*en*gamma);
                      if (args.Upsample == 0)  %false => multi-resolution
                          ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
                      else
                          ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
                      end % end the if-loop for upsample
-                     f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lml)=  f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lml)+ ...
-                                                                      conj(Dlln) * f_cur_lmn_syn{j-args.J_min+1}(ind_lmn); 
-                     f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lmnl)= f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lmnl) + ...
-                                                                      conj(Dl_nl_n) * f_cur_lmn_syn{j-args.J_min+1}(ind_lmn); 
-                end % end n-loop 
-            end  % end m-loop 
-        end % end el-loop 
-    else %i.e. real signals
-        if (args.Upsample ~= 0) 
-            f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros(Nj*args.L^2,1);  
-        else
-            f_cur_lmn_syn_rotated{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
-        end
-    end % end if Reality loop  
-end %end j-loop 
+                     f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lmk)=  f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lmk)+ ...
+                                                                      conj(Dlkn) * f_cur_lmn_syn{j-args.J_min+1}(ind_lmn);
+                 end % end n-loop 
+             end % end k-loop
+          end % end if-loop for reality option 
+      end % end m-loop 
+  end % end el-loop                    
+end
 
 % Reconstruct the signals in harmonic space
 % Perform Wigner transform (lmn2lm -  Call matlab function synthesis_lmn2lm)

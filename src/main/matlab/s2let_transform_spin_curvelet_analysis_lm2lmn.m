@@ -131,15 +131,17 @@ for j = args.J_min:J,
 end % end j-loop 
 % For debugging: 
 % disp('--check the size of f_cur_lmn--')
- % (2N-1)*L^2 for complex signals -> so3_storage_padded
- %  N*L^2 for real signals  -> so3_storage_padded
+% For so3_storage_padded: 
+% (2N-1)*L^2 for complex signals 
+%  N*L^2 for real signals  
+
 %whos f_cur_lmn
 %len= length(f_cur_lmn)
 %temp = f_cur_lmn{len};
 %sz = size(temp)
 %disp('--------')
-% For L=N=16, real data: sz= 4096 1: 
-   
+% For L=N=16, real data: sz= 4096 1:
+                                    
 % -----------------
 % Scaling function contribution: 
 % -----------------

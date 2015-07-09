@@ -80,6 +80,7 @@ J = s2let_jmax(args.L, args.B);
 flm_rec = zeros(args.L^2,1);
 for j = args.J_min:J,
     ind_ln =0;
+    ind_lnn =0;
     ind_lm=0;
     ind_lmn=0;
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
@@ -108,22 +109,25 @@ for j = args.J_min:J,
             for el = en:band_limit-1,    
                 ind_ln = ssht_elm2ind(el, en);
                 psi = cur_lm{j-args.J_min+1}(ind_ln);
-                if (en)
-                    ind_ln = ssht_elm2ind(el, -en);
-                    npsi = cur_lm{j-args.J_min+1}(ind_ln);
+                if (en ~= 0)
+                    ind_lnn = ssht_elm2ind(el, -en);
+                    npsi = cur_lm{j-args.J_min+1}(ind_lnn);
                 end 
                 for m = -el:el,
+                    % conrtibution from positive n terms: 
                     ind_lm = ssht_elm2ind(el, m);
                     ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
                     flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
-                    if (en)
-                       ind_lmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
+                    % conrtibution from negative n terms: 
+                    % i.e. Sum_over_lmn((cur_l_neg-n)*f_cur_l_m_neg-n)) =Sum_over_lmn((cur_l_neg-n)*(-1^(m+n))*f_cur_l_neg-m_n))
+                    if (en ~= 0)
+                       ind_lnmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
                        if (mod((m+en),2) == 1) 
                            sign = -1; 
                        else  %i.e. (mod((m+n),2) == 0)     
                            sign = 1; 
                        end 
-                       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lmn))* npsi; 
+                       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lnmn))* npsi; 
                     end
                 end % end m-loop for Reality Option
             end % end el-loop for Reality Option

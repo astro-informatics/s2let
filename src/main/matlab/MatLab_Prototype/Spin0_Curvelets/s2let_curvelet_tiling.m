@@ -1,12 +1,13 @@
-function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)
+function  [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, varargin)
 %
-% s2let_spin_curvelet_tiling - Tile scaling functions and curvelets in harmonic space.
+% s2let_curvelet_tiling
+% - Generate and tile the scaling functions and curvelet kernels in harmonic space.
 %
 % Default usage :
 %
-%   [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, <options>)
+%   [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, <options>)
 %
-% cur_lm is an array containing the unrotated curvelets spherical harmonic coefficients.
+% cur_lm is an array containing the curvelets spherical harmonic coefficients.
 % scal_l is an array containing the scaling function spherical harmonic coefficients (l only).
 % B is the wavelet parameter,
 % L is the harmonic band-limit;
@@ -31,7 +32,9 @@ function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)
 % S2LET package to perform wavelets transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
-% -----------------------------------------------------------
+% 
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 
 p = inputParser;
 p.addRequired('B', @isnumeric);
@@ -45,13 +48,7 @@ args = p.Results;
 
 % For curvelets: N = L; 
 J = s2let_jmax(L, B);
-Spin = args.Spin; 
-% For spin-lowered curvelet: (i.e. use scalar curvelets for the transform : spin =0, SpinLoweredFrom = e.g. 2)
-if (args.SpinLowered ~= 0) 
-    original_spin= args.SpinLoweredFrom;
-else 
-    original_spin = 0 ;  % if we don't use spin-lowered wavelets (default).    
-end 
+Spin = args.Spin;
 
 % ----------
 % Curvelet directional component s_lm 
@@ -76,6 +73,7 @@ for el = 1:L-1
     s_lm(ind_nm)= signs(m)*conj(s_lm(ind_pm));
 end
 
+
 % `````````````
 % Check the zero-mean condition for the curvelet directional components
 % `````````````
@@ -93,45 +91,30 @@ end
 error_on_slm_tiling = error_on_slm_tiling +sum - 1.0
 %} 
 
-el_min = max(abs(Spin), abs(original_spin));
 % ----------
 % Curvelet angular components:
 % ----------
 [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);
 for j = J_min:J
- ind_pm = 0; % el_min*el_min +1 ;
- ind_nm = 0; % el_min*el_min +1 ; 
- for el = el_min:L-1  % abs(args.Spin):L-1 %  can start from 1 as s_00 is zero, but will change to el_min for spin curvelets.       
-     m = el; 
+ ind_pm = 0;
+ ind_nm = 0;
+ for el = 1:L-1  % can start from 1 as s_00 is zero, but will change to el_min for spin curvelets. 
+     m = el;
      % for positive m
-     ind_pm = ssht_elm2ind(el, m); 
-     cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
+     ind_pm = ssht_elm2ind(el, m);
+     cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1);
      % for negative m
-     ind_nm = ssht_elm2ind(el, -m); 
-     cur_lm{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm{j-J_min+1}(ind_pm)) ; 
-     
-     % if SpinLowered == true 
-     if (args.SpinLowered ~= 0)  
-      s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
-      cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
-      cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
-     end 
-
+     ind_nm = ssht_elm2ind(el, -m);
+     cur_lm{j-J_min+1}(ind_nm) =  ((-1)^m) * conj(cur_lm{j-J_min+1}(ind_pm)); %for el starts with 1, (-1)^m = signs(m) 
  end
-end
-
+end 
 
 % ----------
 % Scaling Function
 % ----------
 scal_l = zeros(L^2,1);
-for el = el_min:L-1  %abs(args.Spin):L-1   % 0:L-1
-    scal_l(el^2+el+1,1) = sqrt((2*el+1)/(4.0*pi)) *kappa0(el+1); 
-    % if SpinLowered == true    
-    if (args.SpinLowered ~= 0)  
-     s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
-     scal_l(el^2+el+1,1) = scal_l(el^2+el+1,1) *s2let_spin_lowered_norm_factor ;
-    end 
+for el = 0:L-1
+    scal_l(el^2+el+1,1) = sqrt((2*el+1)/(4.0*pi)) *kappa0(el+1);
 end
 
 
