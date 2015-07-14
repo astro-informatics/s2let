@@ -88,7 +88,7 @@ int s2let_L0(int j, const s2let_parameters_t *parameters)
     {
     case S2DW:
     case NEEDLET:
-        return ceil(pow(B, j-1));
+        return floor(pow(B, j-1)); //DOUBLE - round down lower limit of wavelet
     case SPLINE:
         return 0;
     default:

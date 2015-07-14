@@ -4,8 +4,8 @@ from pys2let import *
 import math
 import matplotlib.pyplot as plt
 
-nside = 64
-L = 1024
+nside = 512
+L = 16
 J_min = 4
 B = 1.5 #DOUBLE
 N = 3 # Number of directions

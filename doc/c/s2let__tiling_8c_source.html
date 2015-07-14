@@ -155,7 +155,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    {</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="s2let__tiling_8c.html#aa95dc83ea2d993b343828e5c6ca4879aad2e1e459d07d91ca00e5f09caf8b4558">S2DW</a>:</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="s2let__tiling_8c.html#aa95dc83ea2d993b343828e5c6ca4879aa1ab4d051220837ebef5b7bbc03e7f2ac">NEEDLET</a>:</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">return</span> ceil(pow(B, j-1));</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">return</span> floor(pow(B, j-1)); <span class="comment">//DOUBLE - round down lower limit of wavelet</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">case</span> <a class="code" href="s2let__tiling_8c.html#aa95dc83ea2d993b343828e5c6ca4879aa4d8b3b9406a35793dead4b293d793463">SPLINE</a>:</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">return</span> 0;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">default</span>:</div>
@@ -552,7 +552,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 9 2015 20:13:07 for S2LET by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 14 2015 14:06:43 for S2LET by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>
