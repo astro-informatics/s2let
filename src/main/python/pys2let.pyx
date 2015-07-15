@@ -80,7 +80,7 @@ cdef extern from "s2let.h":
 
 	ctypedef struct s2let_parameters_t:
 		int J_min
-		double B
+		int B
 		int L
 		int N
 		int upsample
