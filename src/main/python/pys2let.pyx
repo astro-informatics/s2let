@@ -13,12 +13,15 @@ cdef extern from "ssht.h":
 	double ssht_sampling_mw_t2theta(int t, int L);
 	double ssht_sampling_mw_p2phi(int p, int L);
 	int ssht_sampling_mw_n(int L);
-	int ssht_sampling_mw_ntheta(int L);
+	int ssht_sampling_mw_ntheta(int L);  
 	int ssht_sampling_mw_nphi(int L);
 
 #----------------------------------------------------------------------------------------------------#
 
 cdef extern from "s2let.h":
+
+	void s2let_tiling_axisym(double *kappa, double *kappa0, const s2let_parameters_t *parameters);
+	void s2let_tiling_axisym_allocate(double **kappa, double **kappa0, const s2let_parameters_t *parameters);
 
 	int s2let_n_scal(const s2let_parameters_t *parameters);
 	int s2let_n_wav(const s2let_parameters_t *parameters);
@@ -80,7 +83,7 @@ cdef extern from "s2let.h":
 
 	ctypedef struct s2let_parameters_t:
 		int J_min
-		int B
+		double B
 		int L
 		int N
 		int upsample
@@ -91,7 +94,6 @@ cdef extern from "s2let.h":
 		int original_spin
 		int reality
 		int verbosity
-
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -304,7 +306,7 @@ def wav_ind(j, n, B, L, N, J_min, upsample):
 
 	offset = 0
 	for jprime from J_min <= jprime < j:
-		offset += s2let_n_wav_j(jprime, &parameters);
+		offset += s2let_n_wav_j(jprime, &parameters); 
 	if upsample:
 		bandlimit = L
 	else:
@@ -314,6 +316,22 @@ def wav_ind(j, n, B, L, N, J_min, upsample):
 	nelem_wav = s2let_n_wav_j(j, &parameters);
 
 	return offset, bandlimit, mw_size(bandlimit), nelem_wav
+
+#----------------------------------------------------------------------------------------------------#
+
+def mw_sampling(L):
+
+	ntheta = ssht_sampling_mw_ntheta(L)
+	nphi = ssht_sampling_mw_nphi(L)
+	thetas = np.empty([ntheta,], dtype=float)
+	phis = np.empty([nphi,], dtype=float)
+	for t from 0<=t<ntheta:
+		thetas[t] = ssht_sampling_mw_t2theta(t, L)
+	for p from 0<=p<nphi:
+		phis[p] = ssht_sampling_mw_p2phi(p, L)
+
+	return thetas, phis
+
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -343,22 +361,30 @@ def map2alm_mw(np.ndarray[double complex, ndim=1, mode="c"] f not None, L, spin)
 
 #----------------------------------------------------------------------------------------------------#
 
+def axisym_wav_l(B, L, J_min):
 
-#----------------------------------------------------------------------------------------------------#
+	cdef s2let_parameters_t parameters = {};
+	parameters.B = B;
+	parameters.L = L;
+	parameters.J_min = J_min;
+	J = s2let_j_max(&parameters);
 
-def mw_sampling(L):
+	cdef double *kappa, *kappa0;
+	s2let_tiling_axisym_allocate(&kappa, &kappa0, &parameters);
+	s2let_tiling_axisym(kappa, kappa0, &parameters);
 
-	ntheta = ssht_sampling_mw_ntheta(L)
-	nphi = ssht_sampling_mw_nphi(L)
-	thetas = np.empty([ntheta,], dtype=float)
-	phis = np.empty([nphi,], dtype=float)
-	for t from 0<=t<ntheta:
-		thetas[t] = ssht_sampling_mw_t2theta(t, L)
-	for p from 0<=p<nphi:
-		phis[p] = ssht_sampling_mw_p2phi(p, L)
+	scal_l = np.empty([L,], dtype=complex)
+	wav_l = np.empty([L, J-J_min+1], dtype=complex)
 
-	return thetas, phis
+	for el from 0 <= el < L:
+		scal_l[el] = kappa0[el];
+		for j from 0 <= j <= J-J_min:
+			wav_l[el, j] = kappa[el+(j+J_min)*L];
 
+	free(kappa);
+	free(kappa0);
+
+	return scal_l, wav_l
 
 #----------------------------------------------------------------------------------------------------#
 
