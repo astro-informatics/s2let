@@ -17,7 +17,7 @@
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-clear all;
+clear ;
 close all;
 
 % Main parameters
@@ -144,13 +144,13 @@ disp('=============================')
 disp('Constraint on flms to generate real signal')
 % -------------------------
 for el = 0:L-1
-ind = el*el + el + 1;
-flm_gen(ind,1) = real(flm_gen(ind,1));
-for m = 1:el
-ind_pm = el*el + el + m + 1;
-ind_nm = el*el + el - m + 1;
-flm_gen(ind_nm,1) = (-1)^m * conj(flm_gen(ind_pm,1));
-end
+    ind = el*el + el + 1;
+    flm_gen(ind,1) = real(flm_gen(ind,1));
+    for m = 1:el
+       ind_pm = el*el + el + m + 1;
+       ind_nm = el*el + el - m + 1;
+       flm_gen(ind_nm,1) = (-1)^m * conj(flm_gen(ind_pm,1));
+    end
 end
 
 % ---------------

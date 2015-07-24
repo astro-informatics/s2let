@@ -76,7 +76,6 @@ J = s2let_jmax(args.L, args.B);
 % Curvelet contribution:
 % -----------------
 % disp('syn_lmn2lm: Curvelet synthesis of complex signals from Wigner to harmonic space (flm_cur_syn from flmn_syn)');
-
 flm_rec = zeros(args.L^2,1);
 for j = args.J_min:J,
     ind_ln =0;
@@ -85,9 +84,9 @@ for j = args.J_min:J,
     ind_lmn=0;
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit;
-    if (args.Upsample ~= 0)  %true => full-resolution
-        band_limit = args.L;
-    end
+    %if (args.Upsample ~= 0)  %true => full-resolution
+    %    band_limit = args.L;
+    %end
     if (args.Reality == 0) %i.e. false (default) => complex
         for en = -Nj+1:Nj-1,
             for el = max(abs(args.Spin),abs(en)):band_limit-1,
@@ -105,33 +104,38 @@ for j = args.J_min:J,
             end
         end
     else % i.e.(args.Reality == 1) %i.e. true => real
-        for en = 1-mod(Nj,2):Nj-1, 
-            for el = en:band_limit-1,    
-                ind_ln = ssht_elm2ind(el, en);
-                psi = cur_lm{j-args.J_min+1}(ind_ln);
-                if (en ~= 0)
-                    ind_lnn = ssht_elm2ind(el, -en);
-                    npsi = cur_lm{j-args.J_min+1}(ind_lnn);
-                end 
-                for m = -el:el,
-                    % conrtibution from positive n terms: 
-                    ind_lm = ssht_elm2ind(el, m);
-                    ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
-                    flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
-                    % conrtibution from negative n terms: 
-                    % i.e. Sum_over_lmn((cur_l_neg-n)*f_cur_l_m_neg-n)) =Sum_over_lmn((cur_l_neg-n)*(-1^(m+n))*f_cur_l_neg-m_n))
-                    if (en ~= 0)
-                       ind_lnmn = so3_elmn2ind(el,-m,en,band_limit,Nj,'Reality', args.Reality);
-                       if (mod((m+en),2) == 1) 
-                           sign = -1; 
-                       else  %i.e. (mod((m+n),2) == 0)     
-                           sign = 1; 
-                       end 
-                       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_lnmn))* npsi; 
-                    end
-                end % end m-loop for Reality Option
-            end % end el-loop for Reality Option
-        end % end en-loop for Reality Option
+        for el = 0:band_limit-1,     
+            for m = -el:el,
+                ind_lm = ssht_elm2ind(el, m);
+                % contribution from n=0 terms:
+                 ind_lnzero = ssht_elm2ind(el, 0);
+                 ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,'Reality', args.Reality);
+                 psizero= cur_lm{j-args.J_min+1}(ind_lnzero);  
+                 flm_rec(ind_lm)=  flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmnzero)* psizero; 
+                % for n ~= 0 terms: 
+                 ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj,'Reality', args.Reality);
+                 ind_l_nm_l = so3_elmn2ind(el,-m,el,band_limit,Nj,'Reality', args.Reality);  
+                 if (mod((m+el),2) == 1)    
+                     sign = -1; 
+                 else      
+                     sign = 1; 
+                 end 
+                 for en = 1:Nj-1,   %-mod(Nj,2)
+                     if (el >= en)
+                     % contribution from positive n terms 
+                      % i.e. Sum_over_lmn((cur_l_n)*f_cur_l_m_n))
+                       ind_ln = ssht_elm2ind(el, en); 
+                       psi = cur_lm{j-args.J_min+1}(ind_ln);  
+                       flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lml)* psi;
+                      % contribution from negative n terms: 
+                      % i.e. Sum_over_lmn((cur_l_neg-n)*f_cur_l_m_neg-n)) =Sum_over_lmn((cur_l_neg-n)*(-1^(m+n))*f_cur_l_neg-m_n))
+                       ind_l_nn = ssht_elm2ind(el, -en); 
+                       npsi = cur_lm{j-args.J_min+1}(ind_l_nn);
+                       flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_l_nm_l))* npsi; 
+                     end   % end if (el>=en) loop 
+                 end % end en-loop for Reality Option
+            end % end em-loop for Reality Option
+        end % end el-loop for Reality Option      
     end  % end if-loop for Reality Option
 end % end j-loop
 
