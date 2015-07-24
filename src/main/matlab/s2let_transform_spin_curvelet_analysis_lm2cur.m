@@ -120,6 +120,10 @@ d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
 for el = 1:args.L-1
     d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
 end
+ind_lmk =0 ; 
+ind_lml = 0; 
+ind_l_m_nl =0; 
+ind_l_nm_l = 0;
 for j = args.J_min:J,
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit; 
@@ -130,9 +134,6 @@ for j = args.J_min:J,
         else 
           f_cur_lmn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
         end 
-        % ind_lmk = 0;
-        % ind_lml = 0;
-        % ind_l_m_nl= 0;
         for el = abs(args.Spin):(band_limit-1) %0: args.L-1  % max(abs(args.Spin),abs(en))
             for m = -el:el
                 if (args.Upsample == 0)  %false => multi-resolution
@@ -162,36 +163,21 @@ for j = args.J_min:J,
           f_cur_lmn_rotated{j-args.J_min+1} = zeros(Nj*args.L^2,1);  
         else
           f_cur_lmn_rotated{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
-        end
-        ind_lml = 0; 
-        ind_l_nm_l = 0; 
+        end 
         for el = 0:(band_limit-1) 
             for m = -el:el
-                if (args.Upsample ~= 0)  % true => full-resolution
-                   ind_lml = so3_elmn2ind(el,m,el,args.L,Nj, 'Reality', args.Reality)
-                   ind_l_nm_l = so3_elmn2ind(el,-m,el,args.L,Nj, 'Reality', args.Reality) ;
-                else
+                %if (args.Upsample == 0)  % false=> multi-resolution
                    ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj, 'Reality', args.Reality); 
                    ind_l_nm_l = so3_elmn2ind(el,-m,el,band_limit,Nj, 'Reality', args.Reality);
-                end % end the if-loop for upsample
+               % else
+               %    ind_lml = so3_elmn2ind(el,m,el,args.L,Nj, 'Reality', args.Reality) ; 
+               %    ind_l_nm_l = so3_elmn2ind(el,-m,el,args.L,Nj, 'Reality', args.Reality) ;
+               % end % end the if-loop for upsample
                 if (mod((m+el),2) == 1) 
                     sign = -1; 
                 else  %i.e. (mod((m+n),2) == 0)     
                     sign = 1; 
                 end 
-                %{
-                % k=0 terms 
-                if (args.Upsample == 0)  %false => multi-resolution
-                    ind_lmkzero = so3_elmn2ind(el,m,0,band_limit,Nj, 'Reality', args.Reality);
-                else
-                    ind_lmkzero = so3_elmn2ind(el,m,0,args.L,Nj,'Reality', args.Reality);
-                end % end the if-loop for upsample   
-                 Dl_0_l = exp(-1i*0*alpha) * d(el+1,0+args.L,el+args.L) * exp(-1i*el*gamma);
-                 Dl_0_nl = exp(-1i*0*alpha) * d(el+1,0+args.L,-el+args.L) * exp(-1i*-el*gamma);
-                 f_cur_lmn_rotated{j-args.J_min+1}(ind_lmkzero)= conj(Dl_0_l) * f_cur_lmn{j-args.J_min+1}(ind_lml)+ ...
-                                                                 sign*conj(Dl_0_nl)* conj(f_cur_lmn{j-args.J_min+1}(ind_l_nm_l));
-                %}
-                % (k>=0) terms
                 en_max = min(el, Nj-1); 
                 for k = 0:en_max  
                      Dl_k_l = exp(-1i*k*alpha) * d(el+1,k+args.L,el+args.L) * exp(-1i*el*gamma);

@@ -2,12 +2,12 @@
 % Run curvelet analysis and synthesis 
 % of randomly generated signals f 
 
-clear all;
+clear; % all;
 % close all;
 
 % Main parameters
 Spin = 0;
-L = 32;
+L = 16;
 N = L; % For curvelets: N=L  %N=1 for axisymmetric curvelets
 B = 2;
 J_min = 1;  %N.B. J_min = 2 : NOT EXACT
@@ -36,6 +36,7 @@ f_spin_gen = ssht_inverse(flm_gen, L,  'Spin', Spin, 'Method', 'MW');
 flm_spin_gen= ssht_forward(f_spin_gen, L,  'Spin', Spin,'Method', 'MW');
 %}
 
+%{
 disp(' ');
 disp('----------- ');
 disp('Curvelet transform: full resolution (Upsample: true): ');
@@ -163,6 +164,7 @@ disp('----------- ');
 % Signal analysis: (harmonic to wigner space) - Multi-resolution 
 % -----------------
 upsample = false; 
+disp('Multiresolution...')
 % Call matlab function 's2let_transform_spin_curvelet_analysis_lm2cur'
 disp('analysis_lm2cur...')
 [f_cur, f_scal]= s2let_transform_spin_curvelet_analysis_lm2cur(flm_gen, ...

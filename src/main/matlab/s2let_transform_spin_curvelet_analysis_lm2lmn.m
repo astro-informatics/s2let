@@ -129,8 +129,13 @@ for j = args.J_min:J,
               if (el >= en)
                 ind_ln = ssht_elm2ind(el, en);
                 psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
-                ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
+              %  if (args.Upsample == 0)  % false=> multi-resolution
+                    ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
+               % else
+               %     ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj,'Reality', args.Reality);
+               % end % end the if-loop for upsample
                 f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
+                ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj,'Reality', args.Reality); 
               end
           end 
       end
