@@ -1,23 +1,23 @@
-function s2let_plot_spin_curvelet_on_sphere(B, L, J_min, varargin)
+function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)
 %
-% s2let_plot_cur_on_sphere -
-% Plot curvelet coefficients on multiple spheres.
+% s2let_plot_cur_on_sphere 
+% - Plot curvelet coefficients on multiple spheres.
 %
-% This function
-% i) compute the j-th curvelet, which has been rotated by the Euler's angles (alpha =pi, beta =pi/2, gamma=2) in
-% harmonic space (in s2let_spin_curvelet_tiling.m), 
-% and reconstruct it on the sphere.
+% This Matlab function
+% i)  compute the j-th curvelet, rotated by rho=(alpha, beta, gamma) in
+%     harmonic space and reconstruct it on the sphere.
 % ii) generates one plot of the scaling function contribution and
-% a grid of plots for each orientation of each scale of the
-% curvelet contributions.
+%     a grid of plots for each orientation of each scale of the
+%     curvelet contributions.
 %
 % Default usage :
 %
-%   s2let_plot_curvelet_on_sphere(B, L, J_min, <options>)
+%   s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, <options>)
 %
+% (alpha, beta, gamma) are the Euler's angles by which we rotate the curvelet
 % B is the wavelet dilation factor 
 % L is the angular band-limit.
-% J_min is the first curvelet scale in cur.
+% J_min is the first curvelet scale to be probed.
 %
 % Option :
 %  'N'               = { Azimuthal band-limit; N > 0 , and should =L for curvelets; (default = L) }
@@ -35,11 +35,6 @@ function s2let_plot_spin_curvelet_on_sphere(B, L, J_min, varargin)
 %  'Sampling'        = { 'MW'           [McEwen & Wiaux sampling (default)],
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %
-%
-% j is the order of the curvelet under consideration (depends on B)
-% L if harmonic band-limit for the reconstruction on the sphere
-% psi_j is the reconstructed curvelet on the sphere, at resolution L
-%
 % ---------------------------------------------------------
 % S2LET package to perform wavelet transforms on the sphere.
 % Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen
@@ -50,6 +45,9 @@ function s2let_plot_spin_curvelet_on_sphere(B, L, J_min, varargin)
 
 % Parse arguments.
 p = inputParser;
+p.addRequired('alpha', @isnumeric);
+p.addRequired('beta', @isnumeric);
+p.addRequired('gamma', @isnumeric);
 p.addRequired('B', @isnumeric);
 p.addRequired('L', @isnumeric);
 p.addRequired('J_min', @isnumeric);
@@ -58,7 +56,7 @@ p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.addParamValue('Reality', false, @islogical);
 p.addParamValue('Sampling', 'MW', @ischar);
-p.parse(B, L, J_min, varargin{:});
+p.parse(alpha, beta, gamma, B, L, J_min, varargin{:});
 args = p.Results;
 
 B = args.B ; 
@@ -67,11 +65,19 @@ N = L;
 J_min = args.J_min; 
 J = s2let_jmax(L, B);
 
-[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...
-                                             'Spin', args.Spin, ...
-                                             'SpinLowered', args.SpinLowered,...
-                                             'SpinLoweredFrom', args.SpinLoweredFrom);
-                                    
+original_spin = 0 ;  % if we don't use spin-lowered wavelets (default). 
+if (args.SpinLowered ~= 0) % For spin-lowered curvelet: 
+    original_spin= args.SpinLoweredFrom; 
+end 
+el_min = max(abs(args.Spin), abs(original_spin));
+
+% Precompute Wigner small-d functions for rotation 
+d = zeros(L, 2*L-1, 2*L-1);
+d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, args.beta);  %el_min, beta);
+for el = 1:L-1  %el_min:L-1  %
+    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, args.beta);
+end
+
 % Define plotting parameters
 zoomfactor = 1.4;
 plot_caxis_scale = 2;
@@ -84,20 +90,24 @@ pltroot = '../../../figs/' ;
 configstr = ['Spin',int2str(args.Spin),...
              '_N',int2str(N),'_L',int2str(L),'_B',int2str(B),...
              '_Jmin',int2str(J_min)];
+         
+% ------------ Tile curvelts and the scaling functions --------------- 
+[cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, ...
+                                             'Spin', args.Spin, ...
+                                             'SpinLowered', args.SpinLowered,...
+                                             'SpinLoweredFrom', args.SpinLoweredFrom);          
 
-%
-% curvelets:
-%
+% -------------
+% Plot curvelets:
+% -------------
 figure('Position',[100 100 1200 600])
 ind=0;
 for j = J_min:J,
 %% Rotate the curvelets coefficients
+   flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, args.alpha, args.gamma);
   if args.Spin == 0
-   % Compute the curvelet functsions (from the roatated curvelet harmonic coefficients)
-   % where size(f_cur_rot)= [L, 2*L-1]
-   f_cur_rot = ssht_inverse(cur_lm{j-J_min+1}, L, ...
-                           'Method', args.Sampling, ...
-                           'Spin', args.Spin, 'Reality', true);
+   % Compute the function (rotated):
+   f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', args.Sampling, 'Spin', args.Spin, 'Reality', true);
    ind = ind + 1;
     if ind <= maxfigs
      h = subplot(ny, nx, ind);
@@ -117,11 +127,8 @@ for j = J_min:J,
    end
 
    if args.Spin > 0
-    % Compute the curvelet functsions (from the roatated curvelet harmonic coefficients cur_lm{j-J_min+1} whose size is (L^2,1)) 
-    % where size(f_cur_rot) = [L, 2L-1]  
-    f_cur_rot = ssht_inverse(cur_lm{j-J_min+1}, L, ...
-                            'Method', args.Sampling,...
-                            'Spin', args.Spin);            
+    f_cur_rot = ssht_inverse(flm_cur_rot, L, 'Method', args.Sampling,...
+                             'Spin', args.Spin,'Reality',  args.Reality);
     ind = ind + 1;
      if ind <= maxfigs
       h = subplot(ny, nx, ind);
@@ -176,9 +183,9 @@ colormap(jet)
 fname = [pltroot,'s2let_plotfn_', configstr, '_cur_jet.png']
 print('-r200', '-dpng', fname);
 
-%
-%  Scaling functions
-%
+% -------------
+% Plot scaling functions
+% -------------
 figure('Position',[100 100 300 300])
 h=subplot(1, 1, 1);
 f = ssht_inverse(scal_l, L, 'Reality', true);

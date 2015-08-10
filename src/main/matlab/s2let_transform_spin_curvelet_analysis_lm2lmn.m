@@ -1,6 +1,6 @@
 function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l, varargin)
 
-% s2let_transform_analysis_lm2lmn
+% s2let_transform_spin_curvelet_analysis_lm2lmn
 % Compute (spin) curvelet transform, input in harmonic space,
 % output in Wigner space.
 %
@@ -17,11 +17,11 @@ function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_i
 %  'L'               = { Harmonic band-limit; L > 1 (default=guessed from input) }
 %  'J_min'           = { Minimum curvelet scale to consider;
 %                        0 <= J_min < log_B(L) (default=0) }
-%  'Spin'               = { Spin; (default=0) }
+%  'Spin'            = { Spin; (default=0) }
 %  'Reality'         = { false        [do not assume corresponding signal f real (default)],
 %                        true         [assume f real (improves performance)] }
-%  'Upsample'      = { false        [multiresolution algorithm (default)],
-%                      true         [full resolution curvelets] }
+%  'Upsample'        = { false        [multiresolution algorithm (default)],
+%                        true         [full resolution curvelets] }
 %  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
 %                               curvelets and scaling function.],
 %                        false [Apply the usual normalisation factors such
@@ -39,7 +39,9 @@ function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_i
 % S2LET package to perform wavelet transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
-% -----------------------------------------------------------
+%
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 
 sz = length(flm_init(:));
 Lguessed = sqrt(sz);
@@ -60,19 +62,16 @@ p.addParamValue('Sampling', 'MW', @ischar);
 p.parse(flm_init, cur_lm, scal_l, varargin{:});
 args = p.Results;
 
-% Azimuthal/directional band-limit N =L always holds for curvelets:           
+% Azimuthal band-limit N =L always holds for curvelets:           
 N = args.L ;
 J = s2let_jmax(args.L, args.B);
 
 % ------------
 % Signal Analysis: 
-% ------------
-% Generate flmn from flm of the complex signal
-% (c.f. C function: s2let_analysis_lm2lmn(f_cur_lmn, f_scal_lm, flm, cur_lm, scal_l, parameters);
 % -----------------
 % Curvelet contribution:
 % -----------------
-% disp('ana_lm2lmn: Curvelet analysis of complex signals from harmonic to Wigner space (i.e. flm to flmn)')
+% disp('ana_lm2lmn: Curvelet analysis of complex signals -- from harmonic to Wigner space (i.e. flm to flmn)')
  
 for j = args.J_min:J,   
   band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
@@ -99,23 +98,23 @@ for j = args.J_min:J,
   ind_lm = 0;
   ind_lmn = 0;
   %
-  if (args.Reality == 0) %i.e. false (default) => complex
+  if (args.Reality == 0) %i.e. false (default) => complex signals
    for en = -Nj+1:Nj-1,
        for el = max(abs(args.Spin),abs(en)):band_limit-1,
            ind_ln = ssht_elm2ind(el, en);
            psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
            for m = -el:el,
                ind_lm = ssht_elm2ind(el, m);
-               if (args.Upsample == 0)  %false => multi-resolution
-                        ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+               if (args.Upsample == 0)  % multi-resolution
+                   ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
                else
-                        ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
-               end % end the if-loop for upsample
+                   ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+               end 
                f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
            end
        end
    end
-  else % i.e.(args.Reality == 1) %i.e. true => real
+  else % i.e. real signals
    for el = 1:band_limit-1,
       for m = -el:el, 
           ind_lm = ssht_elm2ind(el, m);
@@ -125,7 +124,7 @@ for j = args.J_min:J,
           ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,'Reality', args.Reality);
           f_cur_lmn{j-args.J_min+1}(ind_lmnzero) =  flm_init(ind_lm) *psizero; 
        % (n ~=0) terms:  
-          for en = 1: Nj-1,     %-mod(Nj,2)
+          for en = 1: Nj-1,    
               if (el >= en)
                 ind_ln = ssht_elm2ind(el, en);
                 psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
@@ -142,32 +141,18 @@ for j = args.J_min:J,
    end
   end % end if loop for Reality Option
 end % end j-loop 
-% For debugging: 
-% disp('--check the size of f_cur_lmn--')
-% For so3_storage_padded: 
-% (2N-1)*L^2 for complex signals 
-%  N*L^2 for real signals  
 
-%whos f_cur_lmn
-%len= length(f_cur_lmn)
-%temp = f_cur_lmn{len};
-%sz = size(temp)
-%disp('--------')
-% For L=N=16, real data: sz= 4096 1:
-                                    
 % -----------------
 % Scaling function contribution: 
 % -----------------
-% disp('ana_lm2lmn: : Compute scaling function f_scal_lm=flm_init(lm_ind) * phi '); 
+% disp('ana_lm2lmn: : Compute scaling function f_scal_lm = flm_init(lm_ind) * phi'); 
 if (args.Upsample == 0)   %i.e. false (default) => multi-resolution 
     band_limit = min([ s2let_bandlimit(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
 else 
     band_limit = args.L ; 
 end
 f_scal_lm = zeros(band_limit^2,1);
-% ToDO Check: band_limit*(2*band_limit-1) for MW; (band_limit+1)*2*band_limit for MWSS
-lm_ind=0;
-if (args.Reality == 0) %i.e. false (default) => complex
+if (args.Reality == 0) %i.e. false (default) => complex signals
    for el = abs(args.Spin):band_limit-1,
        phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);
        for m = -el:el,
@@ -175,7 +160,7 @@ if (args.Reality == 0) %i.e. false (default) => complex
            f_scal_lm(lm_ind) = flm_init(lm_ind) * phi;
        end
    end
-else   %i.e. (args.Reality == 1); true => real
+else   % real signals
    for el = 0 :band_limit-1,
        phi = sqrt(4.0*pi/(2.*el+1))*scal_l(el^2+el+1,1);
        for m = -el:el,

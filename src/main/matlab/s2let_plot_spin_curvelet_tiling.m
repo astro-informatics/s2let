@@ -1,7 +1,7 @@
 function s2let_plot_spin_curvelet_tiling(B, L, J_min, varargin)
 % s2let_plot_spin_curvelet_tiling
-%  - Plot the tiling of scaling function and curvelets in harmonic space.
-%  - then plot the scaling function and curvelets in real space. 
+%  - Plot the tiling of scaling functions and curvelets in harmonic space.
+%  - then plot the scaling functions and curvelets in real space. 
 %
 % Default usage :
 %
@@ -23,9 +23,13 @@ function s2let_plot_spin_curvelet_tiling(B, L, J_min, varargin)
 %                       option indicates which spin number the wavelets
 %                       should be lowered from (default = 0)]
 %
-% S2LET package to perform Wavelet transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
+% ---------------------------------------------------------
+% S2LET package to perform wavelet transforms on the sphere.
+% Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen
 % See LICENSE.txt for license details
+%
+% Modified S2LET package to perform curvelet transforms on the Sphere.
+% ---------------------------------------------------------
 
 % Parse arguments.
 p = inputParser;
@@ -36,6 +40,7 @@ p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.parse(B, L, J_min, varargin{:});
+
 args = p.Results;
 
 B = args.B;
@@ -44,61 +49,39 @@ J_min = args.J_min;
 Spin = args.Spin;
 N = L; 
 J = s2let_jmax(L, B);
-   
+
 % ---------------
 % Tile curvelets:
 % ---------------
 [cur_lm scal_l] = s2let_spin_curvelet_tiling(args.B, args.L, args.J_min, ...
-                                            'Spin', args.Spin, 'SpinLowered', args.SpinLowered,...
-                                            'SpinLoweredFrom',args.SpinLoweredFrom);
-                                       
-% ---------------
-% Define Euler angles such that the curvelets are restored to be centred about the x-axis:
-% ---------------
-alpha =  pi ;
-beta = pi/2 ;
-gamma = 0 ;
-% ---------------
-% Precompute Wigner small-d functions 
-% ---------------
-d = zeros(L, 2*L-1, 2*L-1);
-d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, beta);
-for el = 1:L-1
-    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), L, el, beta);
-end
-% ---------------
-% Rotate the curvelets coefficients
-% ---------------
-for j = J_min:J
-    cur_lm_unrotated{j-J_min+1} = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, alpha, gamma);
-end    
-% ---------------
-% Normalise and reshape the curvelet functions: 
-% ---------------
+                                        'Spin', args.Spin, 'SpinLowered', args.SpinLowered,...
+                                        'SpinLoweredFrom',args.SpinLoweredFrom);
+                                    
+% Normalise and reshape the scaling functions: 
 el_min = max(abs(args.Spin), abs(args.SpinLoweredFrom));
+kappa0_cur = zeros(1,L);
+for el = el_min:L-1
+ kappa0_cur(1,el+1) = scal_l(el^2+el+1,1)/sqrt((2*el+1)/(4.0*pi)) ;
+end 
+
+% Normalise and reshape the curvelet functions: 
 kappa_cur = zeros(J+1,L);
 for j = J_min:J
  for el= el_min:L-1
   % ind = l^2 +l + m + 1 ; now consider m =  el; 
-  kappa_cur(j+1,el+1) = cur_lm_unrotated{j-J_min+1}(el^2+el+el+1,1)/ ...
+  kappa_cur(j+1,el+1) = cur_lm{j-J_min+1}(1,el^2+el+el+1)/ ...
                         (sqrt(1./2.)* sqrt((2*el+1)/(8.0*pi*pi))) ;
  end
 end 
-% ---------------
-% Normalise and reshape the scaling functions: 
-% ---------------
-kappa0_cur = zeros(1,L);
-for el = el_min:L-1
- kappa0_cur(1,el+1) = scal_l(el^2+el+1,1)/sqrt((2*el+1)/(4.0*pi)) ;
-end  
 
-% ---------------
+
 % Set for the output figures: 
-% ---------------
 pltroot = '../../../figs/' ;
 configstr = ['Spin',int2str(args.Spin),...
              '_N',int2str(N),'_L',int2str(L),'_B',int2str(B),...
              '_Jmin',int2str(J_min)];
+
+
 % 
 xi =0:0.01:L-1;
 x = 0:L-1;
@@ -106,7 +89,6 @@ x = 0:L-1;
 % Plot the tiling of the scaling function: 
 % ------------
 figure('Position',[100 100 900 450])
-  %semilogx(0:L-1, kappa0, 'k', 'LineWidth', 2);
 yi = interp1(x, kappa0_cur, xi,'pchip');
 semilogx(xi, yi, 'k', 'LineWidth', 2);
   %h = text(2, 1.07, 'k0', 'Color', [0 0 0]);
@@ -116,17 +98,19 @@ hold on;
 % ------------
 for j = J_min:J
   colour = rand(1,3)*0.9;
-  %plot(0:L-1, kappa(j+1,:), 'LineWidth', 2, 'Color', colour);
-  yi = interp1(x, real(kappa_cur(j+1,:)),xi,'pchip');
+  yi = interp1(x,kappa_cur(j+1,:),xi,'pchip');
   plot(xi, yi, 'LineWidth', 2, 'Color', colour);
   %h = text(B.^j, 1.07, strcat('j',num2str(j+1)), 'Color', colour);
 end
+
 %title('Harmonic tiling');
 %xlabel('l');
 axis([0 L -0.05 1.15]);
 set(gca,'XTick',2.^[0:(J+2)]);
 fname = [pltroot,'s2let_plot_cur_tiling_', configstr, '.png']
 print('-r200', '-dpng', fname);
+
+
 
 % ----------------------------
 % Plot the scaling function in real space: 

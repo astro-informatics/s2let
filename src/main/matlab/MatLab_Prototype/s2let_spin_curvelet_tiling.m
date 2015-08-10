@@ -31,8 +31,6 @@ function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)
 % S2LET package to perform wavelets transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
-%
-% Modified S2LET package to perform curvelet transforms on the Sphere.
 % -----------------------------------------------------------
 
 p = inputParser;
@@ -77,35 +75,56 @@ for el = 1:L-1
     s_lm(ind_nm)= signs(m)*conj(s_lm(ind_pm));
 end
 
+% `````````````
+% Check the zero-mean condition for the curvelet directional components
+% `````````````
+%{
+ind = 1; 
+error_on_slm_tiling = 0; 
+% % Skip the s_00 component as it is zero 
+for el = 0:L-1
+sum = 0.; 
+for m= -el:el
+ sum = sum + s_lm(ind)*conj(s_lm(ind));
+ ind = ind +1; 
+end
+end
+error_on_slm_tiling = error_on_slm_tiling +sum - 1.0
+%} 
 
+el_min = max(abs(Spin), abs(original_spin));
 % ----------
 % Curvelet angular components:
 % ----------
 [kappa kappa0] =  s2let_transform_axisym_tiling(B, L, J_min);
-el_min = max(abs(Spin), abs(original_spin));
 for j = J_min:J
- for el = el_min:L-1  
+ ind_pm = 0; % el_min*el_min +1 ;
+ ind_nm = 0; % el_min*el_min +1 ; 
+ for el = el_min:L-1  % abs(args.Spin):L-1 %  can start from 1 as s_00 is zero, but will change to el_min for spin curvelets.       
      m = el; 
-     % positive m
+     % for positive m
      ind_pm = ssht_elm2ind(el, m); 
      cur_lm{j-J_min+1}(ind_pm) = s_lm(ind_pm) * sqrt((2*el+1)/(8.0*pi*pi))* kappa(j+1,el+1) ; 
-     % negative m
+     % for negative m
      ind_nm = ssht_elm2ind(el, -m); 
      cur_lm{j-J_min+1}(ind_nm) =((-1)^m)* conj(cur_lm{j-J_min+1}(ind_pm)) ; 
+     
      % if SpinLowered == true 
      if (args.SpinLowered ~= 0)  
       s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, 'original_spin',original_spin);
       cur_lm{j-J_min+1}(ind_pm) = cur_lm{j-J_min+1}(ind_pm)*s2let_spin_lowered_norm_factor ;
       cur_lm{j-J_min+1}(ind_nm) = cur_lm{j-J_min+1}(ind_nm)*s2let_spin_lowered_norm_factor ;
      end 
+
  end
 end
+
 
 % ----------
 % Scaling Function
 % ----------
 scal_l = zeros(L^2,1);
-for el = el_min:L-1 
+for el = el_min:L-1  %abs(args.Spin):L-1   % 0:L-1
     scal_l(el^2+el+1,1) = sqrt((2*el+1)/(4.0*pi)) *kappa0(el+1); 
     % if SpinLowered == true    
     if (args.SpinLowered ~= 0)  
@@ -114,5 +133,32 @@ for el = el_min:L-1
     end 
 end
 
+
+% `````````````
+% Check admissibility condition 
+% (OR use the external MATLAB function 's2let_check_cur_tiling.m'
+%  error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min))
+% `````````````
+%{
+% Scaling function
+identity = zeros(1,L);
+for el=abs(args.Spin):L-1
+    identity(1,el+1) = identity(1,el+1)+(4.*pi/(2*el+1))*scal_l(el^2+el+1,1)*conj(scal_l(el^2+el+1,1)); 
+end
+% Curvelet functions
+for j= J_min: J 
+	ind = args.Spin*args.Spin + 1;
+	for el=abs(args.Spin):L-1
+		for m= -el:el
+           identity(1,el+1) = identity(1,el+1)+(8.*pi^2/(2*el+1))* cur_lm{j-J_min+1}(1,ind)*conj(cur_lm{j-J_min+1}(1,ind));
+		   ind = ind + 1;
+		end
+	end
+end
+error_on_cur_tiling = 0;
+for el=abs(args.Spin):L-1
+    error_on_cur_tiling = error_on_cur_tiling + identity(1,el+1) - 1.0
+end
+%}
 
 end

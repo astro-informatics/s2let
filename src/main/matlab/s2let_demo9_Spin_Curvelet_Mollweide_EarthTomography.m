@@ -69,7 +69,7 @@ clear; % all;
 % close all ;
 
 load('EGM2008_Topography_flms_L0128');
-L = 16;   % To see the multi-resoluition effect i.e. Upsample = false, L >=64) 
+L = 64;   % To see the multi-resoluition effect i.e. Upsample = false, L >=64) 
 flm_gen = flm(1:L^2,1);
 f_gen = ssht_inverse(flm_gen, L,'Reality', true);
 
