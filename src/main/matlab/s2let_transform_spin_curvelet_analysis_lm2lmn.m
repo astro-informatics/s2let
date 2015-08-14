@@ -42,6 +42,17 @@ function [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_i
 %
 % Modified S2LET package to perform curvelet transforms on the Sphere.
 % ---------------------------------------------------------
+%{
+% TODO: in the future add option for SO3_STORAGE: 
+% Now SO3_STORAGE_PADDED is used. 
+% For the case SO3_STORAGE_COMPACT:
+  if ((args.Reality == 0) && (args.Storage =='Compact') )
+  f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*(3*band_limit^2-Nj*(Nj-1)/3,1);
+  else if ((args.Reality == 1) && (args.Storage =='Compact') )
+  f_cur_lmn{j-args.J_min+1} = zeros(Nj*(6*band_limit^2-(Nj-1)*(2*Nj-1))/6,1);  
+  end 
+%} 
+
 
 sz = length(flm_init(:));
 Lguessed = sqrt(sz);
@@ -79,66 +90,61 @@ for j = args.J_min:J,
  % if (args.Upsample ~= 0)  %true => full-resolution, set band_limit back to args.L
  %     band_limit = args.L;
  % end
-% for the case SO3_STORAGE_PADDED:
-  if (args.Reality == 0) %i.e. false (default) => complex signals
-      f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
-  else %i.e. real signals
-      f_cur_lmn{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
-  end 
-%{
-% TODO: in the future add option for SO3_STORAGE: 
-% for the case SO3_STORAGE_COMPACT:
-  if ((args.Reality == 0) && (args.Storage =='Compact') )
-  f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*(3*band_limit^2-Nj*(Nj-1)/3,1);
-  else if ((args.Reality == 1) && (args.Storage =='Compact') )
-  f_cur_lmn{j-args.J_min+1} = zeros(Nj*(6*band_limit^2-(Nj-1)*(2*Nj-1))/6,1);  
-  end 
-%} 
   ind_ln=0;
   ind_lm = 0;
   ind_lmn = 0;
   %
   if (args.Reality == 0) %i.e. false (default) => complex signals
-   for en = -Nj+1:Nj-1,
-       for el = max(abs(args.Spin),abs(en)):band_limit-1,
-           ind_ln = ssht_elm2ind(el, en);
-           psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
-           for m = -el:el,
-               ind_lm = ssht_elm2ind(el, m);
-               if (args.Upsample == 0)  % multi-resolution
-                   ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
-               else
-                   ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
-               end 
-               f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
-           end
-       end
-   end
-  else % i.e. real signals
-   for el = 1:band_limit-1,
-      for m = -el:el, 
-          ind_lm = ssht_elm2ind(el, m);
-      % (n =0) terms:  
-          ind_lnzero = ssht_elm2ind(el, 0);
-          psizero = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_lnzero));
-          ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,'Reality', args.Reality);
-          f_cur_lmn{j-args.J_min+1}(ind_lmnzero) =  flm_init(ind_lm) *psizero; 
-       % (n ~=0) terms:  
-          for en = 1: Nj-1,    
-              if (el >= en)
-                ind_ln = ssht_elm2ind(el, en);
-                psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
-              %  if (args.Upsample == 0)  % false=> multi-resolution
-                    ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
-               % else
-               %     ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj,'Reality', args.Reality);
-               % end % end the if-loop for upsample
-                f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
-                ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj,'Reality', args.Reality); 
-              end
-          end 
+      if (args.Upsample ~= 0) 
+           f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*args.L^2,1);  % for the case SO3_STORAGE_PADDED:
+      else 
+           f_cur_lmn{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
+      end 
+      for en = -Nj+1:Nj-1,
+          for el = max(abs(args.Spin),abs(en)):band_limit-1,
+              ind_ln = ssht_elm2ind(el, en);
+              psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
+              for m = -el:el,
+                  ind_lm = ssht_elm2ind(el, m);
+                  if (args.Upsample == 0)  % multi-resolution
+                      ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+                  else
+                      ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+                  end 
+                  f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
+               end
+          end
       end
-   end
+  else % i.e. real signals
+      if (args.Upsample ~= 0) 
+          f_cur_lmn{j-args.J_min+1} = zeros(Nj*args.L^2,1);  
+      else 
+          f_cur_lmn{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
+      end 
+      for el = 1:band_limit-1,
+          for m = -el:el, 
+              ind_lm = ssht_elm2ind(el, m);
+              % (n =0) terms:  
+              ind_lnzero = ssht_elm2ind(el, 0);
+              psizero = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_lnzero));
+              ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,'Reality', args.Reality);
+              f_cur_lmn{j-args.J_min+1}(ind_lmnzero) =  flm_init(ind_lm) *psizero; 
+              % (n ~=0) terms:  
+              for en = 1: Nj-1,    
+                  if (el >= en)
+                      ind_ln = ssht_elm2ind(el, en);
+                      psi = 8.*pi*pi/(2.*el+1) *conj(cur_lm{j-args.J_min+1}(ind_ln));
+                      if (args.Upsample == 0)  % false=> multi-resolution
+                          ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj,'Reality', args.Reality);
+                      else
+                          ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj,'Reality', args.Reality);
+                      end % end the if-loop for upsample
+                      f_cur_lmn{j-args.J_min+1}(ind_lmn) =  flm_init(ind_lm) * psi;
+                      % ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj,'Reality', args.Reality); 
+                  end
+              end 
+          end
+      end
   end % end if loop for Reality Option
 end % end j-loop 
 

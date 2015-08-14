@@ -8,14 +8,18 @@
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
 
+
 load('EGM2008_Topography_flms_L0128');
 L = 32;   % To see the multi-resoluition effect i.e. Upsample = false, L >=64) 
 flm = flm(1:L^2,1);
 Spin = 0; 
 f = ssht_inverse(flm, L, 'Reality', true);
 
-%inputfile = 'data/earth_tomo_mw_128.fits';
-%[f, L] = s2let_mw_read_real_map(inputfile);
+
+%{
+inputfile = '../../../data/earth_tomo_mw_128.fits';
+[f, L] = s2let_mw_read_real_map(inputfile);
+%}
 
 B = 2;
 N = L; %to compare with curvelets
@@ -34,6 +38,7 @@ configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_mi
 [f_wav, f_scal] = s2let_transform_analysis_mw(f, 'B', B, 'J_min', J_min, 'N', N, 'Reality',true, 'Upsample', true, 'Spin', 0);
 
 % For debugging: 
+%{
 type = 'colour';
 zoomfactor = 1.4;
 plot_caxis_scale = 1; %2; 
@@ -41,7 +46,7 @@ plot_caxis_scale = 1; %2;
 figure('Position',[100 100 300 300])
 h=subplot(1, 1, 1);
 % Plot initial signals on the sphere 
-ssht_plot_sphere(f_gen, L, 'Type', type,...
+ssht_plot_sphere(f_wav, L, 'Type', type,...
                  'ColourBar', false, 'Lighting', true);
 title(h,'Earth map')
 locate = get(h,'title');

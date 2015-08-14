@@ -151,13 +151,13 @@ for j = args.J_min:J,
         end 
         for el = 0:(band_limit-1) 
             for m = -el:el
-                %if (args.Upsample == 0)  % false=> multi-resolution
+                if (args.Upsample == 0)  % false=> multi-resolution
                    ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj, 'Reality', args.Reality); 
                    ind_l_nm_l = so3_elmn2ind(el,-m,el,band_limit,Nj, 'Reality', args.Reality);
-               % else
-               %    ind_lml = so3_elmn2ind(el,m,el,args.L,Nj, 'Reality', args.Reality) ; 
-               %    ind_l_nm_l = so3_elmn2ind(el,-m,el,args.L,Nj, 'Reality', args.Reality) ;
-               % end % end the if-loop for upsample
+                else
+                   ind_lml = so3_elmn2ind(el,m,el,args.L,Nj, 'Reality', args.Reality) ; 
+                   ind_l_nm_l = so3_elmn2ind(el,-m,el,args.L,Nj, 'Reality', args.Reality) ;
+                end % end the if-loop for upsample
                 if (mod((m+el),2) == 1) 
                     sign = -1; 
                 else     

@@ -2,10 +2,13 @@
 % s2let_demo_spin_curvelet_evaluate
 % Evaluate timing and error of spin curvelet transform.
 %
-% S2LET package to perform Wavelet transform on the Sphere.
+% -----------------------------------------------------------
+% S2LET package to perform Wavelet Transform on the Sphere.
 % Copyright (C) 2012  Boris Leistedt & Jason McEwen
 % See LICENSE.txt for license details
-
+%
+% Modified S2LET package to perform Curvelets on the Sphere.
+% -----------------------------------------------------------
 clear;
 
 N_test = 3 %10
@@ -17,7 +20,7 @@ reality = false;
 sampling_method = 'MW';
 save_plots = true;
 
-Ls = [4 8 16 ]   %[32 64 128 256 512]
+Ls = [4 8 16 32 64]   %[32 64 128 256 512]
 
 err = zeros(N_test, length(Ls));
 time_analysis = zeros(N_test, length(Ls));
@@ -26,7 +29,7 @@ time_synthesis = zeros(N_test, length(Ls));
 el_ind = 0;
 for L = Ls
    el_ind = el_ind + 1
-   
+   L 
    for n = 1:N_test
    
       n
@@ -97,9 +100,9 @@ blue_light = [0.2 0.4 0.8]; % x3366CC
 blue_dark = [0 0 1];        % x0000FF
 red_light = [1 0.4 0.2];    % xFF6633
 red_dark = [0.8 0.2 0];     % xCC3300
-
-
+% -----------
 % Plot error
+% -----------
 figure;
    
 plot(log2(Ls(istart:iend)), ...
@@ -118,13 +121,21 @@ plot(log2(Ls(istart:iend)), ...
    log10(Ls(istart:iend).^2)-15, ...
    'r', ...
    'LineWidth', line_width_thick);
+%{
+errorindex = [2 2 2 2.2]  
+plot(log2(Ls(istart:iend)), ...
+   log10((Ls(istart:iend).^(errorindex(istart:iend))))-15, ...  
+   'r', ...
+   'LineWidth', line_width_thick);
+%}
+
 a = axis;
 set(gca,'XTick',a(1):1:a(2));
 set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
 set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
-xlabel('L');
-ylabel('E');
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Maximum error','Interpreter','LaTex');
 
 set(gca, 'LineWidth', 3)
 set(gca, 'FontSize', 20)
@@ -134,7 +145,9 @@ set(gca, 'FontSize', 20)
 fname = [pltroot,'spin_curvelet_error.png']
 print('-r200', '-dpng', fname);
 
+% ----------------------------
 % Plot error with error bars
+%-----------------------------
 figure
   
 errorbar(log2(Ls(istart:iend)), ...
@@ -150,17 +163,20 @@ errorbar(log2(Ls(istart:iend)), ...
 
 hold on;
 
+
 plot(log2(Ls(istart:iend)), ...
    log10(Ls(istart:iend).^2)-15, ...
    'r', ...
    'LineWidth', line_width_thick);
+
 a = axis;
 set(gca,'XTick',a(1):1:a(2));
 set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
 set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
-xlabel('L');
-ylabel('E');
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Maximum error','Interpreter','LaTex');
+
 
 set(gca, 'LineWidth', 3)
 set(gca, 'FontSize', 20)
@@ -169,7 +185,9 @@ set(gca, 'FontSize', 20)
 fname = [pltroot,'spin_curvelet_errorbar.png']
 print('-r200', '-dpng', fname);
 
+% -----------------
 % Plot timing
+% ------------------
 figure;
    
 plot(log2(Ls(istart:iend)), ...
@@ -184,8 +202,9 @@ plot(log2(Ls(istart:iend)), ...
 
 hold on;
 
+% speed = L4 
 plot(log2(Ls(istart:iend)), ...
-   log10(Ls(istart:iend).^3)-5, ...
+   log10((Ls(istart:iend).^4))-2.5,... 
    'r', ...
    'LineWidth', line_width_thick);
 a = axis;
@@ -193,11 +212,38 @@ set(gca,'XTick',a(1):1:a(2));
 set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
 set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
-xlabel('L');
-ylabel('T');
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Computation time (s)','Interpreter','LaTex');
+
+% speed = L^3 
+plot(log2(Ls(istart:iend)), ...
+   log10((Ls(istart:iend).^3))-2.8,...  
+   'b', ...
+   'LineWidth', line_width_thick);
+a = axis;
+set(gca,'XTick',a(1):1:a(2));
+set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
+set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
+set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Computation time (s)','Interpreter','LaTex');
+
+
+% speed = L^3logL 
+plot(log2(Ls(istart:iend)), ...
+   log10((Ls(istart:iend).^3).*log10(Ls(istart:iend)))-2,...  
+   'm', ...
+   'LineWidth', line_width_thick);
+a = axis;
+set(gca,'XTick',a(1):1:a(2));
+set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
+set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
+set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Computation time (s)','Interpreter','LaTex');
 
 set(gca, 'LineWidth', 3)
-set(gca, 'FontSize', 20)
+set(gca,'FontSize', 20)
 
 % if save_plots, print('-depsc2', 'plots/spin_curvelet_timing.eps'); end
 
@@ -220,8 +266,9 @@ errorbar(log2(Ls(istart:iend)), ...
 
 hold on;
 
+% speed = L4 
 plot(log2(Ls(istart:iend)), ...
-   log10(Ls(istart:iend).^3)-5, ...
+   log10((Ls(istart:iend).^4))-2.5,... 
    'r', ...
    'LineWidth', line_width_thick);
 a = axis;
@@ -229,11 +276,37 @@ set(gca,'XTick',a(1):1:a(2));
 set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
 set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
-xlabel('L');
-ylabel('T');
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Computation time (s)','Interpreter','LaTex');
+
+% speed = L^3
+plot(log2(Ls(istart:iend)), ...
+    log10((Ls(istart:iend).^3))-2.7,...  
+   'b', ...
+   'LineWidth', line_width_thick);
+a = axis;
+set(gca,'XTick',a(1):1:a(2));
+set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
+set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
+set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Computation time (s)','Interpreter','LaTex');
+
+% speed = L^3logL
+plot(log2(Ls(istart:iend)), ...
+    log10((Ls(istart:iend).^3).*log10(Ls(istart:iend)))-2,...  
+   'm', ...
+   'LineWidth', line_width_thick);
+a = axis;
+set(gca,'XTick',a(1):1:a(2));
+set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
+set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
+set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
+xlabel('$L$','Interpreter','LaTex');
+ylabel('Computation time (s)','Interpreter','LaTex');
 
 set(gca, 'LineWidth', 3)
-set(gca, 'FontSize', 20)
+set(gca,'FontSize', 20)
 
 % if save_plots, print('-depsc2', 'plots/spin_curvelet_timing_errorbars.eps'); end
 

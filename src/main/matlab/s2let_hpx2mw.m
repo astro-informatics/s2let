@@ -19,8 +19,8 @@ function f_mw = s2let_hpx2mw(f, varargin)
 % See LICENSE.txt for license details
 
 sz = size(f);
-nsideguessed = sqrt(max(sz)/12);
-Lguessed = 2*nsideguessed;
+nsideguessed = sqrt(max(sz)/12)
+Lguessed = 2*nsideguessed
 
 p = inputParser;
 p.addRequired('f', @isnumeric); 
@@ -28,6 +28,8 @@ p.addParamValue('nside', nsideguessed, @isnumeric);
 p.addParamValue('L', Lguessed, @isnumeric);   
 p.parse(f, varargin{:});
 args = p.Results;
+
+
 
 flm = s2let_hpx_map2alm(f, 'nside', args.nside, 'L', args.L);
 %flm = s2let_hpx_map2alm_mex(f, args.nside, args.L);

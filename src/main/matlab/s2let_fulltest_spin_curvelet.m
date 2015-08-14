@@ -234,13 +234,43 @@ f_rec_real_px2cur_custom =  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur
 default = max(abs(f_real_gen(:)- f_rec_real_px2cur_custom(:)))
 
 
+
+
+
 disp('')
+disp('==============')
+disp('Rea, Signals, multi-resolution tests start (Upsample: false):')
+disp('==============')
+disp('ana_px2cur: Perform (REAL) curvelet transform (px2cur) with custom parameters')
+[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_real_gen ,...
+                                                    'B', B, 'L', L, ...
+                                                    'J_min', J_min,  ...
+                                                    'Upsample', false, ...
+                                                    'Reality', true,...
+                                                    'Sampling', 'MW');
+disp('syn_cur2px: Perform inverse transform (cur2px) with custom parameters')
+f_rec_real_px2cur_custom =  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal,  ...
+                                                    'B', B, 'L', L, ...
+                                                    'J_min', J_min, ...
+                                                    'Upsample', false, ...
+                                                    'Reality',true,...
+                                                    'Sampling', 'MW');
+default = max(abs(f_real_gen(:)- f_rec_real_px2cur_custom(:)))
+
+
+
+
+disp('')
+disp('==============')
+disp('Real Signals, DEFAULT parameters:')
+disp('==============')
 disp('- CHECK also: the REAL Curvelet Transform of scalar signals in MW sampling with default parameters:')
 disp('ana_px2cur: Perform (scalar) curvelet transform with default parameters')
 [f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_real_gen ,'Reality', true);
 disp('syn_cur2px: Perform inverse transform (cur2px) with default parameters')
 f_rec_real_px2cur_custom =  s2let_transform_spin_curvelet_synthesis_cur2px(f_cur, f_scal, 'Reality',true);
 default = max(abs(f_real_gen(:)- f_rec_real_px2cur_custom(:)))
+
 
 %{
 disp('')

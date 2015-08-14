@@ -10,7 +10,7 @@ L = 192;
 B = 3;
 J_min = 2;
 nside_recon = 128;
-s2let_path = '.'
+s2let_path = '../../..'
 inputfile = strcat(s2let_path,'/data/somecmbsimu_hpx_128.fits')
 
 % Read the file
