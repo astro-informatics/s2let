@@ -409,16 +409,12 @@ void s2let_wav_transform_harmonic_multires_test(int B, int L, int J_min, int N, 
   // Allocate space for the wavelet scales (their harmonic/Wigner coefficients)
   s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, &parameters);
 
-  FILE *fp1, *fp2;
   int el, m, lm_ind;
-  fp1 = fopen("f_lm_before.dat", "w");
    for (el = ABS(spin); el < L; ++el) {
     for (m = -el; m <= el; ++m){
       ssht_sampling_elm2ind(&lm_ind, el, m);
-      fprintf(fp1, "%d, %d, %d, %f, %f\n",el,m,lm_ind, creal(flm[lm_ind]), cimag(flm[lm_ind]));
     }
   }
-  fclose(fp1);
 
   // Perform the wavelet transform through exact harmonic tiling
   time_start = clock();
@@ -434,14 +430,11 @@ void s2let_wav_transform_harmonic_multires_test(int B, int L, int J_min, int N, 
   printf("  - Wavelet synthesis  : %4.4f seconds\n",
      (time_end - time_start) / (double)CLOCKS_PER_SEC);
 
-  fp2 = fopen("f_lm_rec_after.dat", "w");
    for (el = ABS(spin); el < L; ++el) {
     for (m = -el; m <= el; ++m){
       ssht_sampling_elm2ind(&lm_ind, el, m);
-      fprintf(fp2, "%d, %d, %d, %f, %f\n",el,m,lm_ind, creal(flm_rec[lm_ind]), cimag(flm_rec[lm_ind]));
     }
   }
-  fclose(fp2);
 
   // Compute the maximum absolute error on the harmonic coefficients
   printf("  - Maximum abs error  : %6.5e\n",

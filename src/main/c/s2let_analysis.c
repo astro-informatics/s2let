@@ -49,26 +49,6 @@ void s2let_analysis_lm2lmn(
     complex double psi;
     double phi;
 
-    // For debugging:
-    // Open data file '"f_wav_lmn.dat"' to write out f_wav_lm
-    FILE *fp, *fp2, *fp3, *fp4,*fp5, *fp6;
-    fp=fopen("3a_f_wav_lmn_ana.dat", "w");
-    fp2=fopen("3a_f_wav_lmnONLYj0_ana.dat", "w");
-    fp3=fopen("3a_f_wav_lmnONLYj1_ana.dat", "w");
-    fp4=fopen("3a_f_wav_lmnONLYj2_ana.dat", "w");
-    fp5=fopen("3a_f_wav_lmnONLYj3_ana.dat", "w");
-    fp6=fopen("3a_f_wav_lmnONLYj4_ana.dat", "w");
-    
-    // For debugging:
-    // Open data file '"f_lm.dat"' to write out f_lm
-    FILE *fp7, *fp8, *fp9, *fp10,*fp11, *fp12;
-    fp7=fopen("3a_in_f_lm_wav_ana.dat", "w");
-    fp8=fopen("3a_in_f_lm_wavONLYj0_ana.dat", "w");
-    fp9=fopen("3a_in_f_lm_wavONLYj1_ana.dat", "w");
-    fp10=fopen("3a_in_f_lm_wavONLYj2_ana.dat", "w");
-    fp11=fopen("3a_in_f_lm_wavONLYj3_ana.dat", "w");
-    fp12=fopen("3a_in_f_lm_wavONLYj4_ana.dat", "w");
-    
     int offset = 0;
 
     for (j = J_min; j <= J; ++j)
@@ -84,7 +64,7 @@ void s2let_analysis_lm2lmn(
             so3_parameters.N = Nj;
         }
 
-        for (n = -Nj+1; n < Nj; n+=1)  //original n+=2
+        for (n = -Nj+1; n < Nj; n+=2)
         {
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
@@ -95,37 +75,12 @@ void s2let_analysis_lm2lmn(
                     ssht_sampling_elm2ind(&lm_ind, el, m);
                     so3_sampling_elmn2ind(&lmn_ind, el, m, n, &so3_parameters);
                     f_wav_lmn[offset + lmn_ind] = flm[lm_ind] * psi;
-                    // Write out to data file '"f_wav_lmn.dat"'
-                    fprintf(fp, "%d, %d, %d, %d, %d,%d, %f, %f\n",j,n,el,m,offset,lmn_ind, creal(f_wav_lmn[offset + lmn_ind]), cimag(f_wav_lmn[offset + lmn_ind]));
-                    if (j==J_min)
-                        fprintf(fp2, "%f, %f\n", creal(f_wav_lmn[offset + lmn_ind]), cimag(f_wav_lmn[offset + lmn_ind]));
-                    if (j==1)
-                        fprintf(fp3, "%f, %f\n", creal(f_wav_lmn[offset + lmn_ind]), cimag(f_wav_lmn[offset + lmn_ind]));
-                    if (j==2)
-                        fprintf(fp4, "%f, %f\n", creal(f_wav_lmn[offset + lmn_ind]), cimag(f_wav_lmn[offset + lmn_ind]));
-                    if (j==3)
-                        fprintf(fp5, "%f, %f\n", creal(f_wav_lmn[offset + lmn_ind]), cimag(f_wav_lmn[offset + lmn_ind]));
-                    if (j==4)
-                        fprintf(fp6, "%f, %f\n", creal(f_wav_lmn[offset + lmn_ind]), cimag(f_wav_lmn[offset + lmn_ind]));
-                    // Write out to data file 'f_lm_ONLYj*.dat_syn.dat'  %6.5e+i%6.5e
-                    fprintf(fp7, "%d, %d, %d, %d,%d, %f, %f\n",j,n,el,m,lm_ind,creal(flm[lm_ind]),cimag(flm[lm_ind]));
-                    if (j==J_min)
-                        fprintf(fp8, "%f, %f\n", creal(flm[lm_ind]), cimag(flm[lm_ind]));
-                    if (j==1)
-                        fprintf(fp9, "%f, %f\n", creal(flm[lm_ind]), cimag(flm[lm_ind]));
-                    if (j==2)
-                        fprintf(fp10, "%f, %f\n", creal(flm[lm_ind]), cimag(flm[lm_ind]));
-                    if (j==3)
-                        fprintf(fp11, "%f, %f\n", creal(flm[lm_ind]), cimag(flm[lm_ind]));
-                    if (j==4)
-                        fprintf(fp12, "%f, %f\n", creal(flm[lm_ind]), cimag(flm[lm_ind]));
                 }
             }
         }
         offset += so3_sampling_flmn_size(&so3_parameters);
     }
 
-    
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
 
@@ -138,21 +93,6 @@ void s2let_analysis_lm2lmn(
             f_scal_lm[lm_ind] = flm[lm_ind] * phi;
         }
     }
-    
-    // Close file '"flm.dat"'
-    fclose(fp);
-    fclose(fp2);
-    fclose(fp3);
-    fclose(fp4);
-    fclose(fp5);
-    fclose(fp6);
-    fclose(fp7);
-    fclose(fp8);
-    fclose(fp9);
-    fclose(fp10);
-    fclose(fp11);
-    fclose(fp12);
-    
 }
 
 /*!
@@ -207,7 +147,7 @@ void s2let_analysis_lm2lmn_real(
             so3_parameters.N = Nj;
         }
 
-        for (n = 1-Nj%2; n < Nj; n+=1) //original n+=2
+        for (n = 1-Nj%2; n < Nj; n+=2)
         {
             for (el = n; el < bandlimit; ++el)
             {
@@ -279,19 +219,6 @@ void s2let_analysis_lm2wav(
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);
     s2let_analysis_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters);
 
-    // For debugging:
-    int arrayind, arrayind_min;
-    FILE *fp9;
-    fp9=fopen("3aCheck_f_wav_lmn_outfromlm2lmn.dat", "w");
-    arrayind_min= 0;
-    for (arrayind = arrayind_min; arrayind < 11686; arrayind++ )
-    {
-        fprintf(fp9, "%f, %f\n", creal(f_wav_lmn[arrayind]), cimag(f_wav_lmn[arrayind]));
-    }
-    fclose(fp9);
-    
-    
-    
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
 
@@ -308,14 +235,6 @@ void s2let_analysis_lm2wav(
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
 
-    // For debugging:
-    FILE *fp ;
-    FILE *fp7;
-    FILE *fp13;
-    fp=fopen("3aa_f_wav_lmn_ana_lm2wav_so3coreinverseviassht.dat", "w");
-    fp7=fopen("3ab_f_wav_ana_lm2wav_so3coreinversedviassht.dat", "w");
-    fp13=fopen("3abc_wav_so3para.dat", "w");
-    
     offset = 0;
     offset_lmn = 0;
     for (j = J_min; j <= J; ++j)
@@ -330,37 +249,20 @@ void s2let_analysis_lm2wav(
         }
 
         so3_parameters.L0 = s2let_L0(j, parameters);
-        
+
         so3_core_inverse_via_ssht(
             f_wav + offset,
             f_wav_lmn + offset_lmn,
             &so3_parameters
         );
-        
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
-        
-        // For debugging:
-        fprintf(fp13, "%d,%d,%d,%d\n",j, so3_parameters.L0, so3_parameters.L, so3_parameters.N);
-        fprintf(fp, "%d, %f, %f, %ld, %d, %f, %f, %ld\n",j ,creal(*f_wav_lmn), cimag(*f_wav_lmn) , sizeof(f_wav_lmn), offset_lmn,
-                creal(*f_wav_lmn +offset_lmn),  cimag(*f_wav_lmn +offset_lmn), sizeof(f_wav_lmn +offset_lmn));
-        fprintf(fp7, "%d, %f, %f, %ld, %d, %f, %f, %ld\n",j, creal(*f_wav), cimag(*f_wav), sizeof(f_wav), offset, creal(*f_wav+offset),
-                cimag(*f_wav+offset), sizeof(f_wav+offset));
-
     }
-    
-    // For debugging:
-    fclose(fp);
-    fclose(fp7);
-    fclose(fp13);
-    
-    
+
     free(wav_lm);
     free(scal_l);
     free(f_scal_lm);
     free(f_wav_lmn);
-    
-    
 }
 
 /*!

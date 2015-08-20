@@ -77,12 +77,11 @@ upsample = true ;  % true for full resolution plot
 % ---------------
 % Load data set (light probe map): 
 % ---------------
-%filename= '../../../data/heal_grace.fits'; %Grace Cathedral, San Francisco (dynamical range 200, 0000:1) 
-%filename= '../../../data/heal_stpeters.fits'; % St. Perter's Basilica, Rome (dynamical range 200, 0000:1) 
-%filename= '../../../data/heal_galileo.fits'; %The Galileo's Tomb, Florence (dynamical range 7000:1 original)
-%filename= '../../../data/heal_rnl.fits';  %Eucalyptus Grove, UC Berkeley (dynamical range 5000:1 original)
-% filename= '../../../data/heal_uffizi.fits';   %The Uffizi Gallery, Florence (dynamical range 500:1 original)
-filename = '../../../data/wmap_mcmc_base_k_synch_stk_u_9yr_v5.fits';
+%filename= '../../../data/LightProbe_ringmaps/heal_grace_ring.fits'; %Grace Cathedral, San Francisco (dynamical range 200, 0000:1) 
+%filename= '../../../data/LightProbe_ringmaps/heal_stpeters_ring.fits'; % St. Perter's Basilica, Rome (dynamical range 200, 0000:1) 
+%filename= '../../../data/LightProbe_ringmaps/heal_galileo_ring.fits'; %The Galileo's Tomb, Florence (dynamical range 7000:1 original)
+% filename= '../../../data/LightProbe_ringmaps/heal_rnl_ring.fits';  %Eucalyptus Grove, UC Berkeley (dynamical range 5000:1 original)
+filename= '../../../data/LightProbe_ringmaps/heal_uffizi_ring.fits';
 % ----------
 % Read data from the FITS file
 % ----------

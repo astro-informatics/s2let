@@ -15,7 +15,7 @@ CFITSIODIR	= /Users/jenniferyhchan/WaveletsCode_PhD/cfitsio
 # Directory for HEALPIX (optional)
 HEALPIXDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11
 # Directory for idl_export.h include (required for healpix)
-# IDLINC = /Applications/exelis/idl/bin/idl83/external/include
+IDLINC = /Applications/exelis/idl/bin/idl83/external/include
 
 # Directory for MATLAB (optional)
 MLAB	=  /Applications/MATLAB_R2014a.app
