@@ -13,8 +13,9 @@ FFTWDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/fftw-3.3.4
 # Directory for CFITSIO (optional)
 CFITSIODIR	= /Users/jenniferyhchan/WaveletsCode_PhD/cfitsio
 # Directory for HEALPIX (optional)
-F90_FFLAGS	= -O3 -I$(/Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11/include) -DGFORTRAN -fno-second-underscore
 HEALPIXDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11
+# Directory for idl_export.h include (required for healpix)
+# IDLINC = /Applications/exelis/idl/bin/idl83/external/include
 
 # Directory for MATLAB (optional)
 MLAB	=  /Applications/MATLAB_R2014a.app
@@ -26,7 +27,7 @@ UNAME 	:= $(shell uname)
 
 # Compilers and options for C
 CC	= gcc
-OPT	= -Wall -O3 -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
+OPT	= -fPIC -Wall -O3 -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
 # Clone: 
 #  -Wall -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
 # Boris: 
@@ -34,9 +35,10 @@ OPT	= -Wall -O3 -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-p
 
 # Compilers and options for Fortran
 FCC	= gfortran
-OPTF90 	= -O3 -ffree-form
+OPTF90 	= -O3 -ffree-form 
+# -L /Users/jenniferyhchan/WaveletsCode_PhD/cfitsio/lib/libcfitsio.a
 # To be defined if LGFORTRAN cannot be found in the path
-# GFORTRANLIB = /sw/lib/gcc4.9/lib  
+GFORTRANLIB = /sw/lib/gcc4.9/lib
 
 # Config for dynamic library
 ifeq ($(UNAME), Linux)
@@ -49,9 +51,9 @@ ifeq ($(UNAME), Darwin)
 endif
 
 # Commands for Healpix
-F90_INCDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11/include
-HPXOPT	 = -O3 -I$(F90_INCDIR) -DGFORTRAN -fno-second-underscore
-#  -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
+# F90_INCDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11/include
+# HPXOPT	 = -O3 -I$(F90_INCDIR) -DGFORTRAN -fno-second-underscore
+HPXOPT	 = -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
 
 # ======================================== #
 
@@ -108,8 +110,8 @@ endif
 
 # === HEALPIX ===
 ifneq ($(strip $(HEALPIXDIR)),)
-HEALPIXINC    = $(HEALPIXDIR)/include_gfortran
-HEALPIXLIB     = $(HEALPIXDIR)/lib_gfortran
+HEALPIXINC    = $(HEALPIXDIR)/include
+HEALPIXLIB     = $(HEALPIXDIR)/lib
 HEALPIXLIBNM   = healpix
 endif
 
@@ -136,13 +138,12 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 	  $(S2LETOBJ)/s2let_helper.o 	\
 	  $(S2LETOBJ)/s2let_analysis.o 	\
 	  $(S2LETOBJ)/s2let_synthesis.o 	\
-	  $(S2LETOBJ)/s2let_analysis_cur.o 	\
-	  $(S2LETOBJ)/s2let_synthesis_cur.o 	\
-	  $(S2LETOBJ)/s2let_idl_mw.o 	\
 	  $(S2LETOBJ)/s2let_lm.o	\
 	  $(S2LETOBJ)/s2let_math.o 	\
 	  $(S2LETOBJ)/s2let_mw.o	\
 	  $(S2LETOBJ)/s2let_tiling.o
+
+# $(S2LETOBJ)/s2let_idl_mw.o 	\
 
 S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_wavelet_tiling_mex.o		\
@@ -172,7 +173,7 @@ ifneq (,$(wildcard $(HEALPIXLIB)/libhealpix.a))
 
 	S2LETOBJS+= $(S2LETOBJ)/s2let_hpx.o
 	S2LETOBJS+= $(S2LETOBJ)/s2let_transform_axisym_hpx.o
-	S2LETOBJS+= $(S2LETOBJ)/s2let_idl_hpx.o
+	# S2LETOBJS+= $(S2LETOBJ)/s2let_idl_hpx.o
 	S2LETOBJS+= $(S2LETOBJF90)/s2let_hpx.o
 
 	FFLAGS+= -I$(HEALPIXINC)
@@ -271,16 +272,16 @@ $(S2LETLIB)/lib$(S2LETLIBNM).a: $(S2LETOBJS)
 .PHONY: dylib
 dylib: $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT)
 $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT): $(S2LETOBJS)
-	$(DYLIBCMD) $(FFLAGS) $(LDFLAGS) -I$(S2LETINC)/idl_export.h -o $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETOBJS)
+	$(DYLIBCMD) $(FFLAGS) $(LDFLAGS)  -o $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETOBJS)
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/src/main/resources/lib/darwin_universal/
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/target/classes/lib/darwin_universal/
 
+#-I$(S2LETINC)/idl_export.h
+
 .PHONY: test
-test: $(S2LETBIN)/s2let_test $(S2LETBIN)/s2let_test_curvelet  $(S2LETBIN)/s2let_test_csv
+test: $(S2LETBIN)/s2let_test $(S2LETBIN)/s2let_test_csv
 $(S2LETBIN)/s2let_test: $(S2LETTESTOBJ)/s2let_test.o $(S2LETLIB)/lib$(S2LETLIBNM).a
 	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test $(LDFLAGS)
-$(S2LETBIN)/s2let_test_curvelet: $(S2LETTESTOBJ)/s2let_test_curvelet.o $(S2LETLIB)/lib$(S2LETLIBNM).a
-	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test_curvelet $(LDFLAGS)
 $(S2LETBIN)/s2let_test_csv: $(S2LETTESTOBJ)/s2let_test_csv.o $(S2LETLIB)/lib$(S2LETLIBNM).a
 	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test_csv $(LDFLAGS)
 

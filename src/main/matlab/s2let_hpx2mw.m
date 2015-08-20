@@ -19,8 +19,8 @@ function f_mw = s2let_hpx2mw(f, varargin)
 % See LICENSE.txt for license details
 
 sz = size(f);
-nsideguessed = sqrt(max(sz)/12)
-Lguessed = 2*nsideguessed
+nsideguessed = sqrt(max(sz)/12);
+Lguessed = 2*nsideguessed;
 
 p = inputParser;
 p.addRequired('f', @isnumeric); 

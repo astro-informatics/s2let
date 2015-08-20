@@ -75,60 +75,44 @@ reality = false;    % true for real data;
 upsample = true ;  % true for full resolution plot
 
 % ---------------
-% Load data set: 
+% Load data set (light probe map): 
 % ---------------
-%filename= '../../../data/heal_grace.fits';
-filename= '../../../data/heal_galileo.fits';
-%filename= '../../../data/heal_rnl.fits';
-%filename= '../../../data/heal_uffizi.fits';
-%filename= '../../../data/heal_stpeters.fits';
+%filename= '../../../data/heal_grace.fits'; %Grace Cathedral, San Francisco (dynamical range 200, 0000:1) 
+%filename= '../../../data/heal_stpeters.fits'; % St. Perter's Basilica, Rome (dynamical range 200, 0000:1) 
+%filename= '../../../data/heal_galileo.fits'; %The Galileo's Tomb, Florence (dynamical range 7000:1 original)
+%filename= '../../../data/heal_rnl.fits';  %Eucalyptus Grove, UC Berkeley (dynamical range 5000:1 original)
+% filename= '../../../data/heal_uffizi.fits';   %The Uffizi Gallery, Florence (dynamical range 500:1 original)
+filename = '../../../data/wmap_mcmc_base_k_synch_stk_u_9yr_v5.fits';
+% ----------
+% Read data from the FITS file
+% ----------
+[data_hpxmap, nside] = s2let_hpx_read_real_map(filename);
+% Lguessed = 2*nside; 
+% whos data_hpxmap
 
-info =fitsinfo(filename); 
-disp(info.Contents);
-info.BinaryTable
-rowend = info.BinaryTable.Rows;   
+% ----------
+% Band-limit the data
+% ----------
+L = 16;           % 512
+nside_recon = 8;  % 256 
+% Band limit the data
+flm = s2let_hpx_map2alm(data_hpxmap, 'L', L);
+f = s2let_hpx_alm2map(flm, nside_recon, 'L', L);
 
-figure
+% ----------
+% Convert from hpx map to mw map
+% ----------
+% f_mw = s2let_hpx2mw(data_hpxmap);  % original bandlimit 
+f_bandlimit_mw = s2let_hpx2mw(f);
 
-L = 32; 
-flm_gen= data;      % i.e. cell2mat(flm) -> [768*1024] 
-isnumeric(flm_gen)
-for row = 1: rowend
-   flm_data{row} =   flm_gen(row,:); 
-   f_gen{row}  = ssht_inverse(flm_data{row} , L,'Reality', reality);
-end
-
-
-%{
-for n = 1:15
-flm = fitsread(filename,'binarytable',...
-               'Info',info,...
-               'TableColumns',[1],...
-               'TableRows', [n])     
-
-% iscell(flm)  
-%whos flm
-%len= length(flm)
-%temp = flm{len};
-%sz = size(temp)
-
-flm_gen= cell2mat(flm);
-%isnumeric(flm_gen)
-L = 32;
-disp('f_gen from flm_gen')
-f_gen = ssht_inverse(flm_gen, L,'Reality', reality);
-subplot(5, 3, n);
-ssht_plot_mollweide(f_gen, L);
-end 
-%}
 % ---------------
 % Define curvelet parameters: 
 % ---------------
 B = 2;   
 Spin = 0; 
-N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
-J_min = 3; % minimum and maximum scale probed by wavelets 
-J =s2let_jmax(L, B);  %=ceil(log L/ log B);   
+N= L;      % Since m=l, the azimuthal band limit N = overall band limit L
+J_min = 3; % Minimum and maximum scale probed by wavelets 
+J =s2let_jmax(L, B);  % =ceil(log L/ log B);   
  
 % ---------------
 % Define Plotting parameters:
@@ -143,11 +127,11 @@ pltroot = '../../../figs' ;
 configstr = ['N',int2str(N),'_L',int2str(L),'_B',int2str(B),'_Jmin',int2str(J_min)]; 
 
 
-row = 1  % from 1 - 768
+
 % -----------------
 % Signal analysis: 
 % -----------------
-[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_gen{row},  ...
+[f_cur, f_scal] = s2let_transform_spin_curvelet_analysis_px2cur(f_bandlimit_mw,  ...
                                                                 'B', B, 'L', L, ...
                                                                 'J_min', J_min, ...
                                                                 'Spin', Spin, ...
@@ -161,7 +145,7 @@ row = 1  % from 1 - 768
 figure('Position',[20 20 1700 1400]) %100 100 1300 1000
 subplot(ny, nx, 1);
 % --- plot initial data --- % 
-ssht_plot_mollweide(f_gen, L);
+ssht_plot_mollweide(f_bandlimit_mw, L);
 %
 title('Initial data')
 campos([0 0 -1]); camup([0 1 0]); zoom(zoomfactor)
@@ -217,9 +201,9 @@ for j = J_min:J
 end
 colormap(jet)
 if (upsample ~= false)
-    fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_FullRes.png']
+    fname = [pltroot,'/s2let_demo10_', configstr, '_spin_curvelet_LightProbeMap_FullRes.png']
 else
-    fname = [pltroot,'/s2let_demo9_', configstr, '_spin_curvelet_EarthTomo_MultiRes.png']
+    fname = [pltroot,'/s2let_demo10_', configstr, '_spin_curvelet_LightProbeMap_MultiRes.png']
 end
 print('-r200', '-dpng', fname)
 
@@ -295,6 +279,6 @@ for j = J_min:J
 	end
 end
 colormap(jet)
-fname = [pltroot,'/s2let_demo9_', configstr, '_directional_wavelets_EarthTomo_fullres.png']
+fname = [pltroot,'/s2let_demo10_', configstr, '_directional_wavelets_LightProbeMap_fullres.png']
 print('-r200', '-dpng', fname)
 %}
