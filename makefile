@@ -4,21 +4,21 @@
 # ======================================== #
 
 # Directory for SO3 (required)
-SO3DIR = /Users/jenniferyhchan/WaveletsCode_PhD/so3
+SO3DIR = ../so3
 # Directory for SSHT (required)
-SSHTDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/ssht
+SSHTDIR	= ${SSHT}
 # Directory for FFTW (required)
-FFTWDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/fftw-3.3.4
+FFTWDIR	= ${FFTW}
 
 # Directory for CFITSIO (optional)
-CFITSIODIR	= /Users/jenniferyhchan/WaveletsCode_PhD/cfitsio
+CFITSIODIR	= ${CFITSIO}
 # Directory for HEALPIX (optional)
-HEALPIXDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11
+HEALPIXDIR	= ${HEALPIX}
 # Directory for idl_export.h include (required for healpix)
-IDLINC = /Applications/exelis/idl/bin/idl83/external/include
+IDLINC = /Applications/exelis/idl82/external/include
 
 # Directory for MATLAB (optional)
-MLAB	=  /Applications/MATLAB_R2014a.app
+MLAB	=  ${MATLAB}
 # Directory for DOXYGEN (optional)
 #DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen
 DOXYGEN_PATH = doxygen
@@ -27,17 +27,13 @@ UNAME 	:= $(shell uname)
 
 # Compilers and options for C
 CC	= gcc
-OPT	= -Wall -O3 -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
-# Clone: 
-#  -Wall -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
-# Boris: 
-#  -fPIC -Wall -O3 -g -DS2LET_VERSION=\"1.0b1\" -DS2LET_BUILD=\"`svnversion -n .`\"
+OPT	= -Wall -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
 
 # Compilers and options for Fortran
 FCC	= gfortran
 OPTF90 	= -O3 -ffree-form
 # To be defined if LGFORTRAN cannot be found in the path
-# GFORTRANLIB = /sw/lib/gcc4.9/lib  
+# GFORTRANLIB = /usr/local/lib
 
 # Config for dynamic library
 ifeq ($(UNAME), Linux)
@@ -50,9 +46,8 @@ ifeq ($(UNAME), Darwin)
 endif
 
 # Commands for Healpix
-F90_INCDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11/include
-HPXOPT	 = -O3 -I$(F90_INCDIR) -DGFORTRAN -fno-second-underscore
-#  -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
+HPXOPT	 = -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
+
 
 # ======================================== #
 
@@ -98,7 +93,7 @@ SSHTLIBNM = ssht
 FFTWINC	     = $(FFTWDIR)/include
 FFTWLIB      = $(FFTWDIR)/lib
 FFTWLIBNM    = fftw3
-# FFTWOMPLIBNM = fftw3_threads
+FFTWOMPLIBNM = fftw3_omp
 
 # === CFITSIO ===
 ifneq ($(strip $(CFITSIODIR)),)
@@ -109,8 +104,8 @@ endif
 
 # === HEALPIX ===
 ifneq ($(strip $(HEALPIXDIR)),)
-HEALPIXINC    = $(HEALPIXDIR)/include 
-HEALPIXLIB     = $(HEALPIXDIR)/lib 
+HEALPIXINC    = $(HEALPIXDIR)/include_gfortran
+HEALPIXLIB     = $(HEALPIXDIR)/lib_gfortran
 HEALPIXLIBNM   = healpix
 endif
 
@@ -125,8 +120,10 @@ vpath %.c $(S2LETTESTSRC)
 vpath %.h $(S2LETINC)
 vpath %_mex.c $(S2LETSRCMAT)
 
-LDFLAGS = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB)  -l$(FFTWLIBNM) -lm
+#LDFLAGS = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWOMPLIBNM) -l$(FFTWLIBNM) -lm
+LDFLAGS = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWLIBNM) -lm
 
+#LDFLAGSMEX = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWOMPLIBNM) -l$(FFTWLIBNM) -lm
 LDFLAGSMEX = -L$(S2LETLIB) -l$(S2LETLIBNM) -lc -L$(SO3LIB) -l$(SO3LIBNM) -L$(SSHTLIB) -l$(SSHTLIBNM) -L$(FFTWLIB) -l$(FFTWLIBNM) -lm
 
 FFLAGS  = -I$(FFTWINC) -I$(SSHTINC) -I$(SO3INC) -I$(S2LETINC)
@@ -171,9 +168,10 @@ ifneq (,$(wildcard $(HEALPIXLIB)/libhealpix.a))
 
 	S2LETOBJS+= $(S2LETOBJ)/s2let_hpx.o
 	S2LETOBJS+= $(S2LETOBJ)/s2let_transform_axisym_hpx.o
-	S2LETOBJS+= $(S2LETOBJ)/s2let_idl_hpx.o
+#	S2LETOBJS+= $(S2LETOBJ)/s2let_idl_hpx.o
 	S2LETOBJS+= $(S2LETOBJF90)/s2let_hpx.o
 
+	FFLAGS+= -I$(IDLINC)
 	FFLAGS+= -I$(HEALPIXINC)
 	LDFLAGS+= -L$(HEALPIXLIB)
 	LDFLAGS+= -l$(HEALPIXLIBNM)
@@ -182,7 +180,7 @@ ifneq (,$(wildcard $(HEALPIXLIB)/libhealpix.a))
 	  LDFLAGS+= -L$(GFORTRANLIB)
 	endif
 
-	LDFLAGSMEX+= -lgfortran -lgomp 
+	LDFLAGSMEX+= -lgfortran -lgomp
 	ifneq ($(strip $(GFORTRANLIB)),)
 	LDFLAGSMEX+= -L$(GFORTRANLIB)
 	endif
@@ -270,7 +268,7 @@ $(S2LETLIB)/lib$(S2LETLIBNM).a: $(S2LETOBJS)
 .PHONY: dylib
 dylib: $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT)
 $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT): $(S2LETOBJS)
-	$(DYLIBCMD) $(FFLAGS) $(LDFLAGS) -I$(S2LETINC)/idl_export.h -o $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETOBJS)
+	$(DYLIBCMD) $(FFLAGS) $(LDFLAGS) -o $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETOBJS)
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/src/main/resources/lib/darwin_universal/
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/target/classes/lib/darwin_universal/
 
@@ -280,7 +278,6 @@ $(S2LETBIN)/s2let_test: $(S2LETTESTOBJ)/s2let_test.o $(S2LETLIB)/lib$(S2LETLIBNM
 	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test $(LDFLAGS)
 $(S2LETBIN)/s2let_test_csv: $(S2LETTESTOBJ)/s2let_test_csv.o $(S2LETLIB)/lib$(S2LETLIBNM).a
 	$(CC) $(OPT) $< -o $(S2LETBIN)/s2let_test_csv $(LDFLAGS)
-
 
 .PHONY: hpx_demo
 hpx_demo: $(S2LETBIN)/s2let_hpx_demo
