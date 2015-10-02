@@ -18,7 +18,7 @@ HEALPIXDIR	= /Users/jenniferyhchan/WaveletsCode_PhD/Healpix_3.11
 IDLINC = /Applications/exelis/idl/bin/idl83/external/include
 
 # Directory for MATLAB (optional)
-MLAB	=  /Applications/MATLAB_R2014a.app
+MLAB	=  /Applications/MATLAB_R2015a.app
 # Directory for DOXYGEN (optional)
 #DOXYGEN_PATH = /Applications/Doxygen.app/Contents/Resources/doxygen
 DOXYGEN_PATH = doxygen
@@ -142,8 +142,7 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 	  $(S2LETOBJ)/s2let_math.o 	\
 	  $(S2LETOBJ)/s2let_mw.o	\
 	  $(S2LETOBJ)/s2let_tiling.o
-
-# $(S2LETOBJ)/s2let_idl_mw.o 	\
+#          $(S2LETOBJ)/s2let_idl_mw.o 	\
 
 S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_wavelet_tiling_mex.o		\
@@ -173,7 +172,7 @@ ifneq (,$(wildcard $(HEALPIXLIB)/libhealpix.a))
 
 	S2LETOBJS+= $(S2LETOBJ)/s2let_hpx.o
 	S2LETOBJS+= $(S2LETOBJ)/s2let_transform_axisym_hpx.o
-	# S2LETOBJS+= $(S2LETOBJ)/s2let_idl_hpx.o
+#	S2LETOBJS+= $(S2LETOBJ)/s2let_idl_hpx.o
 	S2LETOBJS+= $(S2LETOBJF90)/s2let_hpx.o
 
 	FFLAGS+= -I$(HEALPIXINC)
@@ -272,11 +271,12 @@ $(S2LETLIB)/lib$(S2LETLIBNM).a: $(S2LETOBJS)
 .PHONY: dylib
 dylib: $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT)
 $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT): $(S2LETOBJS)
-	$(DYLIBCMD) $(FFLAGS) $(LDFLAGS)  -o $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETOBJS)
+	$(DYLIBCMD) $(FFLAGS) $(LDFLAGS) -o $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETOBJS)
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/src/main/resources/lib/darwin_universal/
 	cp $(S2LETLIB)/lib$(S2LETLIBNM).$(DYLIBEXT) $(S2LETDIR)/target/classes/lib/darwin_universal/
 
-#-I$(S2LETINC)/idl_export.h
+# -I$(S2LETINC)/idl_export.h 
+
 
 .PHONY: test
 test: $(S2LETBIN)/s2let_test $(S2LETBIN)/s2let_test_csv
