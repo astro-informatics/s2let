@@ -31,27 +31,22 @@ function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varar
 %  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the curvelets
 %                       should be lowered from (default = 0)]
-%  'Sampling'        = { 'MW'           [McEwen & Wiaux sampling (default)],
-%                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %
 % -----------------------------------------------------------
-% Log:
-% -  constructed by Jennifer Y H Chan on 5th June 2015
-% -----------------------------------------------------------
-% S2LET package to perform wavelet transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
+% S2LET package to perform Wavelet Transform on the Sphere.
+% Copyright (C) 2015  Boris Leistedt, Martin B¸ttner, 
+%                     Jennifer Chan & Jason McEwen
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
-len = size(f_cur);
+len = length(f_cur);   % f_cur(N-1 N, 2L-1)
 temp = f_cur{len};
 sz = size(temp);
-if sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
-    Lguessed = min([sz(1) sz(2)]);
+if sz(1) == 2*sz(2)-1 || sz(1) == sz(3)
+    Lguessed = sz(2); 
 else
-    Lguessed = min([sz(1) sz(2)])-1;
+    Lguessed = (sz(3)+1)/2 ;
 end
-
 
 p = inputParser;
 p.addRequired('f_cur');
@@ -71,9 +66,8 @@ args = p.Results;
 N= args.L;
 J = s2let_jmax(args.L, args.B);
 
-
 % -----------------
-% Signal synthesis: (Transform to lm space, then reconstruct the signal in pixel space)
+% Signal synthesis:
 % -----------------
 % Reconstruct the signals in harmonic space:
 flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  ...
@@ -87,9 +81,12 @@ flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  ...
                                                     'Sampling', args.Sampling );
                                       
 % Reconstruct the signals in pxiel space:   
-f_rec = ssht_inverse(flm_rec, args.L, 'Method', 'MW');                                       
+f_rec = ssht_inverse(flm_rec, args.L, ...
+                    'Spin', args.Spin, ... 
+                    'Method', 'MW', ...
+                    'Reality', args.Reality);      
                                       
 % Clear array memory:                                    
-% flm_rec = 0.; 
+flm_rec = 0; 
 
 end

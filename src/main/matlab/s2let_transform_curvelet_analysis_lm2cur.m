@@ -1,7 +1,8 @@
 function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)
 
-% s2let_transform_analysis_lm2cur
-% input in harmonic space (i.e. harmonic to Wigner space via analysis_lm2lmn),
+% s2let_transform_curvelet_analysis_lm2cur
+% Compute curvelet transform:
+% input in harmonic space  (i.e. harmonic to Wigner space via analysis_lm2lmn),
 % output in curvelet space (i.e. Wigner space to curvelet space via SO3_inverse).
 %
 % Default usage :
@@ -30,15 +31,11 @@ function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, va
 %  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the curvelets
 %                       should be lowered from (default = 0)]
-%  'Sampling'        = { 'MW'           [McEwen & Wiaux sampling (default)],
-%                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %
 % -----------------------------------------------------------
-% Log: 
-% -  constructed by Jennifer Y H Chan on 5th June 2015  
-% -----------------------------------------------------------
-% S2LET package to perform wavelet transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
+% S2LET package to perform Wavelet Transform on the Sphere.
+% Copyright (C) 2015  Boris Leistedt, Martin B¸ttner, 
+%                     Jennifer Chan & Jason McEwen
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
 
@@ -59,8 +56,8 @@ p.addParamValue('Sampling', 'MW', @ischar);
 p.parse(flm_init, varargin{:});
 args = p.Results;
 
-% For curvelets, azimuthal/directional band-limit N always equals to L           
-N = args.L ; 
+% For curvelets, N=L always hold (m=l to render parabolic scaling relation)
+N = args.L ;
 J = s2let_jmax(args.L, args.B);
 
 % ---------------
@@ -75,29 +72,142 @@ J = s2let_jmax(args.L, args.B);
 % -----------------
 % Signal analysis:
 % -----------------
-% Decompose the signals in harmonic space using curvelets 
-% Then perform Wigner transform (lm2lmn -  Call matlab function s2let_transform_analysis_lm2lmn)
+% Decompose the signals using curvelets and the scaling functions 
+% Then perform Wigner transform (calling matlab function s2let_transform_analysis_lm2lmn)
 [f_cur_lmn, f_scal_lm] = s2let_transform_curvelet_analysis_lm2lmn(flm_init, cur_lm, scal_l,...
-                                                                'B',args.B, 'L', args.L, 'J_min', args.J_min, ...
-                                                                'Spin', args.Spin,'Reality', args.Reality,...
-                                                                'Upsample', args.Upsample, ...
-                                                                'SpinLowered', args.SpinLowered, ...
-                                                                'SpinLoweredFrom',  args.SpinLoweredFrom, ...
-                                                                'Sampling', args.Sampling);
+                                                                  'B',args.B, 'L', args.L, 'J_min', args.J_min, ...
+                                                                  'Spin', args.Spin,'Reality', args.Reality,...
+                                                                  'Upsample', args.Upsample, ...
+                                                                  'SpinLowered', args.SpinLowered, ...
+                                                                  'SpinLoweredFrom',  args.SpinLoweredFrom, ...
+                                                                  'Sampling', args.Sampling);
+
+% Curvelet contribution:
+% Rotate the Wigner coefficients f_cur_lmn (such the curvelets centered at the North pole)
+% Exploit the property of curvelets that cur_ln = (cur_ll)*(delta_ln) 
+% such that cur_lmk_rotated = cur_lml*conj(Dlkl(evaluated at the desired rotation angle))
+% ---------------
+% Define Euler angles for rotation: 
+% ---------------
+alpha = 0; 
+beta = pi/2 ;
+gamma = 0 ;
+% ---------------
+% Precompute Wigner small-d functions, denoted here as d (in the paper: d_lmn for all el, m, n evaluated at beta).
+% They are indexed d(el,m,n). Alpha and gamma are the other two rotation angles.
+% ---------------
+d = zeros(args.L, 2*args.L-1, 2*args.L-1);  
+d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
+for el = 1:args.L-1
+    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+end
+for j = args.J_min:J,
+    band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+    Nj = band_limit; 
+    % for the case SO3_STORAGE_PADDED:
+    if (args.Reality == 0) 
+        if (args.Upsample ~= 0) 
+          f_cur_lmn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*args.L^2,1); 
+        else 
+          f_cur_lmn_rotated{j-args.J_min+1} = zeros((2*Nj-1)*band_limit^2,1);
+        end 
+        for el = abs(args.Spin):(band_limit-1) 
+            for m = -el:el
+                if (args.Upsample == 0)   
+                   ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj);
+                   ind_l_m_nl = so3_elmn2ind(el,m,-el,band_limit,Nj);
+                else  
+                   ind_lml = so3_elmn2ind(el,m,el,args.L,Nj);
+                   ind_l_m_nl = so3_elmn2ind(el,m,-el,args.L,Nj);
+                end 
+                en_max = min(el, Nj-1); 
+                for k = -en_max:en_max 
+                        % Dlmn = exp(-1i*m*alpha) * d(el+1,m+L,n+L) * exp(-1i*n*gamma);
+                        Dlkl = exp(-1i*k*alpha) * d(el+1,k+args.L,el+args.L) * exp(-1i*el*gamma);  
+                        Dlknl = exp(-1i*k*alpha) * d(el+1,k+args.L,-el+args.L) * exp(-1i*(-el)*gamma);
+                        if (args.Upsample == 0)  
+                           ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj);
+                        else 
+                           ind_lmk = so3_elmn2ind(el,m,k,args.L,Nj);
+                        end 
+                        f_cur_lmn_rotated{j-args.J_min+1}(ind_lmk)= conj(Dlkl) * f_cur_lmn{j-args.J_min+1}(ind_lml)+ ...
+                                                                    conj(Dlknl)* f_cur_lmn{j-args.J_min+1}(ind_l_m_nl);                                        
+                end % end k-loop
+            end % end m-loop 
+        end % end el-loop   
+    else %i.e. real signals
+        if (args.Upsample ~= 0) 
+          f_cur_lmn_rotated{j-args.J_min+1} = zeros(Nj*args.L^2,1);  
+        else
+          f_cur_lmn_rotated{j-args.J_min+1} = zeros(Nj*band_limit^2,1);  
+        end 
+        for el = 0:(band_limit-1) 
+            for m = -el:el
+                if (args.Upsample == 0)  
+                   ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj, 'Reality', args.Reality); 
+                   ind_l_nm_l = so3_elmn2ind(el,-m,el,band_limit,Nj, 'Reality', args.Reality);
+                else
+                   ind_lml = so3_elmn2ind(el,m,el,args.L,Nj, 'Reality', args.Reality) ; 
+                   ind_l_nm_l = so3_elmn2ind(el,-m,el,args.L,Nj, 'Reality', args.Reality) ;
+                end 
+                if (mod((m+el),2) == 1) 
+                    sign = -1; 
+                else     
+                    sign = 1; 
+                end 
+                en_max = min(el, Nj-1); 
+                for k = 0:en_max  
+                     Dl_k_l = exp(-1i*k*alpha) * d(el+1,k+args.L,el+args.L) * exp(-1i*el*gamma);
+                     Dl_k_nl = exp(-1i*k*alpha) * d(el+1,k+args.L,-el+args.L) * exp(-1i*-el*gamma);
+                     if (args.Upsample == 0)  
+                         ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj, 'Reality', args.Reality);
+                     else
+                         ind_lmk = so3_elmn2ind(el,m,k,args.L,Nj,'Reality', args.Reality);
+                     end 
+                     f_cur_lmn_rotated{j-args.J_min+1}(ind_lmk)= conj(Dl_k_l) * f_cur_lmn{j-args.J_min+1}(ind_lml)+ ...
+                                                                 sign*conj(Dl_k_nl)* conj(f_cur_lmn{j-args.J_min+1}(ind_l_nm_l));
+                end  % end k-loop
+            end % end m-loop
+        end % end el-loop
+    end % end if (reality)-loop
+end %end j-loop
+
 
 % -----------------                                                     
 % Transform to pixel space:
 % -----------------
-% Scaling function contribution:
-f_scal = ssht_inverse(f_scal_lm, args.L, 'Spin', args.Spin, ...
-                      'Method', args.Sampling, 'Reality', args.Reality);                  
-% Curvelet kernel conrtribution:
-for j = args.J_min:J,  
- f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn{j-args.J_min+1}, args.L, N , ...
-                        'Sampling', args.Sampling,'Reality', args.Reality) ;
+% Scaling functions in real space:
+if (args.Upsample == 0)  
+     band_limit = min([s2let_bandlimit(args.J_min-1,args.J_min,args.B,args.L) args.L ]);
+else
+     band_limit = args.L ;
 end
+f_scal = ssht_inverse(f_scal_lm, band_limit,  ...
+                      'Method', args.Sampling, ...
+                      'Spin', 0, ...
+                      'Reality', args.Reality);          
+                  
+% Rotated-curvelets contributions:
+% Compute the curvelet coefficients in real space
+for j = args.J_min:J,
+    band_limit = min([s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
+    Nj = band_limit; 
+    if (args.Upsample == 0)  
+        f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn_rotated{j-args.J_min+1}, band_limit, Nj, ...
+                                            'Sampling', args.Sampling, 'Reality', args.Reality) ;
+    else
+        f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn_rotated{j-args.J_min+1}, args.L, Nj, ...
+                                            'Sampling', args.Sampling, 'Reality', args.Reality) ;
+    end
+end
+size(f_cur_lmn_rotated{J-args.J_min+1})
+size(f_cur{J-args.J_min+1})
 
-% Clear array: 
-flm_int = 0;
+
+% Clear array
+cur_lm = 0; 
+scal_l = 0; 
+f_cur_lmn =0; 
+f_scal_lm =0;
 
 end

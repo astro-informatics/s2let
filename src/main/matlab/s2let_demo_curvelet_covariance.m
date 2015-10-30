@@ -1,5 +1,5 @@
-% s2let_demo_curvelet_covariance 
-% - Run curvelet covariance demo.
+% s2let_demo_curvelet_covariance
+% Run curvelet_covariance_demo.
 %
 % Demo to compare theoretical covariance of curvelet coefficients with
 % empirical data from using our transform functions. 
@@ -11,17 +11,13 @@
 % Default usage is given by
 %
 %   s2let_demo_curvelet_covariance
-% 
-% Authors: Martin BÃ¼ttner (m.buettner.d@gmail.com)
-%          Jason McEwen (www.jasonmcewen.org)
-%          Jennifer Y. H. Chan (jennifercyh@gmail.com)
+%
 % ---------------------------------------------------------
-% S2LET package to perform wavelet transforms on the sphere.
-% Copyright (C) 2012-2014 Boris Leistedt and Jason McEwen
+% S2LET package to perform Wavelet Transform on the Sphere.
+% Copyright (C) 2015  Boris Leistedt, Martin Büttner,
+%                     Jennifer Chan & Jason McEwen
 % See LICENSE.txt for license details
-% 
-% Modified S2LET package to perform curvelet transforms on the Sphere.
-% ---------------------------------------------------------
+% -----------------------------------------------------------
 clear all;
 
 % Define parameters
@@ -32,8 +28,7 @@ Spin = 0;
 J_min = 2;
 J = s2let_jmax(L, B);
 
-var_flm = 1; % Should we use the actual variance var(flmn) of each
-             % realization here instead?
+var_flm = 1; 
 
 % Compute theoretical covariance of curvelet coefficients.
 % The covariance <Wj(rho)Wj*(rho)> is given by the following expression:
@@ -50,8 +45,8 @@ var_flm = 1; % Should we use the actual variance var(flmn) of each
 % Tile curvelets:
 % ---------------
 [cur_lm scal_l] = s2let_curvelet_tiling(B, L, J_min, ...
-                                        'Spin', Spin, 'SpinLowered', false,...
-                                        'SpinLoweredFrom',0);
+                                             'Spin', Spin, 'SpinLowered', false,...
+                                             'SpinLoweredFrom',0);
 % reshape scaling functions
 kappa0_cur = zeros(L,1);
 for el = abs(Spin):L-1
@@ -126,7 +121,6 @@ for i = 1:runs
                                                                'SpinLowered', false,...
                                                                'SpinLoweredFrom',0, ...
                                                                'Sampling','MW');
-
     if J_min == 0
         f_scals(i) = f_scal(1);
     else

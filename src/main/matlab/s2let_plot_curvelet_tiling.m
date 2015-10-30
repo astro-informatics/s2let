@@ -1,8 +1,8 @@
 function s2let_plot_curvelet_tiling(B, L, J_min, varargin)
 %
 % s2let_plot_curvelet_tiling
-%  - Plot the tiling of scaling function and curvelets in harmonic space.
-%  - then plot the scaling function and curvelets in real space. 
+%  - Plot the tiling of scaling functions and curvelets in harmonic space.
+%  - then plot the scaling functions and curvelets in real space. 
 %
 % Default usage :
 %
@@ -23,13 +23,13 @@ function s2let_plot_curvelet_tiling(B, L, J_min, varargin)
 %  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the wavelets
 %                       should be lowered from (default = 0)]
-% ---------------------------------------------------------
-% S2LET package to perform Wavelet transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
-% See LICENSE.txt for license details
 %
-% Modified S2LET package to perform curvelet transforms on the Sphere.
-% ---------------------------------------------------------
+% -----------------------------------------------------------
+% S2LET package to perform Wavelet Transform on the Sphere.
+% Copyright (C) 2015  Boris Leistedt, Martin Büttner,
+%                     Jennifer Chan & Jason McEwen
+% See LICENSE.txt for license details
+% -----------------------------------------------------------
 
 % Parse arguments.
 p = inputParser;
@@ -40,8 +40,8 @@ p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('SpinLowered', false, @islogical);
 p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.parse(B, L, J_min, varargin{:});
-args = p.Results;
 
+args = p.Results;
 
 B = args.B;
 L = args.L;
@@ -56,26 +56,25 @@ J = s2let_jmax(L, B);
 [cur_lm scal_l] = s2let_curvelet_tiling(args.B, args.L, args.J_min, ...
                                         'Spin', args.Spin, 'SpinLowered', args.SpinLowered,...
                                         'SpinLoweredFrom',args.SpinLoweredFrom);
-%
+                                    
 % Normalise and reshape the scaling functions: 
-%
+el_min = max(abs(args.Spin), abs(args.SpinLoweredFrom));
 kappa0_cur = zeros(1,L);
-for el = 0:L-1
+for el = el_min:L-1
  kappa0_cur(1,el+1) = scal_l(el^2+el+1,1)/sqrt((2*el+1)/(4.0*pi)) ;
-end
-%
+end 
+
 % Normalise and reshape the curvelet functions: 
-%
 kappa_cur = zeros(J+1,L);
 for j = J_min:J
- for el= 0:L-1
+ for el= el_min:L-1
   % ind = l^2 +l + m + 1 ; now consider m =  el; 
   kappa_cur(j+1,el+1) = cur_lm{j-J_min+1}(1,el^2+el+el+1)/ ...
                         (sqrt(1./2.)* sqrt((2*el+1)/(8.0*pi*pi))) ;
  end
 end 
 
- 
+
 % Set for the output figures: 
 pltroot = '../../../figs/' ;
 configstr = ['Spin',int2str(args.Spin),...
@@ -90,7 +89,6 @@ x = 0:L-1;
 % Plot the tiling of the scaling function: 
 % ------------
 figure('Position',[100 100 900 450])
-  %semilogx(0:L-1, kappa0, 'k', 'LineWidth', 2);
 yi = interp1(x, kappa0_cur, xi,'pchip');
 semilogx(xi, yi, 'k', 'LineWidth', 2);
   %h = text(2, 1.07, 'k0', 'Color', [0 0 0]);
@@ -100,7 +98,6 @@ hold on;
 % ------------
 for j = J_min:J
   colour = rand(1,3)*0.9;
-  %plot(0:L-1, kappa(j+1,:), 'LineWidth', 2, 'Color', colour);
   yi = interp1(x,kappa_cur(j+1,:),xi,'pchip');
   plot(xi, yi, 'LineWidth', 2, 'Color', colour);
   %h = text(B.^j, 1.07, strcat('j',num2str(j+1)), 'Color', colour);
@@ -136,7 +133,7 @@ for j = J_min:Jmax
    h = subplot(nx, ny, j-J_min+2);
    hold on
    flm = zeros(L^2,1);
-    for el = 0:L-1
+    for el = el_min:L-1
         flm(el^2+el+1,1) = kappa_cur(j+1,el+1);
     end  
    f = ssht_inverse(flm, L, 'Reality', true);

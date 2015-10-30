@@ -21,7 +21,7 @@ reality = false;
 sampling_method = 'MW';
 save_plots = true;
 
-Ls = [4 8 16 32 64 128]   %[32 64 128 256 512]
+Ls = [4 8 16 32 64]   %[32 64 128 256 512]
 
 err = zeros(N_test, length(Ls));
 time_analysis = zeros(N_test, length(Ls));
@@ -137,10 +137,12 @@ set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
 set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
 xlabel('$L$','Interpreter','LaTex');
-ylabel('Maximum error','Interpreter','LaTex');
+ylabel('Maximum error');
 
 set(gca, 'LineWidth', 3)
 set(gca, 'FontSize', 20)
+xt =get(gca,'XTick');
+set(gca, 'FontSize', 18); 
 
 % if save_plots, print('-depsc2', 'plots/curvelet_error.eps'); end
 
@@ -205,6 +207,7 @@ plot(log2(Ls(istart:iend)), ...
 hold on;
 
 % speed = L4 
+%{
 plot(log2(Ls(istart:iend)), ...
    log10((Ls(istart:iend).^4))-2.5,... 
    'r', ...
@@ -229,12 +232,12 @@ set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
 xlabel('$L$','Interpreter','LaTex');
 ylabel('Computation time (s)','Interpreter','LaTex');
+%}
 
-
-% speed = L^3logL 
+% speed = L^3log_2{L} 
 plot(log2(Ls(istart:iend)), ...
-   log10((Ls(istart:iend).^3).*log10(Ls(istart:iend)))-2,...  
-   'm', ...
+   log10((Ls(istart:iend).^3).*log2(Ls(istart:iend)))-2,...  
+   'r', ...
    'LineWidth', line_width_thick);
 a = axis;
 set(gca,'XTick',a(1):1:a(2));
@@ -242,7 +245,7 @@ set(gca,'XTickLabel', 2.^[a(1):1:a(2)]);
 set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
 xlabel('$L$','Interpreter','LaTex');
-ylabel('Computation time (s)','Interpreter','LaTex');
+ylabel('Computation time (s)');
 
 set(gca, 'LineWidth', 3)
 set(gca,'FontSize', 20)
@@ -267,7 +270,7 @@ errorbar(log2(Ls(istart:iend)), ...
    'LineWidth', line_width);
 
 hold on;
-
+%{
 % speed = L4 
 plot(log2(Ls(istart:iend)), ...
    log10((Ls(istart:iend).^4))-2.5,... 
@@ -293,11 +296,11 @@ set(gca,'YTick',floor(a(3)):1:ceil(a(4)));
 set(gca,'YTickLabel',{10.^[floor(a(3)):ceil(a(4))]});
 xlabel('$L$','Interpreter','LaTex');
 ylabel('Computation time (s)','Interpreter','LaTex');
-
+%}
 % speed = L^3logL
 plot(log2(Ls(istart:iend)), ...
-    log10((Ls(istart:iend).^3).*log10(Ls(istart:iend)))-2,...  
-   'm', ...
+    log10((Ls(istart:iend).^3).*log2(Ls(istart:iend)))-2,...  
+   'r', ...
    'LineWidth', line_width_thick);
 a = axis;
 set(gca,'XTick',a(1):1:a(2));

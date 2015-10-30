@@ -1,58 +1,54 @@
-% s2let_demo7_Curvelet_Plot_Funcs_and_Tiling
-% ------ About this demo -------- 
-% 1a) Compute and plot the harmonic tiling and the wavelet kernels.
-% 1b) Plot the scaling function and curvelet functions in real space. 
-% 2)  Plot the curvelets on the Sphere. 
-% 
-% Curvelets and the scaling function are generated via the matlab function 
-%  "s2let_curvelet_tiling(B, L, J_min, <options>)".  
-% External matlab function  
-%  "s2let_plot_cur_tiling(B, L, J_min, 'spin', Spin);" is used to accomplish 1a) and 1b) 
-%  "s2let_plot_cur_on_sphere" is called to accomplish 2). 
+% s2let_demo7_curvelet_Plot_Funcs_and_Tiling
+%
+% 1) Plot the scaling function and curvelet functions in real space (s2let_plot_curvelet_tiling).
+% 2) Plot the curvelets on the Sphere (s2let_plot_curvelet_on_sphere).
+% 3) Plot the curvelets parametrically (s2let_plot_curvelet_parametric).
+% wherein  curvelets and the scaling functions are generated via
+% the matlab function "s2let_curvelet_tiling(B, L, J_min, <options>)".
+%
 % -----------------------------------------------------------
-% Log: 
-% -  constructed by Jennifer Y H Chan on 5th June 2014  
-% -----------------------------------------------------------
-% S2LET package to perform wavelet transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
+% S2LET package to perform Wavelet Transform on the Sphere.
+% Copyright (C) 2015  Boris Leistedt, Martin Büttner,
+%                     Jennifer Chan & Jason McEwen
 % See LICENSE.txt for license details
-% 
-% Modified S2LET package to perform Curvelets on the Sphere.
 % -----------------------------------------------------------
 
+clear ; %all;
 
 % ---------------
 % Define curvelet parameters: 
 % ---------------
-Spin = 0;
-B = 2;   % for dyadic sampling 
-L = 64;
-N= L;     % Since m=l, the azimuthal band limit N = overall band limit L
-J_min = 2; % minimum and maximum scale probed by wavelets 
-J =s2let_jmax(L, B); %=ceil(log L/ log B);  
+Spin = 2;            % Spin value of curvelet 
+B = 2;               % B = 2 for dyadic sampling
+L = 256;              % Angular band-limit
+N= L;                % for curvelet, the azimuthal band-limit N = L
+J_min = 2;           % Minimum scale probed by curvelets
+J =s2let_jmax(L, B); % Maximum scale probed by curvelets =ceil(log L/ log B);
+
 
 % ---------------
 % Plot the tiling of scaling function and curvelets in harmonic space:
 % And plot the scaling function and curvelet functions in real space:
 % ---------------
-disp(' - Plot the tiling of curvelets');
-s2let_plot_curvelet_tiling(B, L, J_min,...
-                          'Spin', Spin, ...
-                          'SpinLowered', false, ...
-                          'SpinLoweredFrom', 0);
-                 
+%disp(' - Plot the tiling of curvelets');
+%s2let_plot_curvelet_tiling(B, L, J_min,...
+%                           'Spin', Spin);
+
 % ---------------
 % Plot the curvelets on the sphere:
-% Define Euler angles (for rotation):
-% ---------------
-alpha =  pi ;
+% ---------------     
+% Define Euler angles for rotating the curvelets functions 
+% such that the curvelets centred on the North pole of the sphere (instead of along -x direction):
+alpha =  0 ;
 beta = pi/2 ;
 gamma = 0 ;
 disp(' - Plot the curvelets on the sphere');
-s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, ...
-                         'Reality', true, ...
-                         'Spin', Spin, ...
-                         'SpinLowered', false, ...
-                         'SpinLoweredFrom', 0);
 
+s2let_plot_curvelet_on_sphere(alpha, beta, gamma,...
+                              B, L, J_min, ...
+                              'Spin', Spin);
 
+disp(' - Plot the curvelet parametrically');
+s2let_plot_curvelet_parametric(alpha, beta, gamma,...
+                               B, L, J_min, ...
+                               'Spin', Spin);

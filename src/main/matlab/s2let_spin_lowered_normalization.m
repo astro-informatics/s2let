@@ -12,12 +12,11 @@ function s2let_spin_lowered_norm_factor = s2let_spin_lowered_normalization(el, v
 % original_spin is the spin number that the wavelet was lowered from.
 %
 % -----------------------------------------------------------
-% Log: 
-% -  constructed by Jennifer Y H Chan on 5th June 2015  
-% -----------------------------------------------------------
-% S2LET package to perform curvelets transform on the Sphere.
-% Copyright (C) 2012  Boris Leistedt & Jason McEwen
+% S2LET package to perform Wavelet Transform on the Sphere.
+% Copyright (C) 2015  Boris Leistedt, Martin  Büttner,
+%                     Jennifer Chan & Jason McEwen
 % See LICENSE.txt for license details
+% -----------------------------------------------------------
 
 
 p = inputParser;

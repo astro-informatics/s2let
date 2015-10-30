@@ -29,11 +29,11 @@ upsample = true ;  % true for full resolution plot
 % ---------------
 % Load data set (light probe map): 
 % ---------------
-%filename= '../../../data/LightProbe_ringmaps/heal_grace_ring.fits'; %Grace Cathedral, San Francisco (dynamical range 200, 0000:1) 
-%filename= '../../../data/LightProbe_ringmaps/heal_stpeters_ring.fits'; % St. Perter's Basilica, Rome (dynamical range 200, 0000:1) 
-%filename= '../../../data/LightProbe_ringmaps/heal_galileo_ring.fits'; %The Galileo's Tomb, Florence (dynamical range 7000:1 original)
-% filename= '../../../data/LightProbe_ringmaps/heal_rnl_ring.fits';  %Eucalyptus Grove, UC Berkeley (dynamical range 5000:1 original)
-filename= '../../../data/LightProbe_ringmaps/heal_uffizi_ring.fits';   %The Uffizi Gallery, Florence (dynamical range 500:1 original)
+%filename= '../../../data/LightProbe_ringmaps/heal_grace_ring.fits'; %Grace Cathedral, San Francisco
+filename= '../../../data/LightProbe_ringmaps/heal_stpeters_ring.fits'; % St. Perter's Basilica, Rome
+%filename= '../../../data/LightProbe_ringmaps/heal_galileo_ring.fits'; %The Galileo's Tomb, Florence
+% filename= '../../../data/LightProbe_ringmaps/heal_rnl_ring.fits';  %Eucalyptus Grove, UC Berkeley
+%filename= '../../../data/LightProbe_ringmaps/heal_uffizi_ring.fits';   %The Uffizi Gallery, Florence
 % CMB: 
 % filename = '../../../data/COM_CompMap_Synchrotron-commander_0256_R2.00.fits';
 % filename = '../../../data/COM_CompMap_freefree-commander_0256_R2.00.fits';
@@ -53,12 +53,14 @@ filename= '../../../data/LightProbe_ringmaps/heal_uffizi_ring.fits';   %The Uffi
 % Read and plot the FITS file
 % ----------
 [data_hpxmap, nside] = s2let_hpx_read_real_map(filename);
+
 figure; 
 s2let_hpx_plot_mollweide(data_hpxmap);
 colorbar;
 v = caxis;
-temp = max(abs(v)); 
+temp = max(abs(v))*0.07; 
 caxis([0  temp])
+colormap bone
          
 % ----------
 % Convert from hpx map to mw map
@@ -68,27 +70,47 @@ f_mw = s2let_hpx2mw(data_hpxmap);
 % Plot 
 % ----------
 mode = 1;
-Lguessed= 2*nside;  
+Lguessed= 2*nside;
+% clip data 
+max_f_mw = 1.     
+f_mw(f_mw > max_f_mw) = max_f_mw;
 figure; 
 ssht_plot_mollweide(f_mw, Lguessed, 'Mode', mode);
 colorbar;
 v = caxis;
-temp = max(abs(v)); 
+temp = max(abs(v))*0.1; 
 caxis([0  temp])
-
+colormap hot
+colormap bone
 % ----------
-% bandlimit the data
+% Bandlimit the data
 % ----------
-L = 32; % 512   
+L = 256; % 512   
 B = 2;
 J_min = 2;
-nside_recon = 16; %256 
+nside_recon = L/2; %256 
 flm = s2let_hpx_map2alm(data_hpxmap, 'L', L);
 f = s2let_hpx_alm2map(flm, nside_recon, 'L', L);
 % ----------
 % Convert from hpx map to mw map
 % ----------
 f_bandlimit_mw = s2let_hpx2mw(f);
+
+figure; 
+ssht_plot_mollweide(f_bandlimit_mw, L, 'Mode', mode);
+colorbar;
+v = caxis;
+temp = max(abs(v)); 
+caxis([0  temp])
+colormap bone
+
+% ----------
+% Clip data
+% ----------
+max_f_bandlimit_mw = 1.     
+f_bandlimit_mw(f_bandlimit_mw > max_f_bandlimit_mw) = max_f_bandlimit_mw;
+min_f_bandlimit_mw = -1.     
+f_bandlimit_mw(f_bandlimit_mw < min_f_bandlimit_mw) = min_f_bandlimit_mw;
 % ----------
 % Plot 
 % ----------
@@ -97,7 +119,8 @@ figure;
 ssht_plot_mollweide(f_bandlimit_mw, L, 'Mode', mode);
 colorbar;
 v = caxis;
-temp = max(abs(v));
-caxis([0 temp])
+temp = max(abs(v)); 
+caxis([0  temp])
+colormap bone
 
 
