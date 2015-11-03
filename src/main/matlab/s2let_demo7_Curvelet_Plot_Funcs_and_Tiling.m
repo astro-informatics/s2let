@@ -18,9 +18,9 @@ clear ; %all;
 % ---------------
 % Define curvelet parameters: 
 % ---------------
-Spin = 2;            % Spin value of curvelet 
+Spin = 0;            % Spin value of curvelet 
 B = 2;               % B = 2 for dyadic sampling
-L = 256;              % Angular band-limit
+L = 128;              % Angular band-limit
 N= L;                % for curvelet, the azimuthal band-limit N = L
 J_min = 2;           % Minimum scale probed by curvelets
 J =s2let_jmax(L, B); % Maximum scale probed by curvelets =ceil(log L/ log B);
@@ -34,21 +34,23 @@ J =s2let_jmax(L, B); % Maximum scale probed by curvelets =ceil(log L/ log B);
 %s2let_plot_curvelet_tiling(B, L, J_min,...
 %                           'Spin', Spin);
 
+% Define Euler angles for rotating the curvelets functions 
+% such that the curvelets centred on the North pole of the sphere: 
+alpha =  0 ;
+beta = acos(-Spin/L); 
+gamma = 0  ;  
+
 % ---------------
 % Plot the curvelets on the sphere:
 % ---------------     
-% Define Euler angles for rotating the curvelets functions 
-% such that the curvelets centred on the North pole of the sphere (instead of along -x direction):
-alpha =  0 ;
-beta = pi/2 ;
-gamma = 0 ;
 disp(' - Plot the curvelets on the sphere');
 
-s2let_plot_curvelet_on_sphere(alpha, beta, gamma,...
-                              B, L, J_min, ...
+s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, ...
                               'Spin', Spin);
 
+%{
 disp(' - Plot the curvelet parametrically');
 s2let_plot_curvelet_parametric(alpha, beta, gamma,...
                                B, L, J_min, ...
                                'Spin', Spin);
+%}

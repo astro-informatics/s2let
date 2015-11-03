@@ -69,6 +69,9 @@ end
 el_min = max(abs(args.Spin), abs(original_spin));
 
 % Precompute Wigner small-d functions for rotation 
+% d are the Wigner small-d functions d_lmn for all el, m, n evaluated at beta. They are indexed d(el,m,n), such that
+% d has dimensions (L,2*L-1,2*L-1).
+% alpha and gamma are the other two rotation angles.
 d = zeros(L, 2*L-1, 2*L-1);
 d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), L, 0, args.beta);  %el_min, beta);
 for el = 1:L-1  %el_min:L-1  %
@@ -99,7 +102,7 @@ configstr = ['Spin',int2str(args.Spin),...
 % -------------
 figure('Position',[0 0 1000 800])
 ind=0;
-for j = J_min:J-1, %J,
+for j = J_min:J-1
 %% Rotate the curvelets coefficients
    flm_cur_rot = ssht_rotate_flm(cur_lm{j-J_min+1}(:), d, args.alpha, args.gamma);
   if args.Spin == 0

@@ -89,21 +89,31 @@ J = s2let_jmax(args.L, args.B);
 % ---------------
 % Define Euler angles for rotation: 
 % ---------------
-alpha = 0; 
-beta = pi/2 ;
+alpha = 0;
 gamma = 0 ;
 % ---------------
 % Precompute Wigner small-d functions, denoted here as d (in the paper: d_lmn for all el, m, n evaluated at beta).
 % They are indexed d(el,m,n). Alpha and gamma are the other two rotation angles.
-% ---------------
-d = zeros(args.L, 2*args.L-1, 2*args.L-1);  
-d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
-for el = 1:args.L-1
-    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+% ------
+if (args.Upsample ~= 0)
+    beta = acos(-args.Spin/args.L);
+    d = zeros(args.L, 2*args.L-1, 2*args.L-1);
+    d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
+    for el = 1:args.L-1
+        d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+    end
 end
 for j = args.J_min:J,
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-    Nj = band_limit; 
+    Nj = band_limit;
+    if (args.Upsample == 0)
+       beta = acos(-args.Spin/band_limit);
+       d = zeros(band_limit, 2*band_limit-1, 2*band_limit-1);
+       d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), band_limit, 0, beta);
+       for el = 1:band_limit-1
+           d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), band_limit, el, beta);
+       end
+    end
     % for the case SO3_STORAGE_PADDED:
     if (args.Reality == 0) 
         if (args.Upsample ~= 0) 
@@ -123,14 +133,16 @@ for j = args.J_min:J,
                 en_max = min(el, Nj-1); 
                 for k = -en_max:en_max 
                         % Dlmn = exp(-1i*m*alpha) * d(el+1,m+L,n+L) * exp(-1i*n*gamma);
+                    if (args.Upsample ~= 0)
                         Dlkl = exp(-1i*k*alpha) * d(el+1,k+args.L,el+args.L) * exp(-1i*el*gamma);  
                         Dlknl = exp(-1i*k*alpha) * d(el+1,k+args.L,-el+args.L) * exp(-1i*(-el)*gamma);
-                        if (args.Upsample == 0)  
-                           ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj);
-                        else 
-                           ind_lmk = so3_elmn2ind(el,m,k,args.L,Nj);
-                        end 
-                        f_cur_lmn_rotated{j-args.J_min+1}(ind_lmk)= conj(Dlkl) * f_cur_lmn{j-args.J_min+1}(ind_lml)+ ...
+                        ind_lmk = so3_elmn2ind(el,m,k,args.L,Nj);
+                    else
+                        Dlkl = exp(-1i*k*alpha) * d(el+1,k+band_limit,el+band_limit) * exp(-1i*el*gamma);
+                        Dlknl = exp(-1i*k*alpha) * d(el+1,k+band_limit,-el+band_limit) * exp(-1i*(-el)*gamma);
+                        ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj);
+                    end
+                    f_cur_lmn_rotated{j-args.J_min+1}(ind_lmk)= conj(Dlkl) * f_cur_lmn{j-args.J_min+1}(ind_lml)+ ...
                                                                     conj(Dlknl)* f_cur_lmn{j-args.J_min+1}(ind_l_m_nl);                                        
                 end % end k-loop
             end % end m-loop 
@@ -156,13 +168,15 @@ for j = args.J_min:J,
                     sign = 1; 
                 end 
                 en_max = min(el, Nj-1); 
-                for k = 0:en_max  
-                     Dl_k_l = exp(-1i*k*alpha) * d(el+1,k+args.L,el+args.L) * exp(-1i*el*gamma);
-                     Dl_k_nl = exp(-1i*k*alpha) * d(el+1,k+args.L,-el+args.L) * exp(-1i*-el*gamma);
-                     if (args.Upsample == 0)  
-                         ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj, 'Reality', args.Reality);
-                     else
+                for k = 0:en_max
+                     if (args.Upsample ~= 0)
+                         Dl_k_l = exp(-1i*k*alpha) * d(el+1,k+args.L,el+args.L) * exp(-1i*el*gamma);
+                         Dl_k_nl = exp(-1i*k*alpha) * d(el+1,k+args.L,-el+args.L) * exp(-1i*-el*gamma);
                          ind_lmk = so3_elmn2ind(el,m,k,args.L,Nj,'Reality', args.Reality);
+                     else
+                         Dl_k_l = exp(-1i*k*alpha) * d(el+1,k+band_limit,el+band_limit) * exp(-1i*el*gamma);
+                         Dl_k_nl = exp(-1i*k*alpha) * d(el+1,k+band_limit,-el+band_limit) * exp(-1i*-el*gamma);
+                         ind_lmk = so3_elmn2ind(el,m,k,band_limit,Nj, 'Reality', args.Reality);
                      end 
                      f_cur_lmn_rotated{j-args.J_min+1}(ind_lmk)= conj(Dl_k_l) * f_cur_lmn{j-args.J_min+1}(ind_lml)+ ...
                                                                  sign*conj(Dl_k_nl)* conj(f_cur_lmn{j-args.J_min+1}(ind_l_nm_l));

@@ -24,7 +24,7 @@ clear all;
 B = 2;
 L = 16;
 N = L;
-Spin = 0;
+Spin = 2;
 J_min = 2;
 J = s2let_jmax(L, B);
 

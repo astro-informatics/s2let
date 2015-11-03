@@ -105,7 +105,6 @@ end
 % (for rotating the curvelets to the north pole):
 % ---------------
 alpha = pi ;
-beta = pi/2 ;
 gamma = 0 ;
 % ---------------
 % Precompute Wigner small-d functions
@@ -113,14 +112,30 @@ gamma = 0 ;
 % They are indexed d(el,m,n).
 % Alpha and gamma are the other two rotation angles.
 % ---------------
-d = zeros(args.L, 2*args.L-1, 2*args.L-1);
-d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
-for el = 1:args.L-1
-    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+%d = zeros(args.L, 2*args.L-1, 2*args.L-1);
+%d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
+%for el = 1:args.L-1
+%    d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+%end
+if (args.Upsample ~= 0)
+    beta = pi-acos(-args.Spin/args.L);
+    d = zeros(args.L, 2*args.L-1, 2*args.L-1);
+    d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
+    for el = 1:args.L-1
+        d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+    end
 end
 for j = args.J_min:J,
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-    Nj = band_limit; 
+    Nj = band_limit;
+    if (args.Upsample == 0)
+       beta = pi-acos(-args.Spin/band_limit);
+       d = zeros(band_limit, 2*band_limit-1, 2*band_limit-1);
+       d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), band_limit, 0, beta);
+       for el = 1:band_limit-1
+           d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), band_limit, el, beta);
+       end
+    end
   % for the case SO3_STORAGE_PADDED:
     if (args.Reality == 0)  
         if (args.Upsample ~= 0) 
@@ -140,12 +155,14 @@ for j = args.J_min:J,
                 en_max = min(el, Nj-1); 
                 for en = -en_max:en_max
                      %  Dlmn = exp(-1i*m*alpha) * d(el+1,m+L,n+L) * exp(-1i*n*gamma);
-                     Dlln = exp(-1i*el*alpha) * d(el+1,el+args.L,en+args.L) * exp(-1i*en*gamma);
-                     Dl_nl_n = exp(-1i*-el*alpha) * d(el+1,-el+args.L,en+args.L) * exp(-1i*en*gamma);
-                     if (args.Upsample == 0)  
-                         ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
-                     else
-                         ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+                    if (args.Upsample ~= 0)
+                        Dlln = exp(-1i*el*alpha) * d(el+1,el+args.L,en+args.L) * exp(-1i*en*gamma);
+                        Dl_nl_n = exp(-1i*-el*alpha) * d(el+1,-el+args.L,en+args.L) * exp(-1i*en*gamma);
+                        ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+                    else
+                        Dlln = exp(-1i*el*alpha) * d(el+1,el+band_limit,en+band_limit) * exp(-1i*en*gamma);
+                        Dl_nl_n = exp(-1i*-el*alpha) * d(el+1,-el+band_limit,en+band_limit) * exp(-1i*en*gamma);
+                        ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
                      end  
                      f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lml)=  f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lml)+ ...
                                                                       conj(Dlln) * f_cur_lmn_syn{j-args.J_min+1}(ind_lmn); 
@@ -166,25 +183,28 @@ for j = args.J_min:J,
                 if (args.Upsample == 0)  
                     ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj, 'Reality', args.Reality);
                     ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj, 'Reality', args.Reality);
+                    Dl_l_nzero = exp(-1i*el*alpha) * d(el+1,el+band_limit,0+band_limit) * exp(-1i*0*gamma);
                 else
                     ind_lml = so3_elmn2ind(el,m,el,args.L,Nj, 'Reality', args.Reality);
                     ind_lmnzero = so3_elmn2ind(el,m,0,args.L,Nj, 'Reality', args.Reality);
-                end 
-                Dl_l_nzero = exp(-1i*el*alpha) * d(el+1,el+args.L,0+args.L) * exp(-1i*0*gamma);         
+                    Dl_l_nzero = exp(-1i*el*alpha) * d(el+1,el+args.L,0+args.L) * exp(-1i*0*gamma);
+                end
                 f_cur_lmn_syn_rotated{j-args.J_min+1}(ind_lml)=  conj(Dl_l_nzero)*f_cur_lmn_syn{j-args.J_min+1}(ind_lmnzero);                           
                 % (n> 0) terms
                 en_max = min(el, Nj-1); 
-                for en = 1:en_max 
-                    Dl_l_n = exp(-1i*el*alpha) * d(el+1,el+args.L,en+args.L) * exp(-1i*en*gamma);
-                    Dl_l_nn = exp(-1i*el*alpha) * d(el+1,el+args.L,-en+args.L) * exp(-1i*-en*gamma);
-                    if (args.Upsample == 0)  
-                        ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj, 'Reality', args.Reality);
-                        ind_l_nm_n = so3_elmn2ind(el,-m,en,band_limit,Nj, 'Reality', args.Reality);
-                    else
+                for en = 1:en_max
+                    if (args.Upsample ~= 0)
+                        Dl_l_n = exp(-1i*el*alpha) * d(el+1,el+args.L,en+args.L) * exp(-1i*en*gamma);
+                        Dl_l_nn = exp(-1i*el*alpha) * d(el+1,el+args.L,-en+args.L) * exp(-1i*-en*gamma);
                         ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj, 'Reality', args.Reality);
                         ind_l_nm_n = so3_elmn2ind(el,-m,en,args.L,Nj, 'Reality', args.Reality);
-                    end 
-                    if (mod((m+en),2) == 1) 
+                    else
+                        Dl_l_n = exp(-1i*el*alpha) * d(el+1,el+band_limit,en+band_limit) * exp(-1i*en*gamma);
+                        Dl_l_nn = exp(-1i*el*alpha) * d(el+1,el+band_limit,-en+band_limit) * exp(-1i*-en*gamma);
+                        ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj, 'Reality', args.Reality);
+                        ind_l_nm_n = so3_elmn2ind(el,-m,en,band_limit,Nj, 'Reality', args.Reality);
+                    end
+                    if (mod((m+en),2) == 1)
                            sign = -1; 
                     else 
                            sign = 1; 

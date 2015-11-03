@@ -25,7 +25,7 @@ clear all;
 close all;
 
 % Curvelet parameters
-Spin = 0;             % Spin value of curvelet 
+Spin = 2;             % Spin value of curvelet 
 L = 16;               % Angular band-limit
 N = L;                % for curvelet, the azimuthal band-limit N = L
 B = 2;                % B = 2 for dyadic sampling
@@ -38,8 +38,9 @@ flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
 flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
 disp('Construct the corresponding signal on the sphere')
 f_gen = ssht_inverse(flm_gen, L,'Method', 'MW');
-f_spin_gen = ssht_inverse(flm_gen, L, 'Spin', Spin, 'Method', 'MW');
+% Spin signals: 
 flm_spin_gen= ssht_forward(f_gen, L, 'Spin', Spin, 'Method', 'MW');
+f_spin_gen = ssht_inverse(flm_spin_gen, L, 'Spin', Spin, 'Method', 'MW');
 disp('----------- ');
 
 
@@ -72,7 +73,7 @@ f_spin_rec = ssht_inverse(flm_spin_rec, L,'Spin', Spin,'Method', 'MW');
 disp('- Test exact transform:');
 disp('Check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_spin_gen - flm_spin_rec))
-disp('Check the difference between f_gen and f_rec: ');
+disp('Check the difference between f_spin_gen and f_spin_rec: ');
 maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
 disp('----------- ');
 
@@ -84,11 +85,11 @@ disp(' Curvelet transform: multi-resolution (Upsample: false): ');
 % -----------------
 
 [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_spin_gen,  ...
-                                                                'B', B, 'L', L, ...
-                                                                'J_min', J_min, ...
-                                                                'Spin', Spin, ...
-                                                                'Sampling', 'MW',...
-                                                                'Upsample', false);
+                                                           'B', B, 'L', L, ...
+                                                           'J_min', J_min, ...
+                                                           'Spin', Spin, ...
+                                                           'Sampling', 'MW',...
+                                                           'Upsample', false);
 
 % -----------------
 % Signal synthesis: (curvelet to harmonic space)
@@ -96,6 +97,7 @@ disp(' Curvelet transform: multi-resolution (Upsample: false): ');
 flm_spin_rec= s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal, ...
                                                         'B', B, 'L', L,...
                                                         'J_min', J_min, ...
+                                                        'Spin', Spin, ...
                                                         'Sampling', 'MW', ...
                                                         'Upsample', false);
 
@@ -106,7 +108,7 @@ f_spin_rec = ssht_inverse(flm_spin_rec, L, 'Spin', Spin, 'Method', 'MW');
 disp('- Test exact transform:');
 disp('Check the difference between flm_gen and flm_rec:');
 maxerr = max(abs(flm_spin_gen - flm_spin_rec))
-disp('Check the difference between f_gen and f_rec: ');
+disp('Check the difference between f_spin_gen and f_spin_rec: ');
 maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
 disp('----------- ');
 
