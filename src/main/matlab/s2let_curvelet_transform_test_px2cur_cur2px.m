@@ -25,7 +25,7 @@ clear all;
 close all;
 
 % Curvelet parameters
-Spin = 3;             % Spin value of curvelet 
+Spin = 2;             % Spin value of curvelet 
 L = 64;               % Angular band-limit
 N = L;                % for curvelet, the azimuthal band-limit N = L
 B = 2;                % B = 2 for dyadic sampling

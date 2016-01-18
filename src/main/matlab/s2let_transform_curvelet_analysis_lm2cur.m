@@ -91,28 +91,28 @@ J = s2let_jmax(args.L, args.B);
 % ---------------
 alpha = 0;
 gamma = 0 ;
-% ---------------
-% Precompute Wigner small-d functions, denoted here as d (in the paper: d_lmn for all el, m, n evaluated at beta).
-% They are indexed d(el,m,n). Alpha and gamma are the other two rotation angles.
-% ------
-if (args.Upsample ~= 0)
-    beta = acos(-args.Spin/args.L);
-    d = zeros(args.L, 2*args.L-1, 2*args.L-1);
-    d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
-    for el = 1:args.L-1
-        d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
-    end
-end
+
 for j = args.J_min:J,
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit;
-    if (args.Upsample == 0)
-       beta = acos(-args.Spin/band_limit);
-       d = zeros(band_limit, 2*band_limit-1, 2*band_limit-1);
-       d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), band_limit, 0, beta);
-       for el = 1:band_limit-1
-           d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), band_limit, el, beta);
-       end
+% ---------------
+% Specify beta and orecompute Wigner small-d functions, denoted here as d (in the paper: d_lmn for all el, m, n evaluated at beta).
+% They are indexed d(el,m,n). Alpha and gamma are the other two rotation angles.
+% ---------------
+    if (args.Upsample ~= 0)
+        beta = acos(-args.Spin/args.B^j);
+        d = zeros(args.L, 2*args.L-1, 2*args.L-1);
+        d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), args.L, 0, beta);
+        for el = 1:args.L-1
+            d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), args.L, el, beta);
+        end
+    else
+        beta = acos(-args.Spin/args.B^j);
+        d = zeros(band_limit, 2*band_limit-1, 2*band_limit-1);
+        d(1,:,:) = ssht_dl(squeeze(d(1,:,:)), band_limit, 0, beta);
+        for el = 1:band_limit-1
+            d(el+1,:,:) = ssht_dl(squeeze(d(el,:,:)), band_limit, el, beta);
+        end
     end
     % for the case SO3_STORAGE_PADDED:
     if (args.Reality == 0) 
