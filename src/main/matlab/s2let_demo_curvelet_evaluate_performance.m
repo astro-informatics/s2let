@@ -15,10 +15,11 @@ clear;
 N_test = 3
 
 B = 2;
-J_min = 0;
+J_min = 1;  %rather than 0
 spin = 0;
 reality = false;
 sampling_method = 'MW';
+upsample= false;   %Multi-resolution On
 save_plots = true;
 
 Ls = [4 8 16 32 64]   %[32 64 128 256 512]
@@ -27,6 +28,68 @@ err = zeros(N_test, length(Ls));
 time_analysis = zeros(N_test, length(Ls));
 time_synthesis = zeros(N_test, length(Ls));
 
+
+N_test =1; 
+err_128 = zeros(N_test, 1);
+time_analysis_128 = zeros(N_test, 1);
+time_synthesis_128 = zeros(N_test, 1);
+%el_ind = 0;
+for L = 128
+  % el_ind = el_ind + 1
+   L
+
+   for n = 1:N_test
+   
+      n
+      
+      %disp('Generate band-limited function in harmonic space')
+      flm = zeros(L^2,1);
+      flm = rand(size(flm)) + sqrt(-1)*rand(size(flm));
+      flm = 2.*(flm - (1+sqrt(-1))./2);
+
+      %disp('Construct the corresponding signal on the sphere')
+      f = ssht_inverse(flm, L, 'Method', sampling_method);
+      
+      tstart = tic;
+      [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f, ...
+         'B', B, 'L', L, 'J_min', J_min, ...
+         'Upsample', upsample, 'Spin', spin, 'Reality', reality, ...
+         'Sampling', sampling_method);
+      time_analysis_128(n, 1) = toc(tstart);
+      
+      tstart = tic;
+      f_recov = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal, ...
+         'L', L, 'B', B, 'J_min', J_min, ...
+         'Upsample', upsample, 'Spin', spin, 'Reality', reality, ...
+         'Sampling', sampling_method);
+
+
+      time_synthesis_128(n, 1) = toc(tstart);
+
+      err_128(n, 1) = max(abs(f(:) - f_recov(:)));
+
+   end
+
+end
+err_128_mean = mean(err_128);
+err_128_std = std(err_128);
+err_std_128_log = std(log10(err_128));
+
+time_analysis_128_mean = mean(time_analysis_128);
+time_analysis_128_std = std(time_analysis_128);
+
+
+time_synthesis_128_mean = mean(time_synthesis_128);
+time_synthesis_128_std = std(time_synthesis_128);
+
+
+time_128_total = time_analysis_128 + time_synthesis_128;
+time_total_128_mean = mean(time_128_total);
+time_total_128_std = std(time_128_total);
+time_total_128_std_log = std(log10(time_128_total));
+
+
+%{
 el_ind = 0;
 for L = Ls
    el_ind = el_ind + 1
@@ -47,14 +110,14 @@ for L = Ls
       tstart = tic;
       [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f, ...
          'B', B, 'L', L, 'J_min', J_min, ...
-         'Upsample', true, 'Spin', spin, 'Reality', reality, ...
+         'Upsample', upsample, 'Spin', spin, 'Reality', reality, ...
          'Sampling', sampling_method);
       time_analysis(n, el_ind) = toc(tstart);
       
       tstart = tic;
       f_recov = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal, ...
          'L', L, 'B', B, 'J_min', J_min, ...
-         'Upsample', true, 'Spin', spin, 'Reality', reality, ...
+         'Upsample', upsample, 'Spin', spin, 'Reality', reality, ...
          'Sampling', sampling_method);
 
 
@@ -82,7 +145,7 @@ time_total = time_analysis + time_synthesis;
 time_total_mean = mean(time_total);
 time_total_std = std(time_total);
 time_total_std_log = std(log10(time_total));
-
+%}
 
 %% Define saved figure location 
 pltroot = '../../../figs/' ;

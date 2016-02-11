@@ -26,7 +26,7 @@ close all;
 
 % Curvelet parameters
 Spin = 2;             % Spin value of curvelet 
-L = 64;               % Angular band-limit
+L = 16;               % Angular band-limit
 N = L;                % for curvelet, the azimuthal band-limit N = L
 B = 2;                % B = 2 for dyadic sampling
 J_min = 1;            % Minimum scale probed by curvelets

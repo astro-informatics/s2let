@@ -3,7 +3,7 @@ function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, va
 % s2let_transform_curvelet_analysis_lm2cur
 % Compute curvelet transform:
 % input in harmonic space  (i.e. harmonic to Wigner space via analysis_lm2lmn),
-% output in curvelet space (i.e. Wigner space to curvelet space via SO3_inverse).
+% output in curvelet space (i.e. Wigner space to curvelet space via SO3_inverse_direct).
 %
 % Default usage :
 %
@@ -81,6 +81,9 @@ J = s2let_jmax(args.L, args.B);
                                                                   'SpinLowered', args.SpinLowered, ...
                                                                   'SpinLoweredFrom',  args.SpinLoweredFrom, ...
                                                                   'Sampling', args.Sampling);
+
+% size(f_cur_lmn)
+
 
 % Curvelet contribution:
 % Rotate the Wigner coefficients f_cur_lmn (such the curvelets centered at the North pole)
@@ -207,15 +210,15 @@ for j = args.J_min:J,
     band_limit = min([s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit; 
     if (args.Upsample == 0)  
-        f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn_rotated{j-args.J_min+1}, band_limit, Nj, ...
+        f_cur{j-args.J_min+1} = so3_inverse_direct(f_cur_lmn_rotated{j-args.J_min+1}, band_limit, Nj, ...
                                             'Sampling', args.Sampling, 'Reality', args.Reality) ;
     else
-        f_cur{j-args.J_min+1} = so3_inverse(f_cur_lmn_rotated{j-args.J_min+1}, args.L, Nj, ...
+        f_cur{j-args.J_min+1} = so3_inverse_direct(f_cur_lmn_rotated{j-args.J_min+1}, args.L, Nj, ...
                                             'Sampling', args.Sampling, 'Reality', args.Reality) ;
     end
 end
-size(f_cur_lmn_rotated{J-args.J_min+1})
-size(f_cur{J-args.J_min+1})
+% size(f_cur_lmn_rotated{J-args.J_min+1})
+% size(f_cur{J-args.J_min+1})
 
 
 % Clear array

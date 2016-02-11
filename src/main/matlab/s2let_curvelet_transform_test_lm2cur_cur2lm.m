@@ -16,7 +16,7 @@
 %                        true    [full resolution wavelets] },
 % -----------------------------------------------------------
 % S2LET package to perform Wavelet Transform on the Sphere.
-% Copyright (C) 2015  Boris Leistedt, Martin B¸ttner, 
+% Copyright (C) 2015  Boris Leistedt, Martin Büttner, 
 %                     Jennifer Chan & Jason McEwen
 % See LICENSE.txt for license details
 % -----------------------------------------------------------
@@ -43,7 +43,7 @@ flm_spin_gen= ssht_forward(f_gen, L, 'Spin', Spin, 'Method', 'MW');
 f_spin_gen = ssht_inverse(flm_spin_gen, L, 'Spin', Spin, 'Method', 'MW');
 disp('----------- ');
 
-
+%{
 disp(' ');
 disp('Curvelet transform: full resolution (Upsample: true): ');
 % -----------------
@@ -76,7 +76,7 @@ maxerr = max(abs(flm_spin_gen - flm_spin_rec))
 disp('Check the difference between f_spin_gen and f_spin_rec: ');
 maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
 disp('----------- ');
-
+%}
 
 % ================== MULTI-RESOLUTION ===================% 
 disp(' Curvelet transform: multi-resolution (Upsample: false): ');
@@ -129,14 +129,15 @@ for el = 0:L-1
         flm_gen(ind_nm,1) = (-1)^m * conj(flm_gen(ind_pm,1));
     end
 end
+reality = true; 
 
+%{
 % ================== FULL-RESOLUTION ===================% 
 disp(' Curvelet transform: Full-resolution (Upsample: true): ');
 % -----------------
 % Signal analysis: (harmonic to curvelet space) 
 % -----------------
 disp('Real signal, Full resolution: analysis_lm2lmn...')
-reality = true; 
 upsample = true; 
 [f_cur, f_scal]= s2let_transform_curvelet_analysis_lm2cur(flm_gen, ...
                                                           'B', B, 'L', L,...
@@ -160,7 +161,7 @@ maxerr = max(abs(flm_gen - flm_rec))
 disp('Check the difference between f_gen and f_rec: ');
 maxerr = max(abs(f_gen(:) - f_rec(:)))
 disp('----------- ');
-
+%}
 
 % ================== MULTI-RESOLUTION ===================% 
 disp(' Curvelet transform: Multi-resolution (Upsample: false): ');

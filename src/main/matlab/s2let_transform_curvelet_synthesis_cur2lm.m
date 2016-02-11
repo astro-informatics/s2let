@@ -2,7 +2,7 @@ function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  var
 
 % s2let_transform_curvelet_synthesis_cur2lm
 % Compute curvelet transform:  
-% input in curvelet space (i.e. hamonic to Wigner space via SO3_forward) 
+% input in curvelet space (i.e. hamonic to Wigner space via SO3_forward_direct)
 % output in harmonic space (i.e. Wigner to harmonic space via synthesis_lmn2lm) .
 %
 % Default usage :
@@ -89,10 +89,10 @@ for j = args.J_min:J,
     band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     Nj = band_limit;
     if (args.Upsample == 0)  
-        f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , band_limit, Nj, ...
+        f_cur_lmn_syn{j-args.J_min+1} = so3_forward_direct(f_cur{j-args.J_min+1} , band_limit, Nj, ...
                                                     'Reality', args.Reality, 'Sampling', args.Sampling);
     else  
-        f_cur_lmn_syn{j-args.J_min+1} = so3_forward(f_cur{j-args.J_min+1} , args.L, Nj, ...
+        f_cur_lmn_syn{j-args.J_min+1} = so3_forward_direct(f_cur{j-args.J_min+1} , args.L, Nj, ...
                                                     'Reality', args.Reality, 'Sampling', args.Sampling);
     end
 end
