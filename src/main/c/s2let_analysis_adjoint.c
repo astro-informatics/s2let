@@ -483,12 +483,13 @@ void s2let_analysis_adjoint_wav2lm_real(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
-	//TODO: change to adjoint_invere when it is completed
-        so3_core_forward_via_ssht_real(
+	//TODO: change to adjoint_inverse when it is completed
+        /*so3_core_forward_via_ssht_real(
             f_wav_lmn + offset_lmn,
             f_wav + offset,
             &so3_parameters
-        );
+	    );*/
+	S2LET_ERROR_GENERIC("Real Adjoint function now ready yet...")
 
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
