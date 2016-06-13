@@ -136,6 +136,8 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 	  $(S2LETOBJ)/s2let_helper.o 	\
 	  $(S2LETOBJ)/s2let_analysis.o 	\
 	  $(S2LETOBJ)/s2let_synthesis.o 	\
+	  $(S2LETOBJ)/s2let_analysis_adjoint.o 	\
+	  $(S2LETOBJ)/s2let_synthesis_adjoint.o 	\
 	  $(S2LETOBJ)/s2let_idl_mw.o 	\
 	  $(S2LETOBJ)/s2let_lm.o	\
 	  $(S2LETOBJ)/s2let_math.o 	\
