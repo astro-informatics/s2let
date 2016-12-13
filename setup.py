@@ -19,15 +19,15 @@ for root, dirs, files in os.walk("./src/main/python/", topdown=False):
 include_dirs = [
     numpy.get_include(),
     "./include",
-    os.environ['SSHT']+"/include/c",
-    os.environ['SO3']+"/include/c"
+    os.environ['code']+"ssht/include/c",
+    os.environ['code']+"so3/include/c"
     ]
 
 extra_link_args=[
     "-L./lib",
     "-L"+os.environ['FFTW']+"/lib",
-    "-L"+os.environ['SSHT']+"/lib/c",
-    "-L"+os.environ['SO3']+"/lib/c"
+    "-L"+os.environ['code']+"ssht/lib/c",
+    "-L"+os.environ['code']+"so3/lib/c"
     ]
 
 setup(

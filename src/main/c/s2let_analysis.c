@@ -295,7 +295,8 @@ void s2let_analysis_lm2wav_manual(
             }
         }
 
-        so3_core_inverse_via_ssht(
+//        so3_core_inverse_via_ssht(
+        so3_core_inverse_direct(
             f_wav + offset,
             f_wav_lmn,
             &so3_parameters
@@ -381,7 +382,8 @@ void s2let_analysis_lm2wav(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
-        so3_core_inverse_via_ssht(
+//        so3_core_inverse_via_ssht(
+        so3_core_inverse_direct(
             f_wav + offset,
             f_wav_lmn + offset_lmn,
             &so3_parameters

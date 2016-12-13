@@ -71,7 +71,7 @@ void s2let_analysis_adjoint_lmn2lm(
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
+                psi = 8*PI*PI/(2*el+1) * (wav_lm[j*L*L + lm_ind]);
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -157,7 +157,7 @@ void s2let_analysis_adjoint_lmn2lm_real(
             for (el = n; el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = wav_lm[j*L*L + lm_ind];
+                psi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
 
                 if (n)
                 {
@@ -224,12 +224,12 @@ void s2let_analysis_adjoint_lmn2lm_real(
  */
 void s2let_analysis_adjoint_wav2lm_manual(
     complex double *flm,
-    complex double *f_wav,
-    complex double *f_scal,
-    double *scal_l,
-    complex double *wav_lm,
-    int scal_bandlimit,
-    int *wav_bandlimits,
+    const complex double *f_wav,
+    const complex double *f_scal,
+    const double *scal_l,
+    const complex double *wav_lm,
+    const int scal_bandlimit,
+    const int *wav_bandlimits,
     int J,
     int L,
     int spin,
@@ -294,6 +294,7 @@ void s2let_analysis_adjoint_wav2lm_manual(
 
         f_wav_lmn = (complex double*)calloc(so3_sampling_flmn_size(&so3_parameters), sizeof(complex double));
 
+//        so3_core_forward_direct(
         so3_adjoint_inverse_direct(
             f_wav_lmn,
             f_wav + offset,
@@ -305,7 +306,7 @@ void s2let_analysis_adjoint_wav2lm_manual(
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
+                psi = 8*PI*PI/(2*el+1) * conj(wav_lm[j*L*L + lm_ind]);
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -337,9 +338,9 @@ void s2let_analysis_adjoint_wav2lm_manual(
  */
 void s2let_analysis_adjoint_wav2lm(
     complex double *flm,
-    complex double *f_wav,
-    complex double *f_scal,
-    s2let_parameters_t *parameters
+    const complex double *f_wav,
+    const complex double *f_scal,
+    const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
     int J_min = parameters->J_min;
@@ -365,7 +366,7 @@ void s2let_analysis_adjoint_wav2lm(
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
 
-     // Note, this is a spin-0 transform!
+    // Note, this is a spin-0 transform!
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
@@ -377,6 +378,17 @@ void s2let_analysis_adjoint_wav2lm(
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
+    // switch (parameters->sampling_scheme)
+    // {
+    // case S2LET_SAMPLING_MW:
+    //     ssht_core_mw_forward_sov_conv_sym(f_scal_lm, f_scal, bandlimit, 0, dl_method, verbosity);
+    //     break;
+    // case S2LET_SAMPLING_MW_SS:
+    //     ssht_core_mw_forward_sov_conv_sym_ss(f_scal_lm, f_scal, bandlimit, 0, dl_method, verbosity);
+    //     break;
+    // default:
+    //     S2LET_ERROR_GENERIC("Sampling scheme not supported.");
+    // }
 
     offset = 0;
     offset_lmn = 0;
@@ -394,6 +406,8 @@ void s2let_analysis_adjoint_wav2lm(
         so3_parameters.L0 = s2let_L0(j, parameters);
 
         so3_adjoint_inverse_direct(
+//        so3_core_forward_direct(
+//        so3_core_forward_via_ssht(
             f_wav_lmn + offset_lmn,
             f_wav + offset,
             &so3_parameters
@@ -403,6 +417,7 @@ void s2let_analysis_adjoint_wav2lm(
     }
 
     s2let_analysis_adjoint_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
+//    s2let_synthesis_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
 
     free(wav_lm);
     free(scal_l);
@@ -424,9 +439,9 @@ void s2let_analysis_adjoint_wav2lm(
  */
 void s2let_analysis_adjoint_wav2lm_real(
     complex double *flm,
-    double *f_wav,
-    double *f_scal,
-    s2let_parameters_t *parameters
+    const double *f_wav,
+    const double *f_scal,
+    const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
     int J_min = parameters->J_min;
@@ -458,10 +473,10 @@ void s2let_analysis_adjoint_wav2lm_real(
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
-      ssht_adjoint_mw_inverse_sov_sym_real(f_scal_lm, f_scal, bandlimit, dl_method, verbosity);
+        ssht_adjoint_mw_inverse_sov_sym_real(f_scal_lm, f_scal, bandlimit, dl_method, verbosity);
         break;
     case S2LET_SAMPLING_MW_SS:
-      ssht_adjoint_mw_inverse_sov_sym_ss_real(f_scal_lm, f_scal, bandlimit, dl_method, verbosity);
+        ssht_adjoint_mw_inverse_sov_sym_ss_real(f_scal_lm, f_scal, bandlimit, dl_method, verbosity);
         break;
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
@@ -483,19 +498,18 @@ void s2let_analysis_adjoint_wav2lm_real(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
-	//TODO: change to adjoint_inverse when it is completed
-        /*so3_core_forward_via_ssht_real(
+        so3_adjoint_inverse_direct_real(
             f_wav_lmn + offset_lmn,
             f_wav + offset,
             &so3_parameters
-	    );*/
-	S2LET_ERROR_GENERIC("Real Adjoint function now ready yet...")
+	    );
 
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
     }
 
-    s2let_analysis_adjoint_lmn2lm_real(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, &real_parameters);
+    s2let_analysis_adjoint_lmn2lm_real(
+        flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, &real_parameters);
 
     free(wav_lm);
     free(scal_l);
@@ -517,9 +531,9 @@ void s2let_analysis_adjoint_wav2lm_real(
  */
 void s2let_analysis_adjoint_wav2px(
     complex double *f,
-    complex double *f_wav,
-    complex double *f_scal,
-    s2let_parameters_t *parameters
+    const complex double *f_wav,
+    const complex double *f_scal,
+    const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
     int spin = parameters->spin;
@@ -529,8 +543,9 @@ void s2let_analysis_adjoint_wav2px(
     complex double *flm;
     s2let_allocate_lm(&flm, L);
 
+//    s2let_synthesis_wav2lm(flm, f_wav, f_scal, parameters);
     s2let_analysis_adjoint_wav2lm(flm, f_wav, f_scal, parameters);
-
+ 
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
@@ -560,9 +575,9 @@ void s2let_analysis_adjoint_wav2px(
  */
 void s2let_analysis_adjoint_wav2px_real(
     double *f,
-    double *f_wav,
-    double *f_scal,
-    s2let_parameters_t *parameters
+    const double *f_wav,
+    const double *f_scal,
+    const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
     ssht_dl_method_t dl_method = parameters->dl_method;

@@ -70,6 +70,7 @@ void s2let_synthesis_adjoint_lm2lmn(
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
                 psi = conj(wav_lm[j*L*L + lm_ind]);
+
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -285,7 +286,7 @@ void s2let_synthesis_adjoint_lm2wav_manual(
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * conj(wav_lm[j*L*L + lm_ind]);
+                psi = wav_lm[j*L*L + lm_ind];
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -327,7 +328,7 @@ void s2let_synthesis_adjoint_lm2wav(
     const complex double *flm,
     const s2let_parameters_t *parameters
 ) {
-    int L = parameters->L;
+    int L = parameters->L, i;
     int J_min = parameters->J_min;
     int N = parameters->N;
     ssht_dl_method_t dl_method = parameters->dl_method;
@@ -349,6 +350,7 @@ void s2let_synthesis_adjoint_lm2wav(
 
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);
     s2let_synthesis_adjoint_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters);
+
 
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
@@ -382,6 +384,8 @@ void s2let_synthesis_adjoint_lm2wav(
         so3_parameters.L0 = s2let_L0(j, parameters);
 
         so3_adjoint_forward_direct(
+//        so3_core_inverse_direct(
+//        so3_core_inverse_direct(
             f_wav + offset,
             f_wav_lmn + offset_lmn,
             &so3_parameters
@@ -470,12 +474,11 @@ void s2let_synthesis_adjoint_lm2wav_real(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
-	S2LET_ERROR_GENERIC("Real Adjoint function now ready yet...")
-	  /*so3_core_inverse_via_ssht_real(
+	  so3_adjoint_forward_direct_real(
             f_wav + offset,
             f_wav_lmn + offset_lmn,
             &so3_parameters
-	    );*/
+	    );
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
     }
@@ -504,7 +507,7 @@ void s2let_synthesis_adjoint_px2wav(
     const complex double *f,
     const s2let_parameters_t *parameters
 ) {
-    int L = parameters->L;
+    int L = parameters->L, i;
     int spin = parameters->spin;
     ssht_dl_method_t dl_method = parameters->dl_method;
     int verbosity = parameters->verbosity;

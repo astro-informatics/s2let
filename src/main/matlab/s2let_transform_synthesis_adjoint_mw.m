@@ -75,16 +75,14 @@ end
                                                           args.SpinLowered, args.SpinLoweredFrom, ...
                                                           args.Sampling);
 
-n_shift = args.N+1;
-
 if strcmp(args.Sampling, 'MWSS')
     f_scal = s2let_mwss_vec2arr(f_scal_vec);
 
     J = s2let_jmax(args.L, args.B);
-    f_wav = cell(J+1-args.J_min, 2*args.N-1);
+    f_wav = cell(J+1-args.J_min, args.N);
     offset = 0;
     for j = args.J_min:J
-      for en = -args.N+1:args.N-1
+      for en = 1:args.N
         if args.Upsample
           band_limit = args.L;
         else
@@ -97,7 +95,7 @@ if strcmp(args.Sampling, 'MWSS')
                 temp(t,p) = f_wav_vec(1,ind);
             end
         end
-        f_wav{j+1-args.J_min, en+n_shift} = temp;
+        f_wav{j+1-args.J_min, en} = temp;
         offset = offset + (band_limit+1) * 2*band_limit;
       end
     end
@@ -105,10 +103,10 @@ else
     f_scal = s2let_mw_vec2arr(f_scal_vec);
 
     J = s2let_jmax(args.L, args.B);
-    f_wav = cell(J+1-args.J_min, 2*args.N-1);
+    f_wav = cell(J+1-args.J_min, args.N);
     offset = 0;
     for j = args.J_min:J
-      for en = -args.N+1:args.N-1
+      for en = 1:args.N
         if args.Upsample
           band_limit = args.L;
         else
@@ -121,59 +119,8 @@ else
                 temp(t,p) = f_wav_vec(1,ind);
             end
         end
-        f_wav{j+1-args.J_min, en+n_shift} = temp;
+        f_wav{j+1-args.J_min, en} = temp;
         offset = offset + band_limit * (2*band_limit-1);
       end
     end
 end
-
-% CHANGE BACK WHEN STEERABLE IMPLIMENTED
-% if strcmp(args.Sampling, 'MWSS')
-%     f_scal = s2let_mwss_vec2arr(f_scal_vec);
-% 
-%     J = s2let_jmax(args.L, args.B);
-%     f_wav = cell(J+1-args.J_min, args.N);
-%     offset = 0;
-%     for j = args.J_min:J
-%       for en = 1:args.N
-%         if args.Upsample
-%           band_limit = args.L;
-%         else
-%           band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-%         end
-%         temp = zeros(band_limit+1, 2*band_limit);
-%         for t = 1:band_limit+1
-%             for p = 1:2*band_limit
-%                 ind = offset + (t-1) * 2 * band_limit + p;
-%                 temp(t,p) = f_wav_vec(1,ind);
-%             end
-%         end
-%         f_wav{j+1-args.J_min, en} = temp;
-%         offset = offset + (band_limit+1) * 2*band_limit;
-%       end
-%     end
-% else
-%     f_scal = s2let_mw_vec2arr(f_scal_vec);
-% 
-%     J = s2let_jmax(args.L, args.B);
-%     f_wav = cell(J+1-args.J_min, args.N);
-%     offset = 0;
-%     for j = args.J_min:J
-%       for en = 1:args.N
-%         if args.Upsample
-%           band_limit = args.L;
-%         else
-%           band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
-%         end
-%         temp = zeros(band_limit, 2*band_limit-1);
-%         for t = 1:band_limit
-%             for p = 1:2*band_limit-1
-%                 ind = offset + (t-1) * ( 2 * band_limit - 1) + p;
-%                 temp(t,p) = f_wav_vec(1,ind);
-%             end
-%         end
-%         f_wav{j+1-args.J_min, en} = temp;
-%         offset = offset + band_limit * (2*band_limit-1);
-%       end
-%     end
-% end

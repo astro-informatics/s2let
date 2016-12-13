@@ -76,16 +76,14 @@ J = s2let_jmax(args.L, args.B);
 f_wav_vec = [];
 
 offset = 0;
-n_shift = args.N+1;
-
 for j = args.J_min:J
-  for en = -args.N+1:args.N-1
+  for en = 1:args.N
     if args.Upsample
         band_limit = args.L;
     else
         band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     end
-    temp = f_wav{j+1-args.J_min, en+n_shift};
+    temp = f_wav{j+1-args.J_min, en};
 
     if  strcmp(args.Sampling, 'MWSS')
         for t = 1:band_limit+1
@@ -111,7 +109,7 @@ if(all(isreal(f_wav_vec)))
   f_wav_vec = complex(f_wav_vec,0);
 end
 
-f_vec = s2let_transform_synthesis_mw_mex(f_wav_vec, f_scal_vec, args.B, args.L, args.J_min, ...
+f_vec = s2let_transform_analysis_adjoint_mw_mex(f_wav_vec, f_scal_vec, args.B, args.L, args.J_min, ...
                                          args.N, args.Spin, args.Reality, args.Upsample, ...
                                          args.SpinLowered, args.SpinLoweredFrom, ...
                                          args.Sampling);

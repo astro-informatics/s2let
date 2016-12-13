@@ -27,7 +27,8 @@ UNAME 	:= $(shell uname)
 
 # Compilers and options for C
 CC	= gcc
-OPT	= -Wall -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
+#OPT	= -Wall -g -fopenmp -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
+OPT	= -Wall -g -DS2LET_VERSION=\"1.1b1\" -DS2LET_BUILD=\"`git rev-parse HEAD`\"
 
 # Compilers and options for Fortran
 FCC	= gfortran
@@ -150,8 +151,12 @@ S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_synthesis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2wav_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_lm2wav_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_analysis_adjoint_lm2wav_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_synthesis_adjoint_lm2wav_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_mw_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_analysis_adjoint_mw_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_synthesis_adjoint_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_jmax_mex.o	\
 	  $(S2LETOBJMAT)/s2let_bandlimit_mex.o
 
@@ -163,6 +168,10 @@ S2LETOBJSMEX = $(S2LETOBJMEX)/s2let_transform_axisym_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_synthesis_adjoint_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_lm2wav_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_analysis_adjoint_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_synthesis_adjoint_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_analysis_adjoint_lm2wav_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_synthesis_adjoint_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_jmax_mex.$(MEXEXT)	\
