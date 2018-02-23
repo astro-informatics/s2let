@@ -15,6 +15,7 @@
 *.mexa64
 *.mexmaci64
 *~
+*pys2let.c
 
 core
 vgcore.*
