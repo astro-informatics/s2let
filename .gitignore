@@ -16,6 +16,8 @@
 *.mexmaci64
 *~
 *pys2let.c
+*.idea
 
 core
 vgcore.*
+*.dat
