@@ -5,15 +5,17 @@
 #ifndef S2LET_ANALYSIS
 #define S2LET_ANALYSIS
 
+#include "ssht_types.h"
+
 #include <complex.h>
 
 /** Harmonic-space wavelet transform **/
 
 void s2let_analysis_lm2lmn(
-    complex double *f_wav_lmn,
-    complex double *f_scal_lm,
-    const complex double *flm,
-    const complex double *wav_lm,
+    S2LET_COMPLEX(double) *f_wav_lmn,
+    S2LET_COMPLEX(double) *f_scal_lm,
+    const S2LET_COMPLEX(double) *flm,
+    const S2LET_COMPLEX(double) *wav_lm,
     const double *scal_l,
     const s2let_parameters_t *parameters
 );
@@ -21,10 +23,10 @@ void s2let_analysis_lm2lmn(
 /** Harmonic-space wavelet transform for real signals **/
 
 void s2let_analysis_lm2lmn_real(
-    complex double *f_wav_lmn,
-    complex double *f_scal_lm,
-    const complex double *flm,
-    const complex double *wav_lm,
+    S2LET_COMPLEX(double) *f_wav_lmn,
+    S2LET_COMPLEX(double) *f_scal_lm,
+    const S2LET_COMPLEX(double) *flm,
+    const S2LET_COMPLEX(double) *wav_lm,
     const double *scal_l,
     const s2let_parameters_t *parameters
 );
@@ -32,11 +34,11 @@ void s2let_analysis_lm2lmn_real(
 /** Harmonic-space wavelet transform **/
 
 void s2let_analysis_lm2wav_manual(
-    complex double *f_wav,
-    complex double *f_scal,
-    const complex double *flm,
+    S2LET_COMPLEX(double) *f_wav,
+    S2LET_COMPLEX(double) *f_scal,
+    const S2LET_COMPLEX(double) *flm,
     const double *scal_l,
-    const complex double *wav_lm,
+    const S2LET_COMPLEX(double) *wav_lm,
     const int scal_bandlimit,
     const int *wav_bandlimits,
     int J,
@@ -46,9 +48,9 @@ void s2let_analysis_lm2wav_manual(
 );
 
 void s2let_analysis_lm2wav(
-    complex double *f_wav,
-    complex double *f_scal,
-    const complex double *flm,
+    S2LET_COMPLEX(double) *f_wav,
+    S2LET_COMPLEX(double) *f_scal,
+    const S2LET_COMPLEX(double) *flm,
     const s2let_parameters_t *parameters
 );
 
@@ -57,16 +59,16 @@ void s2let_analysis_lm2wav(
 void s2let_analysis_lm2wav_real(
     double *f_wav,
     double *f_scal,
-    const complex double *flm,
+    const S2LET_COMPLEX(double) *flm,
     const s2let_parameters_t *parameters
 );
 
 /** Pixel-space wavelet transform **/
 
 void s2let_analysis_px2wav(
-    complex double *f_wav,
-    complex double *f_scal,
-    const complex double *f,
+    S2LET_COMPLEX(double) *f_wav,
+    S2LET_COMPLEX(double) *f_scal,
+    const S2LET_COMPLEX(double) *f,
     const s2let_parameters_t *parameters
 );
 

@@ -7,6 +7,18 @@
 
 #include "ssht.h"
 
+#ifdef __cplusplus
+#include <complex>
+#define S2LET_COMPLEX(TYPE) std::complex<TYPE>
+extern "C" {
+#else
+#define S2LET_COMPLEX(TYPE) TYPE complex
+#endif
+
+
+#ifdef __cplusplus
+}
+#endif
 typedef enum {
     /*!
      * McEwen and Wiaux sampling:

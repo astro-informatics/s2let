@@ -4,6 +4,7 @@
 
 #ifndef S2LET_MATH
 #define S2LET_MATH
+#include "ssht_types.h"
 
 #define PI    3.141592653589793238462643383279502884197
 
@@ -20,7 +21,7 @@ double s2let_math_spline_scalingfct(double x, double y);
 
 double ran2_dp(int idum);
 
-double maxerr_cplx(complex double *a, complex double *b, int size);
+double maxerr_cplx(S2LET_COMPLEX(double) *a, S2LET_COMPLEX(double) *b, int size);
 
 double maxerr(double *a, double *b, int size);
 
