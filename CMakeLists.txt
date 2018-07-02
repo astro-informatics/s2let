@@ -15,6 +15,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(FFTW3 REQUIRED COMPONENT SERIAL DOUBLE)
 find_package(OpenMP QUIET)
 find_package(Ssht REQUIRED)
+find_package(So3 REQUIRED)
 
 list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c 
   src/main/c/s2let_transform_axisym_mw.c src/main/c/s2let_math.c 
@@ -45,7 +46,11 @@ else()
 endif()
 
 install(TARGETS s2let EXPORT S2letTargets ARCHIVE DESTINATION lib PUBLIC_HEADER)
-
+install(FILES
+  include/s2let.h                      include/s2let_error.h                include/s2let_hpx.h                  include/s2let_lm.h                   include/s2let_mw.h                   include/s2let_tiling.h               include/s2let_transform_axisym_mw.h
+  include/s2let_alloc.h                include/s2let_fits.h                 include/s2let_idl_hpx.h              include/s2let_math.h                 include/s2let_so3.h                  include/s2let_transform_axisym_hpx.h include/s2let_types.h
+  include/s2let_analysis.h             include/s2let_helper.h               include/s2let_idl_mw.h               include/s2let_mex.h                  include/s2let_synthesis.h            include/s2let_transform_axisym_lm.h
+  DESTINATION include/s2let)
 #building about and test executables
 add_executable(s2let_about src/main/c/s2let_about.c)
 target_compile_definitions(s2let_about PRIVATE S2LET_VERSION="${S2let_VERSION}" S2LET_BUILD="${S2let_BUILD}")
