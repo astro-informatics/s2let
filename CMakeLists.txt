@@ -29,8 +29,8 @@ list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c
 
 add_library(s2let STATIC ${C_SRC})
 target_include_directories(s2let PUBLIC ${FFTW3_INCLUDE_DIRS})
-target_include_directories(s2let PUBLIC ${Ssht_INCLUDE_DIR})
-target_include_directories(s2let PUBLIC ${So3_INCLUDE_DIR})
+target_include_directories(s2let PUBLIC ${Ssht_INCLUDE_DIR}/ssht)
+target_include_directories(s2let PUBLIC ${So3_INCLUDE_DIR}/so3)
 target_include_directories(s2let PRIVATE ${PROJECT_SOURCE_DIR}/include/)
 if(OpenMP_C_FOUND AND openmp)
   target_link_libraries(s2let OpenMP::OpenMP_C)
