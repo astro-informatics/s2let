@@ -17,8 +17,8 @@ find_package(OpenMP QUIET)
 find_package(Ssht REQUIRED)
 find_package(So3 REQUIRED)
 
-list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c 
-  src/main/c/s2let_transform_axisym_mw.c src/main/c/s2let_math.c 
+list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c
+  src/main/c/s2let_transform_axisym_mw.c src/main/c/s2let_math.c
   src/main/c/s2let_mw.c src/main/c/s2let_tiling.c
   src/main/c/s2let_synthesis.c
   src/main/c/s2let_lm.c
@@ -29,8 +29,8 @@ list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c
 
 add_library(s2let STATIC ${C_SRC})
 target_include_directories(s2let PUBLIC ${FFTW3_INCLUDE_DIRS})
-target_include_directories(s2let PUBLIC ${Ssht_INCLUDE_DIR}/ssht)
-target_include_directories(s2let PUBLIC ${So3_INCLUDE_DIR}/so3)
+target_include_directories(s2let PUBLIC ${Ssht_INCLUDE_DIR})
+target_include_directories(s2let PUBLIC ${So3_INCLUDE_DIR})
 target_include_directories(s2let PRIVATE ${PROJECT_SOURCE_DIR}/include/)
 if(OpenMP_C_FOUND AND openmp)
   target_link_libraries(s2let OpenMP::OpenMP_C)
@@ -50,7 +50,7 @@ install(FILES
   include/s2let.h                      include/s2let_error.h                include/s2let_hpx.h                  include/s2let_lm.h                   include/s2let_mw.h                   include/s2let_tiling.h               include/s2let_transform_axisym_mw.h
   include/s2let_alloc.h                include/s2let_fits.h                 include/s2let_idl_hpx.h              include/s2let_math.h                 include/s2let_so3.h                  include/s2let_transform_axisym_hpx.h include/s2let_types.h
   include/s2let_analysis.h             include/s2let_helper.h               include/s2let_idl_mw.h               include/s2let_mex.h                  include/s2let_synthesis.h            include/s2let_transform_axisym_lm.h
-  DESTINATION include/s2let)
+  DESTINATION include)
 #building about and test executables
 add_executable(s2let_about src/main/c/s2let_about.c)
 target_compile_definitions(s2let_about PRIVATE S2LET_VERSION="${S2let_VERSION}" S2LET_BUILD="${S2let_BUILD}")
