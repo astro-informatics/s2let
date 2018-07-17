@@ -6,6 +6,7 @@
 #define S2LET_HPX
 
 #include <complex.h>
+#include "ssht_types.h"
 
 /*!
  * Restore real healpix map from spherical harmonic coefficients.
@@ -17,7 +18,7 @@
  * \param[in]  L Angular harmonic band-limit.
  * \retval none
  */
-void s2let_hpx_alm2map_spin_real(double* fQ, double* fU, const complex double* flmE, const complex double* flmB, int nside, int L, int spin);
+void s2let_hpx_alm2map_spin_real(double* fQ, double* fU, const S2LET_COMPLEX(double)* flmE, const S2LET_COMPLEX(double)* flmB, int nside, int L, int spin);
 
 /*!
  * Compute spherical harmonic coefficients of a real healpix map.
@@ -29,7 +30,7 @@ void s2let_hpx_alm2map_spin_real(double* fQ, double* fU, const complex double* f
  * \param[in]  L Angular harmonic band-limit.
  * \retval none
  */
-void s2let_hpx_map2alm_spin_real(complex double* flmE, complex double* flmB, const double* fQ, const double* fU, int nside, int L, int spin);
+void s2let_hpx_map2alm_spin_real(S2LET_COMPLEX(double)* flmE, S2LET_COMPLEX(double)* flmB, const double* fQ, const double* fU, int nside, int L, int spin);
 
 /*!
  * Restore real healpix map from spherical harmonic coefficients.
@@ -41,7 +42,7 @@ void s2let_hpx_map2alm_spin_real(complex double* flmE, complex double* flmB, con
  * \param[in]  L Angular harmonic band-limit.
  * \retval none
  */
-void s2let_hpx_alm2map_real(double* f, const complex double* flm, int nside, int L);
+void s2let_hpx_alm2map_real(double* f, const S2LET_COMPLEX(double)* flm, int nside, int L);
 
 
 /*!
@@ -54,7 +55,7 @@ void s2let_hpx_alm2map_real(double* f, const complex double* flm, int nside, int
  * \param[in]  L Angular harmonic band-limit.
  * \retval none
  */
-void s2let_hpx_map2alm_real(complex double* flm, const double* f, int nside, int L);
+void s2let_hpx_map2alm_real(S2LET_COMPLEX(double)* flm, const double* f, int nside, int L);
 
 
 /*!

@@ -1,155 +1,65 @@
-#------------------
+cmake_minimum_required(VERSION 3.7)
+option(openmp         "Enable OpenMP"                                   on)
+option(fPIC           "Enable fPIC (only for gcc)"                      on)
+option(tests          "Enable testing"                                  on)
 
-cmake_minimum_required(VERSION 2.6)
+project(s2let C)
 
-INCLUDE (CheckLibraryExists)
 
-# http://www.cmake.org/Wiki/CMake:How_To_Write_Platform_Checks
-# http://www.cmake.org/cmake/help/cmake2.6docs.html
+set(S2let_VERSION "1.1b1")
+set(S2let_BUILD "CMake")
+set(CMAKE_C_STANDARD 99)
 
-project(s2let)
-enable_language(C)
-enable_language(Fortran)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_LIST_DIR}/lib)
+find_package(FFTW3 REQUIRED COMPONENT SERIAL DOUBLE)
+find_package(OpenMP QUIET)
+find_package(Ssht REQUIRED)
+find_package(So3 REQUIRED)
 
-#------------------
-# Dependencies
-#------------------
+list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c
+  src/main/c/s2let_transform_axisym_mw.c src/main/c/s2let_math.c
+  src/main/c/s2let_mw.c src/main/c/s2let_tiling.c
+  src/main/c/s2let_synthesis.c
+  src/main/c/s2let_lm.c
+  src/main/c/s2let_alloc.c
+  src/main/c/s2let_helper.c
+  src/main/c/s2let_analysis.c
+  )
 
-# FFTW
-link_directories($ENV{FFTW}/lib)
+add_library(s2let STATIC ${C_SRC})
+target_include_directories(s2let PUBLIC ${FFTW3_INCLUDE_DIRS})
+target_include_directories(s2let PUBLIC ${Ssht_INCLUDE_DIR})
+target_include_directories(s2let PUBLIC ${So3_INCLUDE_DIR})
+target_include_directories(s2let PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+if(OpenMP_C_FOUND AND openmp)
+  target_link_libraries(s2let OpenMP::OpenMP_C)
+endif()
+target_link_libraries(s2let ${Ssht_LIBRARY})
+target_link_libraries(s2let ${So3_LIBRARY})
+target_link_libraries(s2let ${FFTW3_DOUBLE_SERIAL_LIBRARY})
 
-# SSHT
-include_directories($ENV{SSHT}/include/c)
-link_directories($ENV{SSHT}/lib/c)
+if(fPIC)
+  set_target_properties(s2let PROPERTIES COMPILE_FLAGS "${FFTW3_DEFINITIONS} -fPIC")
+else()
+  set_target_properties(s2let PROPERTIES COMPILE_FLAGS "${FFTW3_DEFINITIONS}")
+endif()
 
-# CFITSIO 
-find_path(CFITSIO_INCLUDE_DIR fitsio.h
-  PATH_SUFFIXES libcfitsio3 libcfitsio0 cfitsio
-  PATHS
-  $ENV{CFITSIO}/include  
-)
-find_library(CFITSIO_LIB NAMES cfitsio
-  PATHS
-  $ENV{CFITSIO}/lib  
-)
-if(CFITSIO_INCLUDE_DIR AND CFITSIO_LIB)
-  set(CFITSIO_FOUND TRUE)
-else (CFITSIO_INCLUDE_DIR AND CFITSIO_LIBRARIES)
-  set(CFITSIO_FOUND FALSE)
-endif(CFITSIO_INCLUDE_DIR AND CFITSIO_LIB)
-# Link if found
-if (CFITSIO_FOUND)
-   include_directories($ENV{CFITSIO}/include)
-   link_directories($ENV{CFITSIO}/lib)
-endif (CFITSIO_FOUND)
+install(TARGETS s2let EXPORT S2letTargets ARCHIVE DESTINATION lib PUBLIC_HEADER)
+install(FILES
+  include/s2let.h                      include/s2let_error.h                include/s2let_hpx.h                  include/s2let_lm.h                   include/s2let_mw.h                   include/s2let_tiling.h               include/s2let_transform_axisym_mw.h
+  include/s2let_alloc.h                include/s2let_fits.h                 include/s2let_idl_hpx.h              include/s2let_math.h                 include/s2let_so3.h                  include/s2let_transform_axisym_hpx.h include/s2let_types.h
+  include/s2let_analysis.h             include/s2let_helper.h               include/s2let_idl_mw.h               include/s2let_mex.h                  include/s2let_synthesis.h            include/s2let_transform_axisym_lm.h
+  DESTINATION include)
+#building about and test executables
+add_executable(s2let_about src/main/c/s2let_about.c)
+target_compile_definitions(s2let_about PRIVATE S2LET_VERSION="${S2let_VERSION}" S2LET_BUILD="${S2let_BUILD}")
+set_target_properties(s2let_about PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-# HEALPIX 
-find_library(HEALPIX_LIB NAMES healpix
-  PATHS
-  $ENV{HEALPIX}/lib  
-)
-if(HEALPIX_LIB)
-  set(HEALPIX_FOUND TRUE)
-else (HEALPIX_LIB)
-  set(HEALPIX_FOUND FALSE)
-endif(HEALPIX_LIB)
-# Link if found
-if (HEALPIX_FOUND)
-   include_directories($ENV{HEALPIX}/include)
-   link_directories($ENV{HEALPIX}/lib)
-endif (HEALPIX_FOUND)
+include("exporting")
 
-#------------------
-# Compiler flags : custom if needed
-#------------------
-
-# get_filename_component (Fortran_COMPILER_NAME ${CMAKE_Fortran_COMPILER} NAME)
-# Wall -O3 -g -fopenmp")
-# if (Fortran_COMPILER_NAME STREQUAL "gfortran")
-#  #elseif (Fortran_COMPILER_NAME STREQUAL "ifort")
-#  set(CMAKE_Fortran_FLAGS "-TODO")
-#elseif (Fortran_COMPILER_NAME STREQUAL "g77") 
-#  set(CMAKE_Fortran_FLAGS "-TODO")
-#else (Fortran_COMPILER_NAME STREQUAL "gfortran")
-#  set(CMAKE_Fortran_FLAGS "-TODO")
-#endif (Fortran_COMPILER_NAME STREQUAL "gfortran")
-
-#------------------
-# Standard configuration, main library
-#------------------
-
-set(LIBS_C "-lfftw3 -lssht")
-set(LIBTAG_C "-L${LIBRARY_OUTPUT_PATH} -ls2let -lm -lc")
-message("Library output :" ${LIBRARY_OUTPUT_PATH})
-
-# Standard library
-set(C_SRC "src/main/c/s2let_axisym_lm.c" "src/main/c/s2let_axisym_mw.c" "src/main/c/s2let_idl_mw.c" "src/main/c/s2let_math.c" "src/main/c/s2let_mw.c" "src/main/c/s2let_tiling.c")
-
-# Test executables
-set(C_TESTEXE "src/test/c/s2let_test.c")  
-
-# Main executables
-set(C_EXE "src/main/c/s2let_denoising_demo.c")  
-
-#------------------
-# CFITS and HEALPIX options
-#------------------
-
-# Additional files if CFITSIO is present
-if (CFITSIO_FOUND)
-   message("CFITSIO library was found")
-   set(C_SRC ${C_SRC} "src/main/c/s2let_fits.c")
-   set(LIBS_C ${LIBS_C} "-lcfitsio")
-   set(C_EXE ${C_EXE} "src/main/c/s2let_axisym_mw_analysis_real.c")  
-   set(C_EXE ${C_EXE} "src/main/c/s2let_axisym_mw_synthesis_real.c") 
-endif (CFITSIO_FOUND)
-
-# Additional files if HEALPIX is present
-if (HEALPIX_FOUND)
-   message("HEALPIX library was found")
-   set(CMAKE_Fortran_COMPILER_INIT gfortran)
-   set(CMAKE_Fortran_FLAGS "-O3 -ffree-form -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp")
-   message("Setting F90 compilation flags as: ${CMAKE_Fortran_FLAGS}")
-   set(C_SRC ${C_SRC} "src/main/f90/s2let_hpx.f90" "src/main/c/s2let_hpx.c" "src/main/c/s2let_axisym_hpx.c" "src/main/c/s2let_idl_hpx.c")
-   set(LIBS_C ${LIBS_C} "-lgfortran -fopenmp -lhealpix")
-   set(C_EXE ${C_EXE} "src/main/c/s2let_hpx_demo.c")  
-   set(C_EXE ${C_EXE} "src/main/c/s2let_axisym_hpx_analysis_real.c") 
-   set(C_EXE ${C_EXE} "src/main/c/s2let_axisym_hpx_synthesis_real.c") 
-   set(C_TESTEXE ${C_TESTEXE} "src/test/c/s2let_hpx_test.c")  
-endif (HEALPIX_FOUND)
-
-# Create library
-include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
-add_library(s2let ${C_SRC})
-
-#------------------
-# Config test executables
-#------------------
-
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
-foreach (p ${C_TESTEXE})
-  get_filename_component(q ${p} NAME_WE)
-  message( "Executable : ${q} " )
-  add_executable (${q} ${p})
-  add_dependencies(${q} s2let)
-  target_link_libraries(${q} ${LIBTAG_C} ${LIBS_C})
-  add_test (${q} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${q})
-endforeach (p)
-
-enable_testing()
-
-#------------------
-# Config main executables
-#------------------
-foreach (p ${C_EXE})
-  get_filename_component(q ${p} NAME_WE)
-  message( "Executable : ${q} " )
-  add_executable (${q} ${p})
-  add_dependencies(${q} s2let)
-  target_link_libraries(${q} ${LIBTAG_C} ${LIBS_C})
-endforeach (p)
-
-#------------------
+if(tests)
+  add_executable(s2let_test src/test/c/s2let_test.c)
+  target_include_directories(s2let_test PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+  target_link_libraries(s2let_test s2let)
+endif()
