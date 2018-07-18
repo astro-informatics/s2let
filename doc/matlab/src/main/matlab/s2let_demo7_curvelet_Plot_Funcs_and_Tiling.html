@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo7_curvelet_Plot_Funcs_and_Tiling</title>
+  <meta name="keywords" content="s2let_demo7_curvelet_Plot_Funcs_and_Tiling">
+  <meta name="description" content="s2let_demo7 - plotting curvelets">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo7_curvelet_Plot_Funcs_and_Tiling.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo7_curvelet_Plot_Funcs_and_Tiling
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo7 - plotting curvelets</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo7 - plotting curvelets 
+
+ 1) Plot the scaling function and curvelet functions in real space (s2let_plot_curvelet_tiling).
+ 2) Plot the curvelets on the Sphere (s2let_plot_curvelet_on_sphere).
+ 3) Plot the curvelets parametrically (s2let_plot_curvelet_parametric).
+ wherein  curvelets and the scaling functions are generated via
+ the matlab function &quot;s2let_curvelet_tiling(B, L, J_min, &lt;options&gt;)&quot;.
+
+ -----------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_plot_curvelet_on_sphere.html" class="code" title="function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_curvelet_on_sphere</a>	s2let_plot_curvelet_on_sphere</li><li><a href="s2let_plot_curvelet_parametric.html" class="code" title="function s2let_plot_curvelet_parametric(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_curvelet_parametric</a>	s2let_plot_curvelet_parametric</li><li><a href="s2let_plot_curvelet_tiling.html" class="code" title="function s2let_plot_curvelet_tiling(B, L, J_min, varargin)">s2let_plot_curvelet_tiling</a>	s2let_plot_curvelet_tiling</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo7 - plotting curvelets</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% 1) Plot the scaling function and curvelet functions in real space (s2let_plot_curvelet_tiling).</span>
+0004 <span class="comment">% 2) Plot the curvelets on the Sphere (s2let_plot_curvelet_on_sphere).</span>
+0005 <span class="comment">% 3) Plot the curvelets parametrically (s2let_plot_curvelet_parametric).</span>
+0006 <span class="comment">% wherein  curvelets and the scaling functions are generated via</span>
+0007 <span class="comment">% the matlab function &quot;s2let_curvelet_tiling(B, L, J_min, &lt;options&gt;)&quot;.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% -----------------------------------------------------------</span>
+0010 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0011 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0012 <span class="comment">% See LICENSE.txt for license details</span>
+0013 <span class="comment">% -----------------------------------------------------------</span>
+0014 
+0015 clear all;
+0016 
+0017 <span class="comment">% ---------------</span>
+0018 <span class="comment">% Define curvelet parameters:</span>
+0019 <span class="comment">% ---------------</span>
+0020 Spin = 0;            <span class="comment">% Spin value of curvelet</span>
+0021 B = 2;               <span class="comment">% B = 2 for dyadic sampling</span>
+0022 L = 128;             <span class="comment">% Angular band-limit</span>
+0023 J_min = 2;           <span class="comment">% Minimum scale probed by curvelets</span>
+0024 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B); <span class="comment">% Maximum scale probed by curvelets =ceil(log L/ log B);</span>
+0025 
+0026 
+0027 <span class="comment">% ---------------</span>
+0028 <span class="comment">% Plot the tiling of scaling function and curvelets in harmonic space:</span>
+0029 <span class="comment">% And plot the scaling function and curvelet functions in real space:</span>
+0030 <span class="comment">% ---------------</span>
+0031 disp(<span class="string">' - Plot the tiling of curvelets'</span>);
+0032 <a href="s2let_plot_curvelet_tiling.html" class="code" title="function s2let_plot_curvelet_tiling(B, L, J_min, varargin)">s2let_plot_curvelet_tiling</a>(B, L, J_min,<span class="keyword">...</span>
+0033                            <span class="string">'Spin'</span>, Spin);
+0034 
+0035 <span class="comment">% Define Euler angles for rotating the curvelets functions</span>
+0036 <span class="comment">% such that the curvelets centred on the North pole of the sphere:</span>
+0037 alpha =  0 ;
+0038 beta = acos(-Spin/L); 
+0039 gamma = 0  ;  
+0040 
+0041 <span class="comment">% ---------------</span>
+0042 <span class="comment">% Plot the curvelets on the sphere:</span>
+0043 <span class="comment">% ---------------</span>
+0044 disp(<span class="string">' - Plot the curvelets on the sphere'</span>);
+0045 <a href="s2let_plot_curvelet_on_sphere.html" class="code" title="function s2let_plot_curvelet_on_sphere(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_curvelet_on_sphere</a>(alpha, beta, gamma, B, L, J_min, <span class="keyword">...</span>
+0046                               <span class="string">'Spin'</span>, Spin);
+0047 
+0048 <span class="comment">%{</span>
+0049 disp(<span class="string">' - Plot the curvelet parametrically'</span>);
+0050 <a href="s2let_plot_curvelet_parametric.html" class="code" title="function s2let_plot_curvelet_parametric(alpha, beta, gamma, B, L, J_min, varargin)">s2let_plot_curvelet_parametric</a>(alpha, beta, gamma,<span class="keyword">...</span>
+0051                                B, L, J_min, <span class="keyword">...</span>
+0052                                <span class="string">'Spin'</span>, Spin);
+0053 <span class="comment">%}</span></pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

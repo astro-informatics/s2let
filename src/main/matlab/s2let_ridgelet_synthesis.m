@@ -1,8 +1,8 @@
 
 function f = s2let_ridgelet_synthesis(f_ridge_wav, f_ridge_scal, varargin)
 
-% s2let_ridgelet_analysis
-% Compute ridgelet transform on the sphere.
+% s2let_ridgelet_synthesis
+% Compute inverse ridgelet transform on the sphere.
 %
 % Default usage :
 %
@@ -24,12 +24,7 @@ function f = s2let_ridgelet_synthesis(f_ridge_wav, f_ridge_scal, varargin)
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %  'Reality'         = { false        [do not assume f real (default)],
 %                        true         [assume f real (improves performance)] }
-%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
-%                               wavelets and scaling function.],
-%                        false [Apply the usual normalisation factors such
-%                               that the wavelets fulfil the admissibility
-%                               condition (default)]}
-%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+%  'OriginalSpin' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the wavelets
 %                       should be lowered from (default = 0)]
 %
@@ -56,8 +51,7 @@ p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('Upsample', false, @islogical);
 p.addParamValue('Sampling', 'MW', @ischar);
 p.addParamValue('Reality', false, @islogical);
-p.addParamValue('SpinLowered', false, @islogical);
-p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
+p.addParamValue('OriginalSpin', 0, @isnumeric);
 p.parse(f_ridge_wav, f_ridge_scal, varargin{:});
 args = p.Results;
 
@@ -68,8 +62,7 @@ f_radon = s2let_transform_synthesis_mw(f_ridge_wav, f_ridge_scal, ...
    'J_min', args.J_min, ...
    'N', N, 'Upsample', args.Upsample, 'Spin', 0, ...
    'Reality', args.Reality, 'Sampling', args.Sampling, ...
-   'SpinLowered', args.SpinLowered, ...
-   'SpinLoweredFrom', args.SpinLoweredFrom);
+   'OriginalSpin', args.OriginalSpin);
 
 f_radon_lm = ssht_forward(f_radon, args.L, ...
    'Method', args.Sampling, ...

@@ -63,7 +63,7 @@ for j = J_min:J
 end
 
 colormap(jet)
-fname = [pltroot,'/s2let_demo4_', configstr, '_earth_multires.png']
+fname = [pltroot,'/s2let_demo4_', configstr, '_earth_fullres.png']
 print('-r200', '-dpng', fname)
 
 
@@ -106,6 +106,6 @@ for j = J_min:J
 end
 
 
-fname = [pltroot,'/s2let_demo4_', configstr, '_earth_fullres.png']
+fname = [pltroot,'/s2let_demo4_', configstr, '_earth_multires.png']
 print('-r200', '-dpng', fname)
 

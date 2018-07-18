@@ -24,12 +24,7 @@ function f = s2let_transform_synthesis_mw(f_wav, f_scal, varargin)
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %  'J_min'           = { Minimum wavelet scale to consider;
 %                        0 <= J_min < log_B(L) (default=0) }
-%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
-%                               wavelets and scaling function.],
-%                        false [Apply the usual normalisation factors such
-%                               that the wavelets fulfil the admissibility
-%                               condition (default)]}
-%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+%  'OriginalSpin' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the wavelets
 %                       should be lowered from (default = 0)]
 %
@@ -57,8 +52,7 @@ p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('Upsample', false, @islogical);
 p.addParamValue('Sampling', 'MW', @ischar);
 p.addParamValue('Reality', false, @islogical);
-p.addParamValue('SpinLowered', false, @islogical);
-p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
+p.addParamValue('OriginalSpin', 0, @isnumeric);
 p.parse(f_wav, f_scal, varargin{:});
 args = p.Results;
 
@@ -113,7 +107,7 @@ end
 
 f_vec = s2let_transform_synthesis_mw_mex(f_wav_vec, f_scal_vec, args.B, args.L, args.J_min, ...
                                          args.N, args.Spin, args.Reality, args.Upsample, ...
-                                         args.SpinLowered, args.SpinLoweredFrom, ...
+                                         args.OriginalSpin, ...
                                          args.Sampling);
 
 if  strcmp(args.Sampling, 'MWSS')

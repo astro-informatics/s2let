@@ -18,12 +18,13 @@ void mexFunction( int nlhs, mxArray *plhs[],
                   int nrhs, const mxArray *prhs[])
 {
 
-  int B, L, J_min, spin, N, normalization, original_spin;
+  int L, J_min, spin, N, original_spin;
+  double B;
   s2let_parameters_t parameters = {};
   int iin = 0, iout = 0;
 
   // Check number of arguments
-  if(nrhs!=7) {
+  if(nrhs!=6) {
     mexErrMsgIdAndTxt("s2let_tiling_mex:InvalidInput:nrhs",
 		      "Require seven inputs.");
   }
@@ -40,7 +41,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
     mexErrMsgIdAndTxt("s2let_tiling_mex:InvalidInput:waveletParameter",
           "Wavelet parameter B must be integer.");
   }
-  B = (int)mxGetScalar(prhs[iin]);
+  B = (double)mxGetScalar(prhs[iin]);
   if (mxGetScalar(prhs[iin]) > (double)B || B <= 1)
     mexErrMsgIdAndTxt("s2let_tiling_mex:InvalidInput:bandLimitNonInt",
           "Wavelet parameter B must be positive integer greater than 2");
@@ -97,19 +98,8 @@ void mexFunction( int nlhs, mxArray *plhs[],
     mexErrMsgIdAndTxt("s2let_tiling_mex:InvalidInput:Jmin",
           "First scale J_min must be positive integer.");
 
-  // Parse normalization flag
-  iin = 5;
-  if( !mxIsLogicalScalar(prhs[iin])) {
-    mexErrMsgIdAndTxt("s2let_tiling_mex:InvalidInput:SpinLowered",
-          "SpinLowered flag must be logical.");
-  }
-  if (mxIsLogicalScalarTrue(prhs[iin]))
-    normalization = S2LET_WAV_NORM_SPIN_LOWERED;
-  else
-    normalization = S2LET_WAV_NORM_DEFAULT;
-
   // Parse original spin
-  iin = 6;
+  iin = 5;
   if( !mxIsDouble(prhs[iin]) ||
       mxIsComplex(prhs[iin]) ||
       mxGetNumberOfElements(prhs[iin])!=1 ) {
@@ -124,7 +114,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
   parameters.J_min = J_min;
   parameters.N = N;
   parameters.spin = spin;
-  parameters.normalization = normalization;
   parameters.original_spin = original_spin;
 
   // Compute ultimate scale J_max

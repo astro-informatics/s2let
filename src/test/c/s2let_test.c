@@ -93,7 +93,6 @@ void s2let_tiling_wavelet_test(int B, int L, int J_min, int N, int spin)
   parameters.J_min = J_min;
   parameters.N = N;
   parameters.spin = spin;
-  parameters.normalization = S2LET_WAV_NORM_DEFAULT;
   parameters.original_spin = 0;
 
   complex double *phi;
@@ -311,7 +310,6 @@ void s2let_wav_transform_wavlm_manual_test(int B, int L, int J_min, int N, int s
   parameters.N = N;
   parameters.spin = spin;
   parameters.upsample = 1;
-  parameters.normalization = S2LET_WAV_NORM_DEFAULT;
   parameters.original_spin = 0;
 
   int el, m, i, j;
@@ -418,7 +416,6 @@ void s2let_wav_transform_harmonic_test(int B, int L, int J_min, int N, int spin,
   parameters.N = N;
   parameters.spin = spin;
   parameters.upsample = 1;
-  parameters.normalization = S2LET_WAV_NORM_DEFAULT;
   parameters.original_spin = 0;
 
   clock_t time_start, time_end;
@@ -491,7 +488,6 @@ void s2let_wav_transform_harmonic_multires_test(int B, int L, int J_min, int N, 
   parameters.J_min = J_min;
   parameters.N = N;
   parameters.spin = spin;
-  parameters.normalization = S2LET_WAV_NORM_DEFAULT;
   parameters.original_spin = 0;
 
   clock_t time_start, time_end;
@@ -850,7 +846,6 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
 
     int verbosity = parameters.verbosity = 0;
@@ -1820,7 +1815,6 @@ void s2let_wav_transform_mw_multires_test(int B, int L, int J_min, int N, int sp
     parameters.J_min = J_min;
     parameters.N = N;
     parameters.spin = spin;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
 
     int verbosity = parameters.verbosity = 0;
@@ -1967,7 +1961,6 @@ void s2let_wav_transform_mwss_test(int B, int L, int J_min, int N, int spin, int
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW_SS;
 
@@ -2116,7 +2109,6 @@ void s2let_wav_transform_mwss_multires_test(int B, int L, int J_min, int N, int 
     parameters.J_min = J_min;
     parameters.N = N;
     parameters.spin = spin;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW_SS;
 
@@ -2266,7 +2258,6 @@ void s2let_wav_transform_lm2wav_test(int B, int L, int J_min, int N, int spin, i
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.verbosity = 0;
     parameters.dl_method = SSHT_DL_RISBO;
@@ -2391,7 +2382,6 @@ void s2let_wav_transform_lm2wav_multires_test(int B, int L, int J_min, int N, in
     parameters.J_min = J_min;
     parameters.N = N;
     parameters.spin = spin;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.verbosity = 0;
     parameters.dl_method = SSHT_DL_RISBO;
@@ -2517,7 +2507,6 @@ void s2let_transform_axisym_vs_directional_mw_test(B, L, J_min, seed)
     int verbosity = parameters.verbosity = 0;
     ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
 
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
 
     double wav_error, scal_error;
@@ -2575,7 +2564,6 @@ void s2let_transform_axisym_vs_directional_mw_multires_test(B, L, J_min, seed)
     int verbosity = parameters.verbosity = 0;
     ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
 
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
 
     int samples, bandlimit, j;

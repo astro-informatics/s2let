@@ -4,7 +4,7 @@
 <head>
   <title>Description of s2let_hpx_map2alm_spin</title>
   <meta name="keywords" content="s2let_hpx_map2alm_spin">
-  <meta name="description" content="">
+  <meta name="description" content="s2let_hpx_axisym_analysis_spin">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
   <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
   <meta name="robots" content="index, follow">
@@ -21,13 +21,14 @@
 </h1>
 
 <h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
-<div class="box"><strong></strong></div>
+<div class="box"><strong>s2let_hpx_axisym_analysis_spin</strong></div>
 
 <h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
 <div class="box"><strong>function [flmQ, flmU] = s2let_hpx_map2alm_spin(fQ, fU, varargin) </strong></div>
 
 <h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
-<div class="fragment"><pre class="comment">
+<div class="fragment"><pre class="comment"> s2let_hpx_axisym_analysis_spin
+
  Default usage :
 
    flmQ, flmU = s2let_hpx_map2alm_spin(fQ, fU, &lt;options&gt;)
@@ -47,14 +48,14 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../../../matlabicon.gif)">
-<li><a href="s2let_demo6.html" class="code" title="">s2let_demo6</a>	</li><li><a href="s2let_hpxtest.html" class="code" title="">s2let_hpxtest</a>	s2let_hpxtest</li></ul>
+<li><a href="s2let_demo6.html" class="code" title="">s2let_demo6</a>	s2let_demo6</li><li><a href="s2let_hpxtest.html" class="code" title="">s2let_hpxtest</a>	s2let_hpxtest</li></ul>
 <!-- crossreference -->
 
 
 
 <h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
 <div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [flmQ, flmU] = s2let_hpx_map2alm_spin(fQ, fU, varargin)</a>
-0002 
+0002 <span class="comment">% s2let_hpx_axisym_analysis_spin</span>
 0003 <span class="comment">%</span>
 0004 <span class="comment">% Default usage :</span>
 0005 <span class="comment">%</span>
@@ -69,7 +70,7 @@ This function is called by:
 0014 <span class="comment">%  'L'               = { Harmonic band-limit; L &gt; 1 (default=2*nside) }</span>
 0015 
 0016 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
-0017 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0017 <span class="comment">% Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen</span>
 0018 <span class="comment">% See LICENSE.txt for license details</span>
 0019 
 0020 sz = size(fQ);
@@ -88,6 +89,6 @@ This function is called by:
 0033 [flmQ, flmU] = s2let_hpx_map2alm_spin_mex(fQ, fU, args.nside, args.L, args.Spin);
 0034 
 0035 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 22-Sep-2015 14:38:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

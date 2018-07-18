@@ -25,7 +25,8 @@ void mexFunction( int nlhs, mxArray *plhs[],
                   int nrhs, const mxArray *prhs[])
 {
 
-  int i, j, B, L, J_min, N, spin, flm_m, flm_n, flm_size, reality, upsample, normalization, original_spin;
+  int i, j, L, J_min, N, spin, flm_m, flm_n, flm_size, reality, upsample, normalization, original_spin;
+  double B;
   char sampling_str[S2LET_STRING_LEN];
   s2let_sampling_t sampling_scheme;
   s2let_parameters_t parameters = {};
@@ -35,9 +36,9 @@ void mexFunction( int nlhs, mxArray *plhs[],
   double *f_wav_r = NULL, *f_scal_r = NULL;
   int iin = 0, iout = 0;
   // Check number of arguments
-  if(nrhs!=11) {
+  if(nrhs!=10) {
     mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidInput:nrhs",
-          "Require eleven inputs.");
+          "Require ten inputs.");
   }
   if(nlhs!=2) {
     mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidOutput:nlhs",
@@ -59,7 +60,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
   upsample = mxIsLogicalScalarTrue(prhs[iin]);
 
   /* Parse sampling scheme method. */
-  iin = 10;
+  iin = 9;
   if( !mxIsChar(prhs[iin]) ) {
       mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidInput:samplingSchemeChar",
                         "Sampling scheme must be string.");
@@ -78,18 +79,8 @@ void mexFunction( int nlhs, mxArray *plhs[],
       mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidInput:samplingScheme",
                         "Invalid sampling scheme.");
 
-  // Parse normalization flag
-  iin = 8;
-  if( !mxIsLogicalScalar(prhs[iin]) )
-    mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidInput:spinlowered",
-          "SpinLowered flag must be logical.");
-  if (mxIsLogicalScalarTrue(prhs[iin]))
-    normalization = S2LET_WAV_NORM_SPIN_LOWERED;
-  else
-    normalization = S2LET_WAV_NORM_DEFAULT;
-
   // Parse original spin
-  iin = 9;
+  iin = 8;
   if( !mxIsDouble(prhs[iin]) ||
       mxIsComplex(prhs[iin]) ||
       mxGetNumberOfElements(prhs[iin])!=1 ) {
@@ -118,7 +109,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
     mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidInput:waveletParameter",
           "Wavelet parameter B must be integer.");
   }
-  B = (int)mxGetScalar(prhs[iin]);
+  B = (double)mxGetScalar(prhs[iin]);
   if (mxGetScalar(prhs[iin]) > (double)B || B <= 1)
     mexErrMsgIdAndTxt("s2let_transform_analysis_lm2wav_mex:InvalidInput:waveletParameter",
           "Wavelet parameter B must be positive integer greater than 2");
@@ -194,7 +185,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
   parameters.N = N;
   parameters.spin = spin;
   parameters.upsample = upsample;
-  parameters.normalization = normalization;
   parameters.original_spin = original_spin;
   parameters.reality = reality;
   parameters.sampling_scheme = sampling_scheme;

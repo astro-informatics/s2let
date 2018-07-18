@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_check_cur_tiling</title>
+  <meta name="keywords" content="s2let_check_cur_tiling">
+  <meta name="description" content="s2let_check_cur_tiling - Checks the admissibity condition is satisfied.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_check_cur_tiling.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_check_cur_tiling
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_check_cur_tiling - Checks the admissibity condition is satisfied.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_check_cur_tiling - Checks the admissibity condition is satisfied. 
+ -----------------------------------------------------------
+ S2LET package to perform wavelets transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_transform_test_lm2lmn_lmn2lm.html" class="code" title="">s2let_curvelet_transform_test_lm2lmn_lmn2lm</a>	s2let_curvelet_transform_test_lm2lmn_lmn2lm</li><li><a href="s2let_fulltest_curvelet.html" class="code" title="">s2let_fulltest_curvelet</a>	s2let_fulltest_curvelet</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function error_on_cur_tiling = s2let_check_cur_tiling(cur_lm, scal_l, L, Spin, J, J_min)</a>
+0002 <span class="comment">% s2let_check_cur_tiling - Checks the admissibity condition is satisfied.</span>
+0003 <span class="comment">% -----------------------------------------------------------</span>
+0004 <span class="comment">% S2LET package to perform wavelets transform on the Sphere.</span>
+0005 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0006 <span class="comment">% See LICENSE.txt for license details</span>
+0007 <span class="comment">% -----------------------------------------------------------</span>
+0008 
+0009 <span class="comment">% Scaling function</span>
+0010 identity = zeros(1,L);
+0011 <span class="keyword">for</span> el=abs(Spin):L-1
+0012     identity(1,el+1) = identity(1,el+1)+4.*pi/(2*el+1)*scal_l(el^2+el+1,1)*conj(scal_l(el^2+el+1,1)); 
+0013 <span class="keyword">end</span>
+0014 
+0015 
+0016 <span class="comment">% Curvelet functions</span>
+0017 <span class="keyword">for</span> j= J_min: J 
+0018     ind = Spin*Spin + 1;
+0019     <span class="keyword">for</span> el=abs(Spin):L-1
+0020         <span class="keyword">for</span> m= -el:el 
+0021           identity(1,el+1) = identity(1,el+1)+(8.*pi^2/(2*el+1))* cur_lm{j-J_min+1}(ind)*conj(cur_lm{j-J_min+1}(ind));
+0022           ind = ind + 1;
+0023         <span class="keyword">end</span>
+0024     <span class="keyword">end</span>
+0025 <span class="keyword">end</span>
+0026 
+0027 error_on_cur_tiling = 0;
+0028 <span class="keyword">for</span> el=abs(Spin):L-1
+0029     error_on_cur_tiling = error_on_cur_tiling+(identity(1,el+1) - 1.0);
+0030 <span class="keyword">end</span>
+0031 
+0032 
+0033 <span class="keyword">end</span>
+0034</pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

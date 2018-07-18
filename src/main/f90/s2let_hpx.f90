@@ -149,6 +149,33 @@ SUBROUTINE healpix_inverse_real( map, alm, nside, L )
 
 END SUBROUTINE healpix_inverse_real
 
+
+! ----------------------------------------------------------- !
+
+SUBROUTINE read_healpix_maps(maps, file, nside, nmaps)
+
+  use healpix_types
+  use healpix_modules
+
+  character(len=filenamelen) :: file, ordering, comment
+  character(LEN=80), dimension(1:60) :: header
+  integer :: n, nside, npix, nmaps
+  real(dp), dimension(0:12*nside*nside-1,1:nmaps) :: maps
+  real(dp) :: nullval
+  logical :: anynull
+
+  npix = nside2npix(nside)
+  call read_bintab(file, maps, npix, nmaps, nullval, anynull, header)
+  call get_card(header,'ORDERING',ordering,comment)
+  if( trim(ordering) .ne. 'ring' .and. trim(ordering) .ne. 'RING' ) then
+    do n = 1, nmaps
+     call convert_nest2ring(nside, maps(:,n) )
+    enddo
+  endif
+
+END SUBROUTINE read_healpix_maps
+
+
 ! ----------------------------------------------------------- !
 
 SUBROUTINE read_healpix_map(map, file, nside)

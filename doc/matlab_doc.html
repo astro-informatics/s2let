@@ -67,6 +67,11 @@ harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wave
 <h2>Brief release notes</h2>
 
 <ul>
+<li><strong>Version 2.1b1</strong><br />
+  <ul>
+  <li>Added support for ridgelets and curvelets.</li>
+  </ul>
+</li>
 <li><strong>Version 1.1b1</strong><br />
   <ul>
   <li>Added support for B-spline wavelets.</li>
@@ -131,46 +136,207 @@ harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wave
   <p>A list of the high-level Matlab
   functions, with brief descriptions, is given here:
 
-  <pre>  <a href="../src/main/matlab/s2let_axisym_mw_analysis.m">s2let_axisym_mw_analysis</a>
-  Compute exact wavelet transform of a signal on the sphere (MW sampling)
+  <h5>Axisymmetric wavelet transform</h5>
+  <pre>  <a href="../src/main/matlab/s2let_transform_axisym_analysis_mw.m">s2let_transform_axisym_analysis_mw</a>
+  Compute exact axisymmetric wavelet transform of a signal on the sphere 
+  (MW sampling).
 
-  <a href="../src/main/matlab/s2let_axisym_mw_synthesis.m">s2let_axisym_mw_synthesis</a>
-  Exactly reconstuct a signal on the sphere from its wavelets (MW sampling)
+  <a href="../src/main/matlab/s2let_transform_axisym_synthesis_mw.m">s2let_transform_axisym_synthesis_mw</a>
+  Exactly reconstuct a signal on the sphere from its axisymmetric wavelets 
+  (MW sampling).
 
-  <a href="../src/main/matlab/s2let_mw_read_real_map.m">s2let_mw_read_real_map</a>
-  Read a MW map from a FITS file
+  <a href="../src/main/matlab/s2let_transform_axisym_analysis_hpx.m">s2let_transform_axisym_analysis_hpx</a>
+  Compute exact axisymmetric wavelet transform of a signal on the sphere 
+  (Healpix sampling).
 
-  <a href="../src/main/matlab/s2let_mw_write_real_map.m">s2let_mw_write_real_map</a>
-  Write a MW map to a FITS file
+  <a href="../src/main/matlab/s2let_transform_axisym_synthesis_hpx.m">s2let_transform_axisym_synthesis_hpx</a>
+  Exactly reconstuct a signal on the sphere from its axisymmetric wavelets 
+  (Healpix sampling). </pre>
+
+
+  <h5>Spin directional wavelet transform</h5>
+  <pre>  <a href="../src/main/matlab/s2let_transform_analysis_lm2wav.m">s2let_transform_analysis_lm2wav</a>
+  Compute forward (spin) directional wavelet transform, 
+  input in harmonic space, output in wavelet space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_analysis_mw.m">s2let_transform_analysis_mw</a>
+  Compute forward (spin) directional wavelet transform, 
+  output in pixel space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_synthesis_lm2wav.m">s2let_transform_synthesis_lm2wav</a>
+  Compute inverse (spin) directional wavelet transform, 
+  input in harmonic space, output in wavelet space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_synthesis_mw.m">s2let_transform_synthesis_mw</a>
+  Compute inverse (spin) directional wavelet transform, 
+  output in pixel space (MW sampling). </pre>
+
+  <h5>Radon transform and Ridgelet transform</h5>
+  <pre>  <a href="../src/main/matlab/s2let_radon_transform.m">s2let_radon_transform</a>
+  Compute forward (spin) radon transform in harmonic space.
+
+  <a href="../src/main/matlab/s2let_radon_inverse.m">s2let_radon_inverse</a>
+  Compute inverse (spin) radon transform in harmonic space.
+
+  <a href="../src/main/matlab/s2let_ridgelet_analysis.m">s2let_ridgelet_analysis</a>
+  Compute forward (spin) ridgelet transform  (MW sampling).
+
+  <a href="../src/main/matlab/s2let_ridgelet_synthesis.m">s2let_ridgelet_synthesis</a>
+  Compute inverse (spin) ridgelet transform (MW sampling).</pre>
+
+  <h5>Curvelet transform</h5>
+  <pre>  <a href="../src/main/matlab/s2let_transform_curvelet_analysis_lm2lmn.m">s2let_transform_curvelet_analysis_lm2lmn</a>
+  Compute forward (spin) curvelet transform, 
+  input in harmonic space, output in Wigner space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_curvelet_analysis_lm2cur.m">s2let_transform_curvelet_analysis_lm2cur</a>
+  Compute forward (spin) curvelet transform, 
+  input in harmonic space, output in curvelet space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_curvelet_analysis_px2cur.m">s2let_transform_curvelet_analysis_px2cur</a>
+  Compute forward (spin) curvelet transform, 
+  input in pixel space, output in curvelet space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_curvelet_synthesis_lmn2lm.m">s2let_transform_curvelet_synthesis_lmn2lm</a>
+  Compute inverse (spin) curvelet transform, 
+  input in Wigner space, output in harmonic space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_curvelet_synthesis_cur2lm.m">s2let_transform_curvelet_synthesis_cur2lm</a>
+  Compute inverse (spin) curvelet transform, 
+  input in curvelet space, output in harmonic space (MW sampling).
+
+  <a href="../src/main/matlab/s2let_transform_curvelet_synthesis_cur2px.m">s2let_transform_curvelet_synthesis_cur2px</a>
+  Compute inverse (spin) curvelet transform, 
+  input in curvelet space, output in pixel space (MW sampling).</pre>
+
+  <h5>Construction and exactness check for scale-discretised wavelets</h5>
+  <pre>  <a href="../src/main/matlab/s2let_bandlimit.m">s2let_bandlimit</a>
+  Return the bandlimit of a specific wavelet scale j.
+
+  <a href="../src/main/matlab/s2let_elmin.m">s2let_elmin</a>
+  Return the lowest harmonic index l supported by the given wavelet scale.
+
+  <a href="../src/main/matlab/s2let_jmax.m">s2let_jmax</a>
+  Return the maximum scale for a wavelet transform.
+
+  <a href="../src/main/matlab/s2let_compute_scal.m">s2let_compute_scal</a>
+  Compute a rotated scaling function.
+
+  <a href="../src/main/matlab/s2let_compute_wav.m">s2let_compute_wav</a>
+  Compute a rotated wavelet.
+
+  <a href="../src/main/matlab/s2let_ridgelet_compute_wav.m">s2let_ridgelet_compute_wav</a>
+  Compute ridgelets and scaling functions.
 
   <a href="../src/main/matlab/s2let_axisym_tiling.m">s2let_axisym_tiling</a>
-  Compute the tiling of harmonic space
+  Compute the tiling of axisymmetric wavelets in harmonic space.
 
   <a href="../src/main/matlab/s2let_check_axisym_tiling.m">s2let_check_axisym_tiling</a>
-  Check exactness (i.e. identity resolution) of the harmonic tiling
+  Check exactness (i.e. identity resolution) of axisymmetric wavelets 
+  in the harmonic tiling.
 
-  <a href="../src/main/matlab/s2let_hpx_alm2map.m">s2let_hpx_alm2map</a>
-  Interface to the Fortran function alm2map in Healpix 
-  (ring ordered, inverse spherical harmonic transform)
+  <a href="../src/main/matlab/s2let_wavelet_tiling.m">s2let_wavelet_tiling</a>
+  Compute the tiling of the (spin) directional wavelets in harmonic space.
 
-  <a href="../src/main/matlab/s2let_hpx_map2alm.m">s2let_hpx_map2alm</a>
-  Interface to the Fortran function map2alm in Healpix 
-  (ring ordered, forward spherical harmonic transform)
+  <a href="../src/main/matlab/s2let_check_tiling.m">s2let_check_tiling</a>
+  Check exactness of (spin) directional wavelets in the harmonic tiling.
 
-  <a href="../src/main/matlab/s2let_axisym_hpx_analysis.m">s2let_axisym_hpx_analysis</a>
-  Compute wavelet transform of a Healpix map (ring ordered)
+  <a href="../src/main/matlab/s2let_curvelet_tiling.m">s2let_curvelet_tiling</a>
+  Compute the (spin) curvelet tiling in harmonic space.
 
-  <a href="../src/main/matlab/s2let_axisym_hpx_synthesis.m">s2let_axisym_hpx_synthesis</a>
-  Reconstuct a Healpix map (ring ordered) on the sphere from its wavelets
+  <a href="../src/main/matlab/s2let_check_cur_tiling.m">s2let_check_cur_tiling</a>
+  Check exactness of (spin) curvelets in the harmonic tiling.
+
+  <a href="../src/main/matlab/s2let_curvelet_transform_test_lm2lmn_lmn2lm.m">s2let_curvelet_transform_test_lm2lmn_lmn2lm</a>
+  Check exactness of the scalar and spin curvelet transform, 
+  from harmonic space to Wigner space and vice versa.
+
+  <a href="../src/main/matlab/s2let_curvelet_transform_test_lm2cur_cur2lm.m">s2let_curvelet_transform_test_lm2cur_cur2lm</a>
+  Check exactness of the scalar and spin curvelet transform, 
+  from harmonic space to curvelet space and vice versa.
+
+  <a href="../src/main/matlab/s2let_curvelet_transform_test_px2cur_cur2px.m">s2let_curvelet_transform_test_px2cur_cur2px</a>
+  Check exactness of the scalar and spin curvelet transform, 
+  from pixel space to curvelet space and vice versa.</pre>
+
+
+  <h5>Plotting functions</h5>
+  <pre>  <a href="../src/main/matlab/s2let_plot_sphere.m">s2let_plot_sphere</a>
+  Plot wavelet kernels of different scales on multiple spheres. 
+
+  <a href="../src/main/matlab/s2let_plot_wavs.m">s2let_plot_wavs</a>
+  Plot B-splines, needlets and scale-discretised wavelets.
+
+  <a href="../src/main/matlab/s2let_plot_curvelet_on_sphere.m">s2let_plot_curvelet_on_sphere</a>
+  Plot curvelet kernels, axis aligned to the North pole, 
+  at different wavelet scales, on multiple spheres. 
+
+  <a href="../src/main/matlab/s2let_plot_curvelet_parametric.m">s2let_plot_curvelet_parametric</a>
+  Plot curvelets parametrically.
 
   <a href="../src/main/matlab/s2let_hpx_plot_mollweide.m">s2let_hpx_plot_mollweide</a>
-  Plot a Healpix map (ring ordered) using Mollweide projection
+  Plot a Healpix map (ring ordered) using Mollweide projection.
 
-  <a href="../src/main/matlab/s2let_hpx_read_real_map.m">s2let_hpx_read_real_map</a>
+  <a href="../src/main/matlab/s2let_plot_mollweide.m">s2let_plot_mollweide</a>
+  Plot wavelet coefficients at different scales j 
+  using multiple Mollweide projections.</pre>
+
+  <h5>Miscellaneous</h5>
+  <pre>  <a href="../src/main/matlab/s2let_hpx_read_real_map.m">s2let_hpx_read_real_map</a>
   Read a Healpix map (ring ordered) from a FITS file
 
   <a href="../src/main/matlab/s2let_hpx_write_real_map.m">s2let_hpx_write_real_map</a>
-  Write a Healpix map (ring ordered) to a FITS file  </pre>
+  Write a Healpix map (ring ordered) to a FITS file.  
+
+  <a href="../src/main/matlab/s2let_hpx_read_real_spin_maps.m">s2let_hpx_read_real_spin_maps</a>
+  Read a Healpix spin maps (ring ordered) from a FITS file.
+
+  <a href="../src/main/matlab/s2let_hpx_write_real_spin_maps.m">s2let_hpx_write_real_spin_maps</a>
+  Write a Healpix spin maps (ring ordered) from a FITS file.
+
+  <a href="../src/main/matlab/s2let_hpx_alm2map.m">s2let_hpx_alm2map</a>
+  Interface to the Fortran function alm2map in Healpix 
+  (ring ordered, inverse spherical harmonic transform).
+
+  <a href="../src/main/matlab/s2let_hpx_map2alm.m">s2let_hpx_map2alm</a>
+  Interface to the Fortran function map2alm in Healpix 
+  (ring ordered, forward spherical harmonic transform).
+
+  <a href="../src/main/matlab/s2let_hpx_alm2map_spin.m">s2let_hpx_alm2map_spin</a>
+  Interface to the Fortran function alm2map_spin in Healpix 
+  (ring ordered, inverse spin spherical harmonic transform).
+
+  <a href="../src/main/matlab/s2let_hpx_map2alm_spin.m">s2let_hpx_map2alm_spin</a>
+  Interface to the Fortran function map2alm_spin in Healpix 
+  (ring ordered, forward spin spherical harmonic transform).
+
+  <a href="../src/main/matlab/s2let_axisym_hpx_analysis.m">s2let_axisym_hpx_analysis</a>
+  Compute axiysymmetric wavelet transform of a Healpix map (ring ordered).
+
+  <a href="../src/main/matlab/s2let_axisym_hpx_synthesis.m">s2let_axisym_hpx_synthesis</a>
+  Reconstuct a Healpix map (ring ordered) on the sphere from its axiysymmetric 
+  wavelets.
+
+  <a href="../src/main/matlab/s2let_hpx_sampling_ring.m">s2let_hpx_sampling_ring</a>
+  Compute the Healpix (ring ordered) sampling nodes (thetas, phis).
+
+  <a href="../src/main/matlab/s2let_hpx2mw.m">s2let_hpx2mw</a>
+  Convert a Healpix map into a MW map. 
+
+  <a href="../src/main/matlab/s2let_mw2hpx.m">s2let_mw2hpx</a>
+  Convert a MW map into a Healpix map. 
+
+  <a href="../src/main/matlab/s2let_mw_read_real_map.m">s2let_mw_read_real_map</a>
+  Read a MW map from a FITS file.
+
+  <a href="../src/main/matlab/s2let_mw_write_real_map.m">s2let_mw_write_real_map</a>
+  Write a MW map to a FITS file.
+
+  <a href="../src/main/matlab/s2let_smoothing.m">s2let_smoothing</a>
+  Return a smoothed map.</pre>
+
+
+
 
   <p> To access the documentation for each function in Matlab, simply
   run:
@@ -185,20 +351,63 @@ harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wave
 
   <pre>
   <a href="../src/main/matlab/s2let_fulltest.m">s2let_fulltest</a>
-  Run and test all functionalties of the wavelet transform (MW sampling)
+  Run and test all functionalities of the wavelet transform (MW sampling).
+
+  <a href="../src/main/matlab/s2let_fulltest.m">s2let_fulltest_curvelet</a>
+  Run and test all functionalities of the curvelet transform (MW sampling).
 
   <a href="../src/main/matlab/s2let_hpxtest.m">s2let_hpxtest</a>
-  Run and test all functionalties of the wavelet transform (Healpix sampling)
+  Run and test all functionalties of the wavelet transform (Healpix sampling).
 
   <a href="../src/main/matlab/s2let_demo1.m">s2let_demo1</a>
-  Compute and plot wavelets of Earth tomography data 
-  (full and multi-resolution, MW sampling)
+  Compute and plot axisymmetric wavelet coefficients of the Earth 
+  topographic data (full and multi-resolution, MW sampling).
 
   <a href="../src/main/matlab/s2let_demo2.m">s2let_demo2</a>
-  Plot wavelet kernels corresponding to some set of parameters
+  Plot axisymmetric wavelet kernels corresponding to some set of parameters.
 
   <a href="../src/main/matlab/s2let_demo3.m">s2let_demo3</a>
-  Compute and plot wavelets of a random CMB simultion (Healpix sampling) </pre>
+  Compute and plot axisymmetric wavelets of a random CMB simulation 
+  (Healpix sampling). 
+
+  <a href="../src/main/matlab/s2let_demo4.m">s2let_demo4</a>
+  Compute and plot directioanl wavelet coefficients of the Earth topographic 
+  data (MW sampling).
+
+  <a href="../src/main/matlab/s2let_demo5.m">s2let_demo5</a>
+  Plot (spin) directional wavelet kernels corresponding to some set of 
+  parameters.
+
+  <a href="../src/main/matlab/s2let_demo6.m">s2let_demo6</a>
+  Compute and plot directional wavelet coefficients of the WMAP CMB polarisation 
+  data (Healpix sampling). 
+
+  <a href="../src/main/matlab/s2let_demo7_curvelet_Plot_Funcs_and_Tiling.m">s2let_demo7_curvelet_Plot_Funcs_and_Tiling</a>
+  Plot (spin) curvelet kernels corresponding to some set of parameters.  
+
+  <a href="../src/main/matlab/s2let_demo8_curvelet_Mollweide_EarthTopography.m">s2let_demo8_curvelet_Mollweide_EarthTopography</a>
+  Compute and plot curvelet coefficients of the Earth topographic data 
+  (MW sampling). 
+
+  <a href="../src/main/matlab/s2let_demo_ridgelet_plot.m">s2let_demo_ridgelet_plot</a>
+  Plot ridgelet kernels corresponding to some set of parameters. 
+
+  <a href="../src/main/matlab/s2let_demo_covariance">s2let_demo_covariance</a>
+  Compute and compare the theoretical covariance and the empirical covariance 
+  for several sets of harmonic coefficients using directional wavelet transform.
+
+  <a href="../src/main/matlab/s2let_demo_curvelet_covariance.m">s2let_demo_curvelet_covariance</a>
+  Compute and compare the theoretical covariance and the empirical covariance 
+  for several sets of harmonic coefficients using curvelet transform. 
+
+  <a href="../src/main/matlab/s2let_demo_ridgelet_evaluate.m">s2let_demo_ridgelet_evaluate</a>
+  Evaluate timing and numerical accuracy of the ridgelet transform. 
+
+  <a href="../src/main/matlab/s2let_demo_curvelet_evaluate_performance.m">s2let_demo_curvelet_evaluate_performance</a>
+  Evaluate timing and numerical accuracy of the curvelet transform. 
+
+  <a href="../src/main/matlab/s2let_plot_denoising_demo.m">s2let_plot_denoising_demo</a>
+  Plot the noisy and denoised polarisation maps. </pre>
 
  <p> To access the documentation for each demo in Matlab, simply
   run:
@@ -220,7 +429,7 @@ harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wave
   <p>
   <a href="#header">Back to top</a><br >
   
-  <p>&copy; 2012-2015 <a href="http://www.ixkael.com/blog">Boris Leistedt</a> & <a href="http://www.jasonmcewen.org">Jason McEwen</a> | Design by
+  <p>&copy; 2012-2016 <a href="http://www.ixkael.com/blog">Boris Leistedt</a> &  Martin B&uuml;ttner,  <a href="http://www.mssl.ucl.ac.uk/~yhjc2/index.html">Jennifer Chan</a> & <a href="http://www.jasonmcewen.org">Jason McEwen</a> | Design by
   <a href="http://andreasviklund.com/">Andreas Viklund</a> </p>
 
 
@@ -228,4 +437,4 @@ harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wave
 </div>
 </body>
 </html>
-xxxxxx
+

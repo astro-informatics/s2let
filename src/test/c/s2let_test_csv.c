@@ -88,7 +88,6 @@ int main(int argc, char **argv)
         parameters.N = N = atoi(argv[4]);
     }
 
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
 
     // Output header row
