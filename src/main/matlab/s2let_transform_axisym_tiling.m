@@ -1,4 +1,4 @@
-function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)
+function [kappa kappa0] = s2let_transform_axisym_tiling(B, L, J_min)
 
 % s2let_axisym_tiling - Compute tiling in harmonic space.
 % -- Axisymmetric wavelets on the sphere.

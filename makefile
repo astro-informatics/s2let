@@ -4,9 +4,9 @@
 # ======================================== #
 
 # Directory for SO3 (required)
-SO3DIR = ../so3
+SO3DIR = ${code}/so3
 # Directory for SSHT (required)
-SSHTDIR	= ${SSHT}
+SSHTDIR	= ${code}/ssht
 # Directory for FFTW (required)
 FFTWDIR	= ${FFTW}
 
@@ -136,6 +136,8 @@ S2LETOBJS= $(S2LETOBJ)/s2let_transform_axisym_lm.o 	\
 	  $(S2LETOBJ)/s2let_helper.o 	\
 	  $(S2LETOBJ)/s2let_analysis.o 	\
 	  $(S2LETOBJ)/s2let_synthesis.o 	\
+	  $(S2LETOBJ)/s2let_analysis_adjoint.o 	\
+	  $(S2LETOBJ)/s2let_synthesis_adjoint.o 	\
 	  $(S2LETOBJ)/s2let_idl_mw.o 	\
 	  $(S2LETOBJ)/s2let_lm.o	\
 	  $(S2LETOBJ)/s2let_math.o 	\
@@ -148,17 +150,27 @@ S2LETOBJSMAT = $(S2LETOBJMAT)/s2let_transform_axisym_tiling_mex.o	\
 	  $(S2LETOBJMAT)/s2let_transform_axisym_synthesis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_lm2wav_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_lm2wav_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_analysis_adjoint_lm2wav_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_synthesis_adjoint_lm2wav_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_analysis_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_transform_synthesis_mw_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_analysis_adjoint_mw_mex.o		\
+	  $(S2LETOBJMAT)/s2let_transform_synthesis_adjoint_mw_mex.o		\
 	  $(S2LETOBJMAT)/s2let_jmax_mex.o	\
 	  $(S2LETOBJMAT)/s2let_bandlimit_mex.o
 
 S2LETOBJSMEX = $(S2LETOBJMEX)/s2let_transform_axisym_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_wavelet_tiling_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_analysis_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_axisym_analysis_adjoint_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_axisym_synthesis_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_axisym_synthesis_adjoint_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_lm2wav_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_analysis_adjoint_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_synthesis_adjoint_mw_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_analysis_adjoint_lm2wav_mex.$(MEXEXT)	\
+	  $(S2LETOBJMEX)/s2let_transform_synthesis_adjoint_lm2wav_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_analysis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_transform_synthesis_mw_mex.$(MEXEXT)	\
 	  $(S2LETOBJMEX)/s2let_jmax_mex.$(MEXEXT)	\

@@ -11,23 +11,23 @@
 #include <stdio.h>
 
 /*!
- * Wavelet analysis from harmonic space to Wigner space for complex signals.
+ * Wavelet analysis adjoint from Wigner space to harmonic space for complex signals.
  *
- * \param[out]  f_wav_lmn Wavelet transform (Wigner coefficients of wavelet contribution).
- * \param[out]  f_scal_lm Wavelet transform (Spherical harmonic coefficients of scaling contribution).
- * \param[in]  flm Spherical harmonic coefficients of input function.
- * \param[in]  wav_lm Wavelet kernels in harmonic space.
- * \param[in]  scal_l Scaling function kernels in harmonic space.
+ * \param[out]  flm Spherical harmonic coefficients of input function.
+ * \param[in]  f_wav_lmn Wavelet transform (Wigner coefficients of wavelet contribution).
+ * \param[in]  f_scal_lm Wavelet transform (spherical harmonic coefficients of scaling contribution).
+ * \param[in]  wav_lm Wavelet kernels.
+ * \param[in]  scal_l Scaling function kernels.
  * \param[in]  parameters A fully populated parameters object. The \link
  *                        s2let_parameters_t::reality reality\endlink flag
- *                        is ignored. Use \link s2let_analysis_lm2lmn_real
+ *                        is ignored. Use \link s2let_synthesis_lmn2lm_real
  *                        \endlink instead for real signals.
  * \retval none
  */
-void s2let_analysis_lm2lmn(
-    complex double *f_wav_lmn,
-    complex double *f_scal_lm,
-    const complex double *flm,
+void s2let_analysis_adjoint_lmn2lm(
+    complex double *flm,
+    const complex double *f_wav_lmn,
+    const complex double *f_scal_lm,
     const complex double *wav_lm,
     const double *scal_l,
     const s2let_parameters_t *parameters
@@ -51,16 +51,18 @@ void s2let_analysis_lm2lmn(
 
     int offset = 0;
 
+    // Clear output
+    for (el = 0; el < L*L; ++el)
+        flm[el] = 0;
+
     for (j = J_min; j <= J; ++j)
     {
-
         if (!parameters->upsample)
         {
             bandlimit = MIN(s2let_bandlimit(j, parameters), L);
             so3_parameters.L = bandlimit;
-            Nj = MIN(N,bandlimit);
-            // ensure N and Nj are both even or both odd
-            Nj += (Nj+N)%2;
+            int Nj = MIN(N,bandlimit);
+            Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
             so3_parameters.N = Nj;
         }
 
@@ -69,12 +71,12 @@ void s2let_analysis_lm2lmn(
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * conj(wav_lm[j*L*L + lm_ind]);
+                psi = 8*PI*PI/(2*el+1) * (wav_lm[j*L*L + lm_ind]);
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
                     so3_sampling_elmn2ind(&lmn_ind, el, m, n, &so3_parameters);
-                    f_wav_lmn[offset + lmn_ind] = flm[lm_ind] * psi;
+                    flm[lm_ind] += f_wav_lmn[offset + lmn_ind] * psi;
                 }
             }
         }
@@ -90,29 +92,29 @@ void s2let_analysis_lm2lmn(
         for (m = -el; m <= el; ++m)
         {
             ssht_sampling_elm2ind(&lm_ind, el, m);
-            f_scal_lm[lm_ind] = flm[lm_ind] * phi;
+            flm[lm_ind] += f_scal_lm[lm_ind] * phi;
         }
     }
 }
 
 /*!
- * Wavelet analysis from harmonic space to Wigner space for real signals.
+ * Wavelet analysis adjoint from Wigner space to harmonic space for real signals.
  *
- * \param[out]  f_wav_lmn Wavelet transform (Wigner coefficients of wavelet contribution).
- * \param[out]  f_scal_lm Wavelet transform (spherical harmonic coefficients of scaling contribution).
- * \param[in]  flm Spherical harmonic coefficients of input function.
+ * \param[out]  flm Spherical harmonic coefficients of input function.
+ * \param[in]  f_wav_lmn Wavelet transform (Wigner coefficients of wavelet contribution).
+ * \param[in]  f_scal_lm Wavelet transform (spherical harmonic coefficients of scaling contribution).
  * \param[in]  wav_lm Wavelet kernels.
  * \param[in]  scal_l Scaling function kernels.
  * \param[in]  parameters A fully populated parameters object. The \link
  *                        s2let_parameters_t::reality reality\endlink flag
- *                        is ignored. Use \link s2let_analysis_lm2lmn
+ *                        is ignored. Use \link s2let_synthesis_lmn2lm
  *                        \endlink instead for complex signals.
  * \retval none
  */
-void s2let_analysis_lm2lmn_real(
-    complex double *f_wav_lmn,
-    complex double *f_scal_lm,
-    const complex double *flm,
+void s2let_analysis_adjoint_lmn2lm_real(
+    complex double *flm,
+    const complex double *f_wav_lmn,
+    const complex double *f_scal_lm,
     const complex double *wav_lm,
     const double *scal_l,
     const s2let_parameters_t *parameters
@@ -130,10 +132,14 @@ void s2let_analysis_lm2lmn_real(
     so3_parameters_t so3_parameters = {};
     fill_so3_parameters(&so3_parameters, parameters);
 
-    complex double psi;
+    complex double psi, npsi;
     double phi;
 
     int offset = 0;
+
+    // Clear output
+    for (el = 0; el < L*L; ++el)
+        flm[el] = 0;
 
     for (j = J_min; j <= J; ++j)
     {
@@ -142,8 +148,7 @@ void s2let_analysis_lm2lmn_real(
             bandlimit = MIN(s2let_bandlimit(j, parameters), L);
             so3_parameters.L = bandlimit;
             int Nj = MIN(N,bandlimit);
-            // ensure N and Nj are both even or both odd
-            Nj += (Nj+N)%2;
+            Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
             so3_parameters.N = Nj;
         }
 
@@ -152,12 +157,26 @@ void s2let_analysis_lm2lmn_real(
             for (el = n; el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * conj(wav_lm[j*L*L + lm_ind]);
+                psi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
+
+                if (n)
+                {
+                    ssht_sampling_elm2ind(&lm_ind, el, -n);
+                    npsi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
+                }
+
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
                     so3_sampling_elmn2ind_real(&lmn_ind, el, m, n, &so3_parameters);
-                    f_wav_lmn[offset + lmn_ind] = flm[lm_ind] * psi;
+                    flm[lm_ind] += f_wav_lmn[offset + lmn_ind] * psi;
+
+                    if (n)
+                    {
+                        so3_sampling_elmn2ind_real(&lmn_ind, el, -m, n, &so3_parameters);
+                        int sign = (m+n)%2 ? -1 : 1;
+                        flm[lm_ind] += sign * conj(f_wav_lmn[offset + lmn_ind]) * npsi;
+                    }
                 }
             }
         }
@@ -173,20 +192,19 @@ void s2let_analysis_lm2lmn_real(
         for (m = -el; m <= el; ++m)
         {
             ssht_sampling_elm2ind(&lm_ind, el, m);
-            f_scal_lm[lm_ind] = flm[lm_ind] * phi;
+            flm[lm_ind] += f_scal_lm[lm_ind] * phi;
         }
     }
 }
 
-
 /*!
- * Wavelet analysis from harmonic space to wavelet space for complex signals.
+ * Wavelet analysis adjoint from wavelet space to harmonic space for complex signals.
  * with fully manual wavelet tiling, using multiresolution as default with 
  * the band-limits provided in input.
  *
- * \param[out]  f_wav Array of wavelet maps
- * \param[out]  f_scal Scaling function map
- * \param[in]  flm Spherical harmonic coefficients of the signal
+ * \param[out]  flm Spherical harmonic coefficients of the signal
+ * \param[in]  f_wav Array of wavelets maps
+ * \param[in]  f_scal Scaling function map
  * \param[in]  scal_l Array of size L containing the \ell space tiling for the scaling fct.
                       It is only \ell because it is assumed to be axisymmetric.
  * \param[in]  wav_lm Array of size (J+1)*L*L containing the (\ell, space) harmonic coefs
@@ -204,10 +222,10 @@ void s2let_analysis_lm2lmn_real(
  * \param[in]  N Azimuthal band-limit for the directional transform
  * \retval none
  */
-void s2let_analysis_lm2wav_manual(
-    complex double *f_wav,
-    complex double *f_scal,
-    const complex double *flm,
+void s2let_analysis_adjoint_wav2lm_manual(
+    complex double *flm,
+    const complex double *f_wav,
+    const complex double *f_scal,
     const double *scal_l,
     const complex double *wav_lm,
     const int scal_bandlimit,
@@ -220,7 +238,7 @@ void s2let_analysis_lm2wav_manual(
     s2let_parameters_t parameters = {};
     parameters.L = L;
     parameters.J_min = 0;
-    parameters.B = pow(L, 1.0/(float)(J+2));
+    parameters.B = pow(L, 1.0/(float)J);
     parameters.N = N;
     parameters.dl_method = SSHT_DL_RISBO;
 
@@ -229,16 +247,28 @@ void s2let_analysis_lm2wav_manual(
     so3_parameters_t so3_parameters = {};
     fill_so3_parameters(&so3_parameters, &parameters);
 
-    int j, offset, offset_lmn;
+    int j, offset;
     complex double *f_wav_lmn, *f_scal_lm;
-    complex double psi, npsi;
+    complex double psi;
     double phi;
     int el, m, n, lm_ind, lmn_ind;
 
-    int Nj = N;
-
     bandlimit = MIN(scal_bandlimit, L);
+
     f_scal_lm = (complex double*)calloc(bandlimit*bandlimit, sizeof(complex double));
+
+    // Note, this is a spin-0 transform!
+    switch (parameters.sampling_scheme)
+    {
+    case S2LET_SAMPLING_MW:
+        ssht_adjoint_mw_inverse_sov_sym(f_scal_lm, f_scal, bandlimit, 0, parameters.dl_method, verbosity);
+        break;
+    case S2LET_SAMPLING_MW_SS:
+        ssht_adjoint_mw_inverse_sov_sym_ss(f_scal_lm, f_scal, bandlimit, 0, parameters.dl_method, verbosity);
+        break;
+    default:
+        S2LET_ERROR_GENERIC("Sampling scheme not supported.");
+    }
 
     for (el = ABS(spin); el < bandlimit; ++el)
     {
@@ -246,20 +276,8 @@ void s2let_analysis_lm2wav_manual(
         for (m = -el; m <= el; ++m)
         {
             ssht_sampling_elm2ind(&lm_ind, el, m);
-            f_scal_lm[lm_ind] = flm[lm_ind] * phi;
+            flm[lm_ind] += f_scal_lm[lm_ind] * phi;
         }
-    }
-
-    switch (parameters.sampling_scheme)
-    {
-    case S2LET_SAMPLING_MW:
-        ssht_core_mw_inverse_sov_sym(f_scal, f_scal_lm, bandlimit, 0, parameters.dl_method, verbosity);
-        break;
-    case S2LET_SAMPLING_MW_SS:
-        ssht_core_mw_inverse_sov_sym_ss(f_scal, f_scal_lm, bandlimit, 0, parameters.dl_method, verbosity);
-        break;
-    default:
-        S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
 
     free(f_scal_lm);
@@ -269,12 +287,19 @@ void s2let_analysis_lm2wav_manual(
     {
         bandlimit = MIN(wav_bandlimits[j], L);
         so3_parameters.L = bandlimit;
-        int Nj = MIN(N, bandlimit);
+        int Nj = MIN(N,bandlimit);
         Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
         so3_parameters.N = Nj;
         so3_parameters.L0 = 0;
 
         f_wav_lmn = (complex double*)calloc(so3_sampling_flmn_size(&so3_parameters), sizeof(complex double));
+
+//        so3_core_forward_direct(
+        so3_adjoint_inverse_direct(
+            f_wav_lmn,
+            f_wav + offset,
+            &so3_parameters
+        );
 
         for (n = -Nj+1; n < Nj; n+=2)
         {
@@ -286,17 +311,10 @@ void s2let_analysis_lm2wav_manual(
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
                     so3_sampling_elmn2ind(&lmn_ind, el, m, n, &so3_parameters);
-                    f_wav_lmn[lmn_ind] = flm[lm_ind] * psi;
+                    flm[lm_ind] += f_wav_lmn[lmn_ind] * psi;
                 }
             }
         }
-
-//        so3_core_inverse_via_ssht(
-        so3_core_inverse_direct(
-            f_wav + offset,
-            f_wav_lmn,
-            &so3_parameters
-        );
 
         free(f_wav_lmn);
         offset += so3_sampling_f_size(&so3_parameters);
@@ -307,21 +325,21 @@ void s2let_analysis_lm2wav_manual(
 
 
 /*!
- * Wavelet analysis from harmonic space to wavelet space for complex signals.
+ * Wavelet analysis adjoint from wavelet space to harmonic space for complex signals.
  *
- * \param[out]  f_wav Array of wavelet maps
- * \param[out]  f_scal Scaling function map
- * \param[in]  flm Spherical harmonic coefficients of the signal
+ * \param[out]  flm Spherical harmonic coefficients of the signal
+ * \param[in]  f_wav Array of wavelets maps
+ * \param[in]  f_scal Scaling function map
  * \param[in]  parameters A fully populated parameters object. The \link
  *                        s2let_parameters_t::reality reality\endlink flag
- *                        is ignored. Use \link s2let_analysis_lm2wav_real
+ *                        is ignored. Use \link s2let_synthesis_wav2lm_real
  *                        \endlink instead for real signals.
  * \retval none
  */
-void s2let_analysis_lm2wav(
-    complex double *f_wav,
-    complex double *f_scal,
-    const complex double *flm,
+void s2let_analysis_adjoint_wav2lm(
+    complex double *flm,
+    const complex double *f_wav,
+    const complex double *f_scal,
     const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
@@ -343,9 +361,7 @@ void s2let_analysis_lm2wav(
     s2let_tiling_wavelet(wav_lm, scal_l, parameters);
 
     complex double *f_wav_lmn, *f_scal_lm;
-
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);
-    s2let_analysis_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters);
 
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
@@ -354,14 +370,25 @@ void s2let_analysis_lm2wav(
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
-        ssht_core_mw_inverse_sov_sym(f_scal, f_scal_lm, bandlimit, 0, dl_method, verbosity);
+        ssht_adjoint_mw_inverse_sov_sym(f_scal_lm, f_scal, bandlimit, 0, dl_method, verbosity);
         break;
     case S2LET_SAMPLING_MW_SS:
-        ssht_core_mw_inverse_sov_sym_ss(f_scal, f_scal_lm, bandlimit, 0, dl_method, verbosity);
+        ssht_adjoint_mw_inverse_sov_sym_ss(f_scal_lm, f_scal, bandlimit, 0, dl_method, verbosity);
         break;
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
+    // switch (parameters->sampling_scheme)
+    // {
+    // case S2LET_SAMPLING_MW:
+    //     ssht_core_mw_forward_sov_conv_sym(f_scal_lm, f_scal, bandlimit, 0, dl_method, verbosity);
+    //     break;
+    // case S2LET_SAMPLING_MW_SS:
+    //     ssht_core_mw_forward_sov_conv_sym_ss(f_scal_lm, f_scal, bandlimit, 0, dl_method, verbosity);
+    //     break;
+    // default:
+    //     S2LET_ERROR_GENERIC("Sampling scheme not supported.");
+    // }
 
     offset = 0;
     offset_lmn = 0;
@@ -378,15 +405,19 @@ void s2let_analysis_lm2wav(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
-//        so3_core_inverse_via_ssht(
-        so3_core_inverse_direct(
-            f_wav + offset,
+        so3_adjoint_inverse_direct(
+//        so3_core_forward_direct(
+//        so3_core_forward_via_ssht(
             f_wav_lmn + offset_lmn,
+            f_wav + offset,
             &so3_parameters
         );
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
     }
+
+    s2let_analysis_adjoint_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
+//    s2let_synthesis_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
 
     free(wav_lm);
     free(scal_l);
@@ -395,21 +426,21 @@ void s2let_analysis_lm2wav(
 }
 
 /*!
- * Wavelet analysis from harmonic space to wavlet space for real signals.
+ * Wavelet analysis adjoint from wavelet space to harmonic space for real signals.
  *
- * \param[out]  f_wav Array of wavelet maps
- * \param[out]  f_scal Scaling function map
- * \param[in]  flm Spherical harmonic coefficients of the signal
+ * \param[out]  flm Spherical harmonic coefficients of the signal
+ * \param[in]  f_wav Array of wavelets maps
+ * \param[in]  f_scal Scaling function map
  * \param[in]  parameters A fully populated parameters object. The \link
  *                        s2let_parameters_t::reality reality\endlink flag
- *                        is ignored. Use \link s2let_analysis_lm2wav
+ *                        is ignored. Use \link s2let_synthesis_wav2lm
  *                        \endlink instead for complex signals.
  * \retval none
  */
-void s2let_analysis_lm2wav_real(
-    double *f_wav,
-    double *f_scal,
-    const complex double *flm,
+void s2let_analysis_adjoint_wav2lm_real(
+    complex double *flm,
+    const double *f_wav,
+    const double *f_scal,
     const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
@@ -434,9 +465,7 @@ void s2let_analysis_lm2wav_real(
     s2let_tiling_wavelet(wav_lm, scal_l, &real_parameters);
 
     complex double *f_wav_lmn, *f_scal_lm;
-
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, &real_parameters);
-    s2let_analysis_lm2lmn_real(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, &real_parameters);
 
     if (!parameters->upsample)
         bandlimit = MIN(s2let_bandlimit(J_min-1, &real_parameters), L);
@@ -444,14 +473,15 @@ void s2let_analysis_lm2wav_real(
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
-        ssht_core_mw_inverse_sov_sym_real(f_scal, f_scal_lm, bandlimit, dl_method, verbosity);
+        ssht_adjoint_mw_inverse_sov_sym_real(f_scal_lm, f_scal, bandlimit, dl_method, verbosity);
         break;
     case S2LET_SAMPLING_MW_SS:
-        ssht_core_mw_inverse_sov_sym_ss_real(f_scal, f_scal_lm, bandlimit, dl_method, verbosity);
+        ssht_adjoint_mw_inverse_sov_sym_ss_real(f_scal_lm, f_scal, bandlimit, dl_method, verbosity);
         break;
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
+
 
     offset = 0;
     offset_lmn = 0;
@@ -468,14 +498,18 @@ void s2let_analysis_lm2wav_real(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
-        so3_core_inverse_via_ssht_real(
-            f_wav + offset,
+        so3_adjoint_inverse_direct_real(
             f_wav_lmn + offset_lmn,
+            f_wav + offset,
             &so3_parameters
-        );
+	    );
+
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
     }
+
+    s2let_analysis_adjoint_lmn2lm_real(
+        flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, &real_parameters);
 
     free(wav_lm);
     free(scal_l);
@@ -484,64 +518,65 @@ void s2let_analysis_lm2wav_real(
 }
 
 /*!
- * Wavelet analysis from pixel space to wavelet space for complex signals.
+ * Wavelet analysis adjoint from wavelet space to pixel space for complex signals.
  *
- * \param[out]  f_wav Array of wavelet maps
- * \param[out]  f_scal Scaling function map
- * \param[in]  f Signal on the sphere
+ * \param[out]  f Signal on the sphere
+ * \param[in]  f_wav Array of wavelets maps
+ * \param[in]  f_scal Scaling function map
  * \param[in]  parameters A fully populated parameters object. The \link
  *                        s2let_parameters_t::reality reality\endlink flag
- *                        is ignored. Use \link s2let_analysis_px2wav_real
+ *                        is ignored. Use \link s2let_synthesis_wav2px_real
  *                        \endlink instead for real signals.
  * \retval none
  */
-void s2let_analysis_px2wav(
-    complex double *f_wav,
-    complex double *f_scal,
-    const complex double *f,
+void s2let_analysis_adjoint_wav2px(
+    complex double *f,
+    const complex double *f_wav,
+    const complex double *f_scal,
     const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
     int spin = parameters->spin;
     ssht_dl_method_t dl_method = parameters->dl_method;
-    int verbosity = parameters->verbosity;
+    int verbosity = 0;
 
     complex double *flm;
     s2let_allocate_lm(&flm, L);
 
+//    s2let_synthesis_wav2lm(flm, f_wav, f_scal, parameters);
+    s2let_analysis_adjoint_wav2lm(flm, f_wav, f_scal, parameters);
+ 
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
-        ssht_core_mw_forward_sov_conv_sym(flm, f, L, spin, dl_method, verbosity);
+        ssht_adjoint_mw_forward_sov_sym(f, flm, L, spin, dl_method, verbosity);
         break;
     case S2LET_SAMPLING_MW_SS:
-        ssht_core_mw_forward_sov_conv_sym_ss(flm, f, L, spin, dl_method, verbosity);
+        ssht_adjoint_mw_forward_sov_sym_ss(f, flm, L, spin, dl_method, verbosity);
         break;
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
 
-    s2let_analysis_lm2wav(f_wav, f_scal, flm, parameters);
-
     free(flm);
 }
 
 /*!
- * Wavelet analysis from pixel space to wavelet space for real signals.
+ * Wavelet synthesis from wavelet space to pixel space for real signals.
  *
- * \param[out]  f_wav Array of wavelet maps
- * \param[out]  f_scal Scaling function map
- * \param[in]  f Signal on the sphere
+ * \param[out]  f Signal on the sphere
+ * \param[in]  f_wav Array of wavelets maps
+ * \param[in]  f_scal Scaling function map
  * \param[in]  parameters A fully populated parameters object. The \link
  *                        s2let_parameters_t::reality reality\endlink flag
- *                        is ignored. Use \link s2let_analysis_px2wav
+ *                        is ignored. Use \link s2let_synthesis_wav2px
  *                        \endlink instead for complex signals.
  * \retval none
  */
-void s2let_analysis_px2wav_real(
-    double *f_wav,
-    double *f_scal,
-    const double *f,
+void s2let_analysis_adjoint_wav2px_real(
+    double *f,
+    const double *f_wav,
+    const double *f_scal,
     const s2let_parameters_t *parameters
 ) {
     int L = parameters->L;
@@ -551,19 +586,19 @@ void s2let_analysis_px2wav_real(
     complex double *flm;
     s2let_allocate_lm(&flm, L);
 
-    switch (parameters->sampling_scheme)
+    s2let_analysis_adjoint_wav2lm_real(flm, f_wav, f_scal, parameters);
+
+     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
-        ssht_core_mw_forward_sov_conv_sym_real(flm, f, L, dl_method, verbosity);
+        ssht_adjoint_mw_forward_sov_sym_real(f, flm, L, dl_method, verbosity);
         break;
     case S2LET_SAMPLING_MW_SS:
-        ssht_core_mw_forward_sov_conv_sym_ss_real(flm, f, L, dl_method, verbosity);
+        ssht_adjoint_mw_forward_sov_sym_ss_real(f, flm, L, dl_method, verbosity);
         break;
     default:
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
-
-    s2let_analysis_lm2wav_real(f_wav, f_scal, flm, parameters);
 
     free(flm);
 }

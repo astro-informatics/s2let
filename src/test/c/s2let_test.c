@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include "so3.h"
 
 /*!
  * Test the identity relation of the wavelet tiling in harmonic space.
@@ -895,6 +896,829 @@ void s2let_wav_transform_mw_test(int B, int L, int J_min, int N, int spin, int s
     free(f_wav);
     free(f_scal);
 }
+
+complex double s2let_dot_product_complex(complex double* v1, complex double* v2, int N_length)
+{
+
+  complex long double dot_product= 0.0;
+  int i;
+
+  for (i=0; i<N_length; i++)
+  {
+    dot_product += conj(v1[i])*v2[i];
+    // if ((i%200)==0){
+    //     printf(" %6.5e  i%6.5e",
+    //        creal(v1[i]), cimag(v1[i]));fflush(NULL);
+    //     printf(" %6.5e  i%6.5e",
+    //        creal(v2[i]), cimag(v2[i]));fflush(NULL);
+    //     printf(" %6.5e  i%6.5e\n",
+    //        creal(dot_product), cimag(dot_product));fflush(NULL);}
+  }
+  return dot_product;
+
+}
+
+complex double s2let_dot_product_real(double* v1, double* v2, int N_length)
+{
+
+  long double dot_product= 0.0;
+  int i;
+
+  for (i=0; i<N_length; i++)
+  {
+    dot_product += v1[i]*v2[i];
+  }
+  return dot_product;
+
+}
+
+/*!
+ * Test the exactness of the full resolution directional wavelet transform
+ * in pixel space for complex functions.
+ *
+ * \param[in]  B Wavelet parameter.
+ * \param[in]  L Angular harmonic band-limit.
+ * \param[in]  J_min First wavelet scale to be used.
+ * \param[in]  N Azimuthal band-limit.
+ * \param[in]  spin Spin number.
+ * \param[in]  seed Random seed.
+ * \retval none
+ */
+void s2let_wav_analysis_adjoint_lm_lmn_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 0;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    complex double  *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    complex double *f_wav_lmn, *f_scal_lm, *f_wav_lmn_rec, *f_scal_lm_rec;
+    s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, &parameters);
+    s2let_allocate_lmn_f_wav(&f_wav_lmn_rec, &f_scal_lm_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm(flm, L, spin, seed);
+   s2let_lm_random_flm(flm_rec, L, spin, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    complex double *wav_lm;
+    double *scal_l;
+    s2let_tiling_wavelet_allocate(&wav_lm, &scal_l, &parameters);
+    s2let_tiling_wavelet(wav_lm, scal_l, &parameters);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_lm2lmn(f_wav_lmn_rec, f_scal_lm_rec, flm_rec, wav_lm, scal_l, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+//    s2let_synthesis_adjoint_px2wav(f_wav, f_scal, f, &parameters);
+    s2let_analysis_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, &parameters);
+    time_end = clock();
+    printf("  - Wavelet analysis         : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_wav[0]), cimag(f_wav[0]));fflush(NULL);
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_analysis_adjoint_lmn2lm(flm_rec, f_wav_lmn_rec, f_scal_lm_rec, wav_lm, scal_l, &parameters);
+//    s2let_synthesis_wav2px(f_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet analysis adjoint : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    complex double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_complex(f_wav_lmn_rec, f_wav_lmn, s2let_n_lmn_wav(&parameters));
+    dot_product_error += s2let_dot_product_complex(f_scal_lm_rec, f_scal_lm, s2let_n_lm_scal(&parameters));
+    dot_product_error -= s2let_dot_product_complex(flm_rec, flm, L*L);
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(flm);
+    free(flm_rec);
+    free(f_wav_lmn);
+    free(f_scal_lm);
+    free(f_wav_lmn_rec);
+    free(f_scal_lm_rec);
+}
+
+/*!
+ * Test the exactness of the full resolution directional wavelet transform
+ * in pixel space for complex functions.
+ *
+ * \param[in]  B Wavelet parameter.
+ * \param[in]  L Angular harmonic band-limit.
+ * \param[in]  J_min First wavelet scale to be used.
+ * \param[in]  N Azimuthal band-limit.
+ * \param[in]  spin Spin number.
+ * \param[in]  seed Random seed.
+ * \retval none
+ */
+void s2let_wav_synthesis_adjoint_lm_lmn_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 0;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    int i;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    complex double  *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    complex double *f_wav_lmn, *f_scal_lm, *f_wav_lmn_rec, *f_scal_lm_rec;
+    s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, &parameters);
+    s2let_allocate_lmn_f_wav(&f_wav_lmn_rec, &f_scal_lm_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm(flm, L, spin, seed);
+   s2let_lm_random_flm(flm_rec, L, spin, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    complex double *wav_lm;
+    double *scal_l;
+    s2let_tiling_wavelet_allocate(&wav_lm, &scal_l, &parameters);
+    s2let_tiling_wavelet(wav_lm, scal_l, &parameters);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_lm2lmn(f_wav_lmn_rec, f_scal_lm_rec, flm_rec, wav_lm, scal_l, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+//    s2let_synthesis_adjoint_px2wav(f_wav, f_scal, f, &parameters);
+    s2let_synthesis_adjoint_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, &parameters);
+    for (i=0; i<s2let_n_lmn_wav(&parameters); i++)  if (abs(f_wav_lmn[i])>1E2) {printf("f_wav_lmn %6.5e  i%6.5e\n", creal(f_wav_lmn[i]), cimag(f_wav_lmn[i]));fflush(NULL);}//
+
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_wav[0]), cimag(f_wav[0]));fflush(NULL);
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_synthesis_lmn2lm(flm_rec, f_wav_lmn_rec, f_scal_lm_rec, wav_lm, scal_l, &parameters);
+//    s2let_synthesis_wav2px(f_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis          : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    complex double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_complex(f_wav_lmn_rec, f_wav_lmn, s2let_n_lmn_wav(&parameters));
+    dot_product_error += s2let_dot_product_complex(f_scal_lm_rec, f_scal_lm, s2let_n_lm_scal(&parameters));
+    dot_product_error -= s2let_dot_product_complex(flm_rec, flm, L*L);
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(flm);
+    free(flm_rec);
+    free(f_wav_lmn);
+    free(f_scal_lm);
+    free(f_wav_lmn_rec);
+    free(f_scal_lm_rec);
+}
+
+
+void s2let_wav_analysis_adjoint_mw_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 1;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    complex double *f, *f_rec, *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+    s2let_allocate_mw(&f, L);
+    s2let_allocate_mw(&f_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    complex double *f_wav, *f_scal, *f_wav_rec, *f_scal_rec;
+    s2let_allocate_f_wav(&f_wav, &f_scal, &parameters);
+    s2let_allocate_f_wav(&f_wav_rec, &f_scal_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm(flm, L, spin, seed);
+   s2let_lm_random_flm(flm_rec, L, spin, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    // Construct the corresponding signal on the sphere (MW sampling)
+    ssht_core_mw_inverse_sov_sym(f, flm, L, spin, dl_method, verbosity);
+    ssht_core_mw_inverse_sov_sym(f_rec, flm_rec, L, spin, dl_method, verbosity);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_px2wav(f_wav_rec, f_scal_rec, f_rec, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+    s2let_analysis_px2wav(f_wav, f_scal, f, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_analysis_adjoint_wav2px(f_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet analysis adjoint   : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    complex double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_complex(f_wav_rec, f_wav, s2let_n_wav(&parameters));
+    dot_product_error += s2let_dot_product_complex(f_scal_rec, f_scal, s2let_n_scal(&parameters));
+    dot_product_error -= s2let_dot_product_complex(f_rec, f, L*(2*L-1));
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(f);
+    free(f_rec);
+    free(flm);
+    free(flm_rec);
+    free(f_wav);
+    free(f_scal);
+    free(f_wav_rec);
+    free(f_scal_rec);
+}
+
+
+
+void s2let_wav_analysis_adjoint_mw_real_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 1;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    double *f, *f_rec; 
+    complex double *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+    s2let_allocate_mw(&f, L);
+    s2let_allocate_mw(&f_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    double *f_wav, *f_scal, *f_wav_rec, *f_scal_rec;
+    s2let_allocate_f_wav_real(&f_wav, &f_scal, &parameters);
+    s2let_allocate_f_wav_real(&f_wav_rec, &f_scal_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm_real(flm, L, seed);
+   s2let_lm_random_flm_real(flm_rec, L, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    // Construct the corresponding signal on the sphere (MW sampling)
+    ssht_core_mw_inverse_sov_sym_real(f, flm, L, dl_method, verbosity);
+    ssht_core_mw_inverse_sov_sym_real(f_rec, flm_rec, L, dl_method, verbosity);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_px2wav_real(f_wav_rec, f_scal_rec, f_rec, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+    s2let_analysis_px2wav_real(f_wav, f_scal, f, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_analysis_adjoint_wav2px_real(f_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet analysis adjoint   : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_real(f_wav_rec, f_wav, s2let_n_wav(&parameters));
+    dot_product_error += s2let_dot_product_real(f_scal_rec, f_scal, s2let_n_scal(&parameters));
+    dot_product_error -= s2let_dot_product_real(f_rec, f, L*(2*L-1));
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(f);
+    free(f_rec);
+    free(flm);
+    free(flm_rec);
+    free(f_wav);
+    free(f_scal);
+    free(f_wav_rec);
+    free(f_scal_rec);
+}
+
+
+
+void s2let_wav_synthesis_adjoint_lm2wav_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 0;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    complex double *f, *f_rec, *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+    s2let_allocate_mw(&f, L);
+    s2let_allocate_mw(&f_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    complex double *f_wav, *f_scal, *f_wav_rec, *f_scal_rec;
+    s2let_allocate_f_wav(&f_wav, &f_scal, &parameters);
+    s2let_allocate_f_wav(&f_wav_rec, &f_scal_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm(flm, L, spin, seed);
+   s2let_lm_random_flm(flm_rec, L, spin, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    // Construct the corresponding signal on the sphere (MW sampling)
+    ssht_core_mw_inverse_sov_sym(f, flm, L, spin, dl_method, verbosity);
+    ssht_core_mw_inverse_sov_sym(f_rec, flm_rec, L, spin, dl_method, verbosity);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_px2wav(f_wav_rec, f_scal_rec, f_rec, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+    s2let_synthesis_adjoint_lm2wav(f_wav, f_scal, flm, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_wav[0]), cimag(f_wav[0]));fflush(NULL);
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_synthesis_wav2lm(flm_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet analysis adjoint   : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    complex double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_complex(f_wav_rec, f_wav, s2let_n_wav(&parameters));
+    dot_product_error += s2let_dot_product_complex(f_scal_rec, f_scal, s2let_n_scal(&parameters));
+    dot_product_error -= s2let_dot_product_complex(flm_rec, flm, L*L);
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(f);
+    free(f_rec);
+    free(flm);
+    free(flm_rec);
+    free(f_wav);
+    free(f_scal);
+    free(f_wav_rec);
+    free(f_scal_rec);
+}
+
+void s2let_wav_synthesis_adjoint_mw_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 1;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    complex double *f, *f_rec, *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+    s2let_allocate_mw(&f, L);
+    s2let_allocate_mw(&f_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    complex double *f_wav, *f_scal, *f_wav_rec, *f_scal_rec;
+    s2let_allocate_f_wav(&f_wav, &f_scal, &parameters);
+    s2let_allocate_f_wav(&f_wav_rec, &f_scal_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm(flm, L, spin, seed);
+   s2let_lm_random_flm(flm_rec, L, spin, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    // Construct the corresponding signal on the sphere (MW sampling)
+    ssht_core_mw_inverse_sov_sym(f, flm, L, spin, dl_method, verbosity);
+    ssht_core_mw_inverse_sov_sym(f_rec, flm_rec, L, spin, dl_method, verbosity);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_lm2wav(f_wav_rec, f_scal_rec, flm_rec, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+    s2let_synthesis_adjoint_px2wav(f_wav, f_scal, f, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_wav[0]), cimag(f_wav[0]));fflush(NULL);
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_synthesis_wav2px(f_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis          : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    complex double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_complex(f_wav_rec, f_wav, s2let_n_wav(&parameters));
+    dot_product_error += s2let_dot_product_complex(f_scal_rec, f_scal, s2let_n_scal(&parameters));
+    dot_product_error -= s2let_dot_product_complex(f_rec, f, L*(2*L-1));
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(f);
+    free(f_rec);
+    free(flm);
+    free(flm_rec);
+    free(f_wav);
+    free(f_scal);
+    free(f_wav_rec);
+    free(f_scal_rec);
+}
+
+void s2let_wav_synthesis_adjoint_mw_real_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 1;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    double *f, *f_rec;
+    complex double *flm, *flm_rec;
+    s2let_allocate_lm(&flm, L);
+    s2let_allocate_lm(&flm_rec, L);
+    s2let_allocate_mw_real(&f, L);
+    s2let_allocate_mw_real(&f_rec, L);
+
+    // Allocate space for wavelet maps on the sphere (corresponding to the triplet B/L/J_min)
+    double *f_wav, *f_scal, *f_wav_rec, *f_scal_rec;
+    s2let_allocate_f_wav_real(&f_wav, &f_scal, &parameters);
+    s2let_allocate_f_wav_real(&f_wav_rec, &f_scal_rec, &parameters);
+  
+    // Generate random harmonic coefficients for a complex signal
+   s2let_lm_random_flm_real(flm, L, seed);
+   s2let_lm_random_flm_real(flm_rec, L, seed);
+    // flm[0] = 1.0; flm_rec[0] = 1.0;
+
+    // Construct the corresponding signal on the sphere (MW sampling)
+    ssht_core_mw_inverse_sov_sym_real(f, flm, L, dl_method, verbosity);
+    ssht_core_mw_inverse_sov_sym_real(f_rec, flm_rec, L, dl_method, verbosity);
+
+    // Perform wavelet analysis to make f_wac_rec amd f_scal_rec
+    s2let_analysis_px2wav_real(f_wav_rec, f_scal_rec, f_rec, &parameters);
+
+
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+    s2let_synthesis_adjoint_px2wav_real(f_wav, f_scal, f, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_wav[0]), cimag(f_wav[0]));fflush(NULL);
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    s2let_synthesis_wav2px_real(f_rec, f_wav_rec, f_scal_rec, &parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis          : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_real(f_wav_rec, f_wav, s2let_n_wav(&parameters));
+    dot_product_error += s2let_dot_product_real(f_scal_rec, f_scal, s2let_n_scal(&parameters));
+    dot_product_error -= s2let_dot_product_real(f_rec, f, L*(2*L-1));
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(f);
+    free(f_rec);
+    free(flm);
+    free(flm_rec);
+    free(f_wav);
+    free(f_scal);
+    free(f_wav_rec);
+    free(f_scal_rec);
+}
+void so3_test_gen_flmn_complex(
+    complex double *flmn,
+    const so3_parameters_t *parameters,
+    int seed)
+{
+    int L0, L, N;
+    int i, el, m, n, n_start, n_stop, n_inc, ind;
+
+    L0 = parameters->L0;
+    L = parameters->L;
+    N = parameters->N;
+
+    for (i = 0; i < (2*N-1)*L*L; ++i)
+        flmn[i] = 0.0;
+
+    switch (parameters->n_mode)
+    {
+    case SO3_N_MODE_ALL:
+        n_start = -N+1;
+        n_stop  =  N-1;
+        n_inc = 1;
+        break;
+    case SO3_N_MODE_EVEN:
+        n_start = ((N-1) % 2 == 0) ? -N+1 : -N+2;
+        n_stop  = ((N-1) % 2 == 0) ?  N-1 :  N-2;
+        n_inc = 2;
+        break;
+    case SO3_N_MODE_ODD:
+        n_start = ((N-1) % 2 != 0) ? -N+1 : -N+2;
+        n_stop  = ((N-1) % 2 != 0) ?  N-1 :  N-2;
+        n_inc = 2;
+        break;
+    case SO3_N_MODE_MAXIMUM:
+        n_start = -N+1;
+        n_stop  =  N-1;
+        n_inc = 2*N - 2;
+        break;
+    default:
+        SO3_ERROR_GENERIC("Invalid n-mode.");
+    }
+
+    for (n = n_start; n <= n_stop; n += n_inc)
+    {
+        for (el = MAX(L0, abs(n)); el < L; ++el)
+        {
+            for (m = -el; m <= el; ++m)
+            {
+                so3_sampling_elmn2ind(&ind, el, m, n, parameters);
+                flmn[ind] = (2.0*ran2_dp(seed) - 1.0) + I * (2.0*ran2_dp(seed) - 1.0);
+            }
+        }
+    }
+}
+void s2let_wav_so3_forward_adjoint_test(int B, int L, int J_min, int N, int spin, int seed)
+{
+    clock_t time_start, time_end;
+
+    s2let_parameters_t parameters = {};
+    parameters.B = B;
+    parameters.L = L;
+    parameters.J_min = J_min;
+    parameters.N = N;
+    parameters.spin = spin;
+    parameters.upsample = 0;
+    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    parameters.original_spin = 0;
+    parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+    int verbosity = parameters.verbosity = 0;
+    ssht_dl_method_t dl_method = parameters.dl_method = SSHT_DL_RISBO;
+    //int J = s2let_j_max(L, B);
+
+    so3_parameters_t so3_parameters = {};
+    fill_so3_parameters(&so3_parameters, &parameters);
+
+    complex double *f, *f_rec, *flmn, *flmn_rec;
+    // (2*N-1)*L*L is the largest number of flmn ever needed. For more
+    // compact storage modes, only part of the memory will be used.
+    flmn = malloc((2*N-1)*L*L * sizeof *flmn);
+    SO3_ERROR_MEM_ALLOC_CHECK(flmn);
+    flmn_rec = malloc((2*N-1)*L*L * sizeof *flmn_rec);
+    SO3_ERROR_MEM_ALLOC_CHECK(flmn_rec);
+
+    // We only need (2*L) * (L+1) * (2*N-1) samples for MW symmetric sampling.
+    // For the usual MW sampling, only part of the memory will be used.
+    f = malloc((2*L-1)*(L)*(2*N-1) * sizeof *f);
+    SO3_ERROR_MEM_ALLOC_CHECK(f);
+    f_rec = malloc((2*L-1)*(L)*(2*N-1) * sizeof *f_rec);
+    SO3_ERROR_MEM_ALLOC_CHECK(f_rec);
+  
+    // Generate random harmonic coefficients for a complex signal
+    so3_test_gen_flmn_complex(flmn, &so3_parameters, seed);
+    so3_test_gen_flmn_complex(flmn_rec, &so3_parameters, seed);
+
+    // Perform so3 transform to make flmn
+    so3_core_inverse_direct(f_rec, flmn_rec, &so3_parameters);
+
+    // Perform wavelet analysis from scratch with all signals given on the sphere (MW sampling)
+    time_start = clock();
+    so3_adjoint_forward_direct(f, flmn, &so3_parameters);
+    //    so3_core_inverse_direct(f, flmn, &so3_parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis adjoint  : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_wav[0]), cimag(f_wav[0]));fflush(NULL);
+
+
+    // Reconstruct the initial signal from the wavelet maps from scratch
+    time_start = clock();
+    //so3_adjoint_inverse_direct(flmn_rec, f_rec, &so3_parameters);
+    so3_core_forward_direct(flmn_rec, f_rec, &so3_parameters);
+    time_end = clock();
+    printf("  - Wavelet synthesis          : %4.4f seconds\n",
+           (time_end - time_start) / (double)CLOCKS_PER_SEC);
+
+    // printf(" %6.5e  i%6.5e\n",
+    //        creal(f_rec[0]), cimag(f_rec[0]));fflush(NULL);
+
+    // compute dot products of arrays
+    complex double dot_product_error = 0.0;
+    // dot_product_error  = s2let_dot_product_complex(flm_rec, flm, L*L);
+    // printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+    //        creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+    dot_product_error  = s2let_dot_product_complex(f_rec, f, (2*L-1)*(L)*(2*N-1));
+    dot_product_error -= s2let_dot_product_complex(flmn_rec, flmn, L*L*(2*N-1));
+
+
+    // Compute the maximum absolute error on the harmonic coefficients
+    printf("  - Dot product test error  : %6.5e  i%6.5e\n",
+           creal(dot_product_error), cimag(dot_product_error));fflush(NULL);
+
+    free(f);
+    free(f_rec);
+    free(flmn);
+    free(flmn_rec);}
 
 /*!
  * Test the exactness of the full resolution directional wavelet transform
@@ -2085,9 +2909,9 @@ void s2let_transform_lm_performance_multires_test(int B, int J_min, int NREPEAT,
 
 int main(int argc, char *argv[])
 {
-  const int L = 81;
-  const int N = 3;
-  const int B = 3;
+  const int L = 16;
+  const int N = 4;
+  const int B = 2;
   const int J_min = 2;
   const int spin = 0;
 
@@ -2101,7 +2925,8 @@ int main(int argc, char *argv[])
 
   // This is too often zero, so we add 1 (zero will result in all random
   // numbers being the same).
-  const int seed = (int)((double)clock()/(double)CLOCKS_PER_SEC) + 1;
+//  const int seed = (int)((double)clock()/(double)CLOCKS_PER_SEC) + 1;
+  const int seed = (int)((double)clock()) + 1;
   int l_min = s2let_L0(J_min, &parameters);
 
   printf("===========================================================================\n");
@@ -2146,6 +2971,27 @@ int main(int argc, char *argv[])
   printf("---------------------------------------------------------------------------\n");
   printf("> Testing directional wavelets in pixel space...\n");
   s2let_wav_transform_mw_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional analysis adjoint in harmonic space...\n");
+  s2let_wav_analysis_adjoint_lm_lmn_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional synthesis adjoint in harmonic space...\n");
+  s2let_wav_synthesis_adjoint_lm_lmn_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional analysis adjoint in pixel space...\n");
+  s2let_wav_analysis_adjoint_mw_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional analysis real adjoint in pixel space...\n");
+  s2let_wav_analysis_adjoint_mw_real_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional synthesis adjoint in pixel space...\n");
+  s2let_wav_synthesis_adjoint_mw_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional synthesis real adjoint in pixel space...\n");
+  s2let_wav_synthesis_adjoint_mw_real_test(B, L, J_min, N, spin, seed);
+  printf("---------------------------------------------------------------------------\n");
+  printf("> Testing directional so3_forward adjoint in pixel space...\n");
+  s2let_wav_so3_forward_adjoint_test(B, L, J_min, N, spin, seed);
   printf("---------------------------------------------------------------------------\n");
   printf("> Testing directional multiresolution algorithm in pixel space...\n");
   s2let_wav_transform_mw_multires_test(B, L, J_min, N, spin, seed);

@@ -294,7 +294,7 @@ void s2let_synthesis_wav2lm_manual(
 
         f_wav_lmn = (complex double*)calloc(so3_sampling_flmn_size(&so3_parameters), sizeof(complex double));
 
-        so3_core_forward_via_ssht(
+        so3_core_forward_direct(
             f_wav_lmn,
             f_wav + offset,
             &so3_parameters
@@ -393,6 +393,9 @@ void s2let_synthesis_wav2lm(
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
+
+//        so3_adjoint_inverse_direct(
+//        so3_core_forward_direct(
         so3_core_forward_via_ssht(
             f_wav_lmn + offset_lmn,
             f_wav + offset,
@@ -493,7 +496,8 @@ void s2let_synthesis_wav2lm_real(
         offset += so3_sampling_f_size(&so3_parameters);
     }
 
-    s2let_synthesis_lmn2lm_real(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, &real_parameters);
+    s2let_synthesis_lmn2lm_real(
+        flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, &real_parameters);
 
     free(wav_lm);
     free(scal_l);
