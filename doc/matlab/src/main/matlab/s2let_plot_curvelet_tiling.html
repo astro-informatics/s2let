@@ -1,0 +1,220 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_plot_curvelet_tiling</title>
+  <meta name="keywords" content="s2let_plot_curvelet_tiling">
+  <meta name="description" content="s2let_plot_curvelet_tiling">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_plot_curvelet_tiling.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_plot_curvelet_tiling
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_plot_curvelet_tiling</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function s2let_plot_curvelet_tiling(B, L, J_min, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_plot_curvelet_tiling
+  - Plot the tiling of scaling functions and curvelets in harmonic space.
+  - then plot the scaling functions and curvelets in real space. 
+
+ Default usage :
+
+   s2let_plot_curvelet_tiling(B, L, J_min, &lt;options&gt;)
+
+ B is the curvelet dilation parameter,
+ L is the angular band-limit,
+ J_min the first wavelet to be used.
+
+ % Valid options include:
+
+  'Spin'        = { Spin; (default=0) }
+  'SpinLowered' = { true  [Apply normalisation factors for spin-lowered
+                           wavelets and scaling function.],
+                    false [Apply the usual normalisation factors such
+                           that the wavelets fulfil the admissibility
+                           condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the wavelets
+                       should be lowered from (default = 0)]
+
+ -----------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>	s2let_spin_curvelet_tiling - Tile scaling functions and curvelets in harmonic space.</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_demo7_curvelet_Plot_Funcs_and_Tiling.html" class="code" title="">s2let_demo7_curvelet_Plot_Funcs_and_Tiling</a>	s2let_demo7 - plotting curvelets</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s2let_plot_curvelet_tiling(B, L, J_min, varargin)</a>
+0002 <span class="comment">% s2let_plot_curvelet_tiling</span>
+0003 <span class="comment">%  - Plot the tiling of scaling functions and curvelets in harmonic space.</span>
+0004 <span class="comment">%  - then plot the scaling functions and curvelets in real space.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Default usage :</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   s2let_plot_curvelet_tiling(B, L, J_min, &lt;options&gt;)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% B is the curvelet dilation parameter,</span>
+0011 <span class="comment">% L is the angular band-limit,</span>
+0012 <span class="comment">% J_min the first wavelet to be used.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% % Valid options include:</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  'Spin'        = { Spin; (default=0) }</span>
+0017 <span class="comment">%  'SpinLowered' = { true  [Apply normalisation factors for spin-lowered</span>
+0018 <span class="comment">%                           wavelets and scaling function.],</span>
+0019 <span class="comment">%                    false [Apply the usual normalisation factors such</span>
+0020 <span class="comment">%                           that the wavelets fulfil the admissibility</span>
+0021 <span class="comment">%                           condition (default)]}</span>
+0022 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0023 <span class="comment">%                       option indicates which spin number the wavelets</span>
+0024 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% -----------------------------------------------------------</span>
+0027 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0028 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0029 <span class="comment">% See LICENSE.txt for license details</span>
+0030 <span class="comment">% -----------------------------------------------------------</span>
+0031 
+0032 <span class="comment">% Parse arguments.</span>
+0033 p = inputParser;
+0034 p.addRequired(<span class="string">'B'</span>, @isnumeric);
+0035 p.addRequired(<span class="string">'L'</span>, @isnumeric);
+0036 p.addRequired(<span class="string">'J_min'</span>, @isnumeric);
+0037 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0038 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0039 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0040 p.parse(B, L, J_min, varargin{:});
+0041 
+0042 args = p.Results;
+0043 
+0044 B = args.B;
+0045 L = args.L;
+0046 J_min = args.J_min;
+0047 Spin = args.Spin;
+0048 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0049 
+0050 <span class="comment">% ---------------</span>
+0051 <span class="comment">% Tile curvelets:</span>
+0052 <span class="comment">% ---------------</span>
+0053 [cur_lm scal_l] = <a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>(args.B, args.L, args.J_min, <span class="keyword">...</span>
+0054                                         <span class="string">'Spin'</span>, args.Spin, <span class="string">'SpinLowered'</span>, args.SpinLowered,<span class="keyword">...</span>
+0055                                         <span class="string">'SpinLoweredFrom'</span>,args.SpinLoweredFrom);
+0056                                     
+0057 <span class="comment">% Normalise and reshape the scaling functions:</span>
+0058 el_min = max(abs(args.Spin), abs(args.SpinLoweredFrom));
+0059 kappa0_cur = zeros(1,L);
+0060 <span class="keyword">for</span> el = el_min:L-1
+0061  kappa0_cur(1,el+1) = scal_l(el^2+el+1,1)/sqrt((2*el+1)/(4.0*pi)) ;
+0062 <span class="keyword">end</span> 
+0063 
+0064 <span class="comment">% Normalise and reshape the curvelet functions:</span>
+0065 kappa_cur = zeros(J+1,L);
+0066 <span class="keyword">for</span> j = J_min:J
+0067  <span class="keyword">for</span> el= el_min:L-1
+0068   <span class="comment">% ind = l^2 +l + m + 1 ; now consider m =  el;</span>
+0069   kappa_cur(j+1,el+1) = cur_lm{j-J_min+1}(1,el^2+el+el+1)/ <span class="keyword">...</span>
+0070                         (sqrt(1./2.)* sqrt((2*el+1)/(8.0*pi*pi))) ;
+0071  <span class="keyword">end</span>
+0072 <span class="keyword">end</span> 
+0073 
+0074 
+0075 <span class="comment">% Set for the output figures:</span>
+0076 pltroot = <span class="string">'../../../figs/'</span> ;
+0077 configstr = [<span class="string">'Spin'</span>,int2str(args.Spin),<span class="keyword">...</span>
+0078              <span class="string">'_L'</span>,int2str(L),<span class="string">'_B'</span>,int2str(B),<span class="keyword">...</span>
+0079              <span class="string">'_Jmin'</span>,int2str(J_min)];
+0080 
+0081 
+0082 <span class="comment">%</span>
+0083 xi =0:0.01:L-1;
+0084 x = 0:L-1;
+0085 <span class="comment">% ------------</span>
+0086 <span class="comment">% Plot the tiling of the scaling function:</span>
+0087 <span class="comment">% ------------</span>
+0088 figure(<span class="string">'Position'</span>,[100 100 900 450])
+0089 yi = interp1(x, kappa0_cur, xi,<span class="string">'pchip'</span>);
+0090 semilogx(xi, yi, <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2);
+0091   <span class="comment">%h = text(2, 1.07, 'k0', 'Color', [0 0 0]);</span>
+0092 hold on;
+0093 <span class="comment">% ------------</span>
+0094 <span class="comment">% Plot the tiling of the curvelet kernels :</span>
+0095 <span class="comment">% ------------</span>
+0096 <span class="keyword">for</span> j = J_min:J
+0097   colour = rand(1,3)*0.9;
+0098   yi = interp1(x,kappa_cur(j+1,:),xi,<span class="string">'pchip'</span>);
+0099   plot(xi, yi, <span class="string">'LineWidth'</span>, 2, <span class="string">'Color'</span>, colour);
+0100   <span class="comment">%h = text(B.^j, 1.07, strcat('j',num2str(j+1)), 'Color', colour);</span>
+0101 <span class="keyword">end</span>
+0102 
+0103 <span class="comment">%title('Harmonic tiling');</span>
+0104 <span class="comment">%xlabel('l');</span>
+0105 axis([0 L -0.05 1.15]);
+0106 set(gca,<span class="string">'XTick'</span>,2.^[0:(J+2)]);
+0107 fname = [pltroot,<span class="string">'s2let_plot_cur_tiling_'</span>, configstr, <span class="string">'.png'</span>]
+0108 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0109 
+0110 
+0111 
+0112 <span class="comment">% ----------------------------</span>
+0113 <span class="comment">% Plot the scaling function in real space:</span>
+0114 <span class="comment">% ----------------------------</span>
+0115 nx = 3;
+0116 ny = 3;
+0117 [thetas, phis, n, ntheta, nphi] = ssht_sampling(L);
+0118 figure(<span class="string">'Position'</span>,[100 100 900 200]) 
+0119 h = subplot(nx, ny, 1);
+0120 f = ssht_inverse(scal_l, L, <span class="string">'Reality'</span>, true);
+0121 plot(thetas, f(:,1), <span class="string">'-k'</span>, <span class="string">'LineWidth'</span>, 2)
+0122 mx = 1.1*max(f(:,1));
+0123 axis([0 3. -mx/8 mx ]) 
+0124 
+0125 <span class="comment">% ----------------------------</span>
+0126 <span class="comment">% Plot the curvelet kernels in real space:</span>
+0127 <span class="comment">% ----------------------------</span>
+0128 Jmax = J;
+0129 <span class="keyword">for</span> j = J_min:Jmax
+0130    h = subplot(nx, ny, j-J_min+2);
+0131    hold on
+0132    flm = zeros(L^2,1);
+0133     <span class="keyword">for</span> el = el_min:L-1
+0134         flm(el^2+el+1,1) = kappa_cur(j+1,el+1);
+0135     <span class="keyword">end</span>  
+0136    f = ssht_inverse(flm, L, <span class="string">'Reality'</span>, true);
+0137    plot(thetas, f(:,1), <span class="string">'-k'</span>, <span class="string">'LineWidth'</span>, 2) 
+0138    mx = 1.1*max(f(:,1));
+0139    axis([0 3. -mx/1.5 mx ])
+0140 <span class="keyword">end</span> 
+0141 fname = [pltroot,<span class="string">'s2let_plot_cur_tiling_fn_real'</span>, configstr, <span class="string">'.png'</span>]
+0142 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0143 
+0144 <span class="keyword">end</span>
+0145</pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

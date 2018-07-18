@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo_curvelet_evaluate_performance</title>
+  <meta name="keywords" content="s2let_demo_curvelet_evaluate_performance">
+  <meta name="description" content="s2let_demo_curvelet_evaluate_performance">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo_curvelet_evaluate_performance.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo_curvelet_evaluate_performance
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo_curvelet_evaluate_performance</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo_curvelet_evaluate_performance
+
+ Evaluate timing and error of (spin) curvelet transform.
+
+ -----------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>	s2let_transform_curvelet_analysis_px2cur</li><li><a href="s2let_transform_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2px</a>	s2let_transform_curvelet_synthesis_cur2px</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo_curvelet_evaluate_performance</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Evaluate timing and error of (spin) curvelet transform.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% -----------------------------------------------------------</span>
+0006 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0007 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0008 <span class="comment">% See LICENSE.txt for license details</span>
+0009 <span class="comment">% -----------------------------------------------------------</span>
+0010 
+0011 clear;
+0012 
+0013 N_test = 3
+0014 
+0015 B = 2;
+0016 J_min = 1;  <span class="comment">%rather than 0</span>
+0017 spin = 0;
+0018 reality = false;
+0019 sampling_method = <span class="string">'MW'</span>;
+0020 upsample= false;   <span class="comment">% Multi-resolution On</span>
+0021 save_plots = true;
+0022 
+0023 Ls = [4 8 16 32 64]  
+0024 
+0025 err = zeros(N_test, length(Ls));
+0026 time_analysis = zeros(N_test, length(Ls));
+0027 time_synthesis = zeros(N_test, length(Ls));
+0028 
+0029 el_ind = 0;
+0030 <span class="keyword">for</span> L = Ls
+0031    el_ind = el_ind + 1
+0032    L
+0033 
+0034    <span class="keyword">for</span> n = 1:N_test
+0035    
+0036       n
+0037       
+0038       <span class="comment">%disp('Generate band-limited function in harmonic space')</span>
+0039       flm = zeros(L^2,1);
+0040       flm = rand(size(flm)) + sqrt(-1)*rand(size(flm));
+0041       flm = 2.*(flm - (1+sqrt(-1))./2);
+0042 
+0043       <span class="comment">%disp('Construct the corresponding signal on the sphere')</span>
+0044       f = ssht_inverse(flm, L, <span class="string">'Method'</span>, sampling_method);
+0045       
+0046       tstart = tic;
+0047       [f_cur, f_scal] = <a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>(f, <span class="keyword">...</span>
+0048          <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0049          <span class="string">'Upsample'</span>, upsample, <span class="string">'Spin'</span>, spin, <span class="string">'Reality'</span>, reality, <span class="keyword">...</span>
+0050          <span class="string">'Sampling'</span>, sampling_method);
+0051       time_analysis(n, el_ind) = toc(tstart);
+0052       
+0053       tstart = tic;
+0054       f_recov = <a href="s2let_transform_curvelet_synthesis_cur2px.html" class="code" title="function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2px</a>(f_cur, f_scal, <span class="keyword">...</span>
+0055          <span class="string">'L'</span>, L, <span class="string">'B'</span>, B, <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0056          <span class="string">'Upsample'</span>, upsample, <span class="string">'Spin'</span>, spin, <span class="string">'Reality'</span>, reality, <span class="keyword">...</span>
+0057          <span class="string">'Sampling'</span>, sampling_method);
+0058 
+0059 
+0060       time_synthesis(n, el_ind) = toc(tstart);
+0061 
+0062       err(n, el_ind) = max(abs(f(:) - f_recov(:)));
+0063 
+0064    <span class="keyword">end</span>
+0065 
+0066 <span class="keyword">end</span>
+0067 
+0068 err_mean = mean(err);
+0069 err_std = std(err);
+0070 err_std_log = std(log10(err));
+0071 
+0072 time_analysis_mean = mean(time_analysis);
+0073 time_analysis_std = std(time_analysis);
+0074 
+0075 
+0076 time_synthesis_mean = mean(time_synthesis);
+0077 time_synthesis_std = std(time_synthesis);
+0078 
+0079 
+0080 time_total = time_analysis + time_synthesis;
+0081 time_total_mean = mean(time_total);
+0082 time_total_std = std(time_total);
+0083 time_total_std_log = std(log10(time_total));
+0084 
+0085 
+0086 <span class="comment">%% Define saved figure location</span>
+0087 pltroot = <span class="string">'../../../figs/'</span> ;
+0088 
+0089 <span class="comment">%% Define plotting parameters.</span>
+0090 
+0091 istart = 1;
+0092 iend = length(Ls);
+0093 
+0094 line_width = 1.8;
+0095 line_width_thick = 2.5;
+0096 marker_size = 7;
+0097 marker_type = <span class="string">'o'</span>;
+0098 green_light = [0.2 0.6 0.4];<span class="comment">% x339966</span>
+0099 green_dark = [0 0.4 0.2];   <span class="comment">% x006633</span>
+0100 blue_light = [0.2 0.4 0.8]; <span class="comment">% x3366CC</span>
+0101 blue_dark = [0 0 1];        <span class="comment">% x0000FF</span>
+0102 red_light = [1 0.4 0.2];    <span class="comment">% xFF6633</span>
+0103 red_dark = [0.8 0.2 0];     <span class="comment">% xCC3300</span>
+0104 <span class="comment">% -----------</span>
+0105 <span class="comment">% Plot error</span>
+0106 <span class="comment">% -----------</span>
+0107 figure;
+0108    
+0109 plot(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0110    log10(err_mean(istart:iend)), <span class="keyword">...</span>
+0111    <span class="string">'Color'</span>, green_dark, <span class="keyword">...</span>
+0112    <span class="string">'Marker'</span>, marker_type, <span class="keyword">...</span>
+0113    <span class="string">'MarkerSize'</span>, marker_size, <span class="keyword">...</span>
+0114    <span class="string">'MarkerFaceColor'</span>, green_light, <span class="keyword">...</span>
+0115    <span class="string">'MarkerEdgeColor'</span>, green_dark, <span class="keyword">...</span>
+0116    <span class="string">'LineStyle'</span>, <span class="string">'--'</span>, <span class="keyword">...</span>
+0117    <span class="string">'LineWidth'</span>, line_width);
+0118 
+0119 hold on;
+0120 
+0121 plot(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0122    log10(Ls(istart:iend).^2)-15, <span class="keyword">...</span>
+0123    <span class="string">'r'</span>, <span class="keyword">...</span>
+0124    <span class="string">'LineWidth'</span>, line_width_thick);
+0125 
+0126 a = axis;
+0127 set(gca,<span class="string">'XTick'</span>,a(1):1:a(2));
+0128 set(gca,<span class="string">'XTickLabel'</span>, 2.^[a(1):1:a(2)]);
+0129 set(gca,<span class="string">'YTick'</span>,floor(a(3)):1:ceil(a(4)));
+0130 set(gca,<span class="string">'YTickLabel'</span>,{10.^[floor(a(3)):ceil(a(4))]});
+0131 xlabel(<span class="string">'$L$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'LaTex'</span>);
+0132 ylabel(<span class="string">'Maximum error'</span>);
+0133 
+0134 set(gca, <span class="string">'LineWidth'</span>, 3)
+0135 set(gca, <span class="string">'FontSize'</span>, 20)
+0136 xt =get(gca,<span class="string">'XTick'</span>);
+0137 set(gca, <span class="string">'FontSize'</span>, 18); 
+0138 
+0139 fname = [pltroot,<span class="string">'curvelet_error.png'</span>]
+0140 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0141 
+0142 <span class="comment">% ----------------------------</span>
+0143 <span class="comment">% Plot error with error bars</span>
+0144 <span class="comment">%-----------------------------</span>
+0145 figure
+0146   
+0147 errorbar(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0148    log10(err_mean(istart:iend)), <span class="keyword">...</span>
+0149    err_std_log(istart:iend), <span class="keyword">...</span>
+0150    <span class="string">'Color'</span>, green_dark, <span class="keyword">...</span>
+0151    <span class="string">'Marker'</span>, marker_type, <span class="keyword">...</span>
+0152    <span class="string">'MarkerSize'</span>, marker_size, <span class="keyword">...</span>
+0153    <span class="string">'MarkerFaceColor'</span>, green_light, <span class="keyword">...</span>
+0154    <span class="string">'MarkerEdgeColor'</span>, green_dark, <span class="keyword">...</span>
+0155    <span class="string">'LineStyle'</span>, <span class="string">'--'</span>, <span class="keyword">...</span>
+0156    <span class="string">'LineWidth'</span>, line_width);
+0157 
+0158 hold on;
+0159 
+0160 plot(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0161    log10(Ls(istart:iend).^2)-15, <span class="keyword">...</span>
+0162    <span class="string">'r'</span>, <span class="keyword">...</span>
+0163    <span class="string">'LineWidth'</span>, line_width_thick);
+0164 
+0165 a = axis;
+0166 set(gca,<span class="string">'XTick'</span>,a(1):1:a(2));
+0167 set(gca,<span class="string">'XTickLabel'</span>, 2.^[a(1):1:a(2)]);
+0168 set(gca,<span class="string">'YTick'</span>,floor(a(3)):1:ceil(a(4)));
+0169 set(gca,<span class="string">'YTickLabel'</span>,{10.^[floor(a(3)):ceil(a(4))]});
+0170 xlabel(<span class="string">'$L$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'LaTex'</span>);
+0171 ylabel(<span class="string">'Maximum error'</span>,<span class="string">'Interpreter'</span>,<span class="string">'LaTex'</span>);
+0172 
+0173 
+0174 set(gca, <span class="string">'LineWidth'</span>, 3)
+0175 set(gca, <span class="string">'FontSize'</span>, 20)
+0176 
+0177 fname = [pltroot,<span class="string">'curvelet_errorbar.png'</span>]
+0178 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0179 
+0180 <span class="comment">% -----------------</span>
+0181 <span class="comment">% Plot timing</span>
+0182 <span class="comment">% ------------------</span>
+0183 figure;
+0184    
+0185 plot(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0186    log10(time_total_mean(istart:iend)), <span class="keyword">...</span>
+0187    <span class="string">'Color'</span>, green_dark, <span class="keyword">...</span>
+0188    <span class="string">'Marker'</span>, marker_type, <span class="keyword">...</span>
+0189    <span class="string">'MarkerSize'</span>, marker_size, <span class="keyword">...</span>
+0190    <span class="string">'MarkerFaceColor'</span>, green_light, <span class="keyword">...</span>
+0191    <span class="string">'MarkerEdgeColor'</span>, green_dark, <span class="keyword">...</span>
+0192    <span class="string">'LineStyle'</span>, <span class="string">'--'</span>, <span class="keyword">...</span>
+0193    <span class="string">'LineWidth'</span>, line_width);
+0194 
+0195 hold on;
+0196 
+0197 <span class="comment">% theoretical scaling : L^3log_2{L}</span>
+0198 plot(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0199    log10((Ls(istart:iend).^3).*log2(Ls(istart:iend)))-2,<span class="keyword">...</span><span class="comment">  </span>
+0200    <span class="string">'r'</span>, <span class="keyword">...</span>
+0201    <span class="string">'LineWidth'</span>, line_width_thick);
+0202 a = axis;
+0203 set(gca,<span class="string">'XTick'</span>,a(1):1:a(2));
+0204 set(gca,<span class="string">'XTickLabel'</span>, 2.^[a(1):1:a(2)]);
+0205 set(gca,<span class="string">'YTick'</span>,floor(a(3)):1:ceil(a(4)));
+0206 set(gca,<span class="string">'YTickLabel'</span>,{10.^[floor(a(3)):ceil(a(4))]});
+0207 xlabel(<span class="string">'$L$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'LaTex'</span>);
+0208 ylabel(<span class="string">'Computation time (s)'</span>);
+0209 
+0210 set(gca, <span class="string">'LineWidth'</span>, 3)
+0211 set(gca,<span class="string">'FontSize'</span>, 20)
+0212 
+0213 fname = [pltroot,<span class="string">'curvelet_timing.png'</span>]
+0214 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0215 
+0216 <span class="comment">% Plot timing with error bars</span>
+0217 figure;
+0218    
+0219 errorbar(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0220    log10(time_total_mean(istart:iend)), <span class="keyword">...</span>
+0221    time_total_std_log(istart:iend), <span class="keyword">...</span>
+0222    <span class="string">'Color'</span>, green_dark, <span class="keyword">...</span>
+0223    <span class="string">'Marker'</span>, marker_type, <span class="keyword">...</span>
+0224    <span class="string">'MarkerSize'</span>, marker_size, <span class="keyword">...</span>
+0225    <span class="string">'MarkerFaceColor'</span>, green_light, <span class="keyword">...</span>
+0226    <span class="string">'MarkerEdgeColor'</span>, green_dark, <span class="keyword">...</span>
+0227    <span class="string">'LineStyle'</span>, <span class="string">'--'</span>, <span class="keyword">...</span>
+0228    <span class="string">'LineWidth'</span>, line_width);
+0229 
+0230 hold on;
+0231 
+0232 <span class="comment">% theoretical scaling: L^3log_2{L}</span>
+0233 plot(log2(Ls(istart:iend)), <span class="keyword">...</span>
+0234     log10((Ls(istart:iend).^3).*log2(Ls(istart:iend)))-2,<span class="keyword">...</span><span class="comment">  </span>
+0235    <span class="string">'r'</span>, <span class="keyword">...</span>
+0236    <span class="string">'LineWidth'</span>, line_width_thick);
+0237 a = axis;
+0238 set(gca,<span class="string">'XTick'</span>,a(1):1:a(2));
+0239 set(gca,<span class="string">'XTickLabel'</span>, 2.^[a(1):1:a(2)]);
+0240 set(gca,<span class="string">'YTick'</span>,floor(a(3)):1:ceil(a(4)));
+0241 set(gca,<span class="string">'YTickLabel'</span>,{10.^[floor(a(3)):ceil(a(4))]});
+0242 xlabel(<span class="string">'$L$'</span>,<span class="string">'Interpreter'</span>,<span class="string">'LaTex'</span>);
+0243 ylabel(<span class="string">'Computation time (s)'</span>,<span class="string">'Interpreter'</span>,<span class="string">'LaTex'</span>);
+0244 
+0245 set(gca, <span class="string">'LineWidth'</span>, 3)
+0246 set(gca,<span class="string">'FontSize'</span>, 20)
+0247 
+0248 fname = [pltroot,<span class="string">'curvelet_timing_errorbar.png'</span>]
+0249 print(<span class="string">'-r200'</span>, <span class="string">'-dpng'</span>, fname);
+0250</pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

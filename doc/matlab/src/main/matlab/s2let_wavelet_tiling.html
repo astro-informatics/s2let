@@ -44,18 +44,12 @@
 
  Options consist of parameter type and value pairs.
  Valid options include:
-
-  'SpinLowered' = { true  [Apply normalisation factors for spin-lowered
-                           wavelets and scaling function.],
-                    false [Apply the usual normalisation factors such
-                           that the wavelets fulfil the admissibility
-                           condition (default)]}
-  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+  'OriginalSpin' = [integer; if the SpinLowered option is used, this
                        option indicates which spin number the wavelets
                        should be lowered from (default = 0)]
 
  S2LET package to perform Wavelets transform on the Sphere.
- Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen
  See LICENSE.txt for license details</pre></div>
 
 <!-- crossreference -->
@@ -90,34 +84,27 @@ This function is called by:
 0017 <span class="comment">%</span>
 0018 <span class="comment">% Options consist of parameter type and value pairs.</span>
 0019 <span class="comment">% Valid options include:</span>
-0020 <span class="comment">%</span>
-0021 <span class="comment">%  'SpinLowered' = { true  [Apply normalisation factors for spin-lowered</span>
-0022 <span class="comment">%                           wavelets and scaling function.],</span>
-0023 <span class="comment">%                    false [Apply the usual normalisation factors such</span>
-0024 <span class="comment">%                           that the wavelets fulfil the admissibility</span>
-0025 <span class="comment">%                           condition (default)]}</span>
-0026 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
-0027 <span class="comment">%                       option indicates which spin number the wavelets</span>
-0028 <span class="comment">%                       should be lowered from (default = 0)]</span>
-0029 <span class="comment">%</span>
-0030 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
-0031 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
-0032 <span class="comment">% See LICENSE.txt for license details</span>
-0033 
-0034 p = inputParser;
-0035 p.addRequired(<span class="string">'B'</span>, @isnumeric);
-0036 p.addRequired(<span class="string">'L'</span>, @isnumeric);
-0037 p.addRequired(<span class="string">'N'</span>, @isnumeric);
-0038 p.addRequired(<span class="string">'Spin'</span>, @isnumeric);
-0039 p.addRequired(<span class="string">'J_min'</span>, @isnumeric);
-0040 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
-0041 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
-0042 p.parse(B, L, N, Spin, J_min, varargin{:});
-0043 args = p.Results;
-0044 
-0045 [psi_lm phi_l] = s2let_wavelet_tiling_mex(B, L, N, Spin, J_min, args.SpinLowered, args.SpinLoweredFrom);
-0046 
-0047 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 22-Sep-2015 14:38:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0020 <span class="comment">%  'OriginalSpin' = [integer; if the SpinLowered option is used, this</span>
+0021 <span class="comment">%                       option indicates which spin number the wavelets</span>
+0022 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
+0025 <span class="comment">% Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen</span>
+0026 <span class="comment">% See LICENSE.txt for license details</span>
+0027 
+0028 p = inputParser;
+0029 p.addRequired(<span class="string">'B'</span>, @isnumeric);
+0030 p.addRequired(<span class="string">'L'</span>, @isnumeric);
+0031 p.addRequired(<span class="string">'N'</span>, @isnumeric);
+0032 p.addRequired(<span class="string">'Spin'</span>, @isnumeric);
+0033 p.addRequired(<span class="string">'J_min'</span>, @isnumeric);
+0034 p.addParamValue(<span class="string">'OriginalSpin'</span>, 0, @isnumeric);
+0035 p.parse(B, L, N, Spin, J_min, varargin{:});
+0036 args = p.Results;
+0037 
+0038 [psi_lm phi_l] = s2let_wavelet_tiling_mex(B, L, N, Spin, J_min, args.OriginalSpin);
+0039 
+0040 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

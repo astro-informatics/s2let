@@ -51,7 +51,7 @@ hybrid_wav_l = hybrid_wav_l.T.ravel()
 res = verify_tiling(L, hybrid_scal_l, hybrid_wav_l, hybrid_scal_bandlimit, hybrid_wav_bandlimits)
 print 'Is the tiling OK and giving an invertible wavelet transform?', res
 fig.savefig('Hybrid_tiling.png')
-plt.show()
+#plt.show()
 #stop
 
 
@@ -87,10 +87,13 @@ f_rec = hp.alm2map(f_lm_rec, nside=nside, lmax=L-1)
 
 # Convert to MW sampling from spherical harmonics
 f_mw = alm2map_mw(lm_hp2lm(f_lm, L), L, spin)
-f_lm_rec = map2alm_mw(f_mw, L, spin) # To check that the analysis routine works
-f_mw_rec = alm2map_mw(f_lm_rec, L, spin)
+#f_lm_rec = map2alm_mw(f_mw, L, spin) # To check that the analysis routine works
+#f_mw_rec = alm2map_mw(f_lm_rec, L, spin)
+f_mw_rec = alm2map_mw(lm_hp2lm(f_lm_rec, L), L, spin)
 
-print 'ACCURACY:', np.max(f_mw_rec-f_mw), np.mean(f_mw_rec/f_mw), np.std(f_mw_rec/f_mw)
+
+print 'ACCURACY HARM:', np.max(f_mw_rec-f_mw), np.mean(f_mw_rec/f_mw), np.std(f_mw_rec/f_mw)
+print 'ACCURACY REAL:', np.max(f_lm_rec-f_lm), np.mean(f_lm_rec/f_lm), np.std(f_lm_rec/f_lm)
 
 # Home made plotting routine! inputs : function f (1D array of MW signal), bandlimit L, plot axis ax, and title
 def myplot(f, L, ax, title=''):

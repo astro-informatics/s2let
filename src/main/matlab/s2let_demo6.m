@@ -1,4 +1,4 @@
-
+% s2let_demo6
 mapTfile = '../../../../ebsep/data/wmap_T_rot.fits';
 mapQfile = '../../../../ebsep/data/wmap_Q_rot.fits';
 mapUfile = '../../../../ebsep/data/wmap_U_rot.fits';

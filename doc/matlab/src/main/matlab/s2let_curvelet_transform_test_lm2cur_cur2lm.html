@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_curvelet_transform_test_lm2cur_cur2lm</title>
+  <meta name="keywords" content="s2let_curvelet_transform_test_lm2cur_cur2lm">
+  <meta name="description" content="s2let_curvelet_transform_test_lm2cur_cur2lm">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_curvelet_transform_test_lm2cur_cur2lm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_curvelet_transform_test_lm2cur_cur2lm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_curvelet_transform_test_lm2cur_cur2lm</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_curvelet_transform_test_lm2cur_cur2lm
+
+ Run curvelet analysis (harmonic to curvelet space) and 
+ synthesis (curvelet to harmonic space)
+ of randomly generated signals f and check exactness 
+
+ Options consist of parameter type and value pairs.
+ Valid options include:
+  'B'               = { Dilation factor; B &gt; 1 (default = 2) }
+  'L'               = { Harmonic band-limit; L &gt; 0 (default = Lguessed) }
+  'J_min'           = { the minimal wavelet scale,(default = 0)}
+  'Spin'            = { Spin number; Spin &gt;= 0 (default = 0) }
+  'Reality'         = { false   [do not assume corresponding signal f real (default)],
+                        true    [assume f real (improves performance)] }
+  'Upsample'        = { false   [multiresolution algorithm (default)],
+                        true    [full resolution wavelets] },
+ -----------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_curvelet_analysis_lm2cur</a>	s2let_transform_curvelet_analysis_lm2cur</li><li><a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>	s2let_transform_curvelet_synthesis_cur2lm</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_curvelet_transform_test_lm2cur_cur2lm</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Run curvelet analysis (harmonic to curvelet space) and</span>
+0004 <span class="comment">% synthesis (curvelet to harmonic space)</span>
+0005 <span class="comment">% of randomly generated signals f and check exactness</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Options consist of parameter type and value pairs.</span>
+0008 <span class="comment">% Valid options include:</span>
+0009 <span class="comment">%  'B'               = { Dilation factor; B &gt; 1 (default = 2) }</span>
+0010 <span class="comment">%  'L'               = { Harmonic band-limit; L &gt; 0 (default = Lguessed) }</span>
+0011 <span class="comment">%  'J_min'           = { the minimal wavelet scale,(default = 0)}</span>
+0012 <span class="comment">%  'Spin'            = { Spin number; Spin &gt;= 0 (default = 0) }</span>
+0013 <span class="comment">%  'Reality'         = { false   [do not assume corresponding signal f real (default)],</span>
+0014 <span class="comment">%                        true    [assume f real (improves performance)] }</span>
+0015 <span class="comment">%  'Upsample'        = { false   [multiresolution algorithm (default)],</span>
+0016 <span class="comment">%                        true    [full resolution wavelets] },</span>
+0017 <span class="comment">% -----------------------------------------------------------</span>
+0018 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0019 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0020 <span class="comment">% See LICENSE.txt for license details</span>
+0021 <span class="comment">% -----------------------------------------------------------</span>
+0022 
+0023 clear all;
+0024 close all;
+0025 
+0026 <span class="comment">% Curvelet parameters</span>
+0027 Spin = 2;             <span class="comment">% Spin value of curvelet</span>
+0028 L = 16;               <span class="comment">% Angular band-limit</span>
+0029 B = 2;                <span class="comment">% B = 2 for dyadic sampling</span>
+0030 J_min = 1;            <span class="comment">% Minimum scale probed by curvelets</span>
+0031 J =<a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);  <span class="comment">% Maximum scale probed by curvelets =ceil(log L/ log B);</span>
+0032 
+0033 disp(<span class="string">'Generates random band-limited function'</span>)
+0034 flm_gen = zeros(L^2,1);
+0035 flm_gen = rand(size(flm_gen)) + sqrt(-1)*rand(size(flm_gen));
+0036 flm_gen = 2.*(flm_gen - (1+sqrt(-1))./2);
+0037 disp(<span class="string">'Construct the corresponding signal on the sphere'</span>)
+0038 f_gen = ssht_inverse(flm_gen, L,<span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0039 <span class="comment">% Spin signals:</span>
+0040 flm_spin_gen= ssht_forward(f_gen, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0041 f_spin_gen = ssht_inverse(flm_spin_gen, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0042 disp(<span class="string">'----------- '</span>);
+0043 
+0044 
+0045 disp(<span class="string">' '</span>);
+0046 disp(<span class="string">'Curvelet transform: full resolution (Upsample: true): '</span>);
+0047 <span class="comment">% -----------------</span>
+0048 <span class="comment">% Signal analysis: (harmonic to curvelet space)</span>
+0049 <span class="comment">% -----------------</span>
+0050 <span class="comment">% N.B. 's2let_transform_curvelet_analysis_lm2cur.m' called 's2let_curvelet_tiling.m'</span>
+0051 disp(<span class="string">'Spin signal, Full resolution: analysis_lm2cur...'</span>)
+0052 [f_cur, f_scal] = <a href="s2let_transform_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_curvelet_analysis_lm2cur</a>(flm_spin_gen,  <span class="keyword">...</span>
+0053                                                            <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0054                                                            <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0055                                                            <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0056                                                            <span class="string">'Upsample'</span>, true); 
+0057 
+0058 <span class="comment">% -----------------</span>
+0059 <span class="comment">% Signal synthesis: (curvelet to harmonic space)</span>
+0060 <span class="comment">% -----------------</span>
+0061 disp(<span class="string">'Spin signal, Full resolution: synthesis_cur2lm...'</span>)
+0062 flm_spin_rec= <a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>(f_cur, f_scal, <span class="keyword">...</span>
+0063                                                         <span class="string">'B'</span>, B, <span class="string">'L'</span>, L,<span class="keyword">...</span>
+0064                                                         <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0065                                                         <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0066                                                         <span class="string">'Upsample'</span>, true);
+0067 
+0068 
+0069 disp(<span class="string">'Compute the re-constructed function via ssht_inverse '</span>);
+0070 f_spin_rec = ssht_inverse(flm_spin_rec, L,<span class="string">'Spin'</span>, Spin,<span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0071 disp(<span class="string">'- Test exact transform:'</span>);
+0072 disp(<span class="string">'Check the difference between flm_gen and flm_rec:'</span>);
+0073 maxerr = max(abs(flm_spin_gen - flm_spin_rec))
+0074 disp(<span class="string">'Check the difference between f_spin_gen and f_spin_rec: '</span>);
+0075 maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
+0076 disp(<span class="string">'----------- '</span>);
+0077 
+0078 
+0079 <span class="comment">% ================== MULTI-RESOLUTION ===================%</span>
+0080 disp(<span class="string">' Curvelet transform: multi-resolution (Upsample: false): '</span>);
+0081 <span class="comment">% -----------------</span>
+0082 <span class="comment">% Signal analysis: (harmonic to curvelet space)</span>
+0083 <span class="comment">% -----------------</span>
+0084 
+0085 [f_cur, f_scal] = <a href="s2let_transform_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_curvelet_analysis_lm2cur</a>(flm_spin_gen,  <span class="keyword">...</span>
+0086                                                            <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0087                                                            <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0088                                                            <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0089                                                            <span class="string">'Sampling'</span>, <span class="string">'MW'</span>,<span class="keyword">...</span>
+0090                                                            <span class="string">'Upsample'</span>, false);
+0091 
+0092 <span class="comment">% -----------------</span>
+0093 <span class="comment">% Signal synthesis: (curvelet to harmonic space)</span>
+0094 <span class="comment">% -----------------</span>
+0095 flm_spin_rec= <a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>(f_cur, f_scal, <span class="keyword">...</span>
+0096                                                         <span class="string">'B'</span>, B, <span class="string">'L'</span>, L,<span class="keyword">...</span>
+0097                                                         <span class="string">'J_min'</span>, J_min, <span class="keyword">...</span>
+0098                                                         <span class="string">'Spin'</span>, Spin, <span class="keyword">...</span>
+0099                                                         <span class="string">'Sampling'</span>, <span class="string">'MW'</span>, <span class="keyword">...</span>
+0100                                                         <span class="string">'Upsample'</span>, false);
+0101 
+0102 
+0103 disp(<span class="string">'Compute the re-constructed function via ssht_inverse '</span>);
+0104 f_spin_rec = ssht_inverse(flm_spin_rec, L, <span class="string">'Spin'</span>, Spin, <span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0105 
+0106 disp(<span class="string">'- Test exact transform:'</span>);
+0107 disp(<span class="string">'Check the difference between flm_gen and flm_rec:'</span>);
+0108 maxerr = max(abs(flm_spin_gen - flm_spin_rec))
+0109 disp(<span class="string">'Check the difference between f_spin_gen and f_spin_rec: '</span>);
+0110 maxerr = max(abs(f_spin_gen(:) - f_spin_rec(:)))
+0111 disp(<span class="string">'----------- '</span>);
+0112 
+0113 
+0114 disp(<span class="string">' '</span>)
+0115 disp(<span class="string">'============================='</span>)
+0116 disp(<span class="string">'REAL Signals TEST'</span>)
+0117 disp(<span class="string">'============================='</span>)
+0118 <span class="comment">% -------------------------</span>
+0119 disp(<span class="string">'Constraint on flms to generate real signal'</span>)
+0120 <span class="comment">% -------------------------</span>
+0121 <span class="keyword">for</span> el = 0:L-1
+0122     ind = el*el + el + 1;
+0123     flm_gen(ind,1) = real(flm_gen(ind,1));
+0124     <span class="keyword">for</span> m = 1:el
+0125         ind_pm = el*el + el + m + 1;
+0126         ind_nm = el*el + el - m + 1;
+0127         flm_gen(ind_nm,1) = (-1)^m * conj(flm_gen(ind_pm,1));
+0128     <span class="keyword">end</span>
+0129 <span class="keyword">end</span>
+0130 reality = true; 
+0131 
+0132 
+0133 <span class="comment">% ================== FULL-RESOLUTION ===================%</span>
+0134 disp(<span class="string">' Curvelet transform: Full-resolution (Upsample: true): '</span>);
+0135 <span class="comment">% -----------------</span>
+0136 <span class="comment">% Signal analysis: (harmonic to curvelet space)</span>
+0137 <span class="comment">% -----------------</span>
+0138 disp(<span class="string">'Real signal, Full resolution: analysis_lm2cur...'</span>)
+0139 upsample = true; 
+0140 [f_cur, f_scal]= <a href="s2let_transform_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_curvelet_analysis_lm2cur</a>(flm_gen, <span class="keyword">...</span>
+0141                                                           <span class="string">'B'</span>, B, <span class="string">'L'</span>, L,<span class="keyword">...</span>
+0142                                                           <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0143                                                           <span class="string">'Reality'</span>, reality, <span class="keyword">...</span>
+0144                                                           <span class="string">'Upsample'</span>, upsample);
+0145 <span class="comment">% -----------------</span>
+0146 <span class="comment">% Signal synthesis: (curvelet to harmonic space)</span>
+0147 <span class="comment">% -----------------</span>
+0148 disp(<span class="string">'Real signal, Full resolution: synthesis_cur2lm...'</span>)
+0149 flm_rec  = <a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0150                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0151                                                      <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0152                                                      <span class="string">'Reality'</span>, reality,<span class="keyword">...</span>
+0153                                                      <span class="string">'Upsample'</span>, upsample);
+0154 f_gen = ssht_inverse(flm_gen, L,<span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0155 f_rec = ssht_inverse(flm_rec, L,<span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0156 disp(<span class="string">'- Test exact transform:'</span>);
+0157 disp(<span class="string">'Check the difference between flm_gen and flm_rec:'</span>);
+0158 maxerr = max(abs(flm_gen - flm_rec))
+0159 disp(<span class="string">'Check the difference between f_gen and f_rec: '</span>);
+0160 maxerr = max(abs(f_gen(:) - f_rec(:)))
+0161 disp(<span class="string">'----------- '</span>);
+0162 
+0163 
+0164 <span class="comment">% ================== MULTI-RESOLUTION ===================%</span>
+0165 disp(<span class="string">' Curvelet transform: Multi-resolution (Upsample: false): '</span>);
+0166 <span class="comment">% -----------------</span>
+0167 <span class="comment">% Signal analysis: (harmonic to curvelet space)</span>
+0168 <span class="comment">% -----------------</span>
+0169 upsample = false; 
+0170 disp(<span class="string">'Real signal, Multi-reolution: analysis_lm2cur...'</span>)
+0171 [f_cur, f_scal]= <a href="s2let_transform_curvelet_analysis_lm2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_lm2cur(flm_init, varargin)">s2let_transform_curvelet_analysis_lm2cur</a>(flm_gen, <span class="keyword">...</span>
+0172                                                           <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0173                                                           <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0174                                                           <span class="string">'Reality'</span>, reality, <span class="keyword">...</span>
+0175                                                           <span class="string">'Upsample'</span>, upsample);
+0176 <span class="comment">% -----------------</span>
+0177 <span class="comment">% Signal synthesis: (curvelet to harmonic space)</span>
+0178 <span class="comment">% -----------------</span>
+0179 disp(<span class="string">'Real signal, Multi-reolution: synthesis_cur2lm...'</span>)
+0180 flm_rec  = <a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0181                                                      <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="keyword">...</span>
+0182                                                      <span class="string">'J_min'</span>, J_min,<span class="keyword">...</span>
+0183                                                      <span class="string">'Reality'</span>, reality,<span class="keyword">...</span>
+0184                                                      <span class="string">'Upsample'</span>,upsample);
+0185 f_gen = ssht_inverse(flm_gen, L,<span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0186 f_rec = ssht_inverse(flm_rec, L,<span class="string">'Method'</span>, <span class="string">'MW'</span>);
+0187 disp(<span class="string">'- Test exact transform:'</span>);
+0188 disp(<span class="string">'Check the difference between flm_gen and flm_rec:'</span>);
+0189 maxerr = max(abs(flm_gen - flm_rec))
+0190 disp(<span class="string">'Check the difference between f_gen and f_rec: '</span>);
+0191 maxerr = max(abs(f_gen(:) - f_rec(:)))
+0192 disp(<span class="string">'----------- '</span>);</pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

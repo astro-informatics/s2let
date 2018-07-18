@@ -1,6 +1,6 @@
 function [fQ, fU] = s2let_hpx_alm2map(flmQ, flmU, nside, varargin)
 
-% s2let_axisym_synthesis 
+% s2let_axisym_synthesis_spin
 % Compute axisymmetric wavelet transform, output as HEALPIX maps.
 %
 % Default usage :

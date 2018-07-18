@@ -353,7 +353,7 @@ void s2let_tiling_wavelet_allocate(complex double **psi, double **phi, const s2l
  * \param[in]  el    Harmonic index el.
  * \param[in]  spin  Spin number the wavelet was lowered from.
  */
-static double s2let_spin_lowered_normalization(int el, int spin)
+static double s2let_spin_normalization(int el, int spin)
 {
     double factor = 1;
     int s;
@@ -382,7 +382,6 @@ static double s2let_spin_lowered_normalization(int el, int spin)
  *                        \link s2let_parameters_t::J_min J_min\endlink
  *                        \link s2let_parameters_t::N N\endlink
  *                        \link s2let_parameters_t::spin spin\endlink
- *                        \link s2let_parameters_t::normalization normalization\endlink
  *                        \link s2let_parameters_t::original_spin original_spin\endlink
  *
  */
@@ -390,7 +389,6 @@ void s2let_tiling_wavelet(complex double *psi, double *phi, const s2let_paramete
     int L = parameters->L;
     int J_min = parameters->J_min;
     int spin = parameters->spin;
-    s2let_wav_norm_t normalization = parameters->normalization;
     int original_spin = parameters->original_spin;
 
     // TODO: Add spin parameter to avoid computation of el < |s|
@@ -400,11 +398,6 @@ void s2let_tiling_wavelet(complex double *psi, double *phi, const s2let_paramete
     complex double *s_elm;
     int j, el, m, el_min;
     int J = s2let_j_max(parameters);
-
-    // Effectively ignore original_spin if we don't use spin-lowered
-    // wavelets.
-    if (normalization != S2LET_WAV_NORM_SPIN_LOWERED)
-        original_spin = 0;
 
     // TODO: Allocate kappa0 directly inside phi. For this, we should probably
     //       separate the allocation functions to do only one allocation per
@@ -419,8 +412,8 @@ void s2let_tiling_wavelet(complex double *psi, double *phi, const s2let_paramete
     for (el = el_min; el < L; ++el)
     {
         phi[el] = sqrt((2*el+1)/(4.0*PI)) * kappa0[el];
-        if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
-            phi[el] *= s2let_spin_lowered_normalization(el, original_spin);
+        if (original_spin != 0)
+            phi[el] *= s2let_spin_normalization(el, original_spin) * pow(-1, original_spin);
     }
 
     for (j = J_min; j <= J; ++j)
@@ -431,8 +424,8 @@ void s2let_tiling_wavelet(complex double *psi, double *phi, const s2let_paramete
             for (m = -el; m <= el; ++m)
             {
                 psi[j*L*L + ind] = sqrt((2*el+1)/(8.0*PI*PI)) * kappa[j*L + el] * s_elm[ind];
-                if (normalization == S2LET_WAV_NORM_SPIN_LOWERED)
-                    psi[j*L*L + ind] *= s2let_spin_lowered_normalization(el, original_spin);
+                if (original_spin != 0)
+                    psi[j*L*L + ind] *= s2let_spin_normalization(el, original_spin) * pow(-1, original_spin);
                 ++ind;
             }
         }

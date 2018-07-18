@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_transform_curvelet_synthesis_lmn2lm</title>
+  <meta name="keywords" content="s2let_transform_curvelet_synthesis_lmn2lm">
+  <meta name="description" content="s2let_transform_curvelet_synthesis_lmn2lm">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_transform_curvelet_synthesis_lmn2lm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_transform_curvelet_synthesis_lmn2lm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_transform_curvelet_synthesis_lmn2lm</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_transform_curvelet_synthesis_lmn2lm
+ Compute (spin) curvelet transform, 
+ input in Wigner space,
+ output in harmonic space. 
+
+ Default usage :
+
+   flm_rec = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm,  &lt;options&gt;)
+
+ f_cur_lmn is the input curvelet contribution,
+ f_cur_lmn is the input scaling function contribution,
+ cur_lm is the curvelet kernels, 
+ scal_l is the scaling function kernel. 
+
+ Option :
+  'B'               = { Dilation factor; B &gt; 1 (default=2) }
+  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }
+  'Spin'               = { Spin; (default=0) }
+  'J_min'           = { Minimum curvelet scale to consider;
+                        0 &lt;= J_min &lt; log_B(L) (default=0) }
+  'Upsample'      = { false        [multiresolution algorithm (default)],
+                      true       [full resolution curvelets] }
+  'Reality'         = { false        [do not assume corresponding signal f real (default)],
+                        true         [assume f real (improves performance)] }
+  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+                               curvelets and scaling function.],
+                        false [Apply the usual normalisation factors such
+                               that the curvelets fulfil the admissibility
+                               condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the curvelets
+                       should be lowered from (default = 0)]
+ -----------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2015  Boris Leistedt, Martin B¸ttner, 
+                     Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_transform_test_lm2lmn_lmn2lm.html" class="code" title="">s2let_curvelet_transform_test_lm2lmn_lmn2lm</a>	s2let_curvelet_transform_test_lm2lmn_lmn2lm</li><li><a href="s2let_fulltest_curvelet.html" class="code" title="">s2let_fulltest_curvelet</a>	s2let_fulltest_curvelet</li><li><a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>	s2let_transform_curvelet_synthesis_cur2lm</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function flm_rec= s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm, cur_lm,  scal_l, varargin)</a>
+0002 
+0003 <span class="comment">% s2let_transform_curvelet_synthesis_lmn2lm</span>
+0004 <span class="comment">% Compute (spin) curvelet transform,</span>
+0005 <span class="comment">% input in Wigner space,</span>
+0006 <span class="comment">% output in harmonic space.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Default usage :</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   flm_rec = s2let_transform_curvelet_synthesis_lmn2lm(f_cur_lmn, f_scal_lm,  &lt;options&gt;)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% f_cur_lmn is the input curvelet contribution,</span>
+0013 <span class="comment">% f_cur_lmn is the input scaling function contribution,</span>
+0014 <span class="comment">% cur_lm is the curvelet kernels,</span>
+0015 <span class="comment">% scal_l is the scaling function kernel.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Option :</span>
+0018 <span class="comment">%  'B'               = { Dilation factor; B &gt; 1 (default=2) }</span>
+0019 <span class="comment">%  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }</span>
+0020 <span class="comment">%  'Spin'               = { Spin; (default=0) }</span>
+0021 <span class="comment">%  'J_min'           = { Minimum curvelet scale to consider;</span>
+0022 <span class="comment">%                        0 &lt;= J_min &lt; log_B(L) (default=0) }</span>
+0023 <span class="comment">%  'Upsample'      = { false        [multiresolution algorithm (default)],</span>
+0024 <span class="comment">%                      true       [full resolution curvelets] }</span>
+0025 <span class="comment">%  'Reality'         = { false        [do not assume corresponding signal f real (default)],</span>
+0026 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
+0027 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
+0028 <span class="comment">%                               curvelets and scaling function.],</span>
+0029 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
+0030 <span class="comment">%                               that the curvelets fulfil the admissibility</span>
+0031 <span class="comment">%                               condition (default)]}</span>
+0032 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0033 <span class="comment">%                       option indicates which spin number the curvelets</span>
+0034 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0035 <span class="comment">% -----------------------------------------------------------</span>
+0036 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0037 <span class="comment">% Copyright (C) 2015  Boris Leistedt, Martin B¸ttner,</span>
+0038 <span class="comment">%                     Jennifer Chan &amp; Jason McEwen</span>
+0039 <span class="comment">% See LICENSE.txt for license details</span>
+0040 <span class="comment">% -----------------------------------------------------------</span>
+0041 
+0042 sz = length(scal_l(:));
+0043 Lguessed = sqrt(sz);
+0044 
+0045 p = inputParser;
+0046 p.addRequired(<span class="string">'f_cur_lmn'</span>, @iscell);
+0047 p.addRequired(<span class="string">'f_scal_lm'</span>, @isnumeric);
+0048 p.addRequired(<span class="string">'cur_lm'</span>, @iscell);
+0049 p.addRequired(<span class="string">'scal_l'</span>, @isnumeric);
+0050 p.addParamValue(<span class="string">'B'</span>, 2, @isnumeric);
+0051 p.addParamValue(<span class="string">'L'</span>, Lguessed, @isnumeric);   
+0052 p.addParamValue(<span class="string">'J_min'</span>, 0, @isnumeric);
+0053 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0054 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
+0055 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
+0056 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0057 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0058 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0059 p.parse(f_cur_lmn, f_scal_lm, cur_lm, scal_l, varargin{:});
+0060 args = p.Results;
+0061 
+0062 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0063 
+0064 <span class="comment">% ---------------</span>
+0065 <span class="comment">% Signal synthesis:</span>
+0066 <span class="comment">% ---------------</span>
+0067 <span class="comment">% Curvelet contribution:</span>
+0068 flm_rec = zeros(args.L^2,1);
+0069 <span class="keyword">for</span> j = args.J_min:J,
+0070     band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
+0071     <span class="comment">% Nj = orientational band-limit at j-th scale</span>
+0072     Nj = band_limit;
+0073     <span class="keyword">if</span> (args.Reality == 0) 
+0074         <span class="keyword">for</span> en = -Nj+1:Nj-1,
+0075             <span class="keyword">for</span> el = max(abs(args.Spin),abs(en)):band_limit-1,
+0076                 ind_ln = ssht_elm2ind(el, en);
+0077                 psi = (cur_lm{j-args.J_min+1}(ind_ln));
+0078                 <span class="keyword">for</span> m = -el:el,
+0079                     ind_lm = ssht_elm2ind(el, m);
+0080                     <span class="keyword">if</span> (args.Upsample ~= 0)  
+0081                         ind_lmn = so3_elmn2ind(el,m,en,args.L,Nj);
+0082                     <span class="keyword">else</span>  
+0083                         ind_lmn = so3_elmn2ind(el,m,en,band_limit,Nj);
+0084                     <span class="keyword">end</span>  
+0085                     flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmn)* psi;
+0086                 <span class="keyword">end</span>
+0087             <span class="keyword">end</span>
+0088         <span class="keyword">end</span>
+0089     <span class="keyword">else</span> <span class="comment">% real setting:</span>
+0090         <span class="keyword">for</span> el = 0:band_limit-1,     
+0091             <span class="keyword">for</span> m = -el:el,
+0092                 ind_lm = ssht_elm2ind(el, m);
+0093                 <span class="comment">% for n=0 terms:</span>
+0094                  ind_lnzero = ssht_elm2ind(el, 0);
+0095                  <span class="keyword">if</span> (args.Upsample ~= 0) 
+0096                      ind_lmnzero = so3_elmn2ind(el,m,0,args.L,Nj,<span class="string">'Reality'</span>, args.Reality);
+0097                  <span class="keyword">else</span>
+0098                      ind_lmnzero = so3_elmn2ind(el,m,0,band_limit,Nj,<span class="string">'Reality'</span>, args.Reality);
+0099                  <span class="keyword">end</span>
+0100                  psizero= cur_lm{j-args.J_min+1}(ind_lnzero);  
+0101                  flm_rec(ind_lm)=  flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lmnzero)* psizero; 
+0102                  <span class="comment">% for n ~= 0 terms:</span>
+0103                  <span class="keyword">if</span> (args.Upsample ~= 0) 
+0104                      ind_lml = so3_elmn2ind(el,m,el,args.L,Nj,<span class="string">'Reality'</span>, args.Reality);
+0105                      ind_l_nm_l = so3_elmn2ind(el,-m,el,args.L,Nj,<span class="string">'Reality'</span>, args.Reality);  
+0106                  <span class="keyword">else</span>
+0107                      ind_lml = so3_elmn2ind(el,m,el,band_limit,Nj,<span class="string">'Reality'</span>, args.Reality);
+0108                      ind_l_nm_l = so3_elmn2ind(el,-m,el,band_limit,Nj,<span class="string">'Reality'</span>, args.Reality);     
+0109                  <span class="keyword">end</span>
+0110                  <span class="keyword">if</span> (mod((m+el),2) == 1)    
+0111                      sign = -1; 
+0112                  <span class="keyword">else</span>      
+0113                      sign = 1; 
+0114                  <span class="keyword">end</span> 
+0115                  <span class="keyword">for</span> en = 1:Nj-1, 
+0116                      <span class="keyword">if</span> (el &gt;= en)
+0117                        <span class="comment">% contribution from positive n terms % i.e. Sum_over_lmn((cur_l_n)*f_cur_l_m_n))</span>
+0118                        ind_ln = ssht_elm2ind(el, en); 
+0119                        psi = cur_lm{j-args.J_min+1}(ind_ln);  
+0120                        flm_rec(ind_lm)= flm_rec(ind_lm)+ f_cur_lmn{j-args.J_min+1}(ind_lml)* psi;
+0121                        <span class="comment">% contribution from negative n terms:</span>
+0122                        <span class="comment">% i.e. Sum_over_lmn((cur_l_neg-n)*f_cur_l_m_neg-n)) =Sum_over_lmn((cur_l_neg-n)*(-1^(m+n))*f_cur_l_neg-m_n))</span>
+0123                        ind_l_nn = ssht_elm2ind(el, -en); 
+0124                        npsi = cur_lm{j-args.J_min+1}(ind_l_nn);
+0125                        flm_rec(ind_lm)= flm_rec(ind_lm)+ sign*conj(f_cur_lmn{j-args.J_min+1}(ind_l_nm_l))* npsi; 
+0126                      <span class="keyword">end</span>   <span class="comment">% end if (el&gt;=en) loop</span>
+0127                  <span class="keyword">end</span> <span class="comment">% end en-loop for Reality Option</span>
+0128             <span class="keyword">end</span> <span class="comment">% end em-loop for Reality Option</span>
+0129         <span class="keyword">end</span> <span class="comment">% end el-loop for Reality Option</span>
+0130     <span class="keyword">end</span>  <span class="comment">% end if-loop for Reality Option</span>
+0131 <span class="keyword">end</span> <span class="comment">% end j-loop</span>
+0132 
+0133 <span class="comment">% -----------------</span>
+0134 <span class="comment">% Add the scaling function contribution:</span>
+0135 <span class="comment">% -----------------</span>
+0136 <span class="keyword">if</span> (args.Upsample == 0) 
+0137     band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(args.J_min-1, args.J_min, args.B,args.L) args.L ]);
+0138 <span class="keyword">else</span> 
+0139     band_limit = args.L ; 
+0140 <span class="keyword">end</span>
+0141 lm_ind=0;
+0142 <span class="keyword">if</span> (args.Reality == 0) 
+0143     <span class="keyword">for</span> el = abs(args.Spin): band_limit-1,
+0144         phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
+0145         <span class="keyword">for</span> m = -el:el,
+0146             lm_ind=ssht_elm2ind(el, m);
+0147             flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
+0148         <span class="keyword">end</span>
+0149     <span class="keyword">end</span> 
+0150 <span class="keyword">else</span> <span class="comment">% real setting:</span>
+0151     <span class="keyword">for</span> el = 0 :band_limit-1,
+0152         phi = sqrt(4.*pi/(2.*el+1))*scal_l(el^2+el+1,1);      
+0153         <span class="keyword">for</span> m = -el:el,
+0154             lm_ind=ssht_elm2ind(el, m);
+0155             flm_rec(lm_ind) =  flm_rec(lm_ind)+  f_scal_lm(lm_ind)* phi;
+0156         <span class="keyword">end</span>
+0157     <span class="keyword">end</span> 
+0158 <span class="keyword">end</span>  <span class="comment">% end if-loop for Reality Option</span>
+0159 
+0160 <span class="keyword">end</span>
+0161 
+0162 
+0163 
+0164 
+0165 
+0166</pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

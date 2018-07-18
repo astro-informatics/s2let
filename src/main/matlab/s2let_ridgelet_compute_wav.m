@@ -2,11 +2,11 @@ function [ridgelet_wav, ridgelet_scal] = ...
    s2let_ridgelet_compute_wav(L, varargin)
 % s2let_ridgelet_compute_wav - Compute ridgelets
 %
-% Compute ridgelet wavelet and scaling functions.
+% Compute ridgelets and scaling functions.
 %
 % Default usage :
 %
-%   [ridgelet_wav, ridgelet_scal] = s2let_compute_wav(L, <options>)
+%   [ridgelet_wav, ridgelet_scal] = s2let_ridgelet_compute_wav(L, <options>)
 %
 % where L is harmonic band-limit for the reconstruction on the sphere,
 % [ridgelet_wav, ridgelet_scal] are the reconstruct ridgelet wavelets and

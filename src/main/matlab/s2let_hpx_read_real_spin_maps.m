@@ -1,7 +1,7 @@
 function [fQ, fU, nside]= s2let_hpx_read_real_spin_maps(file)
 
-% s2let_hpx_read_real_map 
-% Read an MW real map from a FITS file
+% s2let_hpx_read_real_spin_maps 
+% Read a Healpix real map from a FITS file
 % Default usage :
 %
 %   [fQ, fU, nside]= s2let_hpx_read_real_spin_maps(file)

@@ -223,10 +223,6 @@ void s2let_analysis_lm2wav_manual(
     parameters.B = pow(L, 1.0/(float)(J+2));
     parameters.N = N;
     parameters.dl_method = SSHT_DL_RISBO;
-    printf("J = %i\n", J);
-    printf("B = %g\n", parameters.B);
-    printf("N = %i\n", parameters.N);
-    printf("L = %i\n", parameters.L);
 
     int bandlimit = L;
     int verbosity = 0;

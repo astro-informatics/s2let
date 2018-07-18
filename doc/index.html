@@ -66,6 +66,8 @@ harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wave
 <h2>News</h2>
 
 <ul>
+<li><strong>November 2016</strong><br />
+Public release of S2LET 2.1b1, fully supporting scale-discretised ridgelets and curvelets (in Matlab).
 <li><strong>October 2015</strong><br />
 Public release of S2LET 2.0b1, fully supporting directional, spin scale-discretised wavelets.
 Python wrappers now available!
@@ -104,8 +106,7 @@ S2LET code paper submitted to Astronomy & Astrophysics.
   resulting wavelet transform is theoretically exact, i.e. a band-limited signal can be recovered from its wavelet coefficients exactly and the wavelet coefficients capture all the information. <strong>S2LET</strong> also supports the <a href="http://HEALPix.jpl.nasa.gov/">HEALPix</a> sampling scheme, in which case the transforms are not theoretically exact but achieve good numerical accuracy.
 
   <p>
-  As described in <a href=#referencing>Leisted et al (2012)</a>, <strong>S2LET</strong> not only supports scale-discretised wavelets (<a href=#referencing>Wiaux et al 2008</a>) but also needlets (<a href=#referencing>Marinucci et al 2008</a>, <a href=#referencing>Baldi et al 2006</a>) and B-spline wavelets (<a href=#referencing>Starck et al 2006</a>). As described in <a href=#referencing>McEwen et al (2015)</a>, <strong>S2LET</strong> exploits a fast Wigner transform on the rotation group (implemented in <a
- href="http://www.sothree.org/">SO3</a>) to perform the spin directional wavelet transform.
+<strong>S2LET</strong> supports scale-discretised axisymmetric wavelets (<a href=#referencing>Wiaux et al 2008</a>, <a href=#referencing>Leisted et al 2012</a>), directional wavelets (<a href=#referencing>McEwen et al 2015</a>),  ridgelets (<a href=#referencing>McEwen 2015</a>),  and curvelets (<a href=#referencing>Chan et al 2017</a>), as well as needlets (<a href=#referencing>Marinucci et al 2008</a>, <a href=#referencing>Baldi et al 2006</a>) and B-spline wavelets (<a href=#referencing>Starck et al 2006</a>). It exploits a fast Wigner transform on the rotation group (implemented in <a href="http://www.sothree.org/">SO3</a>) to perform the scale-discretised wavelet transform, which anyalyses of scalar and spin signals are both supported. 
 
   <p>
   This page outlines the main features of the code, installation details as well as the core functionalties and interfaces.  References, version, and license information then follows.
@@ -157,15 +158,54 @@ S2LET code paper submitted to Astronomy & Astrophysics.
 <!--------------------------------------------------------------->
 
 
-<a name="wavelets"><h2>Spin, directional wavelets wavelets</h2></a>
+<a name="wavelets"><h2>Spin, directional wavelets</h2></a>
 
 <p>
-  The framework of scale-discretised wavelets was extended in <a href=#referencing>McEwen et al (2015)</a> to the directional setting (following <a href=#referencing>Wiaux et al 2008</a>) and spin signals. The figure blow shows the wavelet decomposition of the Earth tomography using 3 directions.
+  The framework of scale-discretised wavelets was extended in <a href=#referencing>McEwen et al (2015)</a> to the directional setting (following <a href=#referencing>Wiaux et al 2008</a>) and spin signals. The figure below shows the wavelet decomposition of the Earth topography using 3 directions.
 </p>
 
-<img src="images/earth3.png" width="740" height="500" border=0 align="center"> 
+<img src="images/earth3.png" width="690" height="500" border=0 align="center"> 
 
 <br><br><br>
+
+<!--------------------------------------------------------------->
+
+
+<a name="ridgelets"><h2>Ridgelets</h2></a>
+
+<p>
+<strong>S2LET</strong> supports the spherical ridgelet transform developed in <a href=#referencing>McEwen (2015)</a>. The ridgelet transform is defined natively on the sphere, probes signal content globally along great circles, does not exhibit any blocking artefactes, does not rely on any ad hoc parameters, and permits the exact inversion for antipodal signals. 
+
+The figure below shows spherical ridgelets, with axis aligned with the North pole, for wavelet scales j=3 and 4, plotted on the sphere and parmetrically. 
+</p>
+
+<img src="images/Ridgeletj3.png" width="320" height="130" border=0 align="center"> 
+<img src="images/Ridgeletj4.png" width="330" height="140" border=0 align="center"> 
+
+<br><br><br>
+
+<!--------------------------------------------------------------->
+
+<a name="curvelets"><h2>Curvelets</h2></a>
+
+<p>
+<strong>S2LET</strong> also supports scale-discretised curvelets 
+developed in <a href=#referencing>Chan (2017)</a>), which are efficient to represent local linear and 
+curvilinear strcuture and admit exact inversion for both scalar and spin signals. 
+The figure below shows spherical curvelets, 
+with axis aligned with the North pole, for various wavelet scales j, plotted on the sphere. 
+</p>
+
+<img src="images/curvelet_L512_B2_Jmin2.png" width="700" height="140" border=0 align="center"> 
+
+</p>
+The figure below shows some plots of the curvelet decomposition of the Earth topographic map.
+</p>
+
+<img src="images/earth4.png" width="650" height="830" border=0 align="center"> 
+
+<br><br><br>
+
 
 
 <!--------------------------------------------------------------->
@@ -218,11 +258,17 @@ S2LET code paper submitted to Astronomy & Astrophysics.
    href="http://www.s2let.org/">http://www.s2let.org/</a>)
   and the related academic papers:</p>
 
-<blockquote> J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, P. Vandergheynst, <strong>Spin scale-discretised wavelets on the sphere</strong>, IEEE TSP, 2015 (ArXiv). </blockquote>
+<blockquote> J. D. McEwen,  B. Leistedt, M. B&uuml;ttner, H. V. Peiris, Y. Wiaux, <a href="https://arxiv.org/abs/1509.06749"><strong>Directional spin wavelets on the sphere</strong></a>, IEEE Trans. Signal Proc., submitted, 2015 (<a href="http://arxiv.org/abs/1509.06749">ArXiv</a>). </blockquote>
 
-<blockquote> J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, <strong>A novel sampling theorem on the rotation group</strong>, IEEE TSP, 2015 (<a href="http://arxiv.org/abs/1508.03101">ArXiv</a>). </blockquote>
+<blockquote> J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, <a href="http://ieeexplore.ieee.org/document/7298431/"><strong>A novel sampling theorem on the rotation group</strong></a>, IEEE Sig. Proc. Let., 22(12):2425-2429, 2015 (<a href="http://arxiv.org/abs/1508.03101">ArXiv</a> | <a href="http://dx.doi.org/10.1109/LSP.2015.2490676">DOI</a>). </blockquote>
 
-<blockquote> B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux, <a href="http://www.mrao.cam.ac.uk/~jdm57/publications.html#leistedt:s2let_axisym">S2LET: A code to perform fast wavelet analysis on the sphere</a>, Astronomy & Astrophysics, TODO, 2013 (<a href="http://arxiv.org/abs/1211.1680">ArXiv</a>). </blockquote>
+<blockquote> B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux, <a href="http://www.aanda.org/articles/aa/abs/2013/10/aa20729-12/aa20729-12.html"><strong>S2LET: A code to perform fast wavelet analysis on the sphere</strong></a>, Astronomy & Astrophysics, 558(A128):1-9, 2013 (<a href="http://arxiv.org/abs/1211.1680">ArXiv</a> | <a href="http://dx.doi.org/10.1051/0004-6361/201220729">DOI</a>). </blockquote>
+
+<blockquote>  J. D. McEwen, <a href="http://arxiv.org/abs/1510.01595v1"><strong>Ridgelet transform on the sphere</strong></a>, IEEE Trans. Signal Proc., submitted, 2015 (<a href="http://arxiv.org/abs/1510.01595v1">ArXiv</a>). </blockquote>
+
+<blockquote> J. Y. H. Chan, B. Leistedt, T. D. Kitching, J. D. McEwen, <a href="http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=7544452"><strong>Second-generation curvelets on the sphere</strong></a>, IEEE Trans. Signal Proc., 65(1):5-14, 2017 (<a href="http://arxiv.org/abs/1511.05578">ArXiv</a> | <a href="http://dx.doi.org/10.1109/TSP.2016.2600506">DOI</a>). </blockquote>
+
+
 
 <p>If the MW sampling is used please also cite the following paper: </p>
 
@@ -294,10 +340,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 <!--------------------------------------------------------------->
 <a name="authors"><h2>Authors and contributors</h2></a>
 
-  <p> S2LET was developed by <a href="http://ixkael.com/blog/">Boris Leistedt</a>,
- <a href="http://www.jasonmcewen.org/">Jason McEwen</a>, and Martin B&uuml;ttner at University College London (<a
-  href="http://www.ucl.ac.uk/" target="_top">UCL</a>).</p>
-
+  <p> S2LET was developed by <a href="http://ixkael.com/blog/">Boris Leistedt</a>, 
+      Martin B&uuml;ttner, 
+     <a href="http://www.mssl.ucl.ac.uk/~yhjc2/">Jennifer Chan</a>, and 
+     <a href="http://www.jasonmcewen.org/">Jason McEwen</a> 
+     at University College London (<a href="http://www.ucl.ac.uk/" target="_top">UCL</a>).</p>
 
 
 <br><br><br><br><br><br><br>

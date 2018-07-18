@@ -21,7 +21,8 @@
 void mexFunction( int nlhs, mxArray *plhs[],
                   int nrhs, const mxArray *prhs[])
 {
-  int i, nside, B, L, J_min, f_m, f_n;
+  int i, nside, L, J_min, f_m, f_n;
+  double B;
   s2let_parameters_t parameters = {};
   double *f_wav_real, *f_scal_real, *f_real;
   double *f_wav_r = NULL, *f_scal_r = NULL, *f_r = NULL;
@@ -70,7 +71,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
     mexErrMsgIdAndTxt("s2let_transform_axisym_analysis_hpx_mex:InvalidInput:waveletParameter",
           "Wavelet parameter B must be integer.");
   }
-  B = (int)mxGetScalar(prhs[iin]);
+  B = (double)mxGetScalar(prhs[iin]);
   if (mxGetScalar(prhs[iin]) > (double)B || B <= 1)
     mexErrMsgIdAndTxt("s2let_transform_axisym_analysis_hpx_mex:InvalidInput:waveletParameter",
           "Wavelet parameter B must be positive integer greater than 2");

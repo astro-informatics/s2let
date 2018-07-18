@@ -9,29 +9,44 @@ DESCRIPTION
      scale-discretised wavelet transforms on the sphere.
 
 CURRENT VERSION
-     Release 2.0b1, September 2015
+     Release 2.1b1, November 2016
 
 PREVIOUS VERSIONS
+     Release 2.0b1, September 2015
      Release 1.1b1, October 2013
      Release 1.0b1, November 2012
 
 AUTHORS
-     B. Leistedt (www.ixkael.com/blog)
-     J. D. McEwen (www.jasonmcewen.org)
+     B. Leistedt   (www.ixkael.com/blog)
      M. Buttner
+     J. Y. H. Chan (www.mssl.ucl.ac.uk/~yhjc2/)
+     J. D. McEwen  (www.jasonmcewen.org)
+
 
 REFERENCES
 
-     J. D. McEwen, M. Büttner, B. Leistedt, H. V. Peiris, Y. Wiaux, P. Vandergheynst, Spin scale-discretised wavelets on the sphere, IEEE TSP, 2015 .
+     J. D. McEwen, M. Büttner, B. Leistedt, H. V. Peiris and Y. Wiaux, 
+     Directional spin wavelets on the sphere, IEEE TSP, submitted, 2015 
+     (arXiv:1509.06749).
 
-     J. D. McEwen, M. Büttner, B. Leistedt, H. V. Peiris, Y. Wiaux, A novel sampling theorem on the rotation group, IEEE TSP, 2015.
+     J. D. McEwen, M. Büttner, B. Leistedt, H. V. Peiris and Y. Wiaux, 
+     A novel sampling theorem on the rotation group, IEEE TSP, 2015
+     (arXiv:1508.03101).
 
-     B. Leistedt, Y. Wiaux, P. Vandergheynst and J. D. McEwen,
+     B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux,
      S2LET: A code to perform fast wavelet analysis on the sphere, 
-     Astronomy & Astrophysics, 558, A128, 2013 (arXiv:1211.1680)
+     Astronomy & Astrophysics, 558, A128, 2013 (arXiv:1211.1680). 
      
      J. D. McEwen and Y. Wiaux, A novel sampling theorem on the
-     sphere, IEEE Trans. Sig. Proc., 59, 2011 (arXiv:1110.6298).
+     sphere, IEEE TSP, 59, 2011 (arXiv:1110.6298).
+
+     J. D. McEwen, Ridgelet transform on the sphere, 
+     IEEE TSP, submitted, 2015 (arXiv:1510.01595).
+
+     J. Y. H. Chan, B. Leidtedt, T.D. Kitching and J. D. McEwen, 
+     Second-generation curvelets on the sphere, 
+     IEEE TSP, 65(1):5-14, 2017 (arXiv:1511.05578).
+
 
 DOCUMENTATION
      See doc/index.html

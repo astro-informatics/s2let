@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_demo_curvelet_covariance</title>
+  <meta name="keywords" content="s2let_demo_curvelet_covariance">
+  <meta name="description" content="s2let_demo_curvelet_covariance">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_demo_curvelet_covariance.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_demo_curvelet_covariance
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_demo_curvelet_covariance</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_demo_curvelet_covariance
+ Run curvelet covariance demo.
+
+ Demo to compare theoretical covariance of curvelet coefficients with
+ empirical data from using our transform functions. 
+ The empirical covariance is computed for several sets of 
+ harmonic coefficients,
+ and the theoretical covariance is compared to the mean of those
+ calculations in units of its standard deviation. 
+
+ Default usage is given by
+
+   s2let_demo_curvelet_covariance
+
+ ---------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>	s2let_spin_curvelet_tiling - Tile scaling functions and curvelets in harmonic space.</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>	s2let_transform_curvelet_analysis_px2cur</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% s2let_demo_curvelet_covariance</span>
+0002 <span class="comment">% Run curvelet covariance demo.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Demo to compare theoretical covariance of curvelet coefficients with</span>
+0005 <span class="comment">% empirical data from using our transform functions.</span>
+0006 <span class="comment">% The empirical covariance is computed for several sets of</span>
+0007 <span class="comment">% harmonic coefficients,</span>
+0008 <span class="comment">% and the theoretical covariance is compared to the mean of those</span>
+0009 <span class="comment">% calculations in units of its standard deviation.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Default usage is given by</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   s2let_demo_curvelet_covariance</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% ---------------------------------------------------------</span>
+0016 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0017 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0018 <span class="comment">% See LICENSE.txt for license details</span>
+0019 <span class="comment">% -----------------------------------------------------------</span>
+0020 clear all;
+0021 
+0022 <span class="comment">% Define parameters</span>
+0023 B = 2;
+0024 L = 16;
+0025 Spin = 2;
+0026 J_min = 2;
+0027 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(L, B);
+0028 
+0029 var_flm = 1; 
+0030 
+0031 <span class="comment">% Compute theoretical covariance of curvelet coefficients.</span>
+0032 <span class="comment">% The covariance &lt;Wj(rho)Wj*(rho)&gt; is given by the following expression:</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% sigma^2 Sum(l,n) |Psij_ln|^2</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Where sigma^2 is the variance of the harmonic coefficients and Psij_lm</span>
+0037 <span class="comment">% are the harmonic coefficients of the j-th curvelet.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% A similar expression applies for the scaling function coefficients.</span>
+0040 
+0041 
+0042 <span class="comment">% ---------------</span>
+0043 <span class="comment">% Tile curvelets:</span>
+0044 <span class="comment">% ---------------</span>
+0045 [cur_lm scal_l] = <a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>(B, L, J_min, <span class="keyword">...</span>
+0046                                              <span class="string">'Spin'</span>, Spin, <span class="string">'SpinLowered'</span>, false,<span class="keyword">...</span>
+0047                                              <span class="string">'SpinLoweredFrom'</span>,0);
+0048 <span class="comment">% reshape scaling functions</span>
+0049 kappa0_cur = zeros(L,1);
+0050 <span class="keyword">for</span> el = abs(Spin):L-1
+0051  kappa0_cur(el+1,1) = scal_l(el^2+el+1,1);
+0052 <span class="keyword">end</span>
+0053 <span class="comment">% reshape curvelets</span>
+0054 kappa_cur = zeros(J+1,L^2);
+0055 <span class="keyword">for</span> j = J_min:J
+0056  ind = Spin*Spin + 1;
+0057  <span class="keyword">for</span> el = abs(Spin):L-1
+0058   <span class="keyword">for</span> m= -el:el
+0059    kappa_cur(j+1,ind) = cur_lm{j-J_min+1}(1,ind);
+0060    ind = ind +1; 
+0061   <span class="keyword">end</span>
+0062  <span class="keyword">end</span>
+0063 <span class="keyword">end</span> 
+0064 
+0065 
+0066 covar_W_phi_theory = 0;
+0067 <span class="keyword">for</span> el = 0:L-1
+0068     covar_W_phi_theory = covar_W_phi_theory + kappa0_cur(el+1) * kappa0_cur(el+1)';
+0069 <span class="keyword">end</span>
+0070 
+0071 covar_W_psi_theory = zeros(J-J_min+1,1);
+0072 <span class="keyword">for</span> j = J_min:J
+0073     ind = 1;
+0074     <span class="keyword">for</span> el = 0:L-1
+0075         <span class="keyword">for</span> n = -el:el
+0076             covar_W_psi_theory(j-J_min+1) = covar_W_psi_theory(j-J_min+1) + kappa_cur(j+1,ind) * kappa_cur(j+1,ind)';
+0077             ind = ind + 1;
+0078         <span class="keyword">end</span>
+0079     <span class="keyword">end</span>
+0080 <span class="keyword">end</span>
+0081 
+0082 covar_W_phi_theory = covar_W_phi_theory .* var_flm
+0083 covar_W_psi_theory = covar_W_psi_theory .* var_flm
+0084 
+0085 runs = 100;
+0086 <span class="keyword">if</span> J_min == 0
+0087     <span class="comment">% Ergodicity fails for J_min = 0, because the scaling function will</span>
+0088     <span class="comment">% only cover f00. Hence &lt;flm flm*&gt; will be 0 in that case and the</span>
+0089     <span class="comment">% scaling coefficients will all be the same. So, if we do have</span>
+0090     <span class="comment">% J_min = 0, we take the variance over all realisations instead (of</span>
+0091     <span class="comment">% course, we then won't have a standard deviation to compare it to the</span>
+0092     <span class="comment">% theoretical variance).</span>
+0093     f_scals = zeros(runs,1);
+0094 <span class="keyword">else</span>
+0095     covar_W_phi_data = zeros(1, runs);
+0096 <span class="keyword">end</span>
+0097 
+0098 covar_W_psi_data = zeros(J-J_min+1, runs);
+0099 
+0100 
+0101 <span class="keyword">for</span> i = 1:runs
+0102     <span class="comment">% Generate normally distributed random flmn of complex signal</span>
+0103     <span class="comment">% with mean 0 and variance 1</span>
+0104     flm = zeros(L^2 - Spin^2, 1);
+0105     flm = [zeros(Spin^2,1); (randn(size(flm)) + 1i*randn(size(flm)))/sqrt(2)*sqrt(var_flm)];
+0106 
+0107     <span class="comment">% Compute inverse then forward transform.</span>
+0108     f = ssht_inverse(flm, L, <span class="string">'Spin'</span>, Spin);
+0109 
+0110     
+0111     <span class="comment">% ---------------</span>
+0112     <span class="comment">% Curvelet transform:</span>
+0113     <span class="comment">% ---------------</span>
+0114     [f_cur, f_scal] = <a href="s2let_transform_curvelet_analysis_px2cur.html" class="code" title="function [f_cur, f_scal] = s2let_transform_curvelet_analysis_px2cur(f_init, varargin)">s2let_transform_curvelet_analysis_px2cur</a>(complex(real(f), imag(f)), <span class="keyword">...</span>
+0115                                                                <span class="string">'B'</span>, B, <span class="string">'L'</span>, L,  <span class="string">'J_min'</span>, J_min,  <span class="keyword">...</span>
+0116                                                                <span class="string">'Spin'</span>, Spin,  <span class="keyword">...</span>
+0117                                                                <span class="string">'Reality'</span>, false, <span class="keyword">...</span>
+0118                                                                <span class="string">'Upsample'</span>, true, <span class="keyword">...</span>
+0119                                                                <span class="string">'SpinLowered'</span>, false,<span class="keyword">...</span>
+0120                                                                <span class="string">'SpinLoweredFrom'</span>,0, <span class="keyword">...</span>
+0121                                                                <span class="string">'Sampling'</span>,<span class="string">'MW'</span>);
+0122     <span class="keyword">if</span> J_min == 0
+0123         f_scals(i) = f_scal(1);
+0124     <span class="keyword">else</span>
+0125         covar_W_phi_data(i) = var(f_scal(:));
+0126     <span class="keyword">end</span>
+0127 
+0128     <span class="keyword">for</span> j = J_min:J
+0129         f_cur_j = f_cur{j-J_min+1};
+0130         covar_W_psi_data(j-J_min+1,i) = var(f_cur_j(:));
+0131     <span class="keyword">end</span>
+0132 <span class="keyword">end</span>
+0133 
+0134 <span class="keyword">if</span> J_min == 0
+0135     covar_W_phi_data = var(f_scals(:))
+0136     W_phi_error_absolute = abs(covar_W_phi_data - covar_W_phi_theory)
+0137 <span class="keyword">else</span>
+0138     mean_covar_W_phi_data = mean(covar_W_phi_data)
+0139     std_covar_W_phi_data = std(covar_W_phi_data)
+0140     W_phi_error_in_std = abs(mean_covar_W_phi_data - covar_W_phi_theory)/std_covar_W_phi_data
+0141 <span class="keyword">end</span>
+0142 
+0143 mean_covar_W_psi_data = mean(covar_W_psi_data,2)
+0144 std_covar_W_psi_data = std(covar_W_psi_data,0,2)
+0145 W_psi_error_in_std = abs(mean_covar_W_psi_data - covar_W_psi_theory)./std_covar_W_psi_data</pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

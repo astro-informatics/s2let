@@ -54,7 +54,7 @@ cdef extern from "s2let.h":
 	void s2let_tiling_direction(double complex *s_elm, const s2let_parameters_t *parameters);
 
 	void s2let_tiling_wavelet_allocate(double complex **psi, double **phi, const s2let_parameters_t *parameters);
-	void s2letc_tiling_wavelet(double complex *psi, double *phi, const s2let_parameters_t *parameters);
+	void s2let_tiling_wavelet(double complex *psi, double *phi, const s2let_parameters_t *parameters);
 	void s2let_tiling_axisym(double *kappa, double *kappa0, const s2let_parameters_t *parameters);
 	void s2let_tiling_axisym_allocate(double **kappa, double **kappa0, const s2let_parameters_t *parameters);
 
@@ -141,8 +141,6 @@ cdef extern from "s2let.h":
 		SSHT_DL_RISBO, SSHT_DL_TRAPANI
 	ctypedef enum s2let_sampling_t:
 		S2LET_SAMPLING_MW
-	ctypedef enum s2let_wav_norm_t:
-		S2LET_WAV_NORM_DEFAULT, S2LET_WAV_NORM_SPIN_LOWERED
 
 	ctypedef struct s2let_parameters_t:
 		int J_min
@@ -152,7 +150,6 @@ cdef extern from "s2let.h":
 		int upsample
 		int spin
 		ssht_dl_method_t dl_method
-		s2let_wav_norm_t normalisation;
 		s2let_sampling_t sampling_scheme;
 		int original_spin
 		int reality
@@ -188,10 +185,6 @@ def analysis_axisym_lm_wav(
 	np.ndarray[double complex, ndim=1, mode="c"] flm_hp not None, B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
-	if spin_lowered:
-		parameters.normalisation = S2LET_WAV_NORM_SPIN_LOWERED
-	else:
-		parameters.normalisation = S2LET_WAV_NORM_DEFAULT
 	parameters.B = B;
 	parameters.L = L;
 	parameters.J_min = J_min;
@@ -201,8 +194,8 @@ def analysis_axisym_lm_wav(
 	s2let_transform_axisym_lm_allocate_wav(&wav_lm, &scal_lm, &parameters);
 	s2let_transform_axisym_lm_wav(wav_lm, scal_lm, &parameters);
 
-	f_scal_lm = np.empty([L * L,], dtype=complex)
-	f_wav_lm = np.empty([L * L * (J+1-J_min),], dtype=complex)
+	f_scal_lm = np.zeros([L * L,], dtype=complex)
+	f_wav_lm = np.zeros([L * L * (J+1-J_min),], dtype=complex)
 	f_lm = lm_hp2lm(flm_hp, L)
 
 	s2let_transform_axisym_lm_wav_analysis(
@@ -215,8 +208,8 @@ def analysis_axisym_lm_wav(
 	free(scal_lm);
 	free(wav_lm);
 
-	f_scal_lm_hp = np.empty([L*(L+1)/2,], dtype=complex)
-	f_wav_lm_hp = np.empty([L*(L+1)/2, J-J_min+1], dtype=complex)
+	f_scal_lm_hp = np.zeros([L*(L+1)/2,], dtype=complex)
+	f_wav_lm_hp = np.zeros([L*(L+1)/2, J-J_min+1], dtype=complex)
 
 	for el from 0 <= el < L:
 		for em from 0 <= em <= el:
@@ -233,10 +226,6 @@ def synthesis_axisym_lm_wav(
 	np.ndarray[double complex, ndim=1, mode="c"] f_scal_lm_hp not None, B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
-	if spin_lowered:
-		parameters.normalisation = S2LET_WAV_NORM_SPIN_LOWERED
-	else:
-		parameters.normalisation = S2LET_WAV_NORM_DEFAULT
 	parameters.B = B;
 	parameters.L = L;
 	parameters.J_min = J_min;
@@ -246,9 +235,9 @@ def synthesis_axisym_lm_wav(
 	s2let_transform_axisym_lm_allocate_wav(&wav_lm, &scal_lm, &parameters);
 	s2let_transform_axisym_lm_wav(wav_lm, scal_lm, &parameters);
 
-	f_lm = np.empty([L * L,], dtype=complex)
-	f_scal_lm = np.empty([L * L,], dtype=complex)
-	f_wav_lm = np.empty([L * L * (J+1-J_min),], dtype=complex)
+	f_lm = np.zeros([L * L,], dtype=complex)
+	f_scal_lm = np.zeros([L * L,], dtype=complex)
+	f_wav_lm = np.zeros([L * L * (J+1-J_min),], dtype=complex)
 
 	for el from 0 <= el < L:
 		for em from 0 <= em <= el:
@@ -316,8 +305,8 @@ def verify_tiling(L,
 def analysis_lm2wav_manualtiling(
 		np.ndarray[double complex, ndim=1, mode="c"] flm_hp not None,
 		L, N, spin,
-		np.ndarray[double, ndim=1, mode="c"] scal_l,
-		np.ndarray[double, ndim=1, mode="c"] wav_l,
+		np.ndarray[double, ndim=1, mode="c"] kappa_scal_l,
+		np.ndarray[double, ndim=1, mode="c"] kappa_wav_l,
 		scal_bandlimit,
 		np.ndarray[int, ndim=1, mode="c"] wav_bandlimits):
 
@@ -328,12 +317,17 @@ def analysis_lm2wav_manualtiling(
 	parameters.N = N;
 	parameters.spin = spin;
 	parameters.upsample = 0;
+	parameters.J_min = 0;
 
 	cdef so3_parameters_t so3_parameters = {};
 	fill_so3_parameters(&so3_parameters, &parameters);
 	so3_parameters.sampling_scheme = SO3_SAMPLING_MW;
 
-	wav_lm = np.empty([L*L*(J+1),], dtype=complex)
+	scal_l = np.zeros([L,], dtype=float)
+	for el from 0 <= el < L:
+		scal_l[el] = np.sqrt((2*el+1)/(4.0*np.pi)) * kappa_scal_l[el];
+
+	wav_lm = np.zeros([L*L*(J+1),], dtype=complex)
 	cdef double complex *s_elm;
 	s2let_tiling_direction_allocate(&s_elm, &parameters);
 	s2let_tiling_direction(s_elm, &parameters);
@@ -341,13 +335,13 @@ def analysis_lm2wav_manualtiling(
 		for el from 0 <= el < L:
 			for em from -el <= em <= el:
 				ind = el*el + el + em
-				wav_lm[j*L*L + ind] = np.sqrt((2*el+1)/(8.0*np.pi*np.pi)) * wav_l[j*L + el] * s_elm[ind];
+				wav_lm[j*L*L + ind] = np.sqrt((2*el+1)/(8.0*np.pi*np.pi)) * kappa_wav_l[j*L + el] * s_elm[ind];
 	free(s_elm);
 
 	cdef s2let_parameters_t bl_parameters = {};
-	bl_parameters.L = scal_bandlimit;
+	bl_parameters.L = int(scal_bandlimit);
 	total = s2let_n_phi(&bl_parameters) * s2let_n_theta(&bl_parameters)
-	f_scal = np.empty([total,], dtype=complex)
+	f_scal = np.zeros([total,], dtype=complex)
 	total = 0
 	for j from 0 <= j <= J:
 		so3_parameters.L0 = 0;
@@ -357,11 +351,11 @@ def analysis_lm2wav_manualtiling(
 		Nj += (Nj+N) % 2; #// ensure N and Nj are both even or both odd
 		so3_parameters.N = Nj;
 		total += so3_sampling_f_size(&so3_parameters)
-	f_wav = np.empty([total,], dtype=complex)
+	f_wav = np.zeros([total,], dtype=complex)
 
 	f_lm = lm_hp2lm(flm_hp, L)
 
-	print 'scal_bandlimit = ', scal_bandlimit
+	print 'scal_bandlimit = ', int(scal_bandlimit)
 	print 'wav_bandlimits = ', wav_bandlimits
 	print 'J, L, spin, N = ', J, L, spin, N
 
@@ -384,8 +378,8 @@ def synthesis_wav2lm_manualtiling(
 		np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
 		np.ndarray[double complex, ndim=1, mode="c"] f_scal not None,
 		L, N, spin,
-		np.ndarray[double, ndim=1, mode="c"] scal_l,
-		np.ndarray[double, ndim=1, mode="c"] wav_l,
+		np.ndarray[double, ndim=1, mode="c"] kappa_scal_l,
+		np.ndarray[double, ndim=1, mode="c"] kappa_wav_l,
 		scal_bandlimit,
 		np.ndarray[int, ndim=1, mode="c"] wav_bandlimits):
 
@@ -396,8 +390,13 @@ def synthesis_wav2lm_manualtiling(
 	parameters.N = N;
 	parameters.spin = spin;
 	parameters.upsample = 0;
+	parameters.J_min = 0;
 
-	wav_lm = np.empty([L*L*(J+1),], dtype=complex)
+	scal_l = np.zeros([L,], dtype=float)
+	for el from 0 <= el < L:
+		scal_l[el] = np.sqrt((2*el+1)/(4.0*np.pi)) * kappa_scal_l[el];
+
+	wav_lm = np.zeros([L*L*(J+1),], dtype=complex)
 	cdef double complex *s_elm;
 	s2let_tiling_direction_allocate(&s_elm, &parameters);
 	s2let_tiling_direction(s_elm, &parameters);
@@ -405,10 +404,10 @@ def synthesis_wav2lm_manualtiling(
 		for el from 0 <= el < L:
 			for em from -el <= em <= el:
 				ind = el*el + el + em
-				wav_lm[j*L*L + ind] = np.sqrt((2*el+1)/(8.0*np.pi*np.pi)) * wav_l[j*L + el] * s_elm[ind];
+				wav_lm[j*L*L + ind] = np.sqrt((2*el+1)/(8.0*np.pi*np.pi)) * kappa_wav_l[j*L + el] * s_elm[ind];
 	free(s_elm);
 
-	f_lm = np.empty([L * L,], dtype=complex)
+	f_lm = np.zeros([L * L,], dtype=complex)
 
 	print 'Done pre-computing - running s2let_synthesis_wav2lm_manual'
 	s2let_synthesis_wav2lm_manual(
@@ -429,7 +428,7 @@ def synthesis_wav2lm_manualtiling(
 
 def analysis_lm2wav(
 		np.ndarray[double complex, ndim=1, mode="c"] flm_hp not None,
-		B, L, J_min, N, spin, upsample, spin_lowered=False):
+		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
 
 	cdef s2let_parameters_t parameters = {};
 	parameters.B = B;
@@ -439,17 +438,13 @@ def analysis_lm2wav(
 	parameters.spin = spin;
 	parameters.upsample = upsample;
 	parameters.sampling_scheme = S2LET_SAMPLING_MW
-	if spin_lowered:
-		parameters.normalisation = S2LET_WAV_NORM_SPIN_LOWERED
-	else:
-		parameters.normalisation = S2LET_WAV_NORM_DEFAULT
+	parameters.original_spin = original_spin
 	parameters.dl_method = SSHT_DL_RISBO
-	parameters.original_spin = 0
 	parameters.reality = 0
 	parameters.verbosity = 0
 
-	f_scal = np.empty([s2let_n_scal(&parameters),], dtype=complex)
-	f_wav = np.empty([s2let_n_wav(&parameters),], dtype=complex)
+	f_scal = np.zeros([s2let_n_scal(&parameters),], dtype=complex)
+	f_wav = np.zeros([s2let_n_wav(&parameters),], dtype=complex)
 	f_lm = lm_hp2lm(flm_hp, L)
 
 	s2let_analysis_lm2wav(
@@ -465,7 +460,7 @@ def analysis_lm2wav(
 def synthesis_wav2lm(
 		np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
 		np.ndarray[double complex, ndim=1, mode="c"] f_scal not None,
-		B, L, J_min, N, spin, upsample, spin_lowered=False):
+		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
 
 	cdef s2let_parameters_t parameters = {};
 	parameters.B = B;
@@ -475,16 +470,12 @@ def synthesis_wav2lm(
 	parameters.spin = spin;
 	parameters.upsample = upsample;
 	parameters.sampling_scheme = S2LET_SAMPLING_MW
-	if spin_lowered:
-		parameters.normalisation = S2LET_WAV_NORM_SPIN_LOWERED
-	else:
-		parameters.normalisation = S2LET_WAV_NORM_DEFAULT
+	parameters.original_spin = original_spin
 	parameters.dl_method = SSHT_DL_RISBO
-	parameters.original_spin = 0
 	parameters.reality = 0
 	parameters.verbosity = 0
 
-	f_lm = np.empty([L * L,], dtype=complex)
+	f_lm = np.zeros([L * L,], dtype=complex)
 	s2let_synthesis_wav2lm(
 		<double complex*> np.PyArray_DATA(f_lm),
 		<const double complex*> np.PyArray_DATA(f_wav),
@@ -503,7 +494,7 @@ def mw_size(L):
 
 def lm2lm_hp(np.ndarray[double complex, ndim=1, mode="c"] f_lm not None, L):
 
-	f_lm_hp = np.empty([L*(L+1)/2,], dtype=complex)
+	f_lm_hp = np.zeros([L*(L+1)/2,], dtype=complex)
 	for el from 0 <= el < L:
 		for em from 0 <= em <= el:
 			f_lm_hp[healpy_lm(el, em, L)] = f_lm[ el * el + el + em ]
@@ -514,7 +505,7 @@ def lm2lm_hp(np.ndarray[double complex, ndim=1, mode="c"] f_lm not None, L):
 
 def lm_hp2lm(np.ndarray[double complex, ndim=1, mode="c"] flm_hp not None, L):
 
-	f_lm = np.empty([L*L,], dtype=complex)
+	f_lm = np.zeros([L*L,], dtype=complex)
 	for el from 0 <= el < L:
 		for em from 0 <= em <= el:
 			f_lm[ el * el + el - em ] = pow(-1.0, -em) * ( flm_hp[healpy_lm(el, em, L)] ).conjugate()
@@ -534,7 +525,6 @@ def wav_ind(j, n, B, L, N, J_min, upsample):
 	parameters.spin = 0;
 	parameters.upsample = upsample;
 	parameters.sampling_scheme = S2LET_SAMPLING_MW
-	parameters.normalisation = S2LET_WAV_NORM_DEFAULT
 	parameters.dl_method = SSHT_DL_RISBO
 	parameters.original_spin = 0
 	parameters.reality = 0
@@ -559,8 +549,8 @@ def mw_sampling(L):
 
 	ntheta = ssht_sampling_mw_ntheta(L)
 	nphi = ssht_sampling_mw_nphi(L)
-	thetas = np.empty([ntheta,], dtype=float)
-	phis = np.empty([nphi,], dtype=float)
+	thetas = np.zeros([ntheta,], dtype=float)
+	phis = np.zeros([nphi,], dtype=float)
 	for t from 0<=t<ntheta:
 		thetas[t] = ssht_sampling_mw_t2theta(t, L)
 	for p from 0<=p<nphi:
@@ -574,7 +564,7 @@ def mw_sampling(L):
 def alm2map_mw(np.ndarray[double complex, ndim=1, mode="c"] f_lm not None, L, spin):
 
 	#f_lm = lm_hp2lm(f_lm_hp, L)
-	f = np.empty([mw_size(L),], dtype=complex)
+	f = np.zeros([mw_size(L),], dtype=complex)
 	s2let_mw_alm2map(
 		<double complex*> np.PyArray_DATA(f),
 		<const double complex*> np.PyArray_DATA(f_lm),
@@ -586,7 +576,7 @@ def alm2map_mw(np.ndarray[double complex, ndim=1, mode="c"] f_lm not None, L, sp
 
 def map2alm_mw(np.ndarray[double complex, ndim=1, mode="c"] f not None, L, spin):
 
-	f_lm = np.empty([L * L,], dtype=complex)
+	f_lm = np.zeros([L * L,], dtype=complex)
 	s2let_mw_map2alm(
 		<double complex*> np.PyArray_DATA(f_lm),
 		<const double complex*> np.PyArray_DATA(f),
@@ -597,13 +587,14 @@ def map2alm_mw(np.ndarray[double complex, ndim=1, mode="c"] f not None, L, spin)
 
 #----------------------------------------------------------------------------------------------------#
 
-def wavelet_tiling(B, L, N, J_min, spin):
+def wavelet_tiling(B, L, N, J_min, spin, original_spin=0):
 
 	cdef s2let_parameters_t parameters = {};
 	parameters.B = B;
 	parameters.L = L;
 	parameters.N = N;
 	parameters.spin = spin;
+	parameters.original_spin = 0
 	parameters.J_min = J_min;
 	J = s2let_j_max(&parameters);
 
@@ -612,8 +603,8 @@ def wavelet_tiling(B, L, N, J_min, spin):
 	s2let_tiling_wavelet_allocate(&psi, &phi, &parameters)
 	s2let_tiling_wavelet(psi, phi, &parameters);
 
-	scal_l = np.empty([L,], dtype=complex)
-	wav_l = np.empty([L*L, J-J_min+1], dtype=complex)
+	scal_l = np.zeros([L,], dtype=complex)
+	wav_l = np.zeros([L*L, J-J_min+1], dtype=complex)
 
 	for el from 0 <= el < L:
 		scal_l[el] = phi[el];
@@ -641,8 +632,8 @@ def axisym_wav_l(B, L, J_min):
 	s2let_tiling_axisym_allocate(&kappa, &kappa0, &parameters);
 	s2let_tiling_axisym(kappa, kappa0, &parameters);
 
-	scal_l = np.empty([L,], dtype=float)
-	wav_l = np.empty([L, J-J_min+1], dtype=float)
+	scal_l = np.zeros([L,], dtype=float)
+	wav_l = np.zeros([L, J-J_min+1], dtype=float)
 
 	for el from 0 <= el < L:
 		scal_l[el] = kappa0[el];
@@ -658,10 +649,10 @@ def axisym_wav_l(B, L, J_min):
 
 def ssht_dl_beta_risbo(beta, L):
 
-	dl_beta = np.empty([L,(2*L-1),(2*L-1)], dtype=float)
+	dl_beta = np.zeros([L,(2*L-1),(2*L-1)], dtype=float)
 	cdef ssht_dl_size_t ssht_dl_size = SSHT_DL_FULL
 
-	#sqrt_tbl = np.empty([2*(L-1)+2,], dtype=float)
+	#sqrt_tbl = np.zeros([2*(L-1)+2,], dtype=float)
 	#for el from 0 <= el < 2*(L-1)+1:
 	#	sqrt_tbl[el] = np.sqrt(el);
 	sqrt_tbl = np.sqrt(np.arange(2.0*(L-1)+2.0))
@@ -671,7 +662,7 @@ def ssht_dl_beta_risbo(beta, L):
 
 	#cdef double *dl;
 	#dl = ssht_dl_calloc(L, SSHT_DL_FULL);
-	dl = np.empty([(2*L-1)*(2*L-1)], dtype=float)
+	dl = np.zeros([(2*L-1)*(2*L-1)], dtype=float)
 
 	#dl_offset = L - 1; #//ssht_dl_get_offset(L, SSHT_DL_FULL);
 	#dl_stride = 2*L - 1; #//ssht_dl_get_stride(L, SSHT_DL_FULL);
@@ -730,11 +721,9 @@ def construct_hybrid_tiling(L, J_min0, Bs, L_transitions):
 			hybrid_wav_bandlimits[off] = wav_bandlimits[j]
 			hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off] = wav_l[L_bounds[k]:L_bounds[k+1],j]
 			if j == j_transitions_left[k]- J_mins[k] and wav_l[L_bounds[k],j] < 1.0:
-				hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off] = 
-				np.sqrt(hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off]**2 + wav_l[L_bounds[k]:L_bounds[k+1],j-1]**2)
+				hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off] = np.sqrt(hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off]**2 + wav_l[L_bounds[k]:L_bounds[k+1],j-1]**2)
 			if k < nb -1 and j == j_transitions_right[k] - 1 - J_mins[k] and wav_l[L_bounds[k],j] < 1.0:
-				hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off] = 
-				np.sqrt(hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off]**2 + wav_l[L_bounds[k]:L_bounds[k+1],j+1]**2)
+				hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off] = np.sqrt(hybrid_wav_l[L_bounds[k]:L_bounds[k+1],off]**2 + wav_l[L_bounds[k]:L_bounds[k+1],j+1]**2)
 			if j < j_transitions_right[k]-1- J_mins[k]:
 				off += 1
 

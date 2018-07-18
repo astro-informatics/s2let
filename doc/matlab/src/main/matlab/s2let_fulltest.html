@@ -33,14 +33,14 @@
  at floating-point precision. Various parameters are tested.
 
  S2LET package to perform Wavelets on the Sphere.
- Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen
  See LICENSE.txt for license details</pre></div>
 
 <!-- crossreference -->
 <h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
 This function calls:
 <ul style="list-style-image:url(../../../matlabicon.gif)">
-<li><a href="s2let_check_axisym_tiling.html" class="code" title="function error_on_axisym_tiling = s2let_check_axisym_tiling(kappa, kappa0, L, J)">s2let_check_axisym_tiling</a>	s2let_check_axisym_tiling - Checks exactness of the tiling.</li><li><a href="s2let_check_tiling.html" class="code" title="function error_on_tiling = s2let_check_tiling(psi, phi, L, spin, J)">s2let_check_tiling</a>	s2let_check_axisym_tiling - Checks exactness of the tiling.</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>	s2let_transform_analysis_mw</li><li><a href="s2let_transform_axisym_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_axisym_analysis_mw(f, varargin)">s2let_transform_axisym_analysis_mw</a>	s2let_transform_axisym_analysis_mw</li><li><a href="s2let_transform_axisym_synthesis_mw.html" class="code" title="function f = s2let_transform_axisym_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_axisym_synthesis_mw</a>	s2let_transform_axisym_synthesis_mw</li><li><a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>	s2let_axisym_tiling - Compute tiling in harmonic space.</li><li><a href="s2let_transform_synthesis_mw.html" class="code" title="function f = s2let_transform_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_synthesis_mw</a>	s2let_transform_synthesis_mw</li><li><a href="s2let_wavelet_tiling.html" class="code" title="function [psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min, varargin)">s2let_wavelet_tiling</a>	s2let_wavelet_tiling - Compute tiling in harmonic space.</li></ul>
+<li><a href="s2let_check_axisym_tiling.html" class="code" title="function error_on_axisym_tiling = s2let_check_axisym_tiling(kappa, kappa0, L, J)">s2let_check_axisym_tiling</a>	s2let_check_axisym_tiling - Checks exactness of the tiling.</li><li><a href="s2let_check_tiling.html" class="code" title="function error_on_tiling = s2let_check_tiling(psi, phi, L, spin, J)">s2let_check_tiling</a>	s2let_check_tiling - Checks exactness of the directional wavelet tiling.</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_analysis_mw(f, varargin)">s2let_transform_analysis_mw</a>	s2let_transform_analysis_mw</li><li><a href="s2let_transform_axisym_analysis_mw.html" class="code" title="function [f_wav, f_scal] = s2let_transform_axisym_analysis_mw(f, varargin)">s2let_transform_axisym_analysis_mw</a>	s2let_transform_axisym_analysis_mw</li><li><a href="s2let_transform_axisym_synthesis_mw.html" class="code" title="function f = s2let_transform_axisym_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_axisym_synthesis_mw</a>	s2let_transform_axisym_synthesis_mw</li><li><a href="s2let_transform_axisym_tiling.html" class="code" title="function [kappa kappa0] = s2let_axisym_tiling(B, L, J_min)">s2let_transform_axisym_tiling</a>	s2let_axisym_tiling - Compute tiling in harmonic space.</li><li><a href="s2let_transform_synthesis_mw.html" class="code" title="function f = s2let_transform_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_synthesis_mw</a>	s2let_transform_synthesis_mw</li><li><a href="s2let_wavelet_tiling.html" class="code" title="function [psi_lm phi_l] = s2let_wavelet_tiling(B, L, N, Spin, J_min, varargin)">s2let_wavelet_tiling</a>	s2let_wavelet_tiling - Compute tiling in harmonic space.</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../../matlabicon.gif)">
 </ul>
@@ -55,7 +55,7 @@ This function is called by:
 0004 <span class="comment">% at floating-point precision. Various parameters are tested.</span>
 0005 <span class="comment">%</span>
 0006 <span class="comment">% S2LET package to perform Wavelets on the Sphere.</span>
-0007 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0007 <span class="comment">% Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen</span>
 0008 <span class="comment">% See LICENSE.txt for license details</span>
 0009 
 0010 clear all;
@@ -229,6 +229,6 @@ This function is called by:
 0178 f_real_rec = <a href="s2let_transform_axisym_synthesis_mw.html" class="code" title="function f = s2let_transform_axisym_synthesis_mw(f_wav, f_scal, varargin)">s2let_transform_axisym_synthesis_mw</a>(f_wav_real, f_scal_real, <span class="string">'B'</span>, B, <span class="string">'L'</span>, L, <span class="string">'J_min'</span>, J_min, <span class="string">'Reality'</span>, true);
 0179 custom = max(max(abs(f_real-f_real_rec)))
 0180</pre></div>
-<hr><address>Generated on Tue 22-Sep-2015 14:38:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

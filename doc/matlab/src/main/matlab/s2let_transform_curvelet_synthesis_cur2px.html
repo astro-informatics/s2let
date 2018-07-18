@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of s2let_transform_curvelet_synthesis_cur2px</title>
+  <meta name="keywords" content="s2let_transform_curvelet_synthesis_cur2px">
+  <meta name="description" content="s2let_transform_curvelet_synthesis_cur2px">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">src</a> &gt; <a href="#">main</a> &gt; <a href="index.html">matlab</a> &gt; s2let_transform_curvelet_synthesis_cur2px.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for src/main/matlab&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>s2let_transform_curvelet_synthesis_cur2px
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s2let_transform_curvelet_synthesis_cur2px</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s2let_transform_curvelet_synthesis_cur2px
+ Compute (spin) curvelet transform,
+ input curvelet space
+ output in pixel space.
+
+ Default usage :
+
+ f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  flm_init, &lt;options&gt;)
+
+ f_cur contains the input curvelet contributions -- MW sampling,
+ f_scal contains the input scaling contributions -- MW sampling,
+ flm_rec is the output field = flm_cur_syn+ flm_scal_syn
+
+ Option :
+  'B'               = { Dilation factor; B &gt; 1 (default=2) }
+  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }
+  'J_min'           = { Minimum curvelet scale to consider;
+  'Spin'               = { Spin; (default=0) }
+                        0 &lt;= J_min &lt; log_B(L) (default=0) }
+  'Reality'         = { false        [do not assume corresponding signal f real (default)],
+                        true         [assume f real (improves performance)] }
+  'Upsample'        = { false        [multiresolution algorithm (default)],
+                        true       [full resolution curvelets] }
+  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+                               curvelets and scaling function.],
+                        false [Apply the usual normalisation factors such
+                               that the curvelets fulfil the admissibility
+                               condition (default)]}
+  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+                       option indicates which spin number the curvelets
+                       should be lowered from (default = 0)]
+
+ -----------------------------------------------------------
+ S2LET package to perform Wavelet Transform on the Sphere.
+ Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen
+ See LICENSE.txt for license details
+ -----------------------------------------------------------</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>	s2let_transform_curvelet_synthesis_cur2lm</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="s2let_curvelet_transform_test_px2cur_cur2px.html" class="code" title="">s2let_curvelet_transform_test_px2cur_cur2px</a>	s2let_curvelet_transform_test_px2cur_cur2px</li><li><a href="s2let_demo8_curvelet_Mollweide_EarthTopography.html" class="code" title="">s2let_demo8_curvelet_Mollweide_EarthTopography</a>	s2let_demo8 - curvelet analysis on the Earth topographic map</li><li><a href="s2let_demo_curvelet_evaluate_performance.html" class="code" title="">s2let_demo_curvelet_evaluate_performance</a>	s2let_demo_curvelet_evaluate_performance</li><li><a href="s2let_fulltest_curvelet.html" class="code" title="">s2let_fulltest_curvelet</a>	s2let_fulltest_curvelet</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  varargin)</a>
+0002 
+0003 <span class="comment">% s2let_transform_curvelet_synthesis_cur2px</span>
+0004 <span class="comment">% Compute (spin) curvelet transform,</span>
+0005 <span class="comment">% input curvelet space</span>
+0006 <span class="comment">% output in pixel space.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Default usage :</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% f_rec = s2let_transform_curvelet_synthesis_cur2px(f_cur, f_scal,  flm_init, &lt;options&gt;)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% f_cur contains the input curvelet contributions -- MW sampling,</span>
+0013 <span class="comment">% f_scal contains the input scaling contributions -- MW sampling,</span>
+0014 <span class="comment">% flm_rec is the output field = flm_cur_syn+ flm_scal_syn</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Option :</span>
+0017 <span class="comment">%  'B'               = { Dilation factor; B &gt; 1 (default=2) }</span>
+0018 <span class="comment">%  'L'               = { Harmonic band-limit; L &gt; 1 (default=guessed from input) }</span>
+0019 <span class="comment">%  'J_min'           = { Minimum curvelet scale to consider;</span>
+0020 <span class="comment">%  'Spin'               = { Spin; (default=0) }</span>
+0021 <span class="comment">%                        0 &lt;= J_min &lt; log_B(L) (default=0) }</span>
+0022 <span class="comment">%  'Reality'         = { false        [do not assume corresponding signal f real (default)],</span>
+0023 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
+0024 <span class="comment">%  'Upsample'        = { false        [multiresolution algorithm (default)],</span>
+0025 <span class="comment">%                        true       [full resolution curvelets] }</span>
+0026 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
+0027 <span class="comment">%                               curvelets and scaling function.],</span>
+0028 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
+0029 <span class="comment">%                               that the curvelets fulfil the admissibility</span>
+0030 <span class="comment">%                               condition (default)]}</span>
+0031 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
+0032 <span class="comment">%                       option indicates which spin number the curvelets</span>
+0033 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% -----------------------------------------------------------</span>
+0036 <span class="comment">% S2LET package to perform Wavelet Transform on the Sphere.</span>
+0037 <span class="comment">% Copyright (C) 2012-2016  Boris Leistedt, Jennifer Chan &amp; Jason McEwen</span>
+0038 <span class="comment">% See LICENSE.txt for license details</span>
+0039 <span class="comment">% -----------------------------------------------------------</span>
+0040 
+0041 len = length(f_cur);   <span class="comment">% i.e. f_cur(Nj-1 Nj, 2L-1)</span>
+0042 temp = f_cur{len};
+0043 sz = size(temp);
+0044 <span class="keyword">if</span> sz(1) == 2*sz(2)-1 || sz(1) == sz(3)
+0045     Lguessed = sz(2); 
+0046 <span class="keyword">else</span>
+0047     Lguessed = (sz(3)+1)/2 ;
+0048 <span class="keyword">end</span>
+0049 
+0050 p = inputParser;
+0051 p.addRequired(<span class="string">'f_cur'</span>);
+0052 p.addRequired(<span class="string">'f_scal'</span>, @isnumeric);
+0053 p.addParamValue(<span class="string">'B'</span>, 2, @isnumeric);
+0054 p.addParamValue(<span class="string">'L'</span>, Lguessed, @isnumeric);                     
+0055 p.addParamValue(<span class="string">'J_min'</span>, 0, @isnumeric);
+0056 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0057 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
+0058 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0059 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
+0060 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
+0061 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
+0062 p.parse(f_cur, f_scal, varargin{:});
+0063 args = p.Results;
+0064 
+0065 J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0066 
+0067 <span class="comment">% -----------------</span>
+0068 <span class="comment">% Signal synthesis:</span>
+0069 <span class="comment">% -----------------</span>
+0070 <span class="comment">% Reconstruct the signals in harmonic space:</span>
+0071 flm_rec = <a href="s2let_transform_curvelet_synthesis_cur2lm.html" class="code" title="function flm_rec = s2let_transform_curvelet_synthesis_cur2lm(f_cur, f_scal,  varargin)">s2let_transform_curvelet_synthesis_cur2lm</a>(f_cur, f_scal,  <span class="keyword">...</span>
+0072                                                     <span class="string">'B'</span>, args.B, <span class="string">'L'</span>, args.L, <span class="keyword">...</span>
+0073                                                     <span class="string">'Spin'</span>, args.Spin, <span class="keyword">...</span>
+0074                                                     <span class="string">'J_min'</span>, args.J_min, <span class="keyword">...</span>
+0075                                                     <span class="string">'Upsample'</span>, args.Upsample,<span class="keyword">...</span>
+0076                                                     <span class="string">'Reality'</span>, args.Reality,<span class="keyword">...</span>
+0077                                                     <span class="string">'SpinLowered'</span>, args.SpinLowered, <span class="keyword">...</span>
+0078                                                     <span class="string">'SpinLoweredFrom'</span>, args.SpinLoweredFrom,<span class="keyword">...</span>
+0079                                                     <span class="string">'Sampling'</span>, args.Sampling );
+0080                                       
+0081 <span class="comment">% Reconstruct the signals in pxiel space:</span>
+0082 f_rec = ssht_inverse(flm_rec, args.L, <span class="keyword">...</span>
+0083                     <span class="string">'Spin'</span>, args.Spin, <span class="keyword">...</span><span class="comment"> </span>
+0084                     <span class="string">'Method'</span>, <span class="string">'MW'</span>, <span class="keyword">...</span>
+0085                     <span class="string">'Reality'</span>, args.Reality);      
+0086                                       
+0087 <span class="comment">% Clear array memory:</span>
+0088 flm_rec = 0; 
+0089 
+0090 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

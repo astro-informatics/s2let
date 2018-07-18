@@ -41,7 +41,7 @@
  J_min the first wavelet to be used.
 
  S2LET package to perform Wavelets transform on the Sphere.
- Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen
  See LICENSE.txt for license details</pre></div>
 
 <!-- crossreference -->
@@ -51,7 +51,7 @@ This function calls:
 </ul>
 This function is called by:
 <ul style="list-style-image:url(../../../matlabicon.gif)">
-<li><a href="s2let_demo2.html" class="code" title="">s2let_demo2</a>	s2let_demo2</li><li><a href="s2let_fulltest.html" class="code" title="">s2let_fulltest</a>	s2let_fulltest</li><li><a href="s2let_plot_axisym_tiling.html" class="code" title="function s2let_plot_axisym_tiling(B, L, J_min)">s2let_plot_axisym_tiling</a>	plot_axisym_tiling - Plot tiling in harmonic space.</li><li><a href="s2let_ridgelet_compute_wav.html" class="code" title="function [ridgelet_wav, ridgelet_scal] =s2let_ridgelet_compute_wav(L, varargin)">s2let_ridgelet_compute_wav</a>	s2let_ridgelet_compute_wav - Compute ridgelets</li></ul>
+<li><a href="s2let_curvelet_tiling.html" class="code" title="function  [cur_lm scal_l] = s2let_spin_curvelet_tiling(B, L, J_min, varargin)">s2let_curvelet_tiling</a>	s2let_spin_curvelet_tiling - Tile scaling functions and curvelets in harmonic space.</li><li><a href="s2let_demo2.html" class="code" title="">s2let_demo2</a>	s2let_demo2</li><li><a href="s2let_fulltest.html" class="code" title="">s2let_fulltest</a>	s2let_fulltest</li><li><a href="s2let_plot_axisym_tiling.html" class="code" title="function s2let_plot_axisym_tiling(B, L, J_min)">s2let_plot_axisym_tiling</a>	plot_axisym_tiling - Plot tiling in harmonic space.</li><li><a href="s2let_ridgelet_compute_wav.html" class="code" title="function [ridgelet_wav, ridgelet_scal] =s2let_ridgelet_compute_wav(L, varargin)">s2let_ridgelet_compute_wav</a>	s2let_ridgelet_compute_wav - Compute ridgelets</li></ul>
 <!-- crossreference -->
 
 
@@ -73,7 +73,7 @@ This function is called by:
 0014 <span class="comment">% J_min the first wavelet to be used.</span>
 0015 <span class="comment">%</span>
 0016 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
-0017 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
+0017 <span class="comment">% Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen</span>
 0018 <span class="comment">% See LICENSE.txt for license details</span>
 0019 
 0020 p = inputParser;
@@ -86,6 +86,6 @@ This function is called by:
 0027 [kappa kappa0] = s2let_transform_axisym_tiling_mex(B, L, J_min);
 0028   
 0029 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 22-Sep-2015 14:38:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>

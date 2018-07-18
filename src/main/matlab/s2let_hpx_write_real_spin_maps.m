@@ -1,6 +1,6 @@
 function s2let_hpx_write_real_spin_maps(fQ, fU, filename)
 
-% s2let_hpx_rite_real_map 
+% s2let_hpx_rite_real_spin_maps 
 % Write a real Healpix map to a FITS file
 % Default usage :
 %

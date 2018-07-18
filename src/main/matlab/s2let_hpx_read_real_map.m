@@ -1,7 +1,7 @@
 function [healpixmap, nside]= s2let_hpx_read_real_map(file)
 
 % s2let_hpx_read_real_map 
-% Read an MW real map from a FITS file
+% Read a Healpix real map from a FITS file
 % Default usage :
 %
 %   [healpixmap, L]= s2let_hpx_read_real_map(file)

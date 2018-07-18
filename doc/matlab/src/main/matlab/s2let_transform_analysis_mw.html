@@ -51,17 +51,12 @@
                         'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }
   'Reality'         = { false        [do not assume f real (default)],
                         true         [assume f real (improves performance)] }
-  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
-                               wavelets and scaling function.],
-                        false [Apply the usual normalisation factors such
-                               that the wavelets fulfil the admissibility
-                               condition (default)]}
-  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
+  'OriginalSpin' = [integer; if the SpinLowered option is used, this
                        option indicates which spin number the wavelets
                        should be lowered from (default = 0)]
 
  S2LET package to perform Wavelets transform on the Sphere.
- Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen
+ Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen
  See LICENSE.txt for license details</pre></div>
 
 <!-- crossreference -->
@@ -71,7 +66,7 @@ This function calls:
 <li><a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>	s2let_bandlimit</li><li><a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>	s2let_jmax</li><li><a href="s2let_mw_arr2vec.html" class="code" title="function vec = s2let_mw_arr2vec(arr)">s2let_mw_arr2vec</a>	</li><li><a href="s2let_mw_vec2arr.html" class="code" title="function arr = s2let_mw_vec2arr(vec)">s2let_mw_vec2arr</a>	</li><li><a href="s2let_mwss_arr2vec.html" class="code" title="function vec = s2let_mwss_arr2vec(arr)">s2let_mwss_arr2vec</a>	</li><li><a href="s2let_mwss_vec2arr.html" class="code" title="function arr = s2let_mwss_vec2arr(vec)">s2let_mwss_vec2arr</a>	</li></ul>
 This function is called by:
 <ul style="list-style-image:url(../../../matlabicon.gif)">
-<li><a href="s2let_demo4.html" class="code" title="">s2let_demo4</a>	s2let_demo4</li><li><a href="s2let_demo6.html" class="code" title="">s2let_demo6</a>	</li><li><a href="s2let_demo_covariance.html" class="code" title="">s2let_demo_covariance</a>	s2let_demo_covariance - Run covariance demo.</li><li><a href="s2let_fulltest.html" class="code" title="">s2let_fulltest</a>	s2let_fulltest</li><li><a href="s2let_ridgelet_analysis.html" class="code" title="function [f_ridge_wav, f_ridge_scal] = s2let_ridgelet_analysis(f, varargin)">s2let_ridgelet_analysis</a>	s2let_ridgelet_analysis</li></ul>
+<li><a href="s2let_demo4.html" class="code" title="">s2let_demo4</a>	s2let_demo4</li><li><a href="s2let_demo6.html" class="code" title="">s2let_demo6</a>	s2let_demo6</li><li><a href="s2let_demo_covariance.html" class="code" title="">s2let_demo_covariance</a>	s2let_demo_covariance - Run covariance demo.</li><li><a href="s2let_fulltest.html" class="code" title="">s2let_fulltest</a>	s2let_fulltest</li><li><a href="s2let_ridgelet_analysis.html" class="code" title="function [f_ridge_wav, f_ridge_scal] = s2let_ridgelet_analysis(f, varargin)">s2let_ridgelet_analysis</a>	s2let_ridgelet_analysis</li></ul>
 <!-- crossreference -->
 
 
@@ -103,106 +98,100 @@ This function is called by:
 0024 <span class="comment">%                        'MWSS'         [McEwen &amp; Wiaux symmetric sampling] }</span>
 0025 <span class="comment">%  'Reality'         = { false        [do not assume f real (default)],</span>
 0026 <span class="comment">%                        true         [assume f real (improves performance)] }</span>
-0027 <span class="comment">%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered</span>
-0028 <span class="comment">%                               wavelets and scaling function.],</span>
-0029 <span class="comment">%                        false [Apply the usual normalisation factors such</span>
-0030 <span class="comment">%                               that the wavelets fulfil the admissibility</span>
-0031 <span class="comment">%                               condition (default)]}</span>
-0032 <span class="comment">%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this</span>
-0033 <span class="comment">%                       option indicates which spin number the wavelets</span>
-0034 <span class="comment">%                       should be lowered from (default = 0)]</span>
-0035 <span class="comment">%</span>
-0036 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
-0037 <span class="comment">% Copyright (C) 2012  Boris Leistedt &amp; Jason McEwen</span>
-0038 <span class="comment">% See LICENSE.txt for license details</span>
-0039 
-0040 sz = size(f);
-0041 <span class="keyword">if</span> sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
-0042     Lguessed = min([sz(1) sz(2)]);
-0043 <span class="keyword">else</span>
-0044     Lguessed = min([sz(1) sz(2)])-1;
-0045 <span class="keyword">end</span>
-0046 
-0047 p = inputParser;
-0048 p.addRequired(<span class="string">'f'</span>, @isnumeric);
-0049 p.addParamValue(<span class="string">'B'</span>, 2, @isnumeric);
-0050 p.addParamValue(<span class="string">'L'</span>, Lguessed, @isnumeric);
-0051 p.addParamValue(<span class="string">'J_min'</span>, 0, @isnumeric);
-0052 p.addParamValue(<span class="string">'N'</span>, Lguessed, @isnumeric);
-0053 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
-0054 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
-0055 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
-0056 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
-0057 p.addParamValue(<span class="string">'SpinLowered'</span>, false, @islogical);
-0058 p.addParamValue(<span class="string">'SpinLoweredFrom'</span>, 0, @isnumeric);
-0059 p.parse(f, varargin{:});
-0060 args = p.Results;
+0027 <span class="comment">%  'OriginalSpin' = [integer; if the SpinLowered option is used, this</span>
+0028 <span class="comment">%                       option indicates which spin number the wavelets</span>
+0029 <span class="comment">%                       should be lowered from (default = 0)]</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% S2LET package to perform Wavelets transform on the Sphere.</span>
+0032 <span class="comment">% Copyright (C) 2012-2015  Boris Leistedt &amp; Jason McEwen</span>
+0033 <span class="comment">% See LICENSE.txt for license details</span>
+0034 
+0035 sz = size(f);
+0036 <span class="keyword">if</span> sz(1) == 2*sz(2)-1 || sz(2) == 2*sz(1)-1
+0037     Lguessed = min([sz(1) sz(2)]);
+0038 <span class="keyword">else</span>
+0039     Lguessed = min([sz(1) sz(2)])-1;
+0040 <span class="keyword">end</span>
+0041 
+0042 p = inputParser;
+0043 p.addRequired(<span class="string">'f'</span>, @isnumeric);
+0044 p.addParamValue(<span class="string">'B'</span>, 2, @isnumeric);
+0045 p.addParamValue(<span class="string">'L'</span>, Lguessed, @isnumeric);
+0046 p.addParamValue(<span class="string">'J_min'</span>, 0, @isnumeric);
+0047 p.addParamValue(<span class="string">'N'</span>, Lguessed, @isnumeric);
+0048 p.addParamValue(<span class="string">'Spin'</span>, 0, @isnumeric);
+0049 p.addParamValue(<span class="string">'Upsample'</span>, false, @islogical);
+0050 p.addParamValue(<span class="string">'Sampling'</span>, <span class="string">'MW'</span>, @ischar);
+0051 p.addParamValue(<span class="string">'Reality'</span>, false, @islogical);
+0052 p.addParamValue(<span class="string">'OriginalSpin'</span>, 0, @isnumeric);
+0053 p.parse(f, varargin{:});
+0054 args = p.Results;
+0055 
+0056 <span class="keyword">if</span> strcmp(args.Sampling, <span class="string">'MWSS'</span>)
+0057     f_vec = <a href="s2let_mwss_arr2vec.html" class="code" title="function vec = s2let_mwss_arr2vec(arr)">s2let_mwss_arr2vec</a>(f);
+0058 <span class="keyword">else</span>
+0059     f_vec = <a href="s2let_mw_arr2vec.html" class="code" title="function vec = s2let_mw_arr2vec(arr)">s2let_mw_arr2vec</a>(f);
+0060 <span class="keyword">end</span>
 0061 
-0062 <span class="keyword">if</span> strcmp(args.Sampling, <span class="string">'MWSS'</span>)
-0063     f_vec = <a href="s2let_mwss_arr2vec.html" class="code" title="function vec = s2let_mwss_arr2vec(arr)">s2let_mwss_arr2vec</a>(f);
-0064 <span class="keyword">else</span>
-0065     f_vec = <a href="s2let_mw_arr2vec.html" class="code" title="function vec = s2let_mw_arr2vec(arr)">s2let_mw_arr2vec</a>(f);
-0066 <span class="keyword">end</span>
-0067 
-0068 <span class="keyword">if</span>(all(isreal(f_vec)))
-0069   f_vec = complex(f_vec,0);
-0070 <span class="keyword">end</span>
+0062 <span class="keyword">if</span>(all(isreal(f_vec)))
+0063   f_vec = complex(f_vec,0);
+0064 <span class="keyword">end</span>
+0065 
+0066 [f_wav_vec, f_scal_vec] = s2let_transform_analysis_mw_mex(f_vec, args.B, args.L, args.J_min, <span class="keyword">...</span>
+0067                                                           args.N, args.Spin, <span class="keyword">...</span>
+0068                                                           args.Reality, args.Upsample, <span class="keyword">...</span>
+0069                                                           args.OriginalSpin, <span class="keyword">...</span>
+0070                                                           args.Sampling);
 0071 
-0072 [f_wav_vec, f_scal_vec] = s2let_transform_analysis_mw_mex(f_vec, args.B, args.L, args.J_min, <span class="keyword">...</span>
-0073                                                           args.N, args.Spin, <span class="keyword">...</span>
-0074                                                           args.Reality, args.Upsample, <span class="keyword">...</span>
-0075                                                           args.SpinLowered, args.SpinLoweredFrom, <span class="keyword">...</span>
-0076                                                           args.Sampling);
-0077 
-0078 <span class="keyword">if</span> strcmp(args.Sampling, <span class="string">'MWSS'</span>)
-0079     f_scal = <a href="s2let_mwss_vec2arr.html" class="code" title="function arr = s2let_mwss_vec2arr(vec)">s2let_mwss_vec2arr</a>(f_scal_vec);
-0080 
-0081     J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
-0082     f_wav = cell(J+1-args.J_min, args.N);
-0083     offset = 0;
-0084     <span class="keyword">for</span> j = args.J_min:J
-0085       <span class="keyword">for</span> en = 1:args.N
-0086         <span class="keyword">if</span> args.Upsample
-0087           band_limit = args.L;
-0088         <span class="keyword">else</span>
-0089           band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
-0090         <span class="keyword">end</span>
-0091         temp = zeros(band_limit+1, 2*band_limit);
-0092         <span class="keyword">for</span> t = 1:band_limit+1
-0093             <span class="keyword">for</span> p = 1:2*band_limit
-0094                 ind = offset + (t-1) * 2 * band_limit + p;
-0095                 temp(t,p) = f_wav_vec(1,ind);
-0096             <span class="keyword">end</span>
-0097         <span class="keyword">end</span>
-0098         f_wav{j+1-args.J_min, en} = temp;
-0099         offset = offset + (band_limit+1) * 2*band_limit;
-0100       <span class="keyword">end</span>
-0101     <span class="keyword">end</span>
-0102 <span class="keyword">else</span>
-0103     f_scal = <a href="s2let_mw_vec2arr.html" class="code" title="function arr = s2let_mw_vec2arr(vec)">s2let_mw_vec2arr</a>(f_scal_vec);
-0104 
-0105     J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
-0106     f_wav = cell(J+1-args.J_min, args.N);
-0107     offset = 0;
-0108     <span class="keyword">for</span> j = args.J_min:J
-0109       <span class="keyword">for</span> en = 1:args.N
-0110         <span class="keyword">if</span> args.Upsample
-0111           band_limit = args.L;
-0112         <span class="keyword">else</span>
-0113           band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
-0114         <span class="keyword">end</span>
-0115         temp = zeros(band_limit, 2*band_limit-1);
-0116         <span class="keyword">for</span> t = 1:band_limit
-0117             <span class="keyword">for</span> p = 1:2*band_limit-1
-0118                 ind = offset + (t-1) * ( 2 * band_limit - 1) + p;
-0119                 temp(t,p) = f_wav_vec(1,ind);
-0120             <span class="keyword">end</span>
-0121         <span class="keyword">end</span>
-0122         f_wav{j+1-args.J_min, en} = temp;
-0123         offset = offset + band_limit * (2*band_limit-1);
-0124       <span class="keyword">end</span>
-0125     <span class="keyword">end</span>
-0126 <span class="keyword">end</span></pre></div>
-<hr><address>Generated on Tue 22-Sep-2015 14:38:47 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+0072 <span class="keyword">if</span> strcmp(args.Sampling, <span class="string">'MWSS'</span>)
+0073     f_scal = <a href="s2let_mwss_vec2arr.html" class="code" title="function arr = s2let_mwss_vec2arr(vec)">s2let_mwss_vec2arr</a>(f_scal_vec);
+0074 
+0075     J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0076     f_wav = cell(J+1-args.J_min, args.N);
+0077     offset = 0;
+0078     <span class="keyword">for</span> j = args.J_min:J
+0079       <span class="keyword">for</span> en = 1:args.N
+0080         <span class="keyword">if</span> args.Upsample
+0081           band_limit = args.L;
+0082         <span class="keyword">else</span>
+0083           band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
+0084         <span class="keyword">end</span>
+0085         temp = zeros(band_limit+1, 2*band_limit);
+0086         <span class="keyword">for</span> t = 1:band_limit+1
+0087             <span class="keyword">for</span> p = 1:2*band_limit
+0088                 ind = offset + (t-1) * 2 * band_limit + p;
+0089                 temp(t,p) = f_wav_vec(1,ind);
+0090             <span class="keyword">end</span>
+0091         <span class="keyword">end</span>
+0092         f_wav{j+1-args.J_min, en} = temp;
+0093         offset = offset + (band_limit+1) * 2*band_limit;
+0094       <span class="keyword">end</span>
+0095     <span class="keyword">end</span>
+0096 <span class="keyword">else</span>
+0097     f_scal = <a href="s2let_mw_vec2arr.html" class="code" title="function arr = s2let_mw_vec2arr(vec)">s2let_mw_vec2arr</a>(f_scal_vec);
+0098 
+0099     J = <a href="s2let_jmax.html" class="code" title="function J = s2let_jmax(L, B)">s2let_jmax</a>(args.L, args.B);
+0100     f_wav = cell(J+1-args.J_min, args.N);
+0101     offset = 0;
+0102     <span class="keyword">for</span> j = args.J_min:J
+0103       <span class="keyword">for</span> en = 1:args.N
+0104         <span class="keyword">if</span> args.Upsample
+0105           band_limit = args.L;
+0106         <span class="keyword">else</span>
+0107           band_limit = min([ <a href="s2let_bandlimit.html" class="code" title="function bl = s2let_bandlimit(j, J_min, B, L)">s2let_bandlimit</a>(j,args.J_min,args.B,args.L) args.L ]);
+0108         <span class="keyword">end</span>
+0109         temp = zeros(band_limit, 2*band_limit-1);
+0110         <span class="keyword">for</span> t = 1:band_limit
+0111             <span class="keyword">for</span> p = 1:2*band_limit-1
+0112                 ind = offset + (t-1) * ( 2 * band_limit - 1) + p;
+0113                 temp(t,p) = f_wav_vec(1,ind);
+0114             <span class="keyword">end</span>
+0115         <span class="keyword">end</span>
+0116         f_wav{j+1-args.J_min, en} = temp;
+0117         offset = offset + band_limit * (2*band_limit-1);
+0118       <span class="keyword">end</span>
+0119     <span class="keyword">end</span>
+0120 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 11-Nov-2016 11:50:36 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
 </body>
 </html>
