@@ -323,7 +323,7 @@ cleandoc:
 clean:	tidy
 	rm -f $(S2LETLIB)/lib$(S2LETLIBNM).*
 	rm -f $(S2LETOBJMEX)/*_mex.$(MEXEXT)
-	rm -f $(S2LETBIN)/*
+	rm -rf $(S2LETBIN)/*
 
 .PHONY: tidy
 tidy:
