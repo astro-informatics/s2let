@@ -4,7 +4,7 @@
 # ======================================== #
 
 # Directory for SO3 (required)
-SO3DIR = ../so3
+SO3DIR = ${SO3}
 # Directory for SSHT (required)
 SSHTDIR	= ${SSHT}
 # Directory for FFTW (required)
