@@ -21,10 +21,12 @@ list(APPEND C_SRC src/main/c/s2let_transform_axisym_lm.c
   src/main/c/s2let_transform_axisym_mw.c src/main/c/s2let_math.c
   src/main/c/s2let_mw.c src/main/c/s2let_tiling.c
   src/main/c/s2let_synthesis.c
+  src/main/c/s2let_synthesis_adjoint.c
   src/main/c/s2let_lm.c
   src/main/c/s2let_alloc.c
   src/main/c/s2let_helper.c
   src/main/c/s2let_analysis.c
+  src/main/c/s2let_analysis_adjoint.c
   )
 
 add_library(s2let STATIC ${C_SRC})
