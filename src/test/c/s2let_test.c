@@ -955,7 +955,7 @@ void s2let_wav_analysis_adjoint_lm_lmn_test(int B, int L, int J_min, int N, int 
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 0;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1055,7 +1055,7 @@ void s2let_wav_synthesis_adjoint_lm_lmn_test(int B, int L, int J_min, int N, int
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 0;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1147,7 +1147,7 @@ void s2let_wav_analysis_adjoint_mw_test(int B, int L, int J_min, int N, int spin
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1236,7 +1236,7 @@ void s2let_wav_analysis_adjoint_mw_real_test(int B, int L, int J_min, int N, int
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1326,7 +1326,7 @@ void s2let_wav_synthesis_adjoint_lm2wav_test(int B, int L, int J_min, int N, int
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 0;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1415,7 +1415,7 @@ void s2let_wav_synthesis_adjoint_mw_test(int B, int L, int J_min, int N, int spi
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1504,7 +1504,7 @@ void s2let_wav_synthesis_adjoint_mw_real_test(int B, int L, int J_min, int N, in
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 1;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
@@ -1646,7 +1646,7 @@ void s2let_wav_so3_forward_adjoint_test(int B, int L, int J_min, int N, int spin
     parameters.N = N;
     parameters.spin = spin;
     parameters.upsample = 0;
-    parameters.normalization = S2LET_WAV_NORM_DEFAULT;
+    //parameters.normalization = S2LET_WAV_NORM_DEFAULT;
     parameters.original_spin = 0;
     parameters.sampling_scheme = S2LET_SAMPLING_MW;
 
