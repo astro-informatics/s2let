@@ -1,1 +1,4 @@
-s2let_*
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
