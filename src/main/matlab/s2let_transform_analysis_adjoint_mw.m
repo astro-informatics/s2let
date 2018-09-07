@@ -24,7 +24,12 @@ function f = s2let_transform_synthesis_mw(f_wav, f_scal, varargin)
 %                        'MWSS'         [McEwen & Wiaux symmetric sampling] }
 %  'J_min'           = { Minimum wavelet scale to consider;
 %                        0 <= J_min < log_B(L) (default=0) }
-%  'OriginalSpin' = [integer; if the SpinLowered option is used, this
+%  'SpinLowered'     = { true  [Apply normalisation factors for spin-lowered
+%                               wavelets and scaling function.],
+%                        false [Apply the usual normalisation factors such
+%                               that the wavelets fulfil the admissibility
+%                               condition (default)]}
+%  'SpinLoweredFrom' = [integer; if the SpinLowered option is used, this
 %                       option indicates which spin number the wavelets
 %                       should be lowered from (default = 0)]
 %
@@ -52,7 +57,8 @@ p.addParamValue('Spin', 0, @isnumeric);
 p.addParamValue('Upsample', false, @islogical);
 p.addParamValue('Sampling', 'MW', @ischar);
 p.addParamValue('Reality', false, @islogical);
-p.addParamValue('OriginalSpin', 0, @isnumeric);
+p.addParamValue('SpinLowered', false, @islogical);
+p.addParamValue('SpinLoweredFrom', 0, @isnumeric);
 p.parse(f_wav, f_scal, varargin{:});
 args = p.Results;
 
@@ -70,16 +76,14 @@ J = s2let_jmax(args.L, args.B);
 f_wav_vec = [];
 
 offset = 0;
-n_shift = args.N+1;
-
 for j = args.J_min:J
-  for en = -args.N+1:args.N-1
+  for en = 1:args.N
     if args.Upsample
         band_limit = args.L;
     else
         band_limit = min([ s2let_bandlimit(j,args.J_min,args.B,args.L) args.L ]);
     end
-    temp = f_wav{j+1-args.J_min, en+n_shift};
+    temp = f_wav{j+1-args.J_min, en};
 
     if  strcmp(args.Sampling, 'MWSS')
         for t = 1:band_limit+1
@@ -105,9 +109,9 @@ if(all(isreal(f_wav_vec)))
   f_wav_vec = complex(f_wav_vec,0);
 end
 
-f_vec = s2let_transform_synthesis_mw_mex(f_wav_vec, f_scal_vec, args.B, args.L, args.J_min, ...
+f_vec = s2let_transform_analysis_adjoint_mw_mex(f_wav_vec, f_scal_vec, args.B, args.L, args.J_min, ...
                                          args.N, args.Spin, args.Reality, args.Upsample, ...
-                                         args.OriginalSpin, ...
+                                         args.SpinLowered, args.SpinLoweredFrom, ...
                                          args.Sampling);
 
 if  strcmp(args.Sampling, 'MWSS')

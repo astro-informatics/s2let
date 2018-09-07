@@ -203,7 +203,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
   so3_parameters_t so3_parameters = {};
   so3_parameters.N = N;
   so3_parameters.sampling_scheme = sampling_scheme;
-  so3_parameters.steerable = 1;
+  so3_parameters.steerable = 0; // When direct routines support steerable so3 change this to 1.
   if(upsample){
     so3_parameters.L = L;
     wavsize = (J+1-J_min) * so3_sampling_f_size(&so3_parameters);
