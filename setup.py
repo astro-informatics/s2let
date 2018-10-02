@@ -12,6 +12,9 @@ import numpy
 # clean previous build
 for root, dirs, files in os.walk("./src/main/python/", topdown=False):
     for name in dirs:
+        if (name == "build"):
+            shutil.rmtree(name)
+
 include_dirs = [
     numpy.get_include(),
     "./include",
