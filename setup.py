@@ -12,22 +12,18 @@ import numpy
 # clean previous build
 for root, dirs, files in os.walk("./src/main/python/", topdown=False):
     for name in dirs:
-        if (name == "build"):
-            shutil.rmtree(name)
-
-
 include_dirs = [
     numpy.get_include(),
     "./include",
-    os.environ['SSHT']+"include/c",
-    os.environ['SO3']+"include/c"
+    os.environ['SSHT']+"/include/c",
+    os.environ['SO3']+"/include/c"
     ]
 
 extra_link_args=[
     "-L./lib",
     "-L"+os.environ['FFTW']+"/lib",
-    "-L"+os.environ['SSHT']+"lib/c",
-    "-L"+os.environ['SO3']+"lib/c"
+    "-L"+os.environ['SSHT']+"/lib/c",
+    "-L"+os.environ['SO3']+"/lib/c"
     ]
 
 setup(
