@@ -23,3 +23,5 @@ vgcore.*
 *.dat
 *.swp
 build/
+CMakeCache.txt
+CMakeFiles/
