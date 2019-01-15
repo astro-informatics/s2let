@@ -1,4 +1,4 @@
-from __future__ import print_function
+# cython: language_level=3
 
 # import both numpy and the Cython declarations for numpy
 import numpy as np
