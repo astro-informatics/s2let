@@ -32,11 +32,9 @@ extra_link_args = [
 setup(
     name='pys2let',
     version='2.0',
-    prefix='.',
     cmdclass={'build_ext': build_ext},
     ext_modules=cythonize([Extension(
         'src/main/python/pys2let',
-        package_dir=['src'],
         sources=['src/main/python/pys2let.pyx'],
         include_dirs=include_dirs,
         libraries=['s2let', 'so3', 'ssht', 'fftw3'],
