@@ -110,7 +110,7 @@ def myplot(f, L, ax, title=''):
     ntheta = len(thetas)
     nphi = len(phis)
     arr = f.reshape((ntheta, nphi))
-    ax.imshow(arr.astype(float))
+    ax.imshow(arr.real)
     if L > 10:
         step_phi = int(L / 4)
         step_theta = int(L / 4)

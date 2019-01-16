@@ -61,7 +61,7 @@ def myplot(f, L, ax, title=''):
     # Convert the input MW 1D array into 2D array with rows for theta and columns for phi. As simple as that!
     arr = f.reshape((ntheta, nphi))
     # Don't forget to convert to float, otherwise imshow will complain about complex numbers. For polalisation we will have to look into other operations (real part, imag part, angle).
-    ax.imshow(arr.astype(float))
+    ax.imshow(arr.real)
 
     # This is to undersample the grid of x/yticklabels.
     if L > 10:
