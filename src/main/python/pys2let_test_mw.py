@@ -52,7 +52,7 @@ def myplot(f, L, ax, title=''):
     ntheta = len(thetas)
     nphi = len(phis)
     arr = f.reshape((ntheta, nphi))
-    ax.imshow(arr.astype(float), vmin=0, vmax=1)
+    ax.imshow(np.real(arr), vmin=0, vmax=1)
     if L > 10:
         step_phi = int(L / 4)
         step_theta = int(L / 4)
@@ -71,7 +71,7 @@ def myplot(f, L, ax, title=''):
 
 
 # Plot equiangular map
-fig, axs = plt.subplots(2, 2)
+fig, axs = plt.subplots(1, 2)
 axs = axs.ravel()
 myplot(f_mw, L, axs[0], 'L')
 myplot(f_mw_ext, Lpix, axs[1], 'Lpix')
