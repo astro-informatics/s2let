@@ -25,6 +25,10 @@ include_dirs = [
 extra_link_args = [
     '-L./build',
     '-L' + os.environ['FFTW'] + '/lib',
+    # depending whether used cmake
+    '-L' + os.environ['SSHT'] + '/build',
+    '-L' + os.environ['SO3'] + '/build',
+    # or make
     '-L' + os.environ['SSHT'] + '/lib/c',
     '-L' + os.environ['SO3'] + '/lib/c'
 ]
