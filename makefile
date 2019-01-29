@@ -52,20 +52,18 @@ HPXOPT	 = -lgfortran -DGFORTRAN -fno-second-underscore -fopenmp
 # ======================================== #
 
 # === MATLAB ===
+MLABINC	= ${MLAB}/extern/include
+MLABLIB	= ${MLAB}/extern/lib
+# --------------------
 ifeq ($(UNAME), Linux)
-  MLABINC	= ${MLAB}/extern/include
-  MLABLIB	= ${MLAB}/extern/lib
   MEXEXT	= mexa64
-  MEX 		= ${MLAB}/bin/mex
-  MEXFLAGS	= -cxx
 endif
 ifeq ($(UNAME), Darwin)
-  MLABINC	= ${MLAB}/extern/include
-  MLABLIB	= ${MLAB}/extern/lib
   MEXEXT	= mexmaci64
-  MEX 		= ${MLAB}/bin/mex
-  MEXFLAGS	= -cxx
 endif
+# --------------------
+MEX 		= ${MLAB}/bin/mex
+MEXFLAGS	= -cxx
 
 # === S2LET ===
 S2LETDIR = .
