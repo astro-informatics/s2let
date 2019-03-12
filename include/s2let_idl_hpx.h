@@ -5,6 +5,10 @@
 #ifndef S2LET_IDL_HPX
 #define S2LET_IDL_HPX
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!
  * IDL interface to s2let_axisym_hpx_wav_analysis_real
  */
@@ -25,4 +29,7 @@ int s2let_idl_hpx_map2alm_real(int argc, void* argv[]);
  */
 int s2let_idl_hpx_alm2map_real(int argc, void* argv[]);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

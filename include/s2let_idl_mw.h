@@ -5,6 +5,10 @@
 #ifndef S2LET_IDL_MW
 #define S2LET_IDL_MW
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 /*!
  * IDL interface to s2let_mw_axisym_wav_analysis_mw_real
  */
@@ -66,4 +70,7 @@ int s2let_idl_transform_map2alm(int argc, void* argv[]);
  */
 int s2let_idl_transform_alm2map(int argc, void* argv[]);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

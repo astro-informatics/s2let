@@ -13,6 +13,10 @@
 #define S2LET_SO3_N_ORDER SO3_N_ORDER_NEGATIVE_FIRST
 #define S2LET_SO3_STORAGE SO3_STORAGE_COMPACT
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!
  * A static helper function to prepopulate an so3_parameters_t
  * struct with data from an s2let_parameters_t struct.
@@ -58,4 +62,7 @@ static inline void print_so3_parameters(so3_parameters_t *so3_parameters)
     fflush (stdout);
 }
 
+#ifdef __cplusplus
+}
+#endif
 #endif

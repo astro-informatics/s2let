@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Put this macro in a block so that it can be used with single-line
 // if-statements.
 #define S2LET_ERROR_GENERIC(comment)                  \
@@ -21,4 +25,7 @@
     S2LET_ERROR_GENERIC("Memory allocation failed")           \
   }
 
+#ifdef __cplusplus
+}
+#endif
 #endif

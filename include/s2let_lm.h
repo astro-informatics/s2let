@@ -4,11 +4,18 @@
 
 #ifndef S2LET_LM
 #define S2LET_LM
-#include "ssht_types.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <ssht.h>
 
 double s2let_lm_power(S2LET_COMPLEX(double) *flm, int L);
 
 void s2let_lm_random_flm(S2LET_COMPLEX(double) *flm, int L, int spin, int seed);
 void s2let_lm_random_flm_real(S2LET_COMPLEX(double) *flm, int L, int seed);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -5,7 +5,7 @@
 #ifndef S2LET_MW
 #define S2LET_MW
 
-#include "ssht_types.h"
+#include <ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
