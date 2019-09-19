@@ -4,7 +4,7 @@
 
 #ifndef S2LET_SYNTHESIS_ADJOINT
 #define S2LET_SYNTHESIS_ADJOINT
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
