@@ -1,5 +1,6 @@
 #ifndef S2LET
 #define S2LET
+#include <ssht/ssht.h>
 #include "s2let_types.h"
 
 #include "s2let_alloc.h"
