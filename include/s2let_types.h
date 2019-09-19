@@ -5,7 +5,7 @@
 #ifndef S2LET_TYPES
 #define S2LET_TYPES
 
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 #include <complex>
@@ -16,9 +16,6 @@ extern "C" {
 #endif
 
 
-#ifdef __cplusplus
-}
-#endif
 typedef enum {
   /*!
    * McEwen and Wiaux sampling:
@@ -139,5 +136,9 @@ typedef struct {
   ssht_dl_method_t dl_method;
 
 } s2let_parameters_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
