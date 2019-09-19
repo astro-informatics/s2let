@@ -6,7 +6,8 @@
 #define S2LET_HPX
 
 #include <complex.h>
-#include "ssht_types.h"
+#include "s2let_types.h"
+#include <ssht/ssht.h>
 
 /*!
  * Restore real healpix map from spherical harmonic coefficients.

@@ -5,7 +5,7 @@
 #ifndef S2LET_transform_AXISYM_LM
 #define S2LET_transform_AXISYM_LM
 
-#include "ssht_types.h"
+#include "s2let_types.h"
 
 #ifdef __cplusplus
 extern "C" {

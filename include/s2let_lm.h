@@ -4,7 +4,9 @@
 
 #ifndef S2LET_LM
 #define S2LET_LM
-#include "ssht_types.h"
+
+#include "s2let_types.h"
+#include <ssht/ssht.h>
 
 double s2let_lm_power(S2LET_COMPLEX(double) *flm, int L);
 

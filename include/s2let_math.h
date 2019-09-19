@@ -4,7 +4,8 @@
 
 #ifndef S2LET_MATH
 #define S2LET_MATH
-#include "ssht_types.h"
+
+#include "s2let_types.h"
 
 #define PI 3.141592653589793238462643383279502884197
 
