@@ -41,7 +41,7 @@
 #include <complex.h>
 #include <time.h>
 
-#include <ssht.h>
+#include <ssht/ssht.h>
 #include <s2let.h>
 
 #define NREPEAT 10

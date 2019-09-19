@@ -2,7 +2,7 @@
 // Copyright (C) 2012
 // Boris Leistedt & Jason McEwen
 
-#include "s2let.h"
+#include "ssht/s2let.h"
 #include <so3.h>
 #include <ssht.h>
 #include <complex.h>
