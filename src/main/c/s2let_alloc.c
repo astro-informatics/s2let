@@ -2,9 +2,9 @@
 // Copyright (C) 2012
 // Boris Leistedt & Jason McEwen
 
-#include "ssht/s2let.h"
+#include "s2let_alloc.h"
 #include <so3.h>
-#include <ssht.h>
+#include <ssht/ssht.h>
 #include <complex.h>
 #include <math.h>
 #include <stdlib.h>
