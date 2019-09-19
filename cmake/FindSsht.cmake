@@ -1,4 +1,4 @@
-find_path(Ssht_INCLUDE_DIR NAMES ssht.h PATH_SUFFIXES ssht)
+find_path(Ssht_INCLUDE_DIR NAMES ssht/ssht.h)
 find_library(Ssht_LIBRARY NAMES ssht)
 
 include(FindPackageHandleStandardArgs)

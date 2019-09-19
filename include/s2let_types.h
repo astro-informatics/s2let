@@ -5,7 +5,7 @@
 #ifndef S2LET_TYPES
 #define S2LET_TYPES
 
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 #include <complex>
