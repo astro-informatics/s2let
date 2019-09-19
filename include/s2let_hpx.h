@@ -6,7 +6,7 @@
 #define S2LET_HPX
 
 #include <complex.h>
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
