@@ -2,6 +2,7 @@
 #define S2LET_ERROR
 
 #include <stdio.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
