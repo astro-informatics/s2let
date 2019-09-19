@@ -5,7 +5,7 @@
 #ifndef S2LET_ANALYSIS_ADJOINT
 #define S2LET_ANALYSIS_ADJOINT
 
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
