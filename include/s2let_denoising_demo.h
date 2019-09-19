@@ -4,7 +4,7 @@
 
 #ifndef S2LET_DENOISE_DEMO
 #define S2LET_DENOISE_DEMO
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
