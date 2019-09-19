@@ -4,7 +4,7 @@
 
 #include "s2let.h"
 #include <complex.h>
-#include <ssht.h>
+#include <ssht/ssht.h>
 #include <so3.h>
 #include <stdlib.h>
 #include <math.h>
