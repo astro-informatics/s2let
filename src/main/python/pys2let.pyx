@@ -177,7 +177,7 @@ def mw_lm(el, em):
 #----------------------------------------------------------------------------------------------------#
 
 def healpy_lm(el, em, L):
-	return em*(2*L-1-em)/2+el
+	return em*(2*L-1-em)//2+el
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -208,8 +208,8 @@ def analysis_axisym_lm_wav(
 	free(scal_lm);
 	free(wav_lm);
 
-	f_scal_lm_hp = np.zeros([L*(L+1)/2,], dtype=complex)
-	f_wav_lm_hp = np.zeros([L*(L+1)/2, J-J_min+1], dtype=complex)
+	f_scal_lm_hp = np.zeros([L*(L+1)//2,], dtype=complex)
+	f_wav_lm_hp = np.zeros([L*(L+1)//2, J-J_min+1], dtype=complex)
 
 	for el from 0 <= el < L:
 		for em from 0 <= em <= el:
@@ -494,7 +494,7 @@ def mw_size(L):
 
 def lm2lm_hp(np.ndarray[double complex, ndim=1, mode="c"] f_lm not None, L):
 
-	f_lm_hp = np.zeros([L*(L+1)/2,], dtype=complex)
+	f_lm_hp = np.zeros([L*(L+1)//2,], dtype=complex)
 	for el from 0 <= el < L:
 		for em from 0 <= em <= el:
 			f_lm_hp[healpy_lm(el, em, L)] = f_lm[ el * el + el + em ]
