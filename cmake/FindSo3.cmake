@@ -1,5 +1,5 @@
-find_path(So3_INCLUDE_DIR NAMES so3.h PATH_SUFFIXES so3)
-find_library(So3_LIBRARY NAMES so3)
+find_path(So3_INCLUDE_DIR NAMES so3.h HINTS /usr/local/opt/src_so3/include/c)
+find_library(So3_LIBRARY NAMES libso3.a HINTS /usr/local/opt/src_so3/build)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(

@@ -1,6 +1,6 @@
 #ifndef S2LET_HELPER
 #define S2LET_HELPER
-#include <ssht/ssht.h>
+#include <ssht.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -4,7 +4,7 @@
 
 #ifndef S2LET_AXISYM_MW
 #define S2LET_AXISYM_MW
-#include <ssht/ssht.h>
+#include <ssht.h>
 
 #ifdef __cplusplus
 extern "C" {

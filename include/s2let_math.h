@@ -4,7 +4,7 @@
 
 #ifndef S2LET_MATH
 #define S2LET_MATH
-#include <ssht/ssht.h>
+#include <ssht.h>
 
 #define PI 3.141592653589793238462643383279502884197
 

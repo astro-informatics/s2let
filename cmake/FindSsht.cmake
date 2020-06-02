@@ -1,5 +1,5 @@
-find_path(Ssht_INCLUDE_DIR NAMES ssht/ssht.h)
-find_library(Ssht_LIBRARY NAMES ssht)
+find_path(Ssht_INCLUDE_DIR NAMES ssht.h HINTS /usr/local/opt/src_ssht/include/c)
+find_library(Ssht_LIBRARY NAMES libssht.a HINTS /usr/local/opt/src_ssht/build/src/c)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(

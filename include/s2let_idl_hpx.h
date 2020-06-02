@@ -5,7 +5,7 @@
 #ifndef S2LET_IDL_HPX
 #define S2LET_IDL_HPX
 
-#include <ssht/ssht.h>
+#include <ssht.h>
 
 #ifdef __cplusplus
 extern "C" {

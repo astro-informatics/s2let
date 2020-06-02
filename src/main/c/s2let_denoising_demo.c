@@ -3,7 +3,7 @@
 // Boris Leistedt & Jason McEwen
 
 #include "s2let.h"
-#include <ssht/ssht.h>
+#include <ssht.h>
 #include <assert.h>
 #include <complex.h>
 #include <stdio.h>

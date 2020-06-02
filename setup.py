@@ -18,15 +18,15 @@ for root, dirs, files in os.walk("./src/main/python/", topdown=False):
 include_dirs = [
     numpy.get_include(),
     "./include",
-    os.environ['SSHT']+"/include/c",
-    os.environ['SO3']+"/include/c"
+    "/usr/local/opt/src_ssht"+"/include/c",
+    "/usr/local/opt/src_so3"+"/include/c"
     ]
 
 extra_link_args=[
-    "-L./lib",
-    "-L"+os.environ['FFTW']+"/lib",
-    "-L"+os.environ['SSHT']+"/lib/c",
-    "-L"+os.environ['SO3']+"/lib/c"
+    "-L./build",
+    "-L"+"/usr/local/lib",
+    "-L"+"/usr/local/opt/src_ssht/build/src/c",
+    "-L"+"/usr/local/opt/src_so3/build"
     ]
 
 setup(
@@ -35,7 +35,7 @@ setup(
     prefix='.',
     cmdclass={'build_ext': build_ext},
     ext_modules=cythonize([Extension(
-        "src/main/python/pys2let",
+        "pys2let",
         package_dir=['src'],
         sources=["src/main/python/pys2let.pyx"],
         include_dirs=include_dirs,

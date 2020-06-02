@@ -1,5 +1,5 @@
 #include "s2let.h"
-#include <ssht/ssht.h>
+#include <ssht.h>
 
 int s2let_n_phi(const s2let_parameters_t *parameters)
 {
