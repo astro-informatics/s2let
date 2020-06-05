@@ -42,6 +42,11 @@ cdef extern from "ssht.h":
 	void ssht_dl_beta_risbo_half_table(double *dl, double beta, int L,
 					   ssht_dl_size_t dl_size,
 					   int el, double *sqrt_tbl, double *signs);
+	void s2let_transform_axisym_wav_analysis_adjoint_mw(
+		double complex *f,
+		const double complex *f_wav,
+		const double complex *f_scal,
+		const s2let_parameters_t* parameters);
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -221,9 +226,9 @@ def analysis_axisym_lm_wav(
 
 #----------------------------------------------------------------------------------------------------#
 
-def analysis_adjoint_axisym_lm_wav(
-	np.ndarray[double complex, ndim=2, mode="c"] f_wav_lm_hp not None,
-	np.ndarray[double complex, ndim=1, mode="c"] f_scal_lm_hp not None, B, L, J_min, spin_lowered = False):
+def analysis_adjoint_axisym_wav_mw(
+	np.ndarray[double complex, ndim=2, mode="c"] f_wav not None,
+	np.ndarray[double complex, ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
 	parameters.B = B;
@@ -231,39 +236,16 @@ def analysis_adjoint_axisym_lm_wav(
 	parameters.J_min = J_min;
 	J = s2let_j_max(&parameters);
 
-	# wav/scal_lm_hp -> wav/scal_lm_mw
-	f_scal_lm = np.zeros([L * L,], dtype=complex)
-	f_wav_lm = np.zeros([L * L * (J+1-J_min),], dtype=complex)
-	for el from 0 <= el < L:
-		for em from 0 <= em <= el:
-			f_scal_lm[ mw_lm(el, -em) ] = pow(-1.0, -em) * f_scal_lm_hp[healpy_lm(el, em, L)].conjugate()
-			f_scal_lm[ mw_lm(el, em) ] = f_scal_lm_hp[healpy_lm(el, em, L)]
-			for j from 0 <= j <= J-J_min:
-				f_wav_lm[ L*L*j + mw_lm(el, -em) ] = pow(-1.0, -em) * f_wav_lm_hp[healpy_lm(el, em, L), j].conjugate()
-				f_wav_lm[ L*L*j + mw_lm(el, em) ] = f_wav_lm_hp[healpy_lm(el, em, L), j]
+	f = np.zeros([L * (2 * L - 1),], dtype=complex)
+	s2let_transform_axisym_wav_analysis_adjoint_mw(
+		<double complex*> np.PyArray_DATA(f),
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),
+		&parameters
+	);
 
-	# wav/scal_lm_mw -> wav/scal_mw
-	f_scal = np.zeros([L * (2 * L - 1),], dtype=complex)
-	f_wav = np.zeros([L * (2 * L - 1) * (J + 1 - J_min),], dtype=complex)
-	s2let_mw_alm2map(
-		<double complex*> np.PyArray_DATA(f_scal), 
-		<double complex*> np.PyArray_DATA(f_scal_lm),
-		L, 0
-		);
-	offset = 0
-	for j from 0 <= j <= J-J_min:
-		offset += j * L * (2 * L - 1)
-		s2let_mw_alm2map(
-			<double complex*> np.PyArray_DATA(f_scal[offset:offset + L * (2 * L - 1)]),
-			<double complex*> np.PyArray_DATA(
-		)
+	return f
 
-
-	# wav/scal_mw -> f_mw
-
-	# f_mw -> f_lm_mw
-
-	# f_lm_mw -> f_lm_hp
 
 #----------------------------------------------------------------------------------------------------#
 
