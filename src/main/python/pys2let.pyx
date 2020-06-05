@@ -221,6 +221,52 @@ def analysis_axisym_lm_wav(
 
 #----------------------------------------------------------------------------------------------------#
 
+def analysis_adjoint_axisym_lm_wav(
+	np.ndarray[double complex, ndim=2, mode="c"] f_wav_lm_hp not None,
+	np.ndarray[double complex, ndim=1, mode="c"] f_scal_lm_hp not None, B, L, J_min, spin_lowered = False):
+
+	cdef s2let_parameters_t parameters = {};
+	parameters.B = B;
+	parameters.L = L;
+	parameters.J_min = J_min;
+	J = s2let_j_max(&parameters);
+
+	# wav/scal_lm_hp -> wav/scal_lm_mw
+	f_scal_lm = np.zeros([L * L,], dtype=complex)
+	f_wav_lm = np.zeros([L * L * (J+1-J_min),], dtype=complex)
+	for el from 0 <= el < L:
+		for em from 0 <= em <= el:
+			f_scal_lm[ mw_lm(el, -em) ] = pow(-1.0, -em) * f_scal_lm_hp[healpy_lm(el, em, L)].conjugate()
+			f_scal_lm[ mw_lm(el, em) ] = f_scal_lm_hp[healpy_lm(el, em, L)]
+			for j from 0 <= j <= J-J_min:
+				f_wav_lm[ L*L*j + mw_lm(el, -em) ] = pow(-1.0, -em) * f_wav_lm_hp[healpy_lm(el, em, L), j].conjugate()
+				f_wav_lm[ L*L*j + mw_lm(el, em) ] = f_wav_lm_hp[healpy_lm(el, em, L), j]
+
+	# wav/scal_lm_mw -> wav/scal_mw
+	f_scal = np.zeros([L * (2 * L - 1),], dtype=complex)
+	f_wav = np.zeros([L * (2 * L - 1) * (J + 1 - J_min),], dtype=complex)
+	s2let_mw_alm2map(
+		<double complex*> np.PyArray_DATA(f_scal), 
+		<double complex*> np.PyArray_DATA(f_scal_lm),
+		L, 0
+		);
+	offset = 0
+	for j from 0 <= j <= J-J_min:
+		offset += j * L * (2 * L - 1)
+		s2let_mw_alm2map(
+			<double complex*> np.PyArray_DATA(f_scal[offset:offset + L * (2 * L - 1)]),
+			<double complex*> np.PyArray_DATA(
+		)
+
+
+	# wav/scal_mw -> f_mw
+
+	# f_mw -> f_lm_mw
+
+	# f_lm_mw -> f_lm_hp
+
+#----------------------------------------------------------------------------------------------------#
+
 def synthesis_axisym_lm_wav(
 	np.ndarray[double complex, ndim=2, mode="c"] f_wav_lm_hp not None,
 	np.ndarray[double complex, ndim=1, mode="c"] f_scal_lm_hp not None, B, L, J_min, spin_lowered = False):
