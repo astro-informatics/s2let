@@ -42,11 +42,6 @@ cdef extern from "ssht.h":
 	void ssht_dl_beta_risbo_half_table(double *dl, double beta, int L,
 					   ssht_dl_size_t dl_size,
 					   int el, double *sqrt_tbl, double *signs);
-	void s2let_transform_axisym_wav_analysis_adjoint_mw(
-		double complex *f,
-		const double complex *f_wav,
-		const double complex *f_scal,
-		const s2let_parameters_t* parameters);
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -159,6 +154,19 @@ cdef extern from "s2let.h":
 		int original_spin
 		int reality
 		int verbosity
+
+	void s2let_transform_axisym_wav_analysis_adjoint_mw(
+		double complex *f,
+		const double complex *f_wav,
+		const double complex *f_scal,
+		const s2let_parameters_t* parameters);
+
+	void s2let_transform_axisym_wav_synthesis_adjoint_mw(
+		double complex *f_wav,
+		double complex *f_scal,
+		const double complex *f,
+		const s2let_parameters_t *parameters
+)
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -287,6 +295,29 @@ def synthesis_axisym_lm_wav(
 	f_lm_hp = lm2lm_hp(f_lm, L)
 
 	return f_lm_hp
+
+#----------------------------------------------------------------------------------------------------#
+
+def synthesis_adjoint_axisym_wav_mw(
+	np.ndarray[double complex, ndim=1, mode="c"] f not None, 
+	B, L, J_min, spin_lowered = False):
+
+	cdef s2let_parameters_t parameters = {};
+	parameters.B = B;
+	parameters.L = L;
+	parameters.J_min = J_min;
+	J = s2let_j_max(&parameters);
+
+	f_scal = np.zeros([L * (2 * L - 1),], dtype=complex)
+	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)])
+	s2let_transform_axisym_wav_synthesis_adjoint_mw(
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),		
+		<double complex*> np.PyArray_DATA(f),
+		&parameters
+	);
+
+	return f_wav, f_scal
 
 #----------------------------------------------------------------------------------------------------#
 
