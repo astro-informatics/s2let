@@ -235,7 +235,7 @@ def analysis_axisym_lm_wav(
 #----------------------------------------------------------------------------------------------------#
 
 def analysis_adjoint_axisym_wav_mw(
-	np.ndarray[double complex, ndim=2, mode="c"] f_wav not None,
+	np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
 	np.ndarray[double complex, ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
@@ -309,7 +309,7 @@ def synthesis_adjoint_axisym_wav_mw(
 	J = s2let_j_max(&parameters);
 
 	f_scal = np.zeros([L * (2 * L - 1),], dtype=complex)
-	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)])
+	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)], dtype=complex)
 	s2let_transform_axisym_wav_synthesis_adjoint_mw(
 		<double complex*> np.PyArray_DATA(f_wav),
 		<double complex*> np.PyArray_DATA(f_scal),		
