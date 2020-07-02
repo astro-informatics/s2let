@@ -161,10 +161,10 @@ cdef extern from "s2let.h":
 		const double *f_scal,
 		const s2let_parameters_t* parameters);
 
-	void s2let_transform_axisym_wav_synthesis_adjoint_mw(
-		double complex *f_wav,
-		double complex *f_scal,
-		const double complex *f,
+	void s2let_transform_axisym_wav_synthesis_adjoint_mw_real(
+		double *f_wav,
+		double *f_scal,
+		const double *f,
 		const s2let_parameters_t *parameters
 )
 
@@ -299,7 +299,7 @@ def synthesis_axisym_lm_wav(
 #----------------------------------------------------------------------------------------------------#
 
 def synthesis_adjoint_axisym_wav_mw(
-	np.ndarray[double complex, ndim=1, mode="c"] f not None, 
+	np.ndarray[double, ndim=1, mode="c"] f not None, 
 	B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
@@ -308,12 +308,12 @@ def synthesis_adjoint_axisym_wav_mw(
 	parameters.J_min = J_min;
 	J = s2let_j_max(&parameters);
 
-	f_scal = np.zeros([L * (2 * L - 1),], dtype=complex)
-	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)], dtype=complex)
-	s2let_transform_axisym_wav_synthesis_adjoint_mw(
-		<double complex*> np.PyArray_DATA(f_wav),
-		<double complex*> np.PyArray_DATA(f_scal),		
-		<double complex*> np.PyArray_DATA(f),
+	f_scal = np.zeros([L * (2 * L - 1),])
+	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)])
+	s2let_transform_axisym_wav_synthesis_adjoint_mw_real(
+		<double*> np.PyArray_DATA(f_wav),
+		<double*> np.PyArray_DATA(f_scal),		
+		<double*> np.PyArray_DATA(f),
 		&parameters
 	);
 
