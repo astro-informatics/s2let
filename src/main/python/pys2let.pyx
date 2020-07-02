@@ -155,10 +155,10 @@ cdef extern from "s2let.h":
 		int reality
 		int verbosity
 
-	void s2let_transform_axisym_wav_analysis_adjoint_mw(
-		double complex *f,
-		const double complex *f_wav,
-		const double complex *f_scal,
+	void s2let_transform_axisym_wav_analysis_adjoint_mw_real(
+		double *f,
+		const double *f_wav,
+		const double *f_scal,
 		const s2let_parameters_t* parameters);
 
 	void s2let_transform_axisym_wav_synthesis_adjoint_mw(
@@ -235,8 +235,8 @@ def analysis_axisym_lm_wav(
 #----------------------------------------------------------------------------------------------------#
 
 def analysis_adjoint_axisym_wav_mw(
-	np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
-	np.ndarray[double complex, ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
+	np.ndarray[double , ndim=1, mode="c"] f_wav not None,
+	np.ndarray[double , ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
 	parameters.B = B;
@@ -244,11 +244,11 @@ def analysis_adjoint_axisym_wav_mw(
 	parameters.J_min = J_min;
 	J = s2let_j_max(&parameters);
 
-	f = np.zeros([L * (2 * L - 1),], dtype=complex)
-	s2let_transform_axisym_wav_analysis_adjoint_mw(
-		<double complex*> np.PyArray_DATA(f),
-		<double complex*> np.PyArray_DATA(f_wav),
-		<double complex*> np.PyArray_DATA(f_scal),
+	f = np.zeros([L * (2 * L - 1),],)
+	s2let_transform_axisym_wav_analysis_adjoint_mw_real(
+		<double *> np.PyArray_DATA(f),
+		<double *> np.PyArray_DATA(f_wav),
+		<double *> np.PyArray_DATA(f_scal),
 		&parameters
 	);
 
