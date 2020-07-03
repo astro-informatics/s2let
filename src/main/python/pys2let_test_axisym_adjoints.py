@@ -83,17 +83,3 @@ LHS = f.T.dot(y)
 RHS = g.T.dot(x)
 print(f"Synthesis: {LHS}, {RHS}")
 print(f"Dot product test error: {LHS - RHS}")
-
-
-
-# Check forward and back adjoints
-complex=False
-a = random_mw_map(complex)
-a_wav_mw, a_scal_mw = synthesis_adjoint_axisym_wav_mw(a, B, L, J_min)
-a_rec = analysis_adjoint_axisym_wav_mw(a_wav_mw, a_scal_mw, B, L, J_min)
-print(f"Forward-backward adjoint recovery max error: {np.max(a_rec-a)}")
-
-a_lm_hp = np.random.rand(L*(L+1)//2)
-a_wav_lm_hp, a_scal_lm_hp = analysis_axisym_lm_wav(a_lm_hp.astype(np.complex), B, L, J_min)
-a_lm_hp_rec = synthesis_axisym_lm_wav(a_wav_lm_hp.astype(np.complex), a_scal_lm_hp.astype(np.complex), B, L, J_min)
-print(f"Forward-backward recovery max error: {np.max(a_lm_hp_rec-a_lm_hp)}")
