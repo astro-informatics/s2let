@@ -155,13 +155,13 @@ cdef extern from "s2let.h":
 		int reality
 		int verbosity
 
-	void s2let_transform_axisym_wav_analysis_adjoint_mw_real(
+	void s2let_analysis_adjoint_wav2px_real(
 		double *f,
 		const double *f_wav,
 		const double *f_scal,
 		const s2let_parameters_t* parameters);
 
-	void s2let_transform_axisym_wav_synthesis_adjoint_mw_real(
+	void s2let_synthesis_adjoint_px2wav_real(
 		double *f_wav,
 		double *f_scal,
 		const double *f,
@@ -235,23 +235,31 @@ def analysis_axisym_lm_wav(
 #----------------------------------------------------------------------------------------------------#
 
 def analysis_adjoint_axisym_wav_mw(
-	np.ndarray[double , ndim=1, mode="c"] f_wav not None,
-	np.ndarray[double , ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
+	np.ndarray[double, ndim=1, mode="c"] f_wav not None,
+	np.ndarray[double, ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
 
 	cdef s2let_parameters_t parameters = {};
 	parameters.B = B;
 	parameters.L = L;
 	parameters.J_min = J_min;
-	J = s2let_j_max(&parameters);
+	parameters.N = 1;
+	parameters.spin = 0;
+	# parameters.upsample = 1;
+	parameters.original_spin = 0;
+	parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+	parameters.verbosity = 0;
+	parameters.dl_method = SSHT_DL_RISBO;
+
 
 	f = np.zeros([L * (2 * L - 1),],)
-	s2let_transform_axisym_wav_analysis_adjoint_mw_real(
+	s2let_analysis_adjoint_wav2px_real(
 		<double *> np.PyArray_DATA(f),
-		<double *> np.PyArray_DATA(f_wav),
-		<double *> np.PyArray_DATA(f_scal),
+		<const double *> np.PyArray_DATA(f_wav),
+		<const double *> np.PyArray_DATA(f_scal),
 		&parameters
 	);
-
+	print(f)
 	return f
 
 
@@ -306,11 +314,20 @@ def synthesis_adjoint_axisym_wav_mw(
 	parameters.B = B;
 	parameters.L = L;
 	parameters.J_min = J_min;
+	parameters.N = 1;
+	parameters.spin = 0;
+	parameters.upsample = 1;
+	parameters.original_spin = 0;
+	parameters.sampling_scheme = S2LET_SAMPLING_MW;
+
+	parameters.verbosity = 0;
+	parameters.dl_method = SSHT_DL_RISBO;
 	J = s2let_j_max(&parameters);
+
 
 	f_scal = np.zeros([L * (2 * L - 1),])
 	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)])
-	s2let_transform_axisym_wav_synthesis_adjoint_mw_real(
+	s2let_synthesis_adjoint_px2wav_real(
 		<double*> np.PyArray_DATA(f_wav),
 		<double*> np.PyArray_DATA(f_scal),		
 		<double*> np.PyArray_DATA(f),
