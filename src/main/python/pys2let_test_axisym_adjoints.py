@@ -9,26 +9,30 @@ J_min = 2
 J = pys2let_j_max(B, L, J_min)
 nwvlts = J - J_min + 1
 
-def random_mw_map(complex=False):
-    f = np.random.rand(mw_size(L))
-    if complex:
-        f = f + np.random.rand(mw_size(L)) * 1j
+def random_lms(L):
+    lms = np.zeros(L * L, dtype=np.complex)
+    for el in range(L):
+        for em in range(el):
+            rand = np.asarray(np.random.rand(), dtype=np.complex)
+            lms[el * el + el - em] = pow(-1.0, -em) * rand.conjugate()
+            lms[el * el + el + em] = rand
+    return lms
+
+def random_mw_map(L):
+    f_lm = random_lms(L)
+    f = alm2map_mw(f_lm, L, 0)
     return f
 
-def random_mw_wavelet_maps(complex=False):
-    f_wav_mw = np.random.rand(mw_size(L) * nwvlts)
-    f_scal_mw = np.random.rand(mw_size(L))
-    if complex:
-        f_wav_mw = f_wav_mw + np.random.rand(mw_size(L) * nwvlts) * 1j
-        f_scal_mw = f_scal_mw + np.random.rand(mw_size(L)) * 1j
+def random_mw_wavelet_maps(L):
+    f_wav_mw = np.column_stack([random_mw_map(L) for _ in range(nwvlts)])
+    f_scal_mw = random_mw_map(L)
     return f_scal_mw, f_wav_mw
 
 
 #  ANALYSIS
-complex = False
 # fwd: input = map, output = wavelet/scaling coeffs
 # some random input map
-x = random_mw_map(complex)  # MW map
+x = random_mw_map(L)  # MW map
 
 # perform fwd transform via hp
 x_lm = map2alm_mw(x.astype(np.complex), L, 0)
@@ -42,8 +46,8 @@ y = np.concatenate((y_scal_mw, y_wav_mw.flatten("F"))).real  # MW
 
 # adj: input = wavelet/scaling coeffs, output = map
 # some random wavelet coeffs
-f_scal_mw, f_wav_mw = random_mw_wavelet_maps(complex)  
-f = np.concatenate((f_scal_mw, f_wav_mw))  # MW 
+f_scal_mw, f_wav_mw = random_mw_wavelet_maps(L)  
+f = np.concatenate((f_scal_mw, f_wav_mw.flatten("F")))  # MW 
 
 # perform adjoint transform
 g = analysis_adjoint_axisym_wav_mw(f_wav_mw, f_scal_mw, B, L, J_min)  # MW map
@@ -55,10 +59,9 @@ print(f"Dot product test error: {LHS - RHS}")
 
 
 # SYNTHESIS
-complex = False
 # inv: input = wavelet/scaling coeffs, output = map 
 # some random wavelet coeffs
-x_scal_mw, x_wav_mw = random_mw_wavelet_maps(complex)
+x_scal_mw, x_wav_mw = random_mw_wavelet_maps(L)
 x = np.concatenate((x_scal_mw, x_wav_mw))
 
 # perform inverse transform via hp
@@ -73,7 +76,7 @@ y = alm2map_mw(lm_hp2lm(y_hp_lm, L), L, 0).real
 
 # adj: input = map, output = wavelet/scaling coeffs
 # some random map
-f = random_mw_map(complex)
+f = random_mw_map(L)
 
 # perform inverse adjoint transform
 g_wav_mw, g_scal_mw = synthesis_adjoint_axisym_wav_mw(f, B, L, J_min)
