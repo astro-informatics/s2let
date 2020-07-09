@@ -776,7 +776,7 @@ def synthesis_wav2px(
 	parameters.reality = 0
 	parameters.verbosity = 0
 
-	f = np.zeros([L * L,], dtype=complex)
+	f = np.zeros([mw_size(L),], dtype=complex)
 	s2let_synthesis_wav2px(
 		<double complex*> np.PyArray_DATA(f),
 		<const double complex*> np.PyArray_DATA(f_wav),

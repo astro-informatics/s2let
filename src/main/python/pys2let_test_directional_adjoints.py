@@ -45,4 +45,15 @@ x_wav, x_scal = analysis_px2wav(x, B, L, J_min, N, spin, upsample)
 dot_product_error = y_wav.conj().dot(x_wav)
 dot_product_error += y_scal.conj().dot(x_scal)
 dot_product_error -= y.conj().dot(x)
-print(f"Dot product error: {dot_product_error}")
+print(f"ANALYSIS Dot product error: {dot_product_error}")
+
+x_scal, x_wav = random_wavlet_maps(L, spin, nwvlts)
+y = random_mw_map(L, spin)
+
+x = synthesis_wav2px(x_wav, x_scal, B, L, J_min, N, spin, upsample)
+y_wav, y_scal = synthesis_adjoint_px2wav(y, B, L, J_min, N, spin, upsample)
+
+dot_product_error = y.conj().dot(x)
+dot_product_error -= y_wav.conj().dot(x_wav)
+dot_product_error -= y_scal.conj().dot(x_scal)
+print(f"SYNTHESIS Dot product error: {dot_product_error}")
