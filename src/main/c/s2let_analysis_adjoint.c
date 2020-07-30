@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <so3_adjoint.h>
 
 /*!
  * Wavelet analysis adjoint from Wigner space to harmonic space for complex signals.
@@ -30,14 +31,14 @@ void s2let_analysis_adjoint_lmn2lm(
     const complex double *f_scal_lm,
     const complex double *wav_lm,
     const double *scal_l,
-    const s2let_parameters_t *parameters
-) {
+    const s2let_parameters_t *parameters)
+{
     int L = parameters->L;
     int J_min = parameters->J_min;
     int N = parameters->N;
     int spin = parameters->spin;
 
-    int j, el, m ,n;
+    int j, el, m, n;
     int J = s2let_j_max(parameters);
     int bandlimit = L;
     int Nj = N;
@@ -52,7 +53,7 @@ void s2let_analysis_adjoint_lmn2lm(
     int offset = 0;
 
     // Clear output
-    for (el = 0; el < L*L; ++el)
+    for (el = 0; el < L * L; ++el)
         flm[el] = 0;
 
     for (j = J_min; j <= J; ++j)
@@ -61,17 +62,17 @@ void s2let_analysis_adjoint_lmn2lm(
         {
             bandlimit = MIN(s2let_bandlimit(j, parameters), L);
             so3_parameters.L = bandlimit;
-            int Nj = MIN(N,bandlimit);
-            Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
+            int Nj = MIN(N, bandlimit);
+            Nj += (Nj + N) % 2; // ensure N and Nj are both even or both odd
             so3_parameters.N = Nj;
         }
 
-        for (n = -Nj+1; n < Nj; n+=2)
+        for (n = -Nj + 1; n < Nj; n += 2)
         {
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * (wav_lm[j*L*L + lm_ind]);
+                psi = 8 * PI * PI / (2 * el + 1) * (wav_lm[j * L * L + lm_ind]);
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -84,11 +85,11 @@ void s2let_analysis_adjoint_lmn2lm(
     }
 
     if (!parameters->upsample)
-        bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
+        bandlimit = MIN(s2let_bandlimit(J_min - 1, parameters), L);
 
     for (el = ABS(spin); el < bandlimit; ++el)
     {
-        phi = sqrt(4.0*PI/(2*el+1)) * scal_l[el];
+        phi = sqrt(4.0 * PI / (2 * el + 1)) * scal_l[el];
         for (m = -el; m <= el; ++m)
         {
             ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -117,13 +118,13 @@ void s2let_analysis_adjoint_lmn2lm_real(
     const complex double *f_scal_lm,
     const complex double *wav_lm,
     const double *scal_l,
-    const s2let_parameters_t *parameters
-) {
+    const s2let_parameters_t *parameters)
+{
     int L = parameters->L;
     int J_min = parameters->J_min;
     int N = parameters->N;
 
-    int j, el, m ,n;
+    int j, el, m, n;
     int J = s2let_j_max(parameters);
     int bandlimit = L;
     int Nj = N;
@@ -138,7 +139,7 @@ void s2let_analysis_adjoint_lmn2lm_real(
     int offset = 0;
 
     // Clear output
-    for (el = 0; el < L*L; ++el)
+    for (el = 0; el < L * L; ++el)
         flm[el] = 0;
 
     for (j = J_min; j <= J; ++j)
@@ -147,22 +148,22 @@ void s2let_analysis_adjoint_lmn2lm_real(
         {
             bandlimit = MIN(s2let_bandlimit(j, parameters), L);
             so3_parameters.L = bandlimit;
-            int Nj = MIN(N,bandlimit);
-            Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
+            int Nj = MIN(N, bandlimit);
+            Nj += (Nj + N) % 2; // ensure N and Nj are both even or both odd
             so3_parameters.N = Nj;
         }
 
-        for (n = 1-Nj%2; n < Nj; n+=2)
+        for (n = 1 - Nj % 2; n < Nj; n += 2)
         {
             for (el = n; el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
+                psi = 8 * PI * PI / (2 * el + 1) * wav_lm[j * L * L + lm_ind];
 
                 if (n)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, -n);
-                    npsi = 8*PI*PI/(2*el+1) * wav_lm[j*L*L + lm_ind];
+                    npsi = 8 * PI * PI / (2 * el + 1) * wav_lm[j * L * L + lm_ind];
                 }
 
                 for (m = -el; m <= el; ++m)
@@ -174,7 +175,7 @@ void s2let_analysis_adjoint_lmn2lm_real(
                     if (n)
                     {
                         so3_sampling_elmn2ind_real(&lmn_ind, el, -m, n, &so3_parameters);
-                        int sign = (m+n)%2 ? -1 : 1;
+                        int sign = (m + n) % 2 ? -1 : 1;
                         flm[lm_ind] += sign * conj(f_wav_lmn[offset + lmn_ind]) * npsi;
                     }
                 }
@@ -184,11 +185,11 @@ void s2let_analysis_adjoint_lmn2lm_real(
     }
 
     if (!parameters->upsample)
-        bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
+        bandlimit = MIN(s2let_bandlimit(J_min - 1, parameters), L);
 
     for (el = 0; el < bandlimit; ++el)
     {
-        phi = sqrt(4.0*PI/(2*el+1)) * scal_l[el];
+        phi = sqrt(4.0 * PI / (2 * el + 1)) * scal_l[el];
         for (m = -el; m <= el; ++m)
         {
             ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -233,12 +234,12 @@ void s2let_analysis_adjoint_wav2lm_manual(
     int J,
     int L,
     int spin,
-    int N
-) {
+    int N)
+{
     s2let_parameters_t parameters = {};
     parameters.L = L;
     parameters.J_min = 0;
-    parameters.B = pow(L, 1.0/(float)J);
+    parameters.B = pow(L, 1.0 / (float)J);
     parameters.N = N;
     parameters.dl_method = SSHT_DL_RISBO;
 
@@ -255,7 +256,7 @@ void s2let_analysis_adjoint_wav2lm_manual(
 
     bandlimit = MIN(scal_bandlimit, L);
 
-    f_scal_lm = (complex double*)calloc(bandlimit*bandlimit, sizeof(complex double));
+    f_scal_lm = (complex double *)calloc(bandlimit * bandlimit, sizeof(complex double));
 
     // Note, this is a spin-0 transform!
     switch (parameters.sampling_scheme)
@@ -272,7 +273,7 @@ void s2let_analysis_adjoint_wav2lm_manual(
 
     for (el = ABS(spin); el < bandlimit; ++el)
     {
-        phi = sqrt(4.0*PI/(2*el+1)) * scal_l[el];
+        phi = sqrt(4.0 * PI / (2 * el + 1)) * scal_l[el];
         for (m = -el; m <= el; ++m)
         {
             ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -287,26 +288,25 @@ void s2let_analysis_adjoint_wav2lm_manual(
     {
         bandlimit = MIN(wav_bandlimits[j], L);
         so3_parameters.L = bandlimit;
-        int Nj = MIN(N,bandlimit);
-        Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
+        int Nj = MIN(N, bandlimit);
+        Nj += (Nj + N) % 2; // ensure N and Nj are both even or both odd
         so3_parameters.N = Nj;
         so3_parameters.L0 = 0;
 
-        f_wav_lmn = (complex double*)calloc(so3_sampling_flmn_size(&so3_parameters), sizeof(complex double));
+        f_wav_lmn = (complex double *)calloc(so3_sampling_flmn_size(&so3_parameters), sizeof(complex double));
 
-//        so3_core_forward_direct(
+        //        so3_core_forward_direct(
         so3_adjoint_inverse_direct(
             f_wav_lmn,
             f_wav + offset,
-            &so3_parameters
-        );
+            &so3_parameters);
 
-        for (n = -Nj+1; n < Nj; n+=2)
+        for (n = -Nj + 1; n < Nj; n += 2)
         {
             for (el = MAX(ABS(spin), ABS(n)); el < bandlimit; ++el)
             {
                 ssht_sampling_elm2ind(&lm_ind, el, n);
-                psi = 8*PI*PI/(2*el+1) * conj(wav_lm[j*L*L + lm_ind]);
+                psi = 8 * PI * PI / (2 * el + 1) * conj(wav_lm[j * L * L + lm_ind]);
                 for (m = -el; m <= el; ++m)
                 {
                     ssht_sampling_elm2ind(&lm_ind, el, m);
@@ -318,11 +318,8 @@ void s2let_analysis_adjoint_wav2lm_manual(
 
         free(f_wav_lmn);
         offset += so3_sampling_f_size(&so3_parameters);
-
     }
-
 }
-
 
 /*!
  * Wavelet analysis adjoint from wavelet space to harmonic space for complex signals.
@@ -340,8 +337,8 @@ void s2let_analysis_adjoint_wav2lm(
     complex double *flm,
     const complex double *f_wav,
     const complex double *f_scal,
-    const s2let_parameters_t *parameters
-) {
+    const s2let_parameters_t *parameters)
+{
     int L = parameters->L;
     int J_min = parameters->J_min;
     int N = parameters->N;
@@ -364,7 +361,7 @@ void s2let_analysis_adjoint_wav2lm(
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, parameters);
 
     if (!parameters->upsample)
-        bandlimit = MIN(s2let_bandlimit(J_min-1, parameters), L);
+        bandlimit = MIN(s2let_bandlimit(J_min - 1, parameters), L);
 
     // Note, this is a spin-0 transform!
     switch (parameters->sampling_scheme)
@@ -398,26 +395,25 @@ void s2let_analysis_adjoint_wav2lm(
         {
             bandlimit = MIN(s2let_bandlimit(j, parameters), L);
             so3_parameters.L = bandlimit;
-            int Nj = MIN(N,bandlimit);
-            Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
+            int Nj = MIN(N, bandlimit);
+            Nj += (Nj + N) % 2; // ensure N and Nj are both even or both odd
             so3_parameters.N = Nj;
         }
 
         so3_parameters.L0 = s2let_L0(j, parameters);
 
         so3_adjoint_inverse_direct(
-//        so3_core_forward_direct(
-//        so3_core_forward_via_ssht(
+            //        so3_core_forward_direct(
+            //        so3_core_forward_via_ssht(
             f_wav_lmn + offset_lmn,
             f_wav + offset,
-            &so3_parameters
-        );
+            &so3_parameters);
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
     }
 
     s2let_analysis_adjoint_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
-//    s2let_synthesis_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
+    //    s2let_synthesis_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters);
 
     free(wav_lm);
     free(scal_l);
@@ -441,8 +437,8 @@ void s2let_analysis_adjoint_wav2lm_real(
     complex double *flm,
     const double *f_wav,
     const double *f_scal,
-    const s2let_parameters_t *parameters
-) {
+    const s2let_parameters_t *parameters)
+{
     int L = parameters->L;
     int J_min = parameters->J_min;
     int N = parameters->N;
@@ -468,7 +464,7 @@ void s2let_analysis_adjoint_wav2lm_real(
     s2let_allocate_lmn_f_wav(&f_wav_lmn, &f_scal_lm, &real_parameters);
 
     if (!parameters->upsample)
-        bandlimit = MIN(s2let_bandlimit(J_min-1, &real_parameters), L);
+        bandlimit = MIN(s2let_bandlimit(J_min - 1, &real_parameters), L);
 
     switch (parameters->sampling_scheme)
     {
@@ -482,7 +478,6 @@ void s2let_analysis_adjoint_wav2lm_real(
         S2LET_ERROR_GENERIC("Sampling scheme not supported.");
     }
 
-
     offset = 0;
     offset_lmn = 0;
     for (j = J_min; j <= J; ++j)
@@ -491,8 +486,8 @@ void s2let_analysis_adjoint_wav2lm_real(
         {
             bandlimit = MIN(s2let_bandlimit(j, &real_parameters), L);
             so3_parameters.L = bandlimit;
-            int Nj = MIN(N,bandlimit);
-            Nj += (Nj+N)%2; // ensure N and Nj are both even or both odd
+            int Nj = MIN(N, bandlimit);
+            Nj += (Nj + N) % 2; // ensure N and Nj are both even or both odd
             so3_parameters.N = Nj;
         }
 
@@ -501,8 +496,7 @@ void s2let_analysis_adjoint_wav2lm_real(
         so3_adjoint_inverse_direct_real(
             f_wav_lmn + offset_lmn,
             f_wav + offset,
-            &so3_parameters
-	    );
+            &so3_parameters);
 
         offset_lmn += so3_sampling_flmn_size(&so3_parameters);
         offset += so3_sampling_f_size(&so3_parameters);
@@ -533,8 +527,8 @@ void s2let_analysis_adjoint_wav2px(
     complex double *f,
     const complex double *f_wav,
     const complex double *f_scal,
-    const s2let_parameters_t *parameters
-) {
+    const s2let_parameters_t *parameters)
+{
     int L = parameters->L;
     int spin = parameters->spin;
     ssht_dl_method_t dl_method = parameters->dl_method;
@@ -543,9 +537,9 @@ void s2let_analysis_adjoint_wav2px(
     complex double *flm;
     s2let_allocate_lm(&flm, L);
 
-//    s2let_synthesis_wav2lm(flm, f_wav, f_scal, parameters);
+    //    s2let_synthesis_wav2lm(flm, f_wav, f_scal, parameters);
     s2let_analysis_adjoint_wav2lm(flm, f_wav, f_scal, parameters);
- 
+
     switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
@@ -577,8 +571,8 @@ void s2let_analysis_adjoint_wav2px_real(
     double *f,
     const double *f_wav,
     const double *f_scal,
-    const s2let_parameters_t *parameters
-) {
+    const s2let_parameters_t *parameters)
+{
     int L = parameters->L;
     ssht_dl_method_t dl_method = parameters->dl_method;
     int verbosity = 0;
@@ -588,7 +582,7 @@ void s2let_analysis_adjoint_wav2px_real(
 
     s2let_analysis_adjoint_wav2lm_real(flm, f_wav, f_scal, parameters);
 
-     switch (parameters->sampling_scheme)
+    switch (parameters->sampling_scheme)
     {
     case S2LET_SAMPLING_MW:
         ssht_adjoint_mw_forward_sov_sym_real(f, flm, L, dl_method, verbosity);
