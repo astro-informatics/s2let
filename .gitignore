@@ -25,3 +25,4 @@ vgcore.*
 build/
 CMakeCache.txt
 CMakeFiles/
+.vscode
