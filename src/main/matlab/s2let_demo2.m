@@ -26,7 +26,7 @@ figure('Position',[100 100 1100 700])
 h=subplot(nx, ny, 1);
 flm = zeros(L^2,1);
 for l = 0:L-1
-    flm(l^2+l+1,1) = kappa0(l+1);
+    flm(l^2+l+1,1) = sqrt((2*l+1)/4*np.pi) * kappa0(l+1);
 end
 f = ssht_inverse(flm, L, 'Reality', true);
 ssht_plot_sphere(f, L, 'Type', type, 'Lighting', lighting);
@@ -45,7 +45,7 @@ for j = J_min:5
    h=subplot(nx, ny, j-J_min+2);
    flm = zeros(L^2,1);
     for l = 0:L-1
-        flm(l^2+l+1,1) = kappa(j+1,l+1);
+        flm(l^2+l+1,1) = sqrt((2*l+1)/4*np.pi) * kappa(j+1,l+1);
     end
    f = ssht_inverse(flm, L, 'Reality', true);
    ssht_plot_sphere(f, L, 'Type', type, 'Lighting', lighting);
