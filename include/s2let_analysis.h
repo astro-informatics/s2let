@@ -5,7 +5,7 @@
 #ifndef S2LET_ANALYSIS
 #define S2LET_ANALYSIS
 
-#include "ssht_types.h"
+#include <ssht.h>
 
 #ifdef __cplusplus
 extern "C" {
