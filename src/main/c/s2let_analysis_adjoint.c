@@ -9,7 +9,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <so3_adjoint.h>
 
 /*!
  * Wavelet analysis adjoint from Wigner space to harmonic space for complex signals.

@@ -9,7 +9,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <so3_adjoint.h>
 
 /*!
  * Wavelet synthesis adjoint from harmonic space to Wigner space for complex signals.
