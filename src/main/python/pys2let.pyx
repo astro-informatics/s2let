@@ -156,6 +156,55 @@ cdef extern from "s2let.h":
 		int reality
 		int verbosity
 
+	void s2let_transform_axisym_wav_synthesis_mw(
+		double complex *f,
+		const double complex *f_wav,
+		const double complex *f_scal,
+		const s2let_parameters_t *parameters)
+
+	void s2let_transform_axisym_wav_analysis_mw(
+		double complex *f_wav,
+		double complex *f_scal,
+		const double complex *f,
+		const s2let_parameters_t *parameters)
+
+	void s2let_transform_axisym_wav_analysis_adjoint_mw(
+		double complex*f,
+		const double complex*f_wav,
+		const double complex*f_scal,
+		const s2let_parameters_t* parameters)
+
+	void s2let_transform_axisym_wav_synthesis_adjoint_mw(
+		double complex*f_wav,
+		double complex*f_scal,
+		const double complex*f,
+		const s2let_parameters_t *parameters)
+
+	void s2let_analysis_px2wav(
+		double complex *f_wav,
+		double complex *f_scal,
+		const double complex *f,
+		const s2let_parameters_t *parameters
+	)
+
+	void s2let_analysis_adjoint_wav2px( 
+		double complex *f,
+		const double complex *f_wav,
+		const double complex *f_scal,
+		const s2let_parameters_t *parameters)
+
+	void s2let_synthesis_wav2px(
+		double complex *flm,
+		const double complex *f_wav,
+		const double complex *f_scal,
+		const s2let_parameters_t *parameters
+	)
+
+	void s2let_synthesis_adjoint_px2wav(
+		double complex *f_wav,
+		double complex *f_scal,
+		const double complex *f,
+		const s2let_parameters_t *parameters)
 #----------------------------------------------------------------------------------------------------#
 
 cdef extern from "stdlib.h":
@@ -222,6 +271,53 @@ def analysis_axisym_lm_wav(
 
 #----------------------------------------------------------------------------------------------------#
 
+def analysis_axisym_wav_mw(
+	np.ndarray[double complex, ndim=1, mode="c"] f not None, B, L, J_min, spin_lowered = False
+):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	J = s2let_j_max(&parameters)
+
+	f_wav = np.zeros(mw_size(L) * (J - J_min + 1), dtype=np.complex)
+	f_scal = np.zeros(mw_size(L), dtype=np.complex)
+
+	s2let_transform_axisym_wav_analysis_mw(
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),
+		<double complex*> np.PyArray_DATA(f),
+		&parameters
+	)
+
+	return f_wav, f_scal
+
+#----------------------------------------------------------------------------------------------------#
+
+def analysis_adjoint_axisym_wav_mw(
+	np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
+	np.ndarray[double complex, ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	J = s2let_j_max(&parameters)
+
+	f = np.zeros([L * (2 * L - 1),], dtype=np.complex)
+	s2let_transform_axisym_wav_analysis_adjoint_mw(
+		<double complex*> np.PyArray_DATA(f),
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),
+		&parameters
+	)
+
+	return f
+
+
+#----------------------------------------------------------------------------------------------------#
+
 def synthesis_axisym_lm_wav(
 	np.ndarray[double complex, ndim=2, mode="c"] f_wav_lm_hp not None,
 	np.ndarray[double complex, ndim=1, mode="c"] f_scal_lm_hp not None, B, L, J_min, spin_lowered = False):
@@ -260,6 +356,50 @@ def synthesis_axisym_lm_wav(
 	f_lm_hp = lm2lm_hp(f_lm, L)
 
 	return f_lm_hp
+
+#----------------------------------------------------------------------------------------------------#
+
+def synthesis_axisym_wav_mw(
+	np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
+	np.ndarray[double complex, ndim=1, mode="c"] f_scal not None, B, L, J_min, spin_lowered = False):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	J = s2let_j_max(&parameters)
+
+	f = np.zeros(mw_size(L), dtype=np.complex)
+	s2let_transform_axisym_wav_synthesis_mw(
+		<double complex*> np.PyArray_DATA(f),
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),
+		&parameters
+	)
+
+	return f
+
+#----------------------------------------------------------------------------------------------------#
+def synthesis_adjoint_axisym_wav_mw(
+	np.ndarray[double complex, ndim=1, mode="c"] f not None, 
+	B, L, J_min, spin_lowered = False):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	J = s2let_j_max(&parameters)
+
+	f_scal = np.zeros([L * (2 * L - 1),], dtype=np.complex)
+	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)], dtype=np.complex)
+	s2let_transform_axisym_wav_synthesis_adjoint_mw(
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),		
+		<double complex*> np.PyArray_DATA(f),
+		&parameters
+	)
+
+	return f_wav, f_scal
 
 #----------------------------------------------------------------------------------------------------#
 
@@ -485,6 +625,122 @@ def synthesis_wav2lm(
 	f_lm_hp = lm2lm_hp(f_lm, L)
 
 	return f_lm_hp
+
+#----------------------------------------------------------------------------------------------------#
+
+def analysis_px2wav(
+		np.ndarray[double complex, ndim=1, mode="c"] f not None,
+		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	parameters.N = N
+	parameters.spin = spin
+	parameters.upsample = upsample
+	parameters.sampling_scheme = S2LET_SAMPLING_MW
+	parameters.original_spin = original_spin
+	parameters.dl_method = SSHT_DL_RISBO
+	parameters.reality = 0
+	parameters.verbosity = 0
+
+	f_scal = np.zeros([s2let_n_scal(&parameters),], dtype=complex)
+	f_wav = np.zeros([s2let_n_wav(&parameters),], dtype=complex)
+
+	s2let_analysis_px2wav(
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),
+		<const double complex*> np.PyArray_DATA(f),
+		&parameters)
+
+	return f_wav, f_scal
+
+#----------------------------------------------------------------------------------------------------#
+
+def analysis_adjoint_wav2px(np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
+		np.ndarray[double complex, ndim=1, mode="c"] f_scal not None,
+		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	parameters.N = N
+	parameters.spin = spin
+	parameters.upsample = upsample
+	parameters.sampling_scheme = S2LET_SAMPLING_MW
+	parameters.original_spin = original_spin
+	parameters.dl_method = SSHT_DL_RISBO
+	parameters.reality = 0
+	parameters.verbosity = 0
+
+	f = np.zeros([mw_size(L),], dtype=complex)
+	s2let_analysis_adjoint_wav2px(
+		<double complex*> np.PyArray_DATA(f),
+		<const double complex*> np.PyArray_DATA(f_wav),
+		<const double complex*> np.PyArray_DATA(f_scal),
+		&parameters)
+
+	return f
+
+#----------------------------------------------------------------------------------------------------#
+
+def synthesis_wav2px(
+		np.ndarray[double complex, ndim=1, mode="c"] f_wav not None,
+		np.ndarray[double complex, ndim=1, mode="c"] f_scal not None,
+		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	parameters.N = N
+	parameters.spin = spin
+	parameters.upsample = upsample
+	parameters.sampling_scheme = S2LET_SAMPLING_MW
+	parameters.original_spin = original_spin
+	parameters.dl_method = SSHT_DL_RISBO
+	parameters.reality = 0
+	parameters.verbosity = 0
+
+	f = np.zeros([mw_size(L),], dtype=complex)
+	s2let_synthesis_wav2px(
+		<double complex*> np.PyArray_DATA(f),
+		<const double complex*> np.PyArray_DATA(f_wav),
+		<const double complex*> np.PyArray_DATA(f_scal),
+		&parameters)
+
+	return f
+#----------------------------------------------------------------------------------------------------#
+
+def synthesis_adjoint_px2wav(
+		np.ndarray[double complex, ndim=1, mode="c"] f not None,
+		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
+
+	cdef s2let_parameters_t parameters = {}
+	parameters.B = B
+	parameters.L = L
+	parameters.J_min = J_min
+	parameters.N = N
+	parameters.spin = spin
+	parameters.upsample = upsample
+	parameters.sampling_scheme = S2LET_SAMPLING_MW
+	parameters.original_spin = original_spin
+	parameters.dl_method = SSHT_DL_RISBO
+	parameters.reality = 0
+	parameters.verbosity = 0
+
+	f_scal = np.zeros([s2let_n_scal(&parameters),], dtype=complex)
+	f_wav = np.zeros([s2let_n_wav(&parameters),], dtype=complex)
+
+	s2let_synthesis_adjoint_px2wav(
+		<double complex*> np.PyArray_DATA(f_wav),
+		<double complex*> np.PyArray_DATA(f_scal),
+		<const double complex*> np.PyArray_DATA(f),
+		&parameters)
+
+	return f_wav, f_scal
 
 #----------------------------------------------------------------------------------------------------#
 
