@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include "so3.h"
+#include <so3/so3.h>
 
 /*!
  * Test the identity relation of the wavelet tiling in harmonic space.

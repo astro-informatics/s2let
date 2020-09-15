@@ -9,7 +9,7 @@ np.import_array()
 
 #----------------------------------------------------------------------------------------------------#
 
-cdef extern from "so3.h":
+cdef extern from <so3/so3.h>:
 
 	int so3_sampling_f_size(so3_parameters_t *params)
 

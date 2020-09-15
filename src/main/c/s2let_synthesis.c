@@ -3,7 +3,7 @@
 // Boris Leistedt & Jason McEwen
 
 #include "s2let.h"
-#include <so3.h>
+#include <so3/so3.h>
 #include <ssht/ssht.h>
 #include <complex.h>
 #include <math.h>
