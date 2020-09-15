@@ -59,6 +59,9 @@ add_executable(s2let_about src/main/c/s2let_about.c)
 target_compile_definitions(s2let_about PRIVATE S2LET_VERSION="${S2let_VERSION}" S2LET_BUILD="${S2let_BUILD}")
 set_target_properties(s2let_about PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
+#include math libs for unix install
+target_link_libraries(s2let m)
+
 include("exporting")
 
 if(tests)

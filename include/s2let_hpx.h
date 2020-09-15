@@ -6,7 +6,11 @@
 #define S2LET_HPX
 
 #include <complex.h>
-#include "ssht_types.h"
+#include <ssht/ssht.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*!
  * Restore real healpix map from spherical harmonic coefficients.
@@ -93,4 +97,7 @@ void s2let_hpx_write_map(char* file, const double* f, int nside);
  */
 void s2let_hpx_allocate_real(double **f, int nside);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

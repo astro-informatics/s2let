@@ -5,6 +5,10 @@
 #ifndef S2LET_FITS
 #define S2LET_FITS
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!
  * Read Healpix resolution from a FITS file.
  *
@@ -101,4 +105,7 @@ void s2let_fits_mw_write_spin_maps(char* file, double* fQ, double* fU, int L);
  */
 void s2let_fits_mwss_write_spin_maps(char* file, double* fQ, double* fU, int L);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

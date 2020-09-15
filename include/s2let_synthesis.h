@@ -5,7 +5,7 @@
 #ifndef S2LET_SYNTHESIS
 #define S2LET_SYNTHESIS
 
-#include "ssht_types.h"
+#include <ssht/ssht.h>
 
 #ifdef __cplusplus
 extern "C" {

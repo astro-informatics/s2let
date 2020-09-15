@@ -5,6 +5,12 @@
 #ifndef S2LET_AXISYM_HPX
 #define S2LET_AXISYM_HPX
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /*!
  * Allocates arrays for wavelets and scaling functions in pixel space (Healpix sampling).
  *
@@ -54,4 +60,7 @@ void s2let_transform_axisym_wav_analysis_hpx_real(double *f_wav, double *f_scal,
  */
 void s2let_transform_axisym_wav_synthesis_hpx_real(double *f, const double *f_wav, const double *f_scal, int nside, const s2let_parameters_t *parameters);
 
+#ifdef __cplusplus
+}
+#endif
 #endif
