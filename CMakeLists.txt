@@ -7,7 +7,7 @@ project(s2let
   LANGUAGES C)
 
 option(tests "Enable testing" ON)
-option(python "Creates python package" OFF)
+option(python "Creates python package only" OFF)
 option(fPIC "Compile with fPIC" ON)
 option(conan_deps "Download dependencies using conan" OFF)
 
@@ -22,9 +22,19 @@ endif()
 
 add_subdirectory(src/main/c)
 
-if(tests)
+if(tests AND NOT python)
     enable_testing()
     add_subdirectory(src/test/c)
 endif()
 
-include("exporting")
+if(NOT python)
+  include("exporting")
+else()
+  include("python-setup")
+  find_python()
+  setup_skbuild()
+  find_package(PythonExtensions REQUIRED)
+  find_package(Cython REQUIRED)
+  find_package(NumPy REQUIRED)
+  add_subdirectory(src/main/pys2let)
+endif()
