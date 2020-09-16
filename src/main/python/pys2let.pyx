@@ -866,9 +866,12 @@ def wavelet_tiling(B, L, N, J_min, spin, original_spin=0):
 	for el from 0 <= el < L:
 		scal_l[el] = phi[el]
 
-	for el from 0 <= el < L*L:
-		for j from J_min <= j <= J:
-			wav_l[el, j-J_min] = psi[ j*L*L + el]
+	for j from 0 <= j <= J - J_min:
+		ind = spin * spin
+		for el from abs(spin) <= el < L:
+			for m from -el <= m <= el:
+				wav_l[ind, j] = psi[(j + J_min) * L * L + ind]
+				ind += 1
 
 	free(psi)
 	free(phi)
