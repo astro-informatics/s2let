@@ -1,45 +1,43 @@
-import os
-import shutil
-from distutils.core import Extension, setup
+from skbuild import setup
 
-import numpy
-from Cython.Build import cythonize
-from Cython.Distutils import build_ext
-
-# clean previous build
-for root, dirs, files in os.walk("./src/main/python/", topdown=False):
-    for name in dirs:
-        if name == "build":
-            shutil.rmtree(name)
-
-include_dirs = [
-    numpy.get_include(),
-    "./include",
-    os.environ["SSHT"] + "/src/c",
-    os.environ["SO3"] + "/src/c",
+cmake_args = [
+    "-Dpython:BOOL=ON",
+    "-Dtests:BOOL=OFF",
+    "-Dconan_deps=ON",
+    "-DfPIC=ON",
 ]
 
-extra_link_args = [
-    "-L./build",
-    "-L" + os.environ["FFTW"] + "/lib",
-    "-L" + os.environ["SSHT"] + "/build/src/c",
-    "-L" + os.environ["SO3"] + "/build",
-]
-
-extensions = [
-    Extension(
-        "pys2let",
-        sources=["src/main/python/pys2let.pyx"],
-        include_dirs=include_dirs,
-        libraries=["s2let", "so3", "ssht", "fftw3"],
-        extra_link_args=extra_link_args,
-        extra_compile_args=[],
-    )
+build_requirements = [
+    "setuptools",
+    "wheel",
+    "scikit-build",
+    "cmake>=3.10",
+    "ninja",
+    "cython",
+    "conan",
+    "pip!=20.0.0,!=20.0.1",
 ]
 
 setup(
     name="pys2let",
-    version="2.0",
-    cmdclass={"build_ext": build_ext},
-    ext_modules=cythonize(extensions),
+    version="2.1.0",
+    author=[
+        "Boris Leistedt",
+        "Martin Büttner",
+        "Jennifer Chan",
+        "Jason McEwen",
+    ],
+    install_requires=["numpy"],
+    extras_require={
+        "build": build_requirements,
+        "dev": build_requirements,
+        "plots": ["scipy"],
+    },
+    description="Fast spin spherical transforms",
+    url="http://astro-informatics.github.io/s2let/",
+    package_dir={"pys2let": "src/main/pys2let"},
+    cmake_args=cmake_args,
+    cmake_languages=("C",),
+    license="GPL-2",
+    packages=["pys2let"],
 )

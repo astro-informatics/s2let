@@ -9,7 +9,7 @@ np.import_array()
 
 #----------------------------------------------------------------------------------------------------#
 
-cdef extern from <so3/so3.h>:
+cdef extern from "so3/so3.h":
 
 	int so3_sampling_f_size(so3_parameters_t *params)
 
@@ -26,7 +26,7 @@ cdef extern from <so3/so3.h>:
 
 #----------------------------------------------------------------------------------------------------#
 
-cdef extern from "ssht.h":
+cdef extern from "ssht/ssht.h":
 
 	double ssht_sampling_mw_t2theta(int t, int L)
 	double ssht_sampling_mw_p2phi(int p, int L)
