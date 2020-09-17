@@ -2,7 +2,7 @@
 // Copyright (C) 2012
 // Boris Leistedt & Jason McEwen
 
-#include "fitsio.h"
+#include <fitsio.h>
 #include "s2let.h"
 
 

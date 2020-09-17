@@ -11,9 +11,38 @@ set(C_SRC
     s2let_helper.c
     s2let_analysis.c
     s2let_analysis_adjoint.c)
+set(HEADER_PREFIX ${PROJECT_SOURCE_DIR}/include)
+set(C_HEADERS
+    s2let.h
+    s2let_error.h
+    s2let_hpx.h
+    s2let_lm.h
+    s2let_mw.h
+    s2let_tiling.h
+    s2let_transform_axisym_mw.h
+    s2let_alloc.h
+    s2let_idl_hpx.h
+    s2let_math.h
+    s2let_so3.h
+    s2let_transform_axisym_hpx.h
+    s2let_types.h
+    s2let_analysis.h
+    s2let_helper.h
+    s2let_idl_mw.h
+    s2let_mex.h
+    s2let_synthesis.h
+    s2let_transform_axisym_lm.h
+    s2let_analysis_adjoint.h
+    s2let_synthesis_adjoint.h
+    s2let_fits.h)
+
+if(cfitsio)
+  list(APPEND C_SRC s2let_fits.c)
+endif()
+list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/")
 
 add_library(s2let STATIC ${C_SRC})
-target_link_libraries(s2let PUBLIC ${SO3_TARGET})
+target_link_libraries(s2let PUBLIC ${SO3_TARGET} ${CFITSIO_TARGET})
 set_target_properties(s2let PROPERTIES C_STANDARD 99)
 target_include_directories(
   s2let PUBLIC $<INSTALL_INTERFACE:include>
@@ -35,28 +64,5 @@ if(NOT python)
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER)
 
-  install(
-    FILES ${PROJECT_SOURCE_DIR}/include/s2let.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_error.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_hpx.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_lm.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_mw.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_tiling.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_transform_axisym_mw.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_alloc.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_fits.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_idl_hpx.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_math.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_so3.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_transform_axisym_hpx.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_types.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_analysis.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_helper.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_idl_mw.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_mex.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_synthesis.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_transform_axisym_lm.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_analysis_adjoint.h
-          ${PROJECT_SOURCE_DIR}/include/s2let_synthesis_adjoint.h
-    DESTINATION include)
+  install(FILES ${C_HEADERS} DESTINATION include/s2let)
 endif()

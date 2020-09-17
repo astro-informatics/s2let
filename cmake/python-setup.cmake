@@ -4,6 +4,8 @@ macro(find_python)
   find_package(Python3 REQUIRED COMPONENTS Development Interpreter)
   set(CMAKE_FIND_FRAMEWORK "${OLD_CMAKE_FIND_FRAMEWORK}")
   unset(OLD_CMAKE_FIND_FRAMEWORK)
+
+  set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE} CACHE PATH "Path to python executable")
 endmacro()
 
 function(setup_skbuild)

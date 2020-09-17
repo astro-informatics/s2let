@@ -11,7 +11,7 @@ build_requirements = [
     "setuptools",
     "wheel",
     "scikit-build",
-    "cmake>=3.10",
+    "cmake>=3.12",
     "ninja",
     "cython",
     "conan",

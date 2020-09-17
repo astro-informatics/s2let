@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "setuptools", "wheel", "scikit-build", "cmake>=3.10", "ninja", "cython",
+    "setuptools", "wheel", "scikit-build", "cmake>=3.12", "ninja", "cython",
     "numpy", "conan"
 ]
 [tool.black]

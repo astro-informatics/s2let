@@ -5,4 +5,4 @@ if(NOT TARGET S2let AND EXISTS "${S2let_CMAKE_DIR}/S2letTargets.cmake")
 endif()
 
 set(S2let_INCLUDE_DIRS "@ALL_INCLUDE_DIRS@")
-set(S2let_LIBRARIES S2let)
+set(S2let_LIBRARIES s2let)
