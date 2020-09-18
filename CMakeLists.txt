@@ -51,3 +51,8 @@ else()
   find_package(NumPy REQUIRED)
   add_subdirectory(src/main/pys2let)
 endif()
+
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    doxygen_add_docs(docs WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
+endif()
