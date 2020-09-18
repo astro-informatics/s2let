@@ -9,7 +9,7 @@
 
 [![][docs-img]][docs-url]
 [![][bintray-img]][bintray-url]
-[![][pypi-img]][pypy-url]
+[![][pypi-img]][pypi-url]
 
 ## DESCRIPTION
 
