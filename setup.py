@@ -3,7 +3,8 @@ from skbuild import setup
 cmake_args = [
     "-Dpython:BOOL=ON",
     "-Dtests:BOOL=OFF",
-    "-Dconan_deps=ON",
+    "-Dconan_deps:BOOL=ON",
+    "-Dcfitsio:BOOL=OFF",
     "-DfPIC=ON",
 ]
 
@@ -20,7 +21,7 @@ build_requirements = [
 
 setup(
     name="pys2let",
-    version="2.1.0",
+    version="2.1.0rc2",
     author=[
         "Boris Leistedt",
         "Martin Büttner",
