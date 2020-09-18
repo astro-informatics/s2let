@@ -3,7 +3,7 @@
 [docs-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-url]: https://astro-informatics.github.io/s2let/
 [bintray-img]: https://img.shields.io/bintray/v/mdavezac/AstroFizz/s2let:AstroFizz?label=C%20package
-[bintray-url]: https://bintray.com/mdavezac/AstroFizz/s2let:AstroFizz/1.2.0:stable/link
+[bintray-url]: https://bintray.com/mdavezac/AstroFizz/s2let:AstroFizz/2.1.0:stable/link
 [pypi-img]: https://badge.fury.io/py/pys2let.svg
 [pypi-url]: https://badge.fury.io/py/pys2let
 
