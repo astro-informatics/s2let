@@ -21,7 +21,7 @@ build_requirements = [
 
 setup(
     name="pys2let",
-    version="2.1.0rc2",
+    version="2.1.0",
     author=[
         "Boris Leistedt",
         "Martin Büttner",
