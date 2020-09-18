@@ -5,7 +5,7 @@
 #ifndef S2LET_SO3
 #define S2LET_SO3
 
-#include <so3.h>
+#include <so3/so3.h>
 #include <time.h>
 
 // Define a few macros for fixed SO3 configuration used

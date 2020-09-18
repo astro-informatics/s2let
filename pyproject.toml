@@ -1,0 +1,7 @@
+[build-system]
+requires = [
+    "setuptools", "wheel", "scikit-build", "cmake>=3.12", "ninja", "cython",
+    "numpy", "conan"
+]
+[tool.black]
+line-length = 79

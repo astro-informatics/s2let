@@ -25,3 +25,5 @@ vgcore.*
 build/
 CMakeCache.txt
 CMakeFiles/
+dist/
+MANIFEST
