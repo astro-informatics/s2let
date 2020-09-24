@@ -1,13 +1,8 @@
-from matplotlib import pyplot as plt
 import numpy as np
 import os
-import pys2let as s2let
-import pyssht as ssht
-from scipy.interpolate import pchip
-from scipy import io as sio
-
 
 def read_matfile(wavelet_type):
+    from scipy import io as sio
     matfile = os.path.join(
         os.environ["S2LET"], "src", "main", "matlab", "kappas_" + wavelet_type
     )
@@ -18,11 +13,16 @@ def read_matfile(wavelet_type):
 
 
 def plot_wavs(B, L, J_min, J_max):
+    from scipy.interpolate import pchip
+    from matplotlib import pyplot as plt
+    from pys2let import pys2let_j_max
+    import pyssht as ssht
+
     kappa_spline, kappa0_spline = read_matfile("spline")
     kappa_s2dw, kappa0_s2dw = read_matfile("s2dw")
     kappa_need, kappa0_need = read_matfile("need")
 
-    J = s2let.pys2let_j_max(B, L, J_min)
+    J = pys2let_j_max(B, L, J_min)
 
     nx = 1
     ny = 3
