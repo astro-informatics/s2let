@@ -28,6 +28,7 @@ class S2letConan(ConanFile):
         if self.options.with_cfitsio:
             self.options["cfitsio"].fPIC = self.options.fPIC
             self.options["cfitsio"].shared = False
+        del self.settings.compiler.libcxx
 
     def requirements(self):
         self.requires("so3/1.2.1@AstroFizz/stable")
