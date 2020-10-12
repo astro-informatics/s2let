@@ -39,7 +39,7 @@ Both can be installed using pip:
 pip install conan cmake
 ```
 
-Then s2let can be compiled with:
+Then **S2LET** can be compiled with:
 
 ```bash
 git clone https://github.com/astro-informatics/s2let.git
