@@ -82,3 +82,9 @@ make install
 The above will also download all necessary dependencies.
 
 Instructions for installing other languages can be found in docs/index.html.
+
+## LICENSE
+
+S2LET is released under the GPL-3 license.  For further details see 
+[LICENSE.txt](https://github.com/astro-informatics/s2let/blob/main/LICENSE).
+
