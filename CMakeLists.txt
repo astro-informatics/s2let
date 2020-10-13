@@ -16,6 +16,9 @@ option(conan_deps "Download dependencies using conan" OFF)
 if(WIN32)
   set(fpic OFF)
 endif()
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 if(conan_deps)
@@ -37,6 +40,7 @@ add_subdirectory(src/main/c)
 
 if(tests)
   enable_testing()
+  include("fetch_cmocka")
   add_subdirectory(src/test/c)
 endif()
 

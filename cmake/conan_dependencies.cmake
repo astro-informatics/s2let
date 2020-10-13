@@ -13,7 +13,7 @@ elseif(NOT CONAN_OPTIONS)
   set(fpic_value "False")
 endif()
 if(NOT CONAN_DEPS)
-  set(CONAN_DEPS "so3/1.2.1@AstroFizz/stable")
+  set(CONAN_DEPS "so3/1.2.1@astro-informatics/stable")
 endif()
 list(APPEND CONAN_OPTIONS "so3:fPIC=${fpic_value}")
 if(cfitsio)
@@ -25,8 +25,8 @@ if(NOT CONAN_BUILD)
 endif()
 
 conan_check(REQUIRED)
-conan_add_remote(NAME AstroFizz URL
-                 https://api.bintray.com/conan/mdavezac/AstroFizz)
+conan_add_remote(NAME astro-informatics URL
+                 https://api.bintray.com/conan/astro-informatics/astro-informatics)
 conan_cmake_run(
   REQUIRES
   ${CONAN_DEPS}
