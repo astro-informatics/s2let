@@ -48,7 +48,7 @@ void s2let_allocate_f_wav_manual(
     int scal_bandlimit,
     int N,
     int J,
-    s2let_parameters_t* parameters);
+    const s2let_parameters_t* parameters);
 
 #ifdef __cplusplus
 }
