@@ -2,14 +2,15 @@
 // Copyright (C) 2012
 // Boris Leistedt & Jason McEwen
 
-#include "s2let.h"
 #include <assert.h>
 #include <complex.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <time.h>
+
+#include "s2let.h"
 
 /*!
  * PROGRAM : s2let_transform_axisym_mw_synthesis_real
@@ -21,8 +22,7 @@
  * - L : band-limit of the output map / of the finest wavelet map
  * OUTPUT : fits file containing the reconstructed MW map
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   printf("--------------------------------------------------\n");
   printf("S2LET library : axisymmetric wavelet transform\n");
   printf("Real signal, MW sampling\n");
@@ -57,79 +57,81 @@ int main(int argc, char *argv[])
   char params[100];
   sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
   int j, bl, offset = 0;
-  printf("File root = %s\n",fileroot);
+  printf("File root = %s\n", fileroot);
 
   // Read band-limits and see if multiresolution was activated
   int multires_ok = 1, monores_ok = 1;
-  for(j = J; j >= J_min; j--){
+  for (j = J; j >= J_min; j--) {
     sprintf(file, "%s%s%s%s%d%s", fileroot, "_wav_", params, "_", j, ".fits");
-    printf("- Infile_wav[j=%i] = %s\n",j,file);
+    printf("- Infile_wav[j=%i] = %s\n", j, file);
     bl = s2let_fits_mw_read_bandlimit(file);
-    printf("  Detected bandlimit bl = %i\n",bl);
-    if( bl != MIN(s2let_bandlimit(j, &parameters), L) )
+    printf("  Detected bandlimit bl = %i\n", bl);
+    if (bl != MIN(s2let_bandlimit(j, &parameters), L))
       multires_ok = 0;
-    if( bl != L )
+    if (bl != L)
       monores_ok = 0;
   }
   // Read the scaling function
   sprintf(file, "%s%s%s%s", fileroot, "_scal_", params, ".fits");
-  printf("- Infile_scal = %s\n",file);
+  printf("- Infile_scal = %s\n", file);
   bl = s2let_fits_mw_read_bandlimit(file);
-  printf("  Detected bandlimit bl = %i\n",bl);
-  if( bl != MIN(s2let_bandlimit(J_min-1, &parameters), L) )
+  printf("  Detected bandlimit bl = %i\n", bl);
+  if (bl != MIN(s2let_bandlimit(J_min - 1, &parameters), L))
     multires_ok = 0;
-  if( bl != L )
+  if (bl != L)
     monores_ok = 0;
 
   // Are the parameters and the maps all consistent ?
-  if( monores_ok == 0 && multires_ok == 0 ){
+  if (monores_ok == 0 && multires_ok == 0) {
     printf("The parameters don't match the bandlimits of the input maps");
     printf("Neither the full or the multi-resolution algorithms are detected");
     exit(-2);
   }
 
   // Activate full or multi-resolution
-  if(multires_ok == 1){
+  if (multires_ok == 1) {
     multires = 1;
     printf("Multiresolution activated\n");
-  }else{
+  } else {
     multires = 0;
     printf("Multiresolution not activated\n");
   }
 
   // Allocating memory for the wavelets
   double *f_wav, *f_scal;
-  if(multires){
-    s2let_transform_axisym_allocate_mw_f_wav_multires_real(&f_wav, &f_scal, &parameters);
-  }else{
+  if (multires) {
+    s2let_transform_axisym_allocate_mw_f_wav_multires_real(
+        &f_wav, &f_scal, &parameters);
+  } else {
     s2let_transform_axisym_allocate_mw_f_wav_real(&f_wav, &f_scal, &parameters);
   }
 
   // Read the wavelets
   offset = 0;
-  for(j = J_min; j <= J; j++){
+  for (j = J_min; j <= J; j++) {
     sprintf(file, "%s%s%s%s%d%s", fileroot, "_wav_", params, "_", j, ".fits");
-    if(multires)
+    if (multires)
       bl = MIN(s2let_bandlimit(j, &parameters), L);
     else
       bl = L;
     s2let_fits_mw_read_map(f_wav + offset, file, bl); // Now write the map to fits file
-    offset += (2*bl-1) * bl; // Go to the next wavelet
+    offset += (2 * bl - 1) * bl;                      // Go to the next wavelet
   }
   // Read the scaling function
   sprintf(file, "%s%s%s%s", fileroot, "_scal_", params, ".fits");
-  if(multires)
-    bl = MIN(s2let_bandlimit(J_min-1, &parameters), L);
+  if (multires)
+    bl = MIN(s2let_bandlimit(J_min - 1, &parameters), L);
   else
     bl = L;
   s2let_fits_mw_read_map(f_scal, file, bl);
 
-
-  printf("Performing wavelet decomposition...");fflush(NULL);
-  double *f = (double*)calloc(L * (2 * L - 1), sizeof(double));
-  if(multires){
-    s2let_transform_axisym_wav_synthesis_mw_multires_real(f, f_wav, f_scal, &parameters);
-  }else{
+  printf("Performing wavelet decomposition...");
+  fflush(NULL);
+  double *f = (double *)calloc(L * (2 * L - 1), sizeof(double));
+  if (multires) {
+    s2let_transform_axisym_wav_synthesis_mw_multires_real(
+        f, f_wav, f_scal, &parameters);
+  } else {
     s2let_transform_axisym_wav_synthesis_mw_real(f, f_wav, f_scal, &parameters);
   }
   printf("done\n");
@@ -138,13 +140,11 @@ int main(int argc, char *argv[])
   char outfile[100];
   printf("Writing the reconstructed map to a FITS file\n");
   sprintf(outfile, "%s%s%s%s", fileroot, "_recon_", params, ".fits");
-  printf("- Outfile = %s\n",outfile);
-  remove(outfile); // In case the file exists
+  printf("- Outfile = %s\n", outfile);
+  remove(outfile);                        // In case the file exists
   s2let_fits_mw_write_map(outfile, f, L); // Now write the map to fits file
 
   printf("--------------------------------------------------\n");
 
   return 0;
 }
-
-

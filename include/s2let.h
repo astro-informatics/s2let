@@ -1,7 +1,6 @@
 #ifndef S2LET
 #define S2LET
 #include <ssht/ssht.h>
-#include "s2let_types.h"
 
 #include "s2let_alloc.h"
 #include "s2let_analysis.h"
@@ -22,5 +21,6 @@
 #include "s2let_transform_axisym_hpx.h"
 #include "s2let_transform_axisym_lm.h"
 #include "s2let_transform_axisym_mw.h"
+#include "s2let_types.h"
 
 #endif

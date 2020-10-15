@@ -6,6 +6,7 @@
 #define S2LET_ALLOC
 
 #include <ssht/ssht.h>
+#include "s2let_types.h"
 
 #ifdef __cplusplus
 extern "C" {
