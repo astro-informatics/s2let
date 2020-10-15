@@ -31,7 +31,7 @@ class S2letConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def requirements(self):
-        self.requires("so3/1.2.1@AstroFizz/stable")
+        self.requires("so3/1.3.0@astro-informatics/stable")
         if self.options.with_cfitsio:
             self.requires("cfitsio/3.480")
 
