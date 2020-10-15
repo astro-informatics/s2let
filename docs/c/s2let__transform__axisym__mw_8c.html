@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: src/main/c/s2let_transform_axisym_mw.c File Reference</title>
+<title>s2let: src/main/c/s2let_transform_axisym_mw.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -74,14 +74,48 @@ $(function() {
 <div class="title">s2let_transform_axisym_mw.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="s2let_8h_source.html">s2let.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;complex.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;complex.h&gt;</code><br />
 <code>#include &lt;ssht/ssht.h&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="s2let_8h_source.html">s2let.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for s2let_transform_axisym_mw.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="s2let__transform__axisym__mw_8c__incl.png" border="0" usemap="#asrc_2main_2c_2s2let__transform__axisym__mw_8c" alt=""/></div>
+<map name="src_2main_2c_2s2let__transform__axisym__mw_8c" id="asrc_2main_2c_2s2let__transform__axisym__mw_8c">
+<area shape="rect" title=" " alt="" coords="2099,5,2277,47"/>
+<area shape="rect" title=" " alt="" coords="5,259,88,285"/>
+<area shape="rect" title=" " alt="" coords="2226,95,2289,121"/>
+<area shape="rect" title=" " alt="" coords="1111,333,1198,360"/>
+<area shape="rect" title=" " alt="" coords="2313,95,2377,121"/>
+<area shape="rect" href="s2let_8h.html" title=" " alt="" coords="1044,95,1105,121"/>
+<area shape="rect" href="s2let__alloc_8h.html" title=" " alt="" coords="985,177,1079,203"/>
+<area shape="rect" href="s2let__types_8h.html" title=" " alt="" coords="1311,259,1411,285"/>
+<area shape="rect" href="s2let__analysis_8h.html" title=" " alt="" coords="1155,177,1271,203"/>
+<area shape="rect" href="s2let__analysis__adjoint_8h.html" title=" " alt="" coords="1538,177,1699,203"/>
+<area shape="rect" href="s2let__error_8h.html" title=" " alt="" coords="867,177,960,203"/>
+<area shape="rect" href="s2let__fits_8h.html" title=" " alt="" coords="1295,177,1382,203"/>
+<area shape="rect" href="s2let__helper_8h.html" title=" " alt="" coords="1807,259,1910,285"/>
+<area shape="rect" href="s2let__hpx_8h.html" title=" " alt="" coords="85,177,174,203"/>
+<area shape="rect" href="s2let__idl__hpx_8h.html" title=" " alt="" coords="1935,259,2044,285"/>
+<area shape="rect" href="s2let__idl__mw_8h.html" title=" " alt="" coords="1407,177,1513,203"/>
+<area shape="rect" href="s2let__lm_8h.html" title=" " alt="" coords="2068,259,2151,285"/>
+<area shape="rect" href="s2let__math_8h.html" title=" " alt="" coords="163,259,261,285"/>
+<area shape="rect" href="s2let__mw_8h.html" title=" " alt="" coords="257,177,343,203"/>
+<area shape="rect" href="s2let__so3_8h.html" title=" " alt="" coords="1909,177,1998,203"/>
+<area shape="rect" href="s2let__synthesis_8h.html" title=" " alt="" coords="382,177,506,203"/>
+<area shape="rect" href="s2let__synthesis__adjoint_8h.html" title=" " alt="" coords="387,259,557,285"/>
+<area shape="rect" href="s2let__tiling_8h.html" title=" " alt="" coords="594,177,689,203"/>
+<area shape="rect" href="s2let__transform__axisym__hpx_8h.html" title=" " alt="" coords="1723,169,1885,211"/>
+<area shape="rect" href="s2let__transform__axisym__lm_8h.html" title=" " alt="" coords="633,259,826,285"/>
+<area shape="rect" href="s2let__transform__axisym__mw_8h.html" title=" " alt="" coords="850,259,1049,285"/>
+<area shape="rect" title=" " alt="" coords="1124,259,1185,285"/>
+<area shape="rect" title=" " alt="" coords="1621,259,1699,285"/>
+<area shape="rect" title=" " alt="" coords="1724,259,1783,285"/>
+</map>
 </div>
-<p><a href="s2let__transform__axisym__mw_8c_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:abdb0070e4e2f67007c6755020cbf3f76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__transform__axisym__mw_8c.html#abdb0070e4e2f67007c6755020cbf3f76">s2let_transform_axisym_allocate_mw_f_wav</a> (complex double **f_wav, complex double **f_scal, const <a class="el" href="structs2let__parameters__t.html">s2let_parameters_t</a> *parameters)</td></tr>
@@ -179,8 +213,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00021">21</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a34f35be55f0d7920e66ffa96948b7132"></a>
@@ -231,8 +263,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00044">44</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -285,8 +315,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00094">94</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a71d7ea7def45be0508e37eb4789a42be"></a>
@@ -337,8 +365,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00074">74</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -398,8 +424,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00189">189</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="abbbb0b8729b4b4d936723f57fa133bde"></a>
@@ -457,8 +481,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00455">455</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -518,8 +540,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00984">984</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a9d190e3dc17c1e73036fa7def51baf44"></a>
@@ -577,8 +597,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00724">724</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -638,8 +656,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00124">124</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a272edc957f57772f4af7161c4776f118"></a>
@@ -697,8 +713,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00389">389</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -758,8 +772,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00918">918</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="abab7d46ecc4813503ab0fd5f09d8bfa7"></a>
@@ -818,8 +830,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00660">660</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="ab3b3272365c739034b2c5c8fc00613a9"></a>
@@ -871,8 +881,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l01214">1214</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="af2f861872a0b6640d8e24202a451272f"></a>
@@ -923,8 +931,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l01184">1184</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -984,8 +990,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00323">323</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a9d4cb0b9b608e1956058899cfba58280"></a>
@@ -1043,8 +1047,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00593">593</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -1104,8 +1106,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l01122">1122</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a202737e2b30d90af7984051d82e6b55a"></a>
@@ -1163,8 +1163,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00854">854</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -1224,8 +1222,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00255">255</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a002718ed6a64a6d7268626e01931ecba"></a>
@@ -1283,8 +1279,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00524">524</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
 
 </div>
 </div>
@@ -1344,8 +1338,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l01053">1053</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 <a id="a5eec6f7cb23d0ffb408abc583153d496"></a>
@@ -1404,14 +1396,12 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__transform__axisym__mw_8c_source.html#l00789">789</a> of file <a class="el" href="s2let__transform__axisym__mw_8c_source.html">s2let_transform_axisym_mw.c</a>.</p>
-
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

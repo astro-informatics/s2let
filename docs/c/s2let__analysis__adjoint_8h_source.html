@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: include/s2let_analysis_adjoint.h Source File</title>
+<title>s2let: include/s2let_analysis_adjoint.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -167,17 +167,17 @@ $(function() {
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="as2let__analysis__adjoint_8h_html_a46105f73ba49339a7b5565db46ac3b28"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#a46105f73ba49339a7b5565db46ac3b28">s2let_analysis_adjoint_wav2lm_real</a></div><div class="ttdeci">void s2let_analysis_adjoint_wav2lm_real(S2LET_COMPLEX(double) *flm, const double *f_wav, const double *f_scal, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div></div>
-<div class="ttc" id="as2let__types_8h_html_a121c8622035e81912b4b85b436b4ec6d"><div class="ttname"><a href="s2let__types_8h.html#a121c8622035e81912b4b85b436b4ec6d">S2LET_COMPLEX</a></div><div class="ttdeci">#define S2LET_COMPLEX(TYPE)</div><div class="ttdef"><b>Definition:</b> <a href="s2let__types_8h_source.html#l00015">s2let_types.h:15</a></div></div>
-<div class="ttc" id="as2let__analysis__adjoint_8h_html_ad3c34c9c83b067fb9c350698fd66d5a6"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#ad3c34c9c83b067fb9c350698fd66d5a6">s2let_analysis_adjoint_wav2px_real</a></div><div class="ttdeci">void s2let_analysis_adjoint_wav2px_real(double *f, const double *f_wav, const double *f_scal, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> <a href="s2let__analysis__adjoint_8c_source.html#l00576">s2let_analysis_adjoint.c:576</a></div></div>
+<div class="ttc" id="as2let__types_8h_html_a121c8622035e81912b4b85b436b4ec6d"><div class="ttname"><a href="s2let__types_8h.html#a121c8622035e81912b4b85b436b4ec6d">S2LET_COMPLEX</a></div><div class="ttdeci">#define S2LET_COMPLEX(TYPE)</div><div class="ttdef"><b>Definition:</b> s2let_types.h:15</div></div>
+<div class="ttc" id="as2let__analysis__adjoint_8h_html_ad3c34c9c83b067fb9c350698fd66d5a6"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#ad3c34c9c83b067fb9c350698fd66d5a6">s2let_analysis_adjoint_wav2px_real</a></div><div class="ttdeci">void s2let_analysis_adjoint_wav2px_real(double *f, const double *f_wav, const double *f_scal, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> s2let_analysis_adjoint.c:530</div></div>
 <div class="ttc" id="as2let__analysis__adjoint_8h_html_a529cb2b3e504faf4cda24b4c6d99d333"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#a529cb2b3e504faf4cda24b4c6d99d333">s2let_analysis_adjoint_lmn2lm</a></div><div class="ttdeci">void s2let_analysis_adjoint_lmn2lm(S2LET_COMPLEX(double) *flm, const S2LET_COMPLEX(double) *f_wav_lmn, const S2LET_COMPLEX(double) *f_scal_lm, const S2LET_COMPLEX(double) *wav_lm, const double *scal_l, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div></div>
 <div class="ttc" id="as2let__analysis__adjoint_8h_html_a8af02104042ed3c6ea7398889483cc45"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#a8af02104042ed3c6ea7398889483cc45">s2let_analysis_adjoint_wav2px</a></div><div class="ttdeci">void s2let_analysis_adjoint_wav2px(S2LET_COMPLEX(double) *f, const S2LET_COMPLEX(double) *f_wav, const S2LET_COMPLEX(double) *f_scal, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div></div>
 <div class="ttc" id="as2let__analysis__adjoint_8h_html_a181593f69b4cc0d9d26aa9379dc9bba2"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#a181593f69b4cc0d9d26aa9379dc9bba2">s2let_analysis_adjoint_wav2lm_manual</a></div><div class="ttdeci">void s2let_analysis_adjoint_wav2lm_manual(S2LET_COMPLEX(double) *flm, const S2LET_COMPLEX(double) *f_wav, const S2LET_COMPLEX(double) *f_scal, const double *scal_l, const S2LET_COMPLEX(double) *wav_lm, const int scal_bandlimit, const int *wav_bandlimits, int J, int L, int spin, int N)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div></div>
 <div class="ttc" id="as2let__analysis__adjoint_8h_html_a6c6a34d9203703ddf27f323109f9dde6"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#a6c6a34d9203703ddf27f323109f9dde6">s2let_analysis_adjoint_wav2lm</a></div><div class="ttdeci">void s2let_analysis_adjoint_wav2lm(S2LET_COMPLEX(double) *flm, const S2LET_COMPLEX(double) *f_wav, const S2LET_COMPLEX(double) *f_scal, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div></div>
 <div class="ttc" id="as2let__analysis__adjoint_8h_html_a2c83c6835e02811a5d264613391b789e"><div class="ttname"><a href="s2let__analysis__adjoint_8h.html#a2c83c6835e02811a5d264613391b789e">s2let_analysis_adjoint_lmn2lm_real</a></div><div class="ttdeci">void s2let_analysis_adjoint_lmn2lm_real(S2LET_COMPLEX(double) *flm, const S2LET_COMPLEX(double) *f_wav_lmn, const S2LET_COMPLEX(double) *f_scal_lm, const S2LET_COMPLEX(double) *wav_lm, const double *scal_l, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div></div>
-<div class="ttc" id="astructs2let__parameters__t_html"><div class="ttname"><a href="structs2let__parameters__t.html">s2let_parameters_t</a></div><div class="ttdef"><b>Definition:</b> <a href="s2let__types_8h_source.html#l00056">s2let_types.h:56</a></div></div>
+<div class="ttc" id="astructs2let__parameters__t_html"><div class="ttname"><a href="structs2let__parameters__t.html">s2let_parameters_t</a></div><div class="ttdef"><b>Definition:</b> s2let_types.h:56</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>
