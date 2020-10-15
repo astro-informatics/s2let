@@ -11,8 +11,14 @@ B = 3
 J = pys2let_j_max(B, L, J_min)
 
 # The filename of some random healpix map
-fname = os.path.join(os.path.dirname(__file__), os.pardir,
-                     os.pardir, os.pardir, 'data', 'somecmbsimu_hpx_128.fits')
+fname = os.path.join(
+    os.path.dirname(__file__),
+    os.pardir,
+    os.pardir,
+    os.pardir,
+    "data",
+    "somecmbsimu_hpx_128.fits",
+)
 
 # Read healpix map and compute alms.
 # f_lm has size L*(L+1)/2

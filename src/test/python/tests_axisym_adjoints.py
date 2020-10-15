@@ -1,41 +1,74 @@
-from pys2let import *
+from functools import partial
+
 import numpy as np
+from pytest import approx, fixture, mark
 
-def random_lms(L):
-    return np.random.rand(L * L).astype(np.complex)
+from pys2let import (
+    analysis_adjoint_axisym_wav_mw,
+    analysis_adjoint_wav2px,
+    analysis_axisym_wav_mw,
+    analysis_px2wav,
+    synthesis_adjoint_axisym_wav_mw,
+    synthesis_adjoint_px2wav,
+    synthesis_axisym_wav_mw,
+    synthesis_wav2px,
+)
 
-def random_mw_map(L):
-    return alm2map_mw(random_lms(L), L, 0)
 
-def random_wavlet_maps(L, nwvlts):
-    f_scal = random_mw_map(L)
-    f_wav = np.concatenate([random_mw_map(L) for _ in range(nwvlts)])
-    return f_scal, f_wav
+@fixture
+def rng(request):
+    return np.random.default_rng(getattr(request.config.option, "randomly_seed", None))
 
-L = 10
-B = 2
-J_min = 2
-nwvlts = pys2let_j_max(B, L, J_min) - J_min + 1
 
-#### as on website http://sepwww.stanford.edu/sep/prof/pvi/conj/paper_html/node9.html
-x = random_mw_map(L)
-y_scal, y_wav = random_wavlet_maps(L, nwvlts)
+def random_mw_map(rng, L, spin):
+    from pys2let import alm2map_mw
 
-y = analysis_adjoint_axisym_wav_mw(y_wav, y_scal, B, L, J_min)
-x_wav, x_scal = analysis_axisym_wav_mw(x, B, L, J_min)
+    return alm2map_mw(rng.uniform(size=(L * L, 2)) @ [1, 1j], L, spin)
 
-dot_product_error = y_wav.conj().dot(x_wav)
-dot_product_error += y_scal.conj().dot(x_scal)
-dot_product_error -= y.conj().dot(x)
-print(f"ANALYSIS Dot product error: {dot_product_error}")
 
-x_scal, x_wav = random_wavlet_maps(L, nwvlts)
-y = random_mw_map(L)
+def random_wavlet_maps(rng, L, spin, nwvlts):
+    maps = [random_mw_map(rng, L, spin) for _ in range(nwvlts + 1)]
+    return maps[0], np.concatenate(maps[1:])
 
-x = synthesis_axisym_wav_mw(x_wav, x_scal, B, L, J_min)
-y_wav, y_scal = synthesis_adjoint_axisym_wav_mw(y, B, L, J_min)
 
-dot_product_error = y.conj().dot(x)
-dot_product_error -= y_wav.conj().dot(x_wav)
-dot_product_error -= y_scal.conj().dot(x_scal)
-print(f"SYNTHESIS Dot product error: {dot_product_error}")
+@mark.parametrize(
+    "px2wav,wav2px,spin",
+    [
+        (analysis_axisym_wav_mw, analysis_adjoint_axisym_wav_mw, 0),
+        (synthesis_adjoint_axisym_wav_mw, synthesis_axisym_wav_mw, 0),
+        (
+            partial(analysis_px2wav, spin=0, upsample=1, N=1),
+            partial(analysis_adjoint_wav2px, spin=0, upsample=1, N=1),
+            0,
+        ),
+        (
+            partial(analysis_px2wav, spin=2, upsample=1, N=1),
+            partial(analysis_adjoint_wav2px, spin=2, upsample=1, N=1),
+            2,
+        ),
+        (
+            partial(synthesis_adjoint_px2wav, spin=0, upsample=1, N=1),
+            partial(synthesis_wav2px, spin=0, upsample=1, N=1),
+            0,
+        ),
+        (
+            partial(synthesis_adjoint_px2wav, spin=2, upsample=1, N=1),
+            partial(synthesis_wav2px, spin=2, upsample=1, N=1),
+            2,
+        ),
+    ],
+)
+def test_axisym_adjoint(
+    px2wav, wav2px, spin, rng: np.random.Generator, L=10, B=2, J_min=2
+):
+    from pys2let import pys2let_j_max
+
+    nwvlts = pys2let_j_max(B, L, J_min) - J_min + 1
+
+    x = random_mw_map(rng, L, spin)
+    y_scal, y_wav = random_wavlet_maps(rng, L, spin, nwvlts)
+
+    y = wav2px(y_wav, y_scal, B, L, J_min)
+    x_wav, x_scal = px2wav(x, B, L, J_min)
+
+    assert y_wav.conj().T @ x_wav + y_scal.conj() @ x_scal == approx(y.conj().T @ x)

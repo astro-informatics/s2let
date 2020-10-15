@@ -14,12 +14,18 @@ spin = 0  # are we dealing with spin signals? set to 0 for temperature. if non-z
 upsample = 1  # 1 means all scales at full resolution L # 0 means multiresolution wavelet transform
 
 J = pys2let_j_max(B, L, J_min)  # Compute maximum scale
-print('Jmax =', J)
+print("Jmax =", J)
 
 # The filename of some random healpix map
 # fname = '/Users/bl/Dropbox/Astrodata/SDSS/Fields/Planck_EBV_256rQ.fits'
-fname = os.path.join(os.path.dirname(__file__), os.pardir,
-                     os.pardir, os.pardir, 'data', 'somecmbsimu_hpx_128.fits')
+fname = os.path.join(
+    os.path.dirname(__file__),
+    os.pardir,
+    os.pardir,
+    os.pardir,
+    "data",
+    "somecmbsimu_hpx_128.fits",
+)
 
 # Read healpix map and compute alms.
 # f_lm has size L*(L+1)/2
@@ -30,16 +36,16 @@ f = hp.alm2map(f_lm, nside=nside, lmax=L - 1)  # Band limited version
 # Call pys2let and compute directional wavelet transform.
 # Returns an array of MW maps
 # The way to ac,cess them is described below.
-print('Running analysis_lm2wav')
+print("Running analysis_lm2wav")
 f_wav, f_scal = analysis_lm2wav(f_lm, B, L, J_min, N, spin, upsample)
-print('Done')
+print("Done")
 
-print('size f_scal f_wav', f_scal.size, f_wav.size, f_wav.size / f_scal.size)
+print("size f_scal f_wav", f_scal.size, f_wav.size, f_wav.size / f_scal.size)
 
 # Uses synthesis to reconstruct the input alms.
-print('Running synthesis_wav2lm')
+print("Running synthesis_wav2lm")
 f_lm_rec = synthesis_wav2lm(f_wav, f_scal, B, L, J_min, N, spin, upsample)
-print('Done')
+print("Done")
 f_rec = hp.alm2map(f_lm_rec, nside=nside, lmax=L - 1)
 # plot to compare the input/output maps
 # hp.mollview(f)
@@ -53,7 +59,7 @@ f_mw_rec = alm2map_mw(f_lm, L, spin)
 
 
 # Home made plotting routine! inputs : function f (1D array of MW signal), bandlimit L, plot axis ax, and title
-def myplot(f, L, ax, title=''):
+def myplot(f, L, ax, title=""):
     # Compute the theta and phi values of the MW equiangular grid.
     thetas, phis = mw_sampling(L)
     ntheta = len(thetas)
@@ -73,21 +79,21 @@ def myplot(f, L, ax, title=''):
 
     selec = np.arange(0, nphi, step_phi)  # subset of phi tick labels
     ax.set_xticks(selec)
-    ax.set_xticklabels(['%.1f' % x for x in phis[selec]])
-    ax.set_xlabel(r'$\phi$')
+    ax.set_xticklabels(["%.1f" % x for x in phis[selec]])
+    ax.set_xlabel(r"$\phi$")
     selec = np.arange(0, ntheta, step_theta)  # subset of theta tick labels
     ax.set_yticks(selec)
-    ax.set_yticklabels(['%.1f' % x for x in thetas[selec]])
-    ax.set_ylabel(r'$\theta$')
+    ax.set_yticklabels(["%.1f" % x for x in thetas[selec]])
+    ax.set_ylabel(r"$\theta$")
     ax.set_title(title)
 
 
 # Plot equiangular map
 fig, ax = plt.subplots(1, 1)
-myplot(f_mw, L, ax, 'Input map converted to MW')
+myplot(f_mw, L, ax, "Input map converted to MW")
 fig, ax = plt.subplots(1, 1)
-myplot(f_mw_rec, L, ax, 'Input map converted to MW (reconstructed)')
-fig.savefig('test_directional_python_wrappers_1.png')
+myplot(f_mw_rec, L, ax, "Input map converted to MW (reconstructed)")
+fig.savefig("test_directional_python_wrappers_1.png")
 
 # Create giant array figure
 fig, axs = plt.subplots(J - J_min + 1, N, figsize=(4 * N, 3 * (J - J_min)))
@@ -96,18 +102,40 @@ axs = axs.ravel()
 for j in range(J_min, J + 1):
     for n in range(0, N):
         # Retreive the boundaries and positions of the right wavelet scale in the giant f_wav array!
-        offset, bandlimit, nelem, nelem_wav = wav_ind(
-            j, n, B, L, N, J_min, upsample)
+        offset, bandlimit, nelem, nelem_wav = wav_ind(j, n, B, L, N, J_min, upsample)
         # The right wavelet map corresponding to (j,n) will be f_wav[offset:offset+nelem].
         # It has a band-limit bandlimit
         # nelem_wav is the total number of elements in the j-th scale (i.e., sum of all directions). It's a safety check to verify that we are not forgetting anlsy directions.
-        print('plot id', (j - J_min) * N + n, 'j=', j, 'n=', n, 'bounds=',
-              offset, 'to', offset + nelem, 'Total elems:', nelem_wav)
+        print(
+            "plot id",
+            (j - J_min) * N + n,
+            "j=",
+            j,
+            "n=",
+            n,
+            "bounds=",
+            offset,
+            "to",
+            offset + nelem,
+            "Total elems:",
+            nelem_wav,
+        )
         # Make the plot!
-        myplot(f_wav[offset:offset + nelem], bandlimit, axs[(j - J_min) * N + n], title='Scale ' +
-               str(j + 1 - J_min) + '/' + str(J - J_min + 1) + ', direction ' + str(n + 1) + '/' + str(N))
+        myplot(
+            f_wav[offset : offset + nelem],
+            bandlimit,
+            axs[(j - J_min) * N + n],
+            title="Scale "
+            + str(j + 1 - J_min)
+            + "/"
+            + str(J - J_min + 1)
+            + ", direction "
+            + str(n + 1)
+            + "/"
+            + str(N),
+        )
 
 # Pretty adjustment
 fig.subplots_adjust(hspace=0.4, wspace=0.5)
-fig.savefig('test_directional_python_wrappers_2.png')
+fig.savefig("test_directional_python_wrappers_2.png")
 plt.show()

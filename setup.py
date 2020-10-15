@@ -22,17 +22,11 @@ build_requirements = [
 setup(
     name="pys2let",
     version="2.1.0",
-    author=[
-        "Boris Leistedt",
-        "Martin Büttner",
-        "Jennifer Chan",
-        "Jason McEwen",
-    ],
+    author=["Boris Leistedt", "Martin Büttner", "Jennifer Chan", "Jason McEwen"],
     install_requires=["numpy"],
     extras_require={
-        "build": build_requirements,
-        "dev": build_requirements,
-        "plots": ["scipy"],
+        "dev": build_requirements + ["pytest", "black"],
+        "plots": ["scipy", "healpy"],
     },
     description="Fast spin spherical transforms",
     url="http://astro-informatics.github.io/s2let/",
