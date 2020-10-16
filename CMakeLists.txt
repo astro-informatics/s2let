@@ -21,6 +21,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+include("sanitizers")
 if(conan_deps)
   include("conan_dependencies")
   set(SO3_TARGET CONAN_PKG::so3)

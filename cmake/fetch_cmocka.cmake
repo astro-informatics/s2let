@@ -5,6 +5,7 @@ FetchContent_Declare(
   GIT_REPOSITORY https://gitlab.com/cmocka/cmocka.git
   GIT_TAG cmocka-1.1.5)
 
+FetchContent_GetProperties("cmocka")
 if(NOT cmocka_POPULATED)
   # Fetch the content using previously declared details
   FetchContent_Populate("cmocka")
