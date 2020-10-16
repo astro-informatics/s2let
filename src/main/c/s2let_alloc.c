@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * Allocate map for a complex signal in pixel space using MW sampling.

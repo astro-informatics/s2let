@@ -11,7 +11,6 @@ set(C_SRC
     s2let_helper.c
     s2let_analysis.c
     s2let_analysis_adjoint.c)
-set(HEADER_PREFIX ${PROJECT_SOURCE_DIR}/include)
 set(C_HEADERS
     s2let.h
     s2let_error.h
@@ -39,11 +38,12 @@ set(C_HEADERS
 if(cfitsio)
   list(APPEND C_SRC s2let_fits.c)
 endif()
-list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/")
+list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/s2let")
 
 add_library(s2let STATIC ${C_SRC})
 target_link_libraries(s2let PUBLIC ${SO3_TARGET} ${CFITSIO_TARGET})
-set_target_properties(s2let PROPERTIES C_STANDARD 99)
+set_target_properties(s2let PROPERTIES C_STANDARD 99 ARCHIVE_OUTPUT_DIRECTORY
+                                                     ${PROJECT_BINARY_DIR}/lib)
 target_include_directories(
   s2let PUBLIC $<INSTALL_INTERFACE:include>
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
@@ -52,12 +52,6 @@ if(fPIC)
 endif()
 
 if(NOT python)
-  add_executable(s2let_about s2let_about.c)
-  target_compile_definitions(
-    s2let_about PRIVATE S2LET_VERSION="${PROJECT_VERSION}" S2LET_BUILD="CMake")
-  set_target_properties(s2let_about PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                               ${PROJECT_BINARY_DIR})
-
   install(
     TARGETS s2let
     EXPORT S2letTargets

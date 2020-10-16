@@ -7,7 +7,7 @@
 #include <ssht/ssht.h>
 #include <stdlib.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * Allocates arrays for final wavelets and scaling functions in pixel space (MW

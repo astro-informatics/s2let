@@ -7,7 +7,7 @@
 #include <ssht/ssht.h>
 #include <stdlib.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * Interface to SSHT (required by the Java interface to S2LET)

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * Compute power for a signal in harmonic space.

@@ -2,7 +2,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 #include <cmocka.h>
 

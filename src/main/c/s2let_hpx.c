@@ -6,7 +6,7 @@
 #include <ssht/ssht.h>
 #include <stdlib.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 // Fortran interfaces to Healpix F90 library ; see s2let_hpx.f90
 extern void healpix_inverse_real_();

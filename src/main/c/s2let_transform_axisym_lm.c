@@ -6,7 +6,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 static inline int lm2ind(int el, int m) { return el * el + el + m; }
 

@@ -1,4 +1,4 @@
-from conans import ConanFile, CMake
+from conans import CMake, ConanFile
 
 
 class S2letConan(ConanFile):
@@ -16,7 +16,7 @@ class S2letConan(ConanFile):
     exports_sources = [
         "src/main/c/*",
         "src/test/c/*",
-        "include/*",
+        "include/s2let/*",
         "CMakeLists.txt",
         "cmake/*.cmake",
     ]
@@ -31,7 +31,8 @@ class S2letConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def requirements(self):
-        self.requires("so3/1.3.0@astro-informatics/stable")
+        location = "astro-informatics/stable" if self.in_local_cache else "user/testing"
+        self.requires(f"so3/1.3.0@{location}")
         if self.options.with_cfitsio:
             self.requires("cfitsio/3.480")
 

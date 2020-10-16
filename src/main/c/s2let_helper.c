@@ -1,6 +1,6 @@
 #include <ssht/ssht.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 int s2let_n_phi(const s2let_parameters_t *parameters) {
   if (parameters->sampling_scheme == S2LET_SAMPLING_MW_SS)

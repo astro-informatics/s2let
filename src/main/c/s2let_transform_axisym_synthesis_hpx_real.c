@@ -10,7 +10,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * PROGRAM : s2let_transform_axisym_hpx_synthesis_real

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * Tiling function for S2DW wavelets

@@ -5,7 +5,7 @@
 #include <complex.h>
 #include <stdlib.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 void s2let_transform_axisym_allocate_hpx_f_wav_real(
     double **f_wav, double **f_scal, int nside, const s2let_parameters_t *parameters) {

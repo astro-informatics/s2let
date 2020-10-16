@@ -11,7 +11,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*!
  * PROGRAM : s2let_hpx_demo

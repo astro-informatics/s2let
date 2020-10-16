@@ -2,7 +2,7 @@
 // Copyright (C) 2012
 // Boris Leistedt & Jason McEwen
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 /*
  * IDL integer types. For historical reasons, we use UCHAR for TYP_BYTE

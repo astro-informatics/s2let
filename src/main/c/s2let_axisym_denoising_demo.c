@@ -11,7 +11,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "s2let.h"
+#include "s2let/s2let.h"
 
 void s2let_lm_random_flm_real_sigma(
     complex double *flm, int L, int seed, double sigmanoise) {
