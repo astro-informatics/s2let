@@ -34,7 +34,7 @@ jobs:
           conan remote add astro-informatics \
             https://api.bintray.com/conan/astro-informatics/astro-informatics
 
-      - name: create stable or testing package
+      - name: create package with fpic=${{matrix.fpic}} cfitsio=${{matrix.cfitsio}}
         shell: bash
         run: |
           if [ "${{ github.ref }}" = "refs/tags/v1.3.0" ]; then
