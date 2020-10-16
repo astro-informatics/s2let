@@ -34,7 +34,7 @@ jobs:
         run: pip install -e .[dev]
 
       - name: run pytest
-        run: pytest tests/
+        run: pytest src/test/python/
 
   from-sdist:
     name: python source distribution
@@ -58,7 +58,7 @@ jobs:
         run: "pip install dist/s2let-*.tar.gz"
 
       - name: run pytest
-        run: pytest tests/
+        run: pytest src/test/python/
 
       - uses: actions/upload-artifact@v2
         if: ${{ startsWith(github.ref, 'refs/tags') }}
@@ -96,7 +96,7 @@ jobs:
         run: "pip install dist/*.whl"
 
       - name: run pytests
-        run: pytest tests
+        run: pytest src/test/python/
 
       - uses: actions/upload-artifact@v2
         if: ${{ startsWith(github.ref, 'refs/tags') }}
