@@ -32,6 +32,7 @@ static inline void fill_so3_parameters(so3_parameters_t *so3_parameters, const s
     so3_parameters->dl_method = parameters->dl_method;
     so3_parameters->reality = parameters->reality;
     so3_parameters->steerable = 0;  // When direct routines support steerable so3 change this to 1.
+    so3_parameters->L0 = 0;
 
     if (parameters->N % 2)
         so3_parameters->n_mode = SO3_N_MODE_EVEN;
