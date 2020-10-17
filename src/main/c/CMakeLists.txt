@@ -40,6 +40,10 @@ if(cfitsio)
 endif()
 list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/s2let")
 
+configure_file(${PROJECT_SOURCE_DIR}/include/s2let/s2let_version.in.h
+               ${PROJECT_BINARY_DIR}/include/s2let/s2let_version.h)
+list(APPEND C_HEADERS ${PROJECT_BINARY_DIR}/include/s2let/s2let_version.h)
+
 add_library(s2let STATIC ${C_SRC})
 target_link_libraries(s2let PUBLIC ${SO3_TARGET} ${CFITSIO_TARGET})
 set_target_properties(s2let PROPERTIES C_STANDARD 99 ARCHIVE_OUTPUT_DIRECTORY
@@ -52,6 +56,13 @@ if(fPIC)
 endif()
 
 if(NOT python)
+  add_executable(s2let_about s2let_about.c)
+  target_compile_definitions(s2let_about
+                             PRIVATE S2LET_VERSION="${PROJECT_VERSION}")
+  target_include_directories(s2let_about PUBLIC ${PROJECT_BINARY_DIR}/include/s2let)
+  target_compile_definitions(s2let_about PUBLIC BUILT_WITH_CMAKE)
+  set_target_properties(s2let_about PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                                               ${PROJECT_BINARY_DIR}/bin)
   install(
     TARGETS s2let
     EXPORT S2letTargets
