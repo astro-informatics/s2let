@@ -56,13 +56,6 @@ if(fPIC)
 endif()
 
 if(NOT python)
-  add_executable(s2let_about s2let_about.c)
-  target_compile_definitions(s2let_about
-                             PRIVATE S2LET_VERSION="${PROJECT_VERSION}")
-  target_include_directories(s2let_about PUBLIC ${PROJECT_BINARY_DIR}/include/s2let)
-  target_compile_definitions(s2let_about PUBLIC BUILT_WITH_CMAKE)
-  set_target_properties(s2let_about PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                               ${PROJECT_BINARY_DIR}/bin)
   install(
     TARGETS s2let
     EXPORT S2letTargets
