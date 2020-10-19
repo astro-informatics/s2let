@@ -6,10 +6,14 @@
 [bintray-url]: https://bintray.com/astro-informatics/astro-informatics/s2let:astro-informatics/2.1.0:stable/link
 [pypi-img]: https://badge.fury.io/py/pys2let.svg
 [pypi-url]: https://badge.fury.io/py/pys2let
+[codefactor-img]: https://www.codefactor.io/repository/github/astro-informatics/s2let/badge/main
+[codefactor-url]: https://www.codefactor.io/repository/github/astro-informatics/s2let/overview/main
 
 [![][docs-img]][docs-url]
 [![][bintray-img]][bintray-url]
 [![][pypi-img]][pypi-url]
+![CMake Build](https://github.com/astro-informatics/s2let/workflows/CMake%20Build/badge.svg)
+![Python Build](https://github.com/astro-informatics/s2let/workflows/Python%20Build/badge.svg)
 
 ## DESCRIPTION
 
