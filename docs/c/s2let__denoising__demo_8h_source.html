@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: include/s2let_denoising_demo.h Source File</title>
+<title>s2let: include/s2let_denoising_demo.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -85,7 +85,7 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">void</span> <a class="code" href="s2let__denoising__demo_8h.html#aecd22408c13042607d49019671ff9168">s2let_lm_random_flm_real_sigma</a>(complex <span class="keywordtype">double</span> *flm, <span class="keywordtype">int</span> L, <span class="keywordtype">int</span> seed, <span class="keywordtype">double</span> sigmanoise);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">void</span> <a class="code" href="s2let__denoising__demo_8h.html#aecd22408c13042607d49019671ff9168">s2let_lm_random_flm_real_sigma</a>(complex <span class="keywordtype">double</span> *flm, <span class="keywordtype">int</span> L, <span class="keywordtype">int</span> <a class="code" href="test__adjoint_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>, <span class="keywordtype">double</span> sigmanoise);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">double</span> <a class="code" href="s2let__denoising__demo_8h.html#aa037f9325b8399e224222f8d5b9a2788">waveletpower</a>(complex <span class="keywordtype">double</span> *wav_lm, <span class="keywordtype">int</span> L);</div>
@@ -98,13 +98,14 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="as2let__denoising__demo_8h_html_a067d9bf357dbfd7a4986d3f62a9e8c45"><div class="ttname"><a href="s2let__denoising__demo_8h.html#a067d9bf357dbfd7a4986d3f62a9e8c45">hard_threshold_real</a></div><div class="ttdeci">void hard_threshold_real(double *g_wav, const double *threshold, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> <a href="s2let__denoising__demo_8c_source.html#l00040">s2let_denoising_demo.c:40</a></div></div>
-<div class="ttc" id="as2let__denoising__demo_8h_html_aa037f9325b8399e224222f8d5b9a2788"><div class="ttname"><a href="s2let__denoising__demo_8h.html#aa037f9325b8399e224222f8d5b9a2788">waveletpower</a></div><div class="ttdeci">double waveletpower(complex double *wav_lm, int L)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> <a href="s2let__denoising__demo_8c_source.html#l00032">s2let_denoising_demo.c:32</a></div></div>
-<div class="ttc" id="as2let__denoising__demo_8h_html_aecd22408c13042607d49019671ff9168"><div class="ttname"><a href="s2let__denoising__demo_8h.html#aecd22408c13042607d49019671ff9168">s2let_lm_random_flm_real_sigma</a></div><div class="ttdeci">void s2let_lm_random_flm_real_sigma(complex double *flm, int L, int seed, double sigmanoise)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> <a href="s2let__axisym__denoising__demo_8c_source.html#l00015">s2let_axisym_denoising_demo.c:15</a></div></div>
-<div class="ttc" id="astructs2let__parameters__t_html"><div class="ttname"><a href="structs2let__parameters__t.html">s2let_parameters_t</a></div><div class="ttdef"><b>Definition:</b> <a href="s2let__types_8h_source.html#l00056">s2let_types.h:56</a></div></div>
+<div class="ttc" id="as2let__denoising__demo_8h_html_a067d9bf357dbfd7a4986d3f62a9e8c45"><div class="ttname"><a href="s2let__denoising__demo_8h.html#a067d9bf357dbfd7a4986d3f62a9e8c45">hard_threshold_real</a></div><div class="ttdeci">void hard_threshold_real(double *g_wav, const double *threshold, const s2let_parameters_t *parameters)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> s2let_denoising_demo.c:43</div></div>
+<div class="ttc" id="as2let__denoising__demo_8h_html_aa037f9325b8399e224222f8d5b9a2788"><div class="ttname"><a href="s2let__denoising__demo_8h.html#aa037f9325b8399e224222f8d5b9a2788">waveletpower</a></div><div class="ttdeci">double waveletpower(complex double *wav_lm, int L)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> s2let_denoising_demo.c:35</div></div>
+<div class="ttc" id="as2let__denoising__demo_8h_html_aecd22408c13042607d49019671ff9168"><div class="ttname"><a href="s2let__denoising__demo_8h.html#aecd22408c13042607d49019671ff9168">s2let_lm_random_flm_real_sigma</a></div><div class="ttdeci">void s2let_lm_random_flm_real_sigma(complex double *flm, int L, int seed, double sigmanoise)</div><div class="ttdoc">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</div><div class="ttdef"><b>Definition:</b> s2let_axisym_denoising_demo.c:16</div></div>
+<div class="ttc" id="atest__adjoint_8c_html_ab1633aa266a0a720540840343194b2cf"><div class="ttname"><a href="test__adjoint_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a></div><div class="ttdeci">const int seed</div><div class="ttdef"><b>Definition:</b> test_adjoint.c:9</div></div>
+<div class="ttc" id="astructs2let__parameters__t_html"><div class="ttname"><a href="structs2let__parameters__t.html">s2let_parameters_t</a></div><div class="ttdef"><b>Definition:</b> s2let_types.h:56</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

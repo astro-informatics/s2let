@@ -46,7 +46,7 @@ cdef extern from "ssht/ssht.h":
 
 #----------------------------------------------------------------------------------------------------#
 
-cdef extern from "s2let.h":
+cdef extern from "s2let/s2let.h":
 
 	void fill_so3_parameters(so3_parameters_t *parameters1, s2let_parameters_t *parameters2)
 	int s2let_n_phi(const s2let_parameters_t *parameters)

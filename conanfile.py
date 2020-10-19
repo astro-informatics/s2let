@@ -1,4 +1,4 @@
-from conans import ConanFile, CMake
+from conans import CMake, ConanFile
 
 
 class S2letConan(ConanFile):
@@ -16,7 +16,7 @@ class S2letConan(ConanFile):
     exports_sources = [
         "src/main/c/*",
         "src/test/c/*",
-        "include/*",
+        "include/s2let/*",
         "CMakeLists.txt",
         "cmake/*.cmake",
     ]
@@ -31,7 +31,8 @@ class S2letConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def requirements(self):
-        self.requires("so3/1.2.1@AstroFizz/stable")
+        location = "astro-informatics/stable" if self.in_local_cache else "user/testing"
+        self.requires(f"so3/1.3.0@{location}")
         if self.options.with_cfitsio:
             self.requires("cfitsio/3.480")
 
@@ -43,10 +44,16 @@ class S2letConan(ConanFile):
             self._cmake.definitions["conan_deps"] = True
             self._cmake.definitions["python"] = False
             self._cmake.definitions["fPIC"] = self.options.fPIC
-            self._cmake.configure(source_folder=".")
+            self._cmake.configure(build_folder="build")
         return self._cmake
 
     def build(self):
+        from pathlib import Path
+
+        path = Path(self.source_folder)
+        build = Path(self.source_folder) / "build"
+        build.mkdir(exist_ok=True)
+        (path / "conanbuildinfo.cmake").rename(path / "build" / "conanbuildinfo.cmake")
         self.cmake.build()
         self.cmake.test()
 
