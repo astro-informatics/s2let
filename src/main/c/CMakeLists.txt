@@ -38,7 +38,7 @@ set(C_HEADERS
 if(cfitsio)
   list(APPEND C_SRC s2let_fits.c)
 endif()
-list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/s2let")
+list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/s2let/")
 
 configure_file(${PROJECT_SOURCE_DIR}/include/s2let/s2let_version.in.h
                ${PROJECT_BINARY_DIR}/include/s2let/s2let_version.h)
