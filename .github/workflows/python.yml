@@ -55,7 +55,7 @@ jobs:
         run: python setup.py sdist
 
       - name: Install python s2let
-        run: "pip install dist/s2let-*.tar.gz"
+        run: "pip install dist/pys2let-*.tar.gz"
 
       - name: run pytest
         run: pytest src/test/python/
