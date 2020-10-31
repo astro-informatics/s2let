@@ -37,7 +37,7 @@ jobs:
       - name: create package with fpic=${{matrix.fpic}} cfitsio=${{matrix.cfitsio}}
         shell: bash
         run: |
-          if [ "${{ github.ref }}" = "refs/tags/v1.3.0" ]; then
+          if [ "${{ github.ref }}" = "refs/tags/v2.1.0" ]; then
             channel="stable"
           else
             channel="testing"
