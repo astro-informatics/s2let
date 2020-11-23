@@ -1,7 +1,6 @@
 from skbuild import setup
 
 cmake_args = [
-    "-Dpython:BOOL=ON",
     "-Dtests:BOOL=OFF",
     "-Dconan_deps:BOOL=ON",
     "-Dcfitsio:BOOL=OFF",

@@ -55,7 +55,7 @@ if(fPIC)
   set_target_properties(s2let PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
-if(NOT python)
+if(NOT SKBUILD)
   install(
     TARGETS s2let
     EXPORT S2letTargets
