@@ -37,7 +37,7 @@ jobs:
       - name: create package with fpic=${{matrix.fpic}} cfitsio=${{matrix.cfitsio}}
         shell: bash
         run: |
-          if [ "${{ github.ref }}" = "refs/tags/v2.2.0" ]; then
+          if [ "${{ github.ref }}" = "refs/tags/v2.2.1" ]; then
             channel="stable"
           else
             channel="testing"
@@ -55,4 +55,4 @@ jobs:
           CONAN_PASSWORD: ${{secrets.BINTRAY_TOKEN}}
           CONAN_LOGIN_USERNAME: astroinformaticsci
           CONAN_REMOTE_URL: https://api.bintray.com/conan/astro-informatics/astro-informatics
-        run: conan upload s2let/2.2.0 -c --all -r=astro-informatics
+        run: conan upload s2let/2.2.1 -c --all -r=astro-informatics

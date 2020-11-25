@@ -2,13 +2,12 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
   s2let
-  VERSION "2.2.0"
+  VERSION "2.2.1"
   DESCRIPTION "Fast wavelets on the sphere"
   HOMEPAGE_URL "http://astro-informatics.github.io/s2let/"
   LANGUAGES C)
 
 option(tests "Enable testing" ON)
-option(python "Creates python package only" OFF)
 option(cfitsio "Links to cfitsio" OFF)
 option(fPIC "Compile with fPIC" ON)
 option(conan_deps "Download dependencies using conan" OFF)
@@ -48,12 +47,9 @@ if(tests)
   add_subdirectory(src/test/c)
 endif()
 
-if(NOT python)
+if(NOT SKBUILD)
   include("exporting")
 else()
-  include("python-setup")
-  find_python()
-  setup_skbuild()
   find_package(PythonExtensions REQUIRED)
   find_package(Cython REQUIRED)
   find_package(NumPy REQUIRED)

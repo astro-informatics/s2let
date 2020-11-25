@@ -3,7 +3,7 @@ from conans import CMake, ConanFile
 
 class S2letConan(ConanFile):
     name = "s2let"
-    version = "2.2.0"
+    version = "2.2.1"
     license = "GPL-2.0"
     url = "https://github.com/astro-informatics/s2let"
     homepage = "https://github.com/astro-informatics/s2let"
@@ -32,9 +32,9 @@ class S2letConan(ConanFile):
 
     def requirements(self):
         location = "astro-informatics/stable" if self.in_local_cache else "user/testing"
-        self.requires(f"so3/1.3.0@{location}")
+        self.requires(f"so3/1.3.1@{location}")
         if self.options.with_cfitsio:
-            self.requires("cfitsio/3.480")
+            self.requires("cfitsio/3.490")
 
     @property
     def cmake(self):
