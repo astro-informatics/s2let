@@ -32,9 +32,9 @@ class S2letConan(ConanFile):
 
     def requirements(self):
         location = "astro-informatics/stable" if self.in_local_cache else "user/testing"
-        self.requires(f"so3/1.3.0@{location}")
+        self.requires(f"so3/1.3.1@{location}")
         if self.options.with_cfitsio:
-            self.requires("cfitsio/3.480")
+            self.requires("cfitsio/3.490")
 
     @property
     def cmake(self):
