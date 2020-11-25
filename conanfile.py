@@ -3,7 +3,7 @@ from conans import CMake, ConanFile
 
 class S2letConan(ConanFile):
     name = "s2let"
-    version = "2.2.0"
+    version = "2.2.1"
     license = "GPL-2.0"
     url = "https://github.com/astro-informatics/s2let"
     homepage = "https://github.com/astro-informatics/s2let"
