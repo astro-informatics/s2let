@@ -1,59 +1,57 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.12...4.0)
 
 project(
   s2let
-  VERSION "2.2.2"
+  VERSION "2.2.3"
   DESCRIPTION "Fast wavelets on the sphere"
   HOMEPAGE_URL "http://astro-informatics.github.io/s2let/"
   LANGUAGES C)
 
-option(tests "Enable testing" ON)
 option(cfitsio "Links to cfitsio" OFF)
-option(fPIC "Compile with fPIC" ON)
 option(conan_deps "Download dependencies using conan" OFF)
 
-if(WIN32)
-  set(fpic OFF)
+if(conan_deps AND NOT cfitsio)
+  message(
+    WARNING "cfitsio is always included when managing dependencies via conan")
 endif()
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-include("sanitizers")
+include(CTest)
 if(conan_deps OR CONAN_EDITABLE_MODE)
-  include("conan_dependencies")
-  if(NOT CONAN_EDITABLE_MODE)
-    set(SO3_TARGET CONAN_PKG::so3)
-  endif()
-  if(cfitsio)
-    set(CFITSIO_TARGET CONAN_PKG::cfitsio)
-  endif()
+  include("${PROJECT_SOURCE_DIR}/cmake/conan_dependencies.cmake")
 endif()
-if(NOT conan_deps)
-  find_package(So3 REQUIRED)
-  set(SO3_TARGET so3)
-  if(cfitsio AND NOT CONAN_EDITABLE_MODE)
-    find_package(CFITSIO REQUIRED)
-    set(CFITSIO_TARGET cfitsio::cfitsio)
-  endif()
+if(EXISTS "${PROJECT_BINARY_DIR}/conan_paths.cmake")
+  include("${PROJECT_BINARY_DIR}/conan_paths.cmake")
+elseif(EXISTS "${PROJECT_BINARY_DIR}/FindFFTW3.cmake")
+  list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}")
+else()
+  list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+endif()
+
+find_package(astro-informatics-so3 REQUIRED)
+find_library(MATH_LIBRARY m)
+if(cfitsio)
+  find_package(cfitsio REQUIRED)
 endif()
 
 add_subdirectory(src/main/c)
 
-if(tests)
-  enable_testing()
-  include("fetch_cmocka")
+include(CTest)
+if(BUILD_TESTING)
+  include("${PROJECT_SOURCE_DIR}/cmake/fetch_cmocka.cmake")
   add_subdirectory(src/test/c)
 endif()
 
-if(NOT SKBUILD)
-  include("exporting")
-else()
+if(SKBUILD)
   find_package(PythonExtensions REQUIRED)
   find_package(Cython REQUIRED)
   find_package(NumPy REQUIRED)
   add_subdirectory(src/main/pys2let)
+elseif(NOT CONAN_EXPORTED)
+  include("${PROJECT_SOURCE_DIR}/cmake/exporting.cmake")
 endif()
 
 # only run documentation if this is not a sub-project

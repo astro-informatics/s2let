@@ -2,15 +2,15 @@
 
 [docs-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-url]: https://astro-informatics.github.io/s2let/
-[bintray-img]: https://img.shields.io/bintray/v/astro-informatics/astro-informatics/s2let:astro-informatics?label=C%20package
-[bintray-url]: https://bintray.com/astro-informatics/astro-informatics/s2let:astro-informatics/2.2.2:stable/link
+[conan-img]: https://img.shields.io/badge/ConanCenter-C%20Package-red.svg
+[conan-url]: https://conan.io/center/s2let
 [pypi-img]: https://badge.fury.io/py/pys2let.svg
 [pypi-url]: https://badge.fury.io/py/pys2let
 [codefactor-img]: https://www.codefactor.io/repository/github/astro-informatics/s2let/badge/main
 [codefactor-url]: https://www.codefactor.io/repository/github/astro-informatics/s2let/overview/main
 
 [![][docs-img]][docs-url]
-[![][bintray-img]][bintray-url]
+[![][conan-img]][conan-url]
 [![][pypi-img]][pypi-url]
 ![CMake Build](https://github.com/astro-informatics/s2let/workflows/CMake%20Build/badge.svg)
 ![Python Build](https://github.com/astro-informatics/s2let/workflows/Python%20Build/badge.svg)
