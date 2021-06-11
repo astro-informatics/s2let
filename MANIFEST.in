@@ -2,6 +2,7 @@ include CMakeLists.txt
 include setup.py setup.cfg pyproject.toml
 include COPYRIGHT.txt LICENSE.md README.md
 include cmake/*.cmake
+include conanfile.txt
 recursive-include src/main/c *.c CMakeLists.txt
 recursive-include include/s2let *.h 
 recursive-include src/main/pys2let .py *.pyx *.md CMakeLists.txt

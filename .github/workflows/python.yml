@@ -119,14 +119,14 @@ jobs:
             mv source-distribution/*.tar.gz  wheel-*/*.whl dist
 
       - name: Publish distribution 📦 to Test PyPI
-        if: ${{ github.ref != 'refs/tags/v2.2.2' }}
+        if: ${{ github.ref != 'refs/tags/v2.2.3' }}
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.TEST_PYPI_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
 
       - name: Publish distribution 📦 to PyPI
-        if: ${{ github.ref == 'refs/tags/v2.2.2' }}
+        if: ${{ github.ref == 'refs/tags/v2.2.3' }}
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.PYPI_TOKEN }}

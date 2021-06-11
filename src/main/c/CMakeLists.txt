@@ -35,7 +35,7 @@ set(C_HEADERS
     s2let_synthesis_adjoint.h
     s2let_fits.h)
 
-if(cfitsio)
+if(TARGET cfitsio::cfitsio)
   list(APPEND C_SRC s2let_fits.c)
 endif()
 list(TRANSFORM C_HEADERS PREPEND "${PROJECT_SOURCE_DIR}/include/s2let/")
@@ -45,20 +45,20 @@ configure_file(${PROJECT_SOURCE_DIR}/include/s2let/s2let_version.in.h
 list(APPEND C_HEADERS ${PROJECT_BINARY_DIR}/include/s2let/s2let_version.h)
 
 add_library(s2let STATIC ${C_SRC})
-target_link_libraries(s2let PUBLIC ${SO3_TARGET} ${CFITSIO_TARGET})
+target_link_libraries(s2let PUBLIC astro-informatics-so3::astro-informatics-so3)
+if(TARGET cfitsio::cfitsio)
+  target_link_libraries(s2let PUBLIC cfitsio::cfitsio)
+endif()
 set_target_properties(s2let PROPERTIES C_STANDARD 99 ARCHIVE_OUTPUT_DIRECTORY
                                                      ${PROJECT_BINARY_DIR}/lib)
 target_include_directories(
   s2let PUBLIC $<INSTALL_INTERFACE:include>
                $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
-if(fPIC)
-  set_target_properties(s2let PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-endif()
 
 if(NOT SKBUILD)
   install(
     TARGETS s2let
-    EXPORT S2letTargets
+    EXPORT s2letTargets
     ARCHIVE DESTINATION lib
     PUBLIC_HEADER)
 

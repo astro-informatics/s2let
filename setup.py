@@ -1,10 +1,10 @@
 from skbuild import setup
 
 cmake_args = [
-    "-Dtests:BOOL=OFF",
+    "-DBUILD_TESTING:BOOL=OFF",
     "-Dconan_deps:BOOL=ON",
-    "-Dcfitsio:BOOL=OFF",
-    "-DfPIC=ON",
+    "-Dcfitsio:BOOL=ON",
+    "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
 ]
 
 build_requirements = [
@@ -20,7 +20,7 @@ build_requirements = [
 
 setup(
     name="pys2let",
-    version="2.2.2",
+    version="2.2.3",
     author=["Boris Leistedt", "Martin Büttner", "Jennifer Chan", "Jason McEwen"],
     install_requires=["numpy"],
     extras_require={
