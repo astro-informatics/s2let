@@ -20,7 +20,7 @@ build_requirements = [
 
 setup(
     name="pys2let",
-    version="2.2.3",
+    version="2.2.4",
     author=["Boris Leistedt", "Martin Büttner", "Jennifer Chan", "Jason McEwen"],
     install_requires=["numpy"],
     extras_require={
