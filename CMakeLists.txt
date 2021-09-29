@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12...4.0)
 
 project(
   s2let
-  VERSION "2.2.3"
+  VERSION "2.2.4"
   DESCRIPTION "Fast wavelets on the sphere"
   HOMEPAGE_URL "http://astro-informatics.github.io/s2let/"
   LANGUAGES C)
