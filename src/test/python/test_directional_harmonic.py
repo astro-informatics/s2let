@@ -5,7 +5,7 @@ from pytest import approx, fixture, mark
 
 from pys2let import (
     analysis_lm2lmn,
-    analysis_adjoint_lm2lmn,
+    analysis_adjoint_lmn2lm,
     synthesis_lmn2lm,
     synthesis_adjoint_lm2lmn
 )
@@ -30,11 +30,11 @@ def random_wavlet_lms(rng, L, nwvlts):
     [
         (
             partial(analysis_lm2lmn, spin=0, upsample=1, N=1),
-            partial(analysis_adjoint_lm2lmn, spin=0, upsample=1, N=1),
+            partial(analysis_adjoint_lmn2lm, spin=0, upsample=1, N=1),
         ),
         (
             partial(analysis_lm2lmn, spin=2, upsample=1, N=1),
-            partial(analysis_adjoint_lm2lmn, spin=2, upsample=1, N=1),
+            partial(analysis_adjoint_lmn2lm, spin=2, upsample=1, N=1),
         ),
         (
             partial(synthesis_adjoint_lm2lmn, spin=0, upsample=1, N=1),
