@@ -795,24 +795,29 @@ def analysis_lm2lmn(np.ndarray[double complex, ndim=1, mode="c"] flm not None,
 	parameters.dl_method = SSHT_DL_RISBO
 	parameters.reality = 0
 	parameters.verbosity = 0
-	J = s2let_j_max(parameters)
+	J = s2let_j_max(&parameters)
 
 	scal_l = np.zeros([L,])
 	wav_lm = np.zeros([(J + 1) * L * L,], dtype=complex)
-	s2let_tiling_wavelet(<double *> np.PyArray_DATA(wav_lm),
-						 <double complex*> np.PyArray_DATA(scal_l),
-						  parameters)
+	s2let_tiling_wavelet(<double complex*> np.PyArray_DATA(wav_lm),
+						 <double *> np.PyArray_DATA(scal_l),
+						  &parameters)
 
-	f_wav_lmn = np.zeros([s2let_n_lmn_wav(parameters),], dtype=complex)
-	f_scal_lm = np.zeros([s2let_n_lm_scal(parameters),], dtype=complex)
+	f_wav_lmn = np.zeros([s2let_n_lmn_wav(&parameters),], dtype=complex)
+	f_scal_lm = np.zeros([s2let_n_lm_scal(&parameters),], dtype=complex)
 
-	s2let_analysis_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters)
-
+	s2let_analysis_lm2lmn(
+		<double complex*> np.PyArray_DATA(f_wav_lmn),
+		<double complex*> np.PyArray_DATA(f_scal_lm),
+		<const double complex*> np.PyArray_DATA(flm),
+		<const double complex*> np.PyArray_DATA(wav_lm),
+		<const double *> np.PyArray_DATA(scal_l),
+		&parameters)
 	return f_wav_lmn, f_scal_lm
 
 #----------------------------------------------------------------------------------------------------#
 
-def analysis_adjoint_lm2lmn(
+def analysis_adjoint_lmn2lm(
 		np.ndarray[double complex, ndim=1, mode="c"] f_wav_lmn not None,
 		np.ndarray[double complex, ndim=1, mode="c"] f_scal_lm not None,
 		B, L, J_min, N, spin, upsample, spin_lowered=False, original_spin=0):
@@ -829,16 +834,22 @@ def analysis_adjoint_lm2lmn(
 	parameters.dl_method = SSHT_DL_RISBO
 	parameters.reality = 0
 	parameters.verbosity = 0
-	J = s2let_j_max(parameters)
+	J = s2let_j_max(&parameters)
 
 	scal_l = np.zeros([L,])
 	wav_lm = np.zeros([(J + 1) * L * L,], dtype=complex)
-	s2let_tiling_wavelet(<double *> np.PyArray_DATA(wav_lm),
-						 <double complex*> np.PyArray_DATA(scal_l),
-						  parameters)
+	s2let_tiling_wavelet(<double complex*> np.PyArray_DATA(wav_lm),
+						 <double *> np.PyArray_DATA(scal_l),
+						  &parameters)
 
 	flm = np.zeros([L * L,], dtype=complex)
-	s2let_analysis_adjoint_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters)
+	s2let_analysis_adjoint_lmn2lm(
+		<double complex*> np.PyArray_DATA(flm),
+		<const double complex*> np.PyArray_DATA(f_wav_lmn),
+		<const double complex*> np.PyArray_DATA(f_scal_lm),
+		<const double complex*> np.PyArray_DATA(wav_lm),
+		<const double *> np.PyArray_DATA(scal_l),
+		&parameters)
 
 	return flm
 
@@ -861,16 +872,22 @@ def synthesis_lmn2lm(
 	parameters.dl_method = SSHT_DL_RISBO
 	parameters.reality = 0
 	parameters.verbosity = 0
-	J = s2let_j_max(parameters)
+	J = s2let_j_max(&parameters)
 
 	scal_l = np.zeros([L,])
 	wav_lm = np.zeros([(J + 1) * L * L,], dtype=complex)
-	s2let_tiling_wavelet(<double *> np.PyArray_DATA(wav_lm),
-						 <double complex*> np.PyArray_DATA(scal_l),
-						  parameters)
+	s2let_tiling_wavelet(<double complex*> np.PyArray_DATA(wav_lm),
+						 <double *> np.PyArray_DATA(scal_l),
+						  &parameters)
 
 	flm = np.zeros([L * L,], dtype=complex)
-	s2let_synthesis_lmn2lm(flm, f_wav_lmn, f_scal_lm, wav_lm, scal_l, parameters)
+	s2let_synthesis_lmn2lm(
+		<double complex*> np.PyArray_DATA(flm),
+		<const double complex*> np.PyArray_DATA(f_wav_lmn),
+		<const double complex*> np.PyArray_DATA(f_scal_lm),
+		<const double complex*> np.PyArray_DATA(wav_lm),
+		<const double *> np.PyArray_DATA(scal_l),
+		&parameters)
 
 	return flm
 
@@ -891,18 +908,24 @@ def synthesis_adjoint_lm2lmn(np.ndarray[double complex, ndim=1, mode="c"] flm no
 	parameters.dl_method = SSHT_DL_RISBO
 	parameters.reality = 0
 	parameters.verbosity = 0
-	J = s2let_j_max(parameters)
+	J = s2let_j_max(&parameters)
 	
 	scal_l = np.zeros([L,])
 	wav_lm = np.zeros([(J + 1) * L * L,], dtype=complex)
-	s2let_tiling_wavelet(<double *> np.PyArray_DATA(wav_lm),
-						 <double complex*> np.PyArray_DATA(scal_l),
-						  parameters)
+	s2let_tiling_wavelet(<double complex*> np.PyArray_DATA(wav_lm),
+						 <double *> np.PyArray_DATA(scal_l),
+						  &parameters)
 
-	f_wav_lmn = np.zeros([s2let_n_lmn_wav(parameters),], dtype=complex)
-	f_scal_lm = np.zeros([s2let_n_lm_scal(parameters),], dtype=complex)
+	f_wav_lmn = np.zeros([s2let_n_lmn_wav(&parameters),], dtype=complex)
+	f_scal_lm = np.zeros([s2let_n_lm_scal(&parameters),], dtype=complex)
 
-	s2let_synthesis_adjoint_lm2lmn(f_wav_lmn, f_scal_lm, flm, wav_lm, scal_l, parameters)
+	s2let_synthesis_adjoint_lm2lmn(
+		<double complex*> np.PyArray_DATA(f_wav_lmn),
+		<double complex*> np.PyArray_DATA(f_scal_lm),
+		<const double complex*> np.PyArray_DATA(flm),
+		<const double complex*> np.PyArray_DATA(wav_lm),
+		<const double *> np.PyArray_DATA(scal_l),
+		&parameters)
 
 	return f_wav_lmn, f_scal_lm
 
