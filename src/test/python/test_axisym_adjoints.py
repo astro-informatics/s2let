@@ -1,5 +1,6 @@
 from functools import partial
 
+from pys2let import 
 import numpy as np
 from pytest import approx, fixture, mark
 
@@ -12,6 +13,7 @@ from pys2let import (
     synthesis_adjoint_px2wav,
     synthesis_axisym_wav_mw,
     synthesis_wav2px,
+    pys2let_j_max,
 )
 
 
@@ -61,8 +63,6 @@ def random_wavlet_maps(rng, L, spin, nwvlts):
 def test_axisym_adjoint(
     px2wav, wav2px, spin, rng: np.random.Generator, L=10, B=2, J_min=2
 ):
-    from pys2let import pys2let_j_max
-
     nwvlts = pys2let_j_max(B, L, J_min) - J_min + 1
 
     x = random_mw_map(rng, L, spin)

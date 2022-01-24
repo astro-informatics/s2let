@@ -7,7 +7,8 @@ from pys2let import (
     analysis_lm2lmn,
     analysis_adjoint_lmn2lm,
     synthesis_lmn2lm,
-    synthesis_adjoint_lm2lmn
+    synthesis_adjoint_lm2lmn,
+    pys2let_j_max,
 )
 
 
@@ -49,8 +50,6 @@ def random_wavlet_lms(rng, L, nwvlts):
 def test_axisym_adjoint(
     px2wav, wav2px, rng: np.random.Generator, L=10, B=2, J_min=2
 ):
-    from pys2let import pys2let_j_max
-
     nwvlts = pys2let_j_max(B, L, J_min) - J_min + 1
 
     x = random_lms(rng, L)
