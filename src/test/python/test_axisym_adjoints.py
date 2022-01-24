@@ -1,6 +1,5 @@
 from functools import partial
 
-from pys2let import 
 import numpy as np
 from pytest import approx, fixture, mark
 
@@ -71,4 +70,9 @@ def test_axisym_adjoint(
     y = wav2px(y_wav, y_scal, B, L, J_min)
     x_wav, x_scal = px2wav(x, B, L, J_min)
 
-    assert y_wav.conj().T @ x_wav + y_scal.conj() @ x_scal == approx(y.conj().T @ x)
+    # y'Ax
+    yAx = y_wav.conj().T @ x_wav + y_scal.conj() @ x_scal
+    # (A'y)'x
+    Ayx = approx(y.conj().T @ x)
+
+    assert yAx == Ayx
