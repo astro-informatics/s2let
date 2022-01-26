@@ -12,6 +12,7 @@ from pys2let import (
     synthesis_adjoint_px2wav,
     synthesis_axisym_wav_mw,
     synthesis_wav2px,
+    pys2let_j_max,
 )
 
 
@@ -61,8 +62,6 @@ def random_wavlet_maps(rng, L, spin, nwvlts):
 def test_axisym_adjoint(
     px2wav, wav2px, spin, rng: np.random.Generator, L=10, B=2, J_min=2
 ):
-    from pys2let import pys2let_j_max
-
     nwvlts = pys2let_j_max(B, L, J_min) - J_min + 1
 
     x = random_mw_map(rng, L, spin)
@@ -71,4 +70,9 @@ def test_axisym_adjoint(
     y = wav2px(y_wav, y_scal, B, L, J_min)
     x_wav, x_scal = px2wav(x, B, L, J_min)
 
-    assert y_wav.conj().T @ x_wav + y_scal.conj() @ x_scal == approx(y.conj().T @ x)
+    # y'Ax
+    yAx = y_wav.conj().T @ x_wav + y_scal.conj() @ x_scal
+    # (A'y)'x
+    Ayx = approx(y.conj().T @ x)
+
+    assert yAx == Ayx
