@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.8
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
 
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         name: Install Python
         with:
           python-version: ${{ matrix.python-version }}
@@ -93,13 +93,13 @@ jobs:
 
       - name: Publish distribution 📦 to Test PyPI
         if: ${{ github.ref != 'refs/tags/v2.2.5' }}
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
 
       - name: Publish distribution 📦 to PyPI
         if: ${{ github.ref == 'refs/tags/v2.2.5' }}
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_TOKEN }}
