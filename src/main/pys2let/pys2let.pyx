@@ -317,8 +317,8 @@ def analysis_axisym_wav_mw(
 	parameters.J_min = J_min
 	J = s2let_j_max(&parameters)
 
-	f_wav = np.zeros(mw_size(L) * (J - J_min + 1), dtype=np.complex)
-	f_scal = np.zeros(mw_size(L), dtype=np.complex)
+	f_wav = np.zeros(mw_size(L) * (J - J_min + 1), dtype=complex)
+	f_scal = np.zeros(mw_size(L), dtype=complex)
 
 	s2let_transform_axisym_wav_analysis_mw(
 		<double complex*> np.PyArray_DATA(f_wav),
@@ -341,7 +341,7 @@ def analysis_adjoint_axisym_wav_mw(
 	parameters.J_min = J_min
 	J = s2let_j_max(&parameters)
 
-	f = np.zeros([L * (2 * L - 1),], dtype=np.complex)
+	f = np.zeros([L * (2 * L - 1),], dtype=complex)
 	s2let_transform_axisym_wav_analysis_adjoint_mw(
 		<double complex*> np.PyArray_DATA(f),
 		<double complex*> np.PyArray_DATA(f_wav),
@@ -405,7 +405,7 @@ def synthesis_axisym_wav_mw(
 	parameters.J_min = J_min
 	J = s2let_j_max(&parameters)
 
-	f = np.zeros(mw_size(L), dtype=np.complex)
+	f = np.zeros(mw_size(L), dtype=complex)
 	s2let_transform_axisym_wav_synthesis_mw(
 		<double complex*> np.PyArray_DATA(f),
 		<double complex*> np.PyArray_DATA(f_wav),
@@ -426,8 +426,8 @@ def synthesis_adjoint_axisym_wav_mw(
 	parameters.J_min = J_min
 	J = s2let_j_max(&parameters)
 
-	f_scal = np.zeros([L * (2 * L - 1),], dtype=np.complex)
-	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)], dtype=np.complex)
+	f_scal = np.zeros([L * (2 * L - 1),], dtype=complex)
+	f_wav = np.zeros([L * (2 * L - 1) * (J - J_min + 1)], dtype=complex)
 	s2let_transform_axisym_wav_synthesis_adjoint_mw(
 		<double complex*> np.PyArray_DATA(f_wav),
 		<double complex*> np.PyArray_DATA(f_scal),		
