@@ -29,3 +29,4 @@ dist/
 MANIFEST
 .clangd/
 compile_commands.json
+/_skbuild/
