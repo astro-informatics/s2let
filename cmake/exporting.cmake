@@ -1,5 +1,8 @@
 # Exports s2let so other packages can access it
-export(TARGETS s2let FILE "${PROJECT_BINARY_DIR}/S2letTargets.cmake")
+export(
+  TARGETS s2let
+  FILE "${PROJECT_BINARY_DIR}/s2letTargets.cmake"
+  NAMESPACE s2let::)
 
 # Avoids creating an entry in the cmake registry.
 if(NOT NOEXPORT)
@@ -7,30 +10,24 @@ if(NOT NOEXPORT)
 endif()
 
 # First in binary dir
-set(ALL_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}")
-configure_File(cmake/S2letConfig.in.cmake
-  "${PROJECT_BINARY_DIR}/S2letConfig.cmake" @ONLY
-)
-configure_File(cmake/S2letConfigVersion.in.cmake
-  "${PROJECT_BINARY_DIR}/S2letConfigVersion.cmake" @ONLY
-)
+set(INCLUDE_INSTALL_DIR include/)
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  cmake/S2letConfig.in.cmake "${PROJECT_BINARY_DIR}/s2letConfig.cmake"
+  INSTALL_DESTINATION lib/cmake/s2let
+  PATH_VARS INCLUDE_INSTALL_DIR)
+write_basic_package_version_file(
+  s2letConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion)
 
-# Then for installation tree
-file(RELATIVE_PATH REL_INCLUDE_DIR
-    "${CMAKE_INSTALL_PREFIX}/share/cmake/s2let"
-    "${CMAKE_INSTALL_PREFIX}/include/s2let"
-)
-set(ALL_INCLUDE_DIRS "\${s2let_CMAKE_DIR}/${REL_INCLUDE_DIR}")
-configure_file(cmake/S2letConfig.in.cmake
-  "${PROJECT_BINARY_DIR}/CMakeFiles/S2letConfig.cmake" @ONLY
-)
+if(NOT CONAN_EXPORTED)
+  install(FILES "${PROJECT_BINARY_DIR}/s2letConfig.cmake"
+                "${PROJECT_BINARY_DIR}/s2letConfigVersion.cmake"
+          DESTINATION lib/cmake/s2let)
+endif()
 
-# Finally install all files
-install(FILES
-  "${PROJECT_BINARY_DIR}/CMakeFiles/S2letConfig.cmake"
-  "${PROJECT_BINARY_DIR}/S2letConfigVersion.cmake"
-  DESTINATION share/cmake/s2let
-    COMPONENT dev
-)
-
-install(EXPORT S2letTargets DESTINATION share/cmake/s2let COMPONENT dev)
+install(
+  EXPORT s2letTargets
+  DESTINATION lib/cmake/s2let
+  NAMESPACE s2let::)

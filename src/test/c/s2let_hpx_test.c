@@ -10,8 +10,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-#include <fftw3.h>
-#include <ssht.h>
+#include <ssht/ssht.h>
 
 void s2let_hpx_spinalm_test(int nside, int spin, int L, int seed)
 {

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: include/s2let_hpx.h Source File</title>
+<title>s2let: include/s2let_hpx.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -114,15 +114,15 @@ $(function() {
 <div class="ttc" id="as2let__hpx_8h_html_addf44689d1620ff08e9e623064a3da0f"><div class="ttname"><a href="s2let__hpx_8h.html#addf44689d1620ff08e9e623064a3da0f">s2let_hpx_map2alm_real</a></div><div class="ttdeci">void s2let_hpx_map2alm_real(S2LET_COMPLEX(double) *flm, const double *f, int nside, int L)</div></div>
 <div class="ttc" id="as2let__hpx_8h_html_aa7a27c83a31e71f1fd90bdf0bbb84a8d"><div class="ttname"><a href="s2let__hpx_8h.html#aa7a27c83a31e71f1fd90bdf0bbb84a8d">s2let_hpx_map2alm_spin_real</a></div><div class="ttdeci">void s2let_hpx_map2alm_spin_real(S2LET_COMPLEX(double) *flmE, S2LET_COMPLEX(double) *flmB, const double *fQ, const double *fU, int nside, int L, int spin)</div></div>
 <div class="ttc" id="as2let__hpx_8h_html_aeeb308d10fad6609143c7b88add754c1"><div class="ttname"><a href="s2let__hpx_8h.html#aeeb308d10fad6609143c7b88add754c1">s2let_hpx_alm2map_spin_real</a></div><div class="ttdeci">void s2let_hpx_alm2map_spin_real(double *fQ, double *fU, const S2LET_COMPLEX(double) *flmE, const S2LET_COMPLEX(double) *flmB, int nside, int L, int spin)</div></div>
-<div class="ttc" id="as2let__hpx_8h_html_a007bb3a6640667248187f9ac38b9d6a4"><div class="ttname"><a href="s2let__hpx_8h.html#a007bb3a6640667248187f9ac38b9d6a4">s2let_hpx_read_map</a></div><div class="ttdeci">void s2let_hpx_read_map(double *f, char *file, int nside)</div><div class="ttdef"><b>Definition:</b> <a href="s2let__hpx_8c_source.html#l00045">s2let_hpx.c:45</a></div></div>
-<div class="ttc" id="as2let__hpx_8h_html_a5fd3f8d1975ab0798c4797665256083a"><div class="ttname"><a href="s2let__hpx_8h.html#a5fd3f8d1975ab0798c4797665256083a">s2let_hpx_allocate_real</a></div><div class="ttdeci">void s2let_hpx_allocate_real(double **f, int nside)</div><div class="ttdef"><b>Definition:</b> <a href="s2let__hpx_8c_source.html#l00055">s2let_hpx.c:55</a></div></div>
-<div class="ttc" id="as2let__types_8h_html_a121c8622035e81912b4b85b436b4ec6d"><div class="ttname"><a href="s2let__types_8h.html#a121c8622035e81912b4b85b436b4ec6d">S2LET_COMPLEX</a></div><div class="ttdeci">#define S2LET_COMPLEX(TYPE)</div><div class="ttdef"><b>Definition:</b> <a href="s2let__types_8h_source.html#l00015">s2let_types.h:15</a></div></div>
-<div class="ttc" id="as2let__hpx_8h_html_a5c51e9a1cbae07bee6dede794c93470c"><div class="ttname"><a href="s2let__hpx_8h.html#a5c51e9a1cbae07bee6dede794c93470c">s2let_hpx_read_maps</a></div><div class="ttdeci">void s2let_hpx_read_maps(double *f, char *file, int nside, int nmaps)</div><div class="ttdef"><b>Definition:</b> <a href="s2let__hpx_8c_source.html#l00040">s2let_hpx.c:40</a></div></div>
-<div class="ttc" id="as2let__hpx_8h_html_a5f03d8745c5e15c0f03c2546464ec042"><div class="ttname"><a href="s2let__hpx_8h.html#a5f03d8745c5e15c0f03c2546464ec042">s2let_hpx_write_map</a></div><div class="ttdeci">void s2let_hpx_write_map(char *file, const double *f, int nside)</div><div class="ttdef"><b>Definition:</b> <a href="s2let__hpx_8c_source.html#l00050">s2let_hpx.c:50</a></div></div>
+<div class="ttc" id="as2let__hpx_8h_html_a007bb3a6640667248187f9ac38b9d6a4"><div class="ttname"><a href="s2let__hpx_8h.html#a007bb3a6640667248187f9ac38b9d6a4">s2let_hpx_read_map</a></div><div class="ttdeci">void s2let_hpx_read_map(double *f, char *file, int nside)</div><div class="ttdef"><b>Definition:</b> s2let_hpx.c:55</div></div>
+<div class="ttc" id="as2let__hpx_8h_html_a5fd3f8d1975ab0798c4797665256083a"><div class="ttname"><a href="s2let__hpx_8h.html#a5fd3f8d1975ab0798c4797665256083a">s2let_hpx_allocate_real</a></div><div class="ttdeci">void s2let_hpx_allocate_real(double **f, int nside)</div><div class="ttdef"><b>Definition:</b> s2let_hpx.c:63</div></div>
+<div class="ttc" id="as2let__types_8h_html_a121c8622035e81912b4b85b436b4ec6d"><div class="ttname"><a href="s2let__types_8h.html#a121c8622035e81912b4b85b436b4ec6d">S2LET_COMPLEX</a></div><div class="ttdeci">#define S2LET_COMPLEX(TYPE)</div><div class="ttdef"><b>Definition:</b> s2let_types.h:15</div></div>
+<div class="ttc" id="as2let__hpx_8h_html_a5c51e9a1cbae07bee6dede794c93470c"><div class="ttname"><a href="s2let__hpx_8h.html#a5c51e9a1cbae07bee6dede794c93470c">s2let_hpx_read_maps</a></div><div class="ttdeci">void s2let_hpx_read_maps(double *f, char *file, int nside, int nmaps)</div><div class="ttdef"><b>Definition:</b> s2let_hpx.c:51</div></div>
+<div class="ttc" id="as2let__hpx_8h_html_a5f03d8745c5e15c0f03c2546464ec042"><div class="ttname"><a href="s2let__hpx_8h.html#a5f03d8745c5e15c0f03c2546464ec042">s2let_hpx_write_map</a></div><div class="ttdeci">void s2let_hpx_write_map(char *file, const double *f, int nside)</div><div class="ttdef"><b>Definition:</b> s2let_hpx.c:59</div></div>
 <div class="ttc" id="as2let__hpx_8h_html_adfeed42820bd0d0c686c83b87c091050"><div class="ttname"><a href="s2let__hpx_8h.html#adfeed42820bd0d0c686c83b87c091050">s2let_hpx_alm2map_real</a></div><div class="ttdeci">void s2let_hpx_alm2map_real(double *f, const S2LET_COMPLEX(double) *flm, int nside, int L)</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

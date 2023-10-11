@@ -1,358 +1,471 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
 <head>
-<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-<meta name="description" content="s2let: fast wavelets on the sphere" />
-<meta name="keywords" content="s2let, spherical, harmonics, spherical
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <meta name="description" content="s2let: fast wavelets on the sphere" />
+  <meta name="keywords" content="s2let, spherical, harmonics, spherical
 harmonics, sphere, transforms, fourier, fast, algorithms, mcewen, leistedt, wavelets, tiling" />
-<meta name="author" content="Boris Leistedt & Jason McEwen" />
-<link rel="stylesheet" type="text/css" href="style.css" title="1024px style" media="screen,projection" />
-<title>S2LET</title>
+  <meta name="author" content="Boris Leistedt & Jason McEwen" />
+  <link rel="stylesheet" type="text/css" href="style.css" title="1024px style" media="screen,projection" />
+  <title>S2LET</title>
 </head>
 
 <body>
-<div id="wrap">
+  <div id="wrap">
 
 
-<!--------------------------- HEADER --------------------------->
-<div id="header">
+    <!--------------------------- HEADER --------------------------->
+    <div id="header">
 
-  <p id="toplinks">
-  <a href="#description">Description</a> |
-  <a href="#installation">Installation</a> |
-  <a href="#documentation">Source docs</a> |  
-  <a href="#referencing">Referencing</a> |
-  <a href="#license">License</a> |
-  <a href="#authors">Authors</a>
-  </p>
+      <p id="toplinks">
+        <a href="#description">Description</a> |
+        <a href="#installation">Installation</a> |
+        <a href="#documentation">Source docs</a> |
+        <a href="#referencing">Referencing</a> |
+        <a href="#license">License</a> |
+        <a href="#authors">Authors</a>
+      </p>
 
-  <table border="0" cellspacing="0">
-    <tr>
-      <td width=200 align="right" valign="top">
-	<img src="images/newlogo.png" width="140" height="140" border=0>
-      </td>
-      <td width=500 align="left" valign="center">
-	<h1 class="title">S2LET<span class="fade"></span></h1>
-	<p id="slogantitle">Fast wavelets on the sphere</p>
-      </td>
-    </tr>
-  </table>
+      <table border="0" cellspacing="0">
+        <tr>
+          <td width=200 align="right" valign="top">
+            <img src="images/newlogo.png" width="140" height="140" border=0>
+          </td>
+          <td width=500 align="left" valign="center">
+            <h1 class="title">S2LET<span class="fade"></span></h1>
+            <p id="slogantitle">Fast wavelets on the sphere</p>
+          </td>
+        </tr>
+      </table>
 
-</div>
-
-
-<!--------------------------- SIDEBAR --------------------------->
-<div id="sidebar">
-
-<h2>News</h2>
-
-<ul>
-<li><strong>November 2016</strong><br />
-Public release of S2LET 2.1b1, fully supporting scale-discretised ridgelets and curvelets (in Matlab).
-<li><strong>October 2015</strong><br />
-Public release of S2LET 2.0b1, fully supporting directional, spin scale-discretised wavelets.
-Python wrappers now available!
-</li>
-<li><strong>October 2013</strong><br />
-Public release of S2LET 1.1b1, fully supporting B-spline, scale-discretised and needlet wavelets.
-</li>
-<li><strong>August 2013</strong><br />
-S2LET code paper accepted for publication in Astronomy & Astrophysics.
-</li>
-<li><strong>November 2012</strong><br />
-Public release of S2LET 1.0b1, fully supporting the MW and HEALPix samplings.
-</li>
-<li><strong>November 2012</strong><br />
-S2LET code paper submitted to Astronomy & Astrophysics.
-</li>
-
-</ul>
+    </div>
 
 
-</div>
+    <!--------------------------- SIDEBAR --------------------------->
+    <div id="sidebar">
+
+      <h2>News</h2>
+
+      <ul>
+        <li><strong>May 2021</strong><br />
+          Release of S2LET v2.2.3 (<a href="https://conan.io/center/s2let">conan-center</a>release)
+        <li><strong>October 2020</strong><br />
+          Public release of S2LET 2.2.0, revamped build system and publication to bintray and pypi.
+        <li><strong>November 2016</strong><br />
+          Public release of S2LET 2.1b1, fully supporting scale-discretised ridgelets and curvelets (in Matlab).
+        <li><strong>October 2015</strong><br />
+          Public release of S2LET 2.0b1, fully supporting directional, spin scale-discretised wavelets.
+          Python wrappers now available!
+        </li>
+        <li><strong>October 2013</strong><br />
+          Public release of S2LET 1.1b1, fully supporting B-spline, scale-discretised and needlet wavelets.
+        </li>
+        <li><strong>August 2013</strong><br />
+          S2LET code paper accepted for publication in Astronomy & Astrophysics.
+        </li>
+        <li><strong>November 2012</strong><br />
+          Public release of S2LET 1.0b1, fully supporting the MW and HEALPix samplings.
+        </li>
+        <li><strong>November 2012</strong><br />
+          S2LET code paper submitted to Astronomy & Astrophysics.
+        </li>
+
+      </ul>
 
 
-<!--------------------------- CONTENT --------------------------->
-<div id="content">
-
-  
-  <p>
-
-    <a href="https://github.com/astro-informatics/s2let">
-    <img src="https://img.shields.io/badge/GitHub-s2let-blue.svg?style=flat">
-    </a>
-    
-    <a href="https://astro-informatics.github.io/s2let/">
-    <img src="https://img.shields.io/badge/docs-stable-blue.svg">
-    </a>
-    
-    <a href="https://bintray.com/astro-informatics/astro-informatics/so3:astro-informatics/">
-    <img src="https://img.shields.io/bintray/v/astro-informatics/astro-informatics/so3:astro-informatics?label=C%20package">
-    </a>
-    
-    <a href="https://badge.fury.io/py/pys2let">
-    <img src="https://badge.fury.io/py/pys2let.svg">
-    </a>
-  
-  </p>
-
-<!--------------------------------------------------------------->
-<a name="description"><h2>Description</h2></a>
-
-  <p>
-  The <strong>S2LET</strong> code provides functionality to compute fast wavelet transforms of signals on the sphere. It uses the <a href="http://www.spinsht.org">SSHT</a> and <a
-  href="http://www.sothree.org">SO3</a> codes to compute fast and exact spherical harmonic and Wigner transforms.  The resulting wavelet transform is theoretically exact, i.e. wavelet coefficients capture all information of a band-limited signal and the original signal can be recovered exactly from its wavelet coefficients. <strong>S2LET</strong> also supports the <a href="http://HEALPix.jpl.nasa.gov/">HEALPix</a> sampling scheme, in which case the transforms are not theoretically exact but achieve good numerical accuracy.
-
-  <p>
-  This documentation describes installation details and documents the source code. Reference, author and license information is also given.  The code itself is <a href="https://github.com/astro-informatics/s2let">hosted on GitHub</a>.</p>
+    </div>
 
 
-<!--------------------------------------------------------------->
-<a name="wavelets"><h3>Scale discretised wavelets on the sphere</h3></a>
+    <!--------------------------- CONTENT --------------------------->
+    <div id="content">
 
 
-<p>
-  <strong>S2LET</strong> supports scale-discretised axisymmetric and directional wavelets (<a href="http://www.jasonmcewen.org/publication/wiaux-2007-sdw/">Wiaux et al. 2008</a>, <a href="http://www.jasonmcewen.org/publication/leistedt-s-2-let-axisym/">Leisted et al. 2012</a>, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">McEwen et al. 2018</a>), spin wavelets (<a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/">McEwen et al. 2015</a>),  ridgelets (<a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/">McEwen & Price 2019</a>),  and curvelets (<a href="http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/">Chan et al. 2017</a>).  
-  
-  <p>
-  Fast and exact algorithms are implemented to compute forward and inverse wavelet transforms by leveraging fast and exact algorithms to compute harmonic transforms on the sphere (<a href="http://www.jasonmcewen.org/publication/mcewen-fssht/">McEwen & Wiaux 2011</a>) and rotation group (<a href="http://www.jasonmcewen.org/publication/mcewen-so-3/">McEwen et al. 2015</a>), implemented in the <a href="http://www.spinsht.org">SSHT</a> and <a href="http://www.sothree.org">SO3</a> codes, respectively.
-  
-  <p> Scale-discretised wavelets are constructed through an exact tiling of harmonic space. The harmonic line is tiled into wavelet kernels which are localised in both real and frequency spaces, as shown on the image below for a particular set of wavelet parameters (B=2, J_min=2, harmonic space on the left, corresponding kernels on the right).</p>
+      <p>
 
- <p><img src="images/tiling2.png" width="350" height="240" border=0 align="center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="images/needlets.png" width="350" height="250" border=0 align="center">
+        <a href="https://github.com/astro-informatics/s2let">
+          <img src="https://img.shields.io/badge/GitHub-s2let-blue.svg?style=flat">
+        </a>
 
-  <p>
-  Scale-discretised wavelets on the sphere satisfy excellent spatial localisation and asymptotic correlation properties , as shown in <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">McEwen et al. (2018)</a>.
-  </p>
+        <a href="https://astro-informatics.github.io/s2let/">
+          <img src="https://img.shields.io/badge/docs-stable-blue.svg">
+        </a>
 
-  <p> 
-  A band-limited signal may be decomposed into a set of wavelet maps that exactly capture all the information content of the original signal.  The original signal may then be synthesised exactly from its wavelet coefficients (at machine precision). Due to the nature of the tiling in harmonic space, the individual wavelet maps have different band-limits and hence can be reconstructed at different resolutions, i.e. with the minimal number of samples. The left and right panels below are the wavelet decomposition of Earth tomography data at full (left) and multi-resolution (right). Due to the exactness of all transforms, these two approaches are equivalent and capture all the information contained in the initial band-limited map.
+        <a href="https://conan.io/center/s2let">
+          <img src="https://img.shields.io/badge/ConanCenter-C%20Package-red.svg">
+        </a>
 
- <p>&nbsp;<img src="images/earth2.png" width="340" height="300" border=0 align="center">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="images/earth1.png" width="340" height="300" border=0 align="center"> </p>
+        <a href="https://badge.fury.io/py/pys2let">
+          <img src="https://badge.fury.io/py/pys2let.svg">
+        </a>
 
- <p>When using <a
- href="http://HEALPix.jpl.nasa.gov/">HEALPix</a> instead of the sampling on the sphere of <a href="http://www.jasonmcewen.org/publication/mcewen-fssht/">McEwen & Wiaux (2011)</a>, the harmonic transform is not exact and hence the corresponding wavelet transform performed by <strong>S2LET</strong> is only exact in harmonic space. In other words, a set of spherical harmonic coefficients may be projected onto wavelets exactly in harmonic spaces but the HEALPix maps don't capture all the information contained in these coefficients. However good numerical accuracy is achieved in a wide range of situations. </p>
+        <img src="https://github.com/astro-informatics/s2let/workflows/CMake%20Build/badge.svg">
+        <img src="https://github.com/astro-informatics/s2let/workflows/Python%20Build/badge.svg">
 
+      </p>
 
-<!--------------------------------------------------------------->
+      <!--------------------------------------------------------------->
+      <a name="description">
+        <h2>Description</h2>
+      </a>
 
+      <p>
+        The <strong>S2LET</strong> code provides functionality to compute fast wavelet transforms of signals on the
+        sphere. It uses the <a href="http://www.spinsht.org">SSHT</a> and <a href="http://www.sothree.org">SO3</a> codes
+        to compute fast and exact spherical harmonic and Wigner transforms. The resulting wavelet transform is
+        theoretically exact, i.e. wavelet coefficients capture all information of a band-limited signal and the original
+        signal can be recovered exactly from its wavelet coefficients. <strong>S2LET</strong> also supports the <a
+          href="http://HEALPix.jpl.nasa.gov/">HEALPix</a> sampling scheme, in which case the transforms are not
+        theoretically exact but achieve good numerical accuracy.
 
-<a name="wavelets"><h4>Spin wavelets</h4></a>
-
-<p>
-  The framework of scale-discretised wavelets was extended in <a href=http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/>McEwen et al. (2015)</a> to support spin signals.
-  
-  The figure below shows the real, imaginary and absolute part of a spin wavelet.
-</p>
-
-<p style="text-align:center;">
-<img src="images/spin.png" width="680" border=0 align="center"> 
-</p>
-
-<!--------------------------------------------------------------->
-
-
-<a name="ridgelets"><h4>Ridgelets</h4></a>
-
-<p>
-<strong>S2LET</strong> supports the spherical ridgelet transform developed in <a href=http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/>McEwen & Price (2019)</a>. The ridgelet transform is defined natively on the sphere, probes signal content globally along great circles, does not exhibit any blocking artefactes, does not rely on any ad hoc parameters, and permits the exact inversion for antipodal signals. 
-
-The figure below shows spherical ridgelets, with axis aligned with the North pole, for wavelet scales j=3 and 4, plotted on the sphere and parametrically. 
-</p>
-
-<p>
-<img src="images/Ridgeletj3.png" width="320" height="130" border=0 align="center"> 
-<img src="images/Ridgeletj4.png" width="330" height="140" border=0 align="center"> 
-</p>
-
-<!--------------------------------------------------------------->
-
-<a name="curvelets"><h4>Curvelets</h4></a>
-
-<p>
-<strong>S2LET</strong> also supports scale-discretised curvelets, as
-developed in <a href=http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/>Chan (2017)</a>, which are efficient for representing local linear and 
-curvilinear structure and admit exact inversion for both scalar and spin signals. 
-The figure below shows spherical curvelets, 
-with axis aligned with the North pole, for various wavelet scales j, plotted on the sphere. 
-</p>
-
-<p>
-<img src="images/curvelet_L512_B2_Jmin2.png" width="700" height="140" border=0 align="center"> 
-</p>
-
-<!--------------------------------------------------------------->
-<a name="installation"><h2>Installation</h2></a>
+      <p>
+        This documentation describes installation details and documents the source code. Reference, author and license
+        information is also given. The code itself is <a href="https://github.com/astro-informatics/s2let">hosted on
+          GitHub</a>.</p>
 
 
-<p>
-  The <strong>S2LET</strong> package in based on a core C implementation.  Python, Matlab and IDL interfaces to the C implementation are provided.
-  </p>
+      <!--------------------------------------------------------------->
+      <a name="wavelets">
+        <h3>Scale discretised wavelets on the sphere</h3>
+      </a>
 
 
-<h4>Dependencies</h4>
+      <p>
+        <strong>S2LET</strong> supports scale-discretised axisymmetric and directional wavelets (<a
+          href="http://www.jasonmcewen.org/publication/wiaux-2007-sdw/">Wiaux et al. 2008</a>, <a
+          href="http://www.jasonmcewen.org/publication/leistedt-s-2-let-axisym/">Leisted et al. 2012</a>, <a
+          href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">McEwen et al. 2018</a>), spin
+        wavelets (<a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/">McEwen et al. 2015</a>),
+        ridgelets (<a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/">McEwen & Price 2019</a>),
+        and curvelets (<a href="http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/">Chan et al. 2017</a>).
 
-<p>
-<strong>S2LET</strong> requires the <a href=""http://www.spinsht.org">SSHT</a>, <a
-href="http://www.sothree.org/">SO3</a>, and <a
-href="http://www.fftw.org/">FFTW</a> libraries. The IO FITS features require <a
-href="http://heasarc.gsfc.nasa.gov/fitsio/">CFITSIO</a>. To support <a
-href="http://HEALPix.jpl.nasa.gov/">HEALPix</a>, a valid installation of its Fortran implementation must be provided. 
-</p>
+      <p>
+        Fast and exact algorithms are implemented to compute forward and inverse wavelet transforms by leveraging fast
+        and exact algorithms to compute harmonic transforms on the sphere (<a
+          href="http://www.jasonmcewen.org/publication/mcewen-fssht/">McEwen & Wiaux 2011</a>) and rotation group (<a
+          href="http://www.jasonmcewen.org/publication/mcewen-so-3/">McEwen et al. 2015</a>), implemented in the <a
+          href="http://www.spinsht.org">SSHT</a> and <a href="http://www.sothree.org">SO3</a> codes, respectively.
 
-<h4>Python installation</h4>
+      <p> Scale-discretised wavelets are constructed through an exact tiling of harmonic space. The harmonic line is
+        tiled into wavelet kernels which are localised in both real and frequency spaces, as shown on the image below
+        for a particular set of wavelet parameters (B=2, J_min=2, harmonic space on the left, corresponding kernels on
+        the right).</p>
 
-<p>
-The python package, <strong>pys2let</strong>, is available on <a href="https://pypi.org/project/pys2let/">pypi</a> and can be installed with:
- 
-<pre>pip install pys2let</pre>
- 
-<p> The python package is backed by
-  <a href="https://scikit-build.readthedocs.io/en/latest/">scikit-build</a> and
-  <a href="https://cmake.org">CMake</a>. It will install a local version of
-  <a href="http://www.fftw.org/">FFTW</a> and will compile its own version of the C package. </p>
+      <p><img src="images/tiling2.png" width="350" height="240" border=0 align="center">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="images/needlets.png" width="350" height="250" border=0
+          align="center">
 
-<p> Alternatively, the python package can be installed from a local clone of the repository for development purposes by
+      <p>
+        Scale-discretised wavelets on the sphere satisfy excellent spatial localisation and asymptotic correlation
+        properties , as shown in <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">McEwen et
+          al. (2018)</a>.
+      </p>
 
-  <pre>pip install -e .[dev]</pre>
+      <p>
+        A band-limited signal may be decomposed into a set of wavelet maps that exactly capture all the information
+        content of the original signal. The original signal may then be synthesised exactly from its wavelet
+        coefficients (at machine precision). Due to the nature of the tiling in harmonic space, the individual wavelet
+        maps have different band-limits and hence can be reconstructed at different resolutions, i.e. with the minimal
+        number of samples. The left and right panels below are the wavelet decomposition of Earth tomography data at
+        full (left) and multi-resolution (right). Due to the exactness of all transforms, these two approaches are
+        equivalent and capture all the information contained in the initial band-limited map.
 
-<h4>C installation</h4>
+      <p>&nbsp;<img src="images/earth2.png" width="340" height="300" border=0 align="center">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="images/earth1.png" width="340" height="300" border=0
+          align="center"> </p>
 
-The C package can be installed with <a href="https://cmake.org">CMake</a> and
-    <a href="https://docs.conan.io/en/latest/howtos/other_languages_package_manager/python.html">conan</a>.
-    
-    <p>
-    Both can be installed using pip:
-    
-    <pre>pip install conan cmake</pre>
-    
-    <p>
-    Then <strong>S2LET</strong> can be compiled with:
-    
-    <pre>
+      <p>When using <a href="http://HEALPix.jpl.nasa.gov/">HEALPix</a> instead of the sampling on the sphere of <a
+          href="http://www.jasonmcewen.org/publication/mcewen-fssht/">McEwen & Wiaux (2011)</a>, the harmonic transform
+        is not exact and hence the corresponding wavelet transform performed by <strong>S2LET</strong> is only exact in
+        harmonic space. In other words, a set of spherical harmonic coefficients may be projected onto wavelets exactly
+        in harmonic spaces but the HEALPix maps don't capture all the information contained in these coefficients.
+        However good numerical accuracy is achieved in a wide range of situations. </p>
+
+
+      <!--------------------------------------------------------------->
+
+
+      <a name="wavelets">
+        <h4>Spin wavelets</h4>
+      </a>
+
+      <p>
+        The framework of scale-discretised wavelets was extended in <a
+          href=http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin />McEwen et al. (2015)</a> to support spin
+        signals.
+
+        The figure below shows the real, imaginary and absolute part of a spin wavelet.
+      </p>
+
+      <p style="text-align:center;">
+        <img src="images/spin.png" width="680" border=0 align="center">
+      </p>
+
+      <!--------------------------------------------------------------->
+
+
+      <a name="ridgelets">
+        <h4>Ridgelets</h4>
+      </a>
+
+      <p>
+        <strong>S2LET</strong> supports the spherical ridgelet transform developed in <a
+          href=http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets />McEwen & Price (2019)</a>. The ridgelet
+        transform is defined natively on the sphere, probes signal content globally along great circles, does not
+        exhibit any blocking artefactes, does not rely on any ad hoc parameters, and permits the exact inversion for
+        antipodal signals.
+
+        The figure below shows spherical ridgelets, with axis aligned with the North pole, for wavelet scales j=3 and 4,
+        plotted on the sphere and parametrically.
+      </p>
+
+      <p>
+        <img src="images/Ridgeletj3.png" width="320" height="130" border=0 align="center">
+        <img src="images/Ridgeletj4.png" width="330" height="140" border=0 align="center">
+      </p>
+
+      <!--------------------------------------------------------------->
+
+      <a name="curvelets">
+        <h4>Curvelets</h4>
+      </a>
+
+      <p>
+        <strong>S2LET</strong> also supports scale-discretised curvelets, as
+        developed in <a href=http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets />Chan (2017)</a>, which are
+        efficient for representing local linear and
+        curvilinear structure and admit exact inversion for both scalar and spin signals.
+        The figure below shows spherical curvelets,
+        with axis aligned with the North pole, for various wavelet scales j, plotted on the sphere.
+      </p>
+
+      <p>
+        <img src="images/curvelet_L512_B2_Jmin2.png" width="700" height="140" border=0 align="center">
+      </p>
+
+      <!--------------------------------------------------------------->
+      <a name="installation">
+        <h2>Installation</h2>
+      </a>
+
+
+      <p>
+        The <strong>S2LET</strong> package in based on a core C implementation. Python, Matlab and IDL interfaces to the
+        C implementation are provided.
+      </p>
+
+
+      <h4>Dependencies</h4>
+
+      <p>
+        <strong>S2LET</strong> requires the <a href="" http://www.spinsht.org">SSHT</a>, <a
+          href="http://www.sothree.org/">SO3</a>, and <a href="http://www.fftw.org/">FFTW</a> libraries. The IO FITS
+        features require <a href="http://heasarc.gsfc.nasa.gov/fitsio/">CFITSIO</a>. To support <a
+          href="http://HEALPix.jpl.nasa.gov/">HEALPix</a>, a valid installation of its Fortran implementation must be
+        provided.
+      </p>
+
+      <h4>Python installation</h4>
+
+      <p>
+        The python package, <strong>pys2let</strong>, is available on <a
+          href="https://pypi.org/project/pys2let/">pypi</a> and can be installed with:
+
+      <pre>pip install pys2let</pre>
+
+      <p> The python package is backed by
+        <a href="https://scikit-build.readthedocs.io/en/latest/">scikit-build</a> and
+        <a href="https://cmake.org">CMake</a>. It will install a local version of
+        <a href="http://www.fftw.org/">FFTW</a> and will compile its own version of the C package.
+      </p>
+
+      <p> Alternatively, the python package can be installed from a local clone of the repository for development
+        purposes by
+
+      <pre>pip install -e .[dev]</pre>
+
+      <h4>C installation</h4>
+
+      The C package can be installed with <a href="https://cmake.org">CMake</a> and
+      <a href="https://docs.conan.io/en/latest/howtos/other_languages_package_manager/python.html">conan</a>.
+
+      <p>
+        Both can be installed using pip:
+
+      <pre>pip install conan cmake</pre>
+
+      <p>
+        Then <strong>S2LET</strong> can be compiled with:
+
+      <pre>
   git clone https://github.com/astro-informatics/s2let.git
   mkdir s2let/build && cd s2let/build
   cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -Dconan_deps=ON  -Dcfitsio=ON ..
   make
   make install</pre>
-    
-    <p>
-    The above will also download <a href="http://www.fftw.org/">FFTW</a>, <a href="http://www.spinsht.org">SSHT</a> and <a href="http://www.sothree.org">SO3</a>, if necessary.</p>
+
+      <p>
+        The above will also download <a href="http://www.fftw.org/">FFTW</a>, <a href="http://www.spinsht.org">SSHT</a>
+        and <a href="http://www.sothree.org">SO3</a>, if necessary.</p>
 
 
-    <h4>Matlab installation</h4>
+      <h4>Matlab installation</h4>
 
-    <p>The Matlab interface requires the C version to be installed.  
-    
+      <p>The Matlab interface requires the C version to be installed.
+
       <p>It can be built using make by configuring appropriate compilers and dependencies, and then running:
-    
+
       <pre>make matlab</pre>
-    </p>
+      </p>
 
-    <h4>IDL installation</h4>
+      <h4>IDL installation</h4>
 
-    <p>The IDL interface requires the dynamic C library to first be built using make.  The variable S2LET must then be defined in Bash/Shell and point to the root of the S2LET directory so that IDL can find the dynamic library.
-    </p>
+      <p>The IDL interface requires the dynamic C library to first be built using make. The variable S2LET must then be
+        defined in Bash/Shell and point to the root of the S2LET directory so that IDL can find the dynamic library.
+      </p>
 
 
 
-<!--------------------------------------------------------------->
-<a name="documentation"><h2>Source code documentation</h2></a>
+      <!--------------------------------------------------------------->
+      <a name="documentation">
+        <h2>Source code documentation</h2>
+      </a>
 
-    <p>
-      <strong>S2LET</strong> code is self documented.  Source code documentation for each language is available here:
-    
+      <p>
+        <strong>S2LET</strong> code is self documented. Source code documentation for each language is available here:
+
       <ul>
-        <li><a href="https://pypi.org/project/pys2let/">Python source documentation</a> (usage for the python package is given in the package docstring)</li>
+        <li><a href="https://pypi.org/project/pys2let/">Python source documentation</a> (usage for the python package is
+          given in the package docstring)</li>
         <li><a href="c/index.html">C source documentation</a></li>
-        <li><a href="matlab/index.html">Matlab source documentation</a> (usage for the matlab package is available through matlab help documentation)</li>    
-        <li><a href="idl/index.html">IDL source documentation</a> </li>    
+        <li><a href="matlab/index.html">Matlab source documentation</a> (usage for the matlab package is available
+          through matlab help documentation)</li>
+        <li><a href="idl/index.html">IDL source documentation</a> </li>
       </ul>
-    </p>
-    
-    
-<!--------------------------------------------------------------->
-<a name="referencing"><h2>Referencing</h2></a>
-
-<p> If you use <strong>S2LET</strong> for work that results in
-  publication, please reference <a
-   href="http://github.com/astro-informatics/s2let">https://github.com/astro-informatics/s2let/</a>
-  and cite the relevant academic paper(s):
-
-<blockquote>  Y. Wiaux, J. D. McEwen,  P. Vandergheynst, O. Blanc,
-  <a href="http://www.jasonmcewen.org/publication/wiaux-2007-sdw/">Exact reconstruction with directional wavelets on the sphere</a>, Mon. Not. Roy. Astron. Soc., 388(2):770-788, 2008. (<a href="http://arxiv.org/abs/arXiv:0712.3519">ArXiv</a>
-  | <a href="http://dx.doi.org/10.1111/j.1365-2966.2008.13448.x">DOI</a>). </blockquote>
-  
-<blockquote> B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/leistedt-s-2-let-axisym/">S2LET: A code to perform fast wavelet analysis on the sphere</a>, Astronomy & Astrophysics, 558(A128):1-9, 2013 (<a href="http://arxiv.org/abs/1211.1680">ArXiv</a> | <a href="http://dx.doi.org/10.1051/0004-6361/201220729">DOI</a>). </blockquote>
-
-<blockquote> J. D. McEwen,  B. Leistedt, M. B&uuml;ttner, H. V. Peiris, Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/">Directional spin wavelets on the sphere</a>, IEEE Trans. Signal Proc., submitted, 2015 (<a href="http://arxiv.org/abs/1509.06749">ArXiv</a>). </blockquote>
-
-<blockquote>  J. D. McEwen, M. Price, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/">Ridgelet transform on the sphere</a>, 27th European Signal Processing Conference (EUSIPCO), 2019 (<a href="http://arxiv.org/abs/1510.01595v1">ArXiv</a> | <a href="http://dx.doi.org/10.23919/EUSIPCO.2019.8903034">DOI</a>). </blockquote>
-
-<blockquote> J. Y. H. Chan, B. Leistedt, T. D. Kitching, J. D. McEwen, <a href="http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/">Second-generation curvelets on the sphere</a>, IEEE Trans. Signal Proc., 65(1):5-14, 2017 (<a href="http://arxiv.org/abs/1511.05578">ArXiv</a> | <a href="http://dx.doi.org/10.1109/TSP.2016.2600506">DOI</a>). </blockquote>
-
-<blockquote> J. D. McEwen,  C. Durastanti, Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">Localisation of directional scale-discretised wavelets on the sphere</a>, Applied Comput. Harm. Anal., 44(1), 59-88, 2018 (<a href="http://arxiv.org/abs/1509.06749">ArXiv</a> | <a href="http://dx.doi.org/10.1016/j.acha.2016.03.009">DOI</a>). </blockquote>
+      </p>
 
 
-<p>You may also like to consider citing the following papers on which the fast algorithms of S2LET are based: </p>
+      <!--------------------------------------------------------------->
+      <a name="referencing">
+        <h2>Referencing</h2>
+      </a>
 
-<blockquote> J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, <a href="http://ieeexplore.ieee.org/document/7298431/">A novel sampling theorem on the rotation group</a>, IEEE Sig. Proc. Let., 22(12):2425-2429, 2015 (<a href="http://arxiv.org/abs/1508.03101">ArXiv</a> | <a href="http://dx.doi.org/10.1109/LSP.2015.2490676">DOI</a>). </blockquote>
+      <p> If you use <strong>S2LET</strong> for work that results in
+        publication, please reference <a
+          href="http://github.com/astro-informatics/s2let">https://github.com/astro-informatics/s2let/</a>
+        and cite the relevant academic paper(s):
 
-<blockquote> J. D. McEwen and
- Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-so-3/">A
- novel sampling theorem on the sphere</a>, IEEE Trans. Signal Proc., 59, 5876-5887, 2011 (<a href="http://arxiv.org/abs/1110.6298">ArXiv</a>
- | <a href="http://dx.doi.org/10.1109/TSP.2011.2166394">DOI</a>). </blockquote>
+      <blockquote> Y. Wiaux, J. D. McEwen, P. Vandergheynst, O. Blanc,
+        <a href="http://www.jasonmcewen.org/publication/wiaux-2007-sdw/">Exact reconstruction with directional wavelets
+          on the sphere</a>, Mon. Not. Roy. Astron. Soc., 388(2):770-788, 2008. (<a
+          href="http://arxiv.org/abs/arXiv:0712.3519">ArXiv</a>
+        | <a href="http://dx.doi.org/10.1111/j.1365-2966.2008.13448.x">DOI</a>).
+      </blockquote>
 
+      <blockquote> B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux, <a
+          href="http://www.jasonmcewen.org/publication/leistedt-s-2-let-axisym/">S2LET: A code to perform fast wavelet
+          analysis on the sphere</a>, Astronomy & Astrophysics, 558(A128):1-9, 2013 (<a
+          href="http://arxiv.org/abs/1211.1680">ArXiv</a> | <a
+          href="http://dx.doi.org/10.1051/0004-6361/201220729">DOI</a>). </blockquote>
 
-<!--------------------------------------------------------------->
-<a name="license"><h2>License</h2></a>
+      <blockquote> J. D. McEwen, B. Leistedt, M. B&uuml;ttner, H. V. Peiris, Y. Wiaux, <a
+          href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/">Directional spin wavelets on the
+          sphere</a>, IEEE Trans. Signal Proc., submitted, 2015 (<a href="http://arxiv.org/abs/1509.06749">ArXiv</a>).
+      </blockquote>
 
-<blockquote>
-<p>
-S2LET package to perform fast wavelet transform on the sphere<br>
-Copyright (C) 2012- Boris Leistedt, Jason McEwen, Martin B&uuml;ttner and contributors
+      <blockquote> J. D. McEwen, M. Price, <a
+          href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/">Ridgelet transform on the sphere</a>,
+        27th European Signal Processing Conference (EUSIPCO), 2019 (<a
+          href="http://arxiv.org/abs/1510.01595v1">ArXiv</a> | <a
+          href="http://dx.doi.org/10.23919/EUSIPCO.2019.8903034">DOI</a>). </blockquote>
 
-<p>
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or (at
-your option) any later version.
+      <blockquote> J. Y. H. Chan, B. Leistedt, T. D. Kitching, J. D. McEwen, <a
+          href="http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/">Second-generation curvelets on the
+          sphere</a>, IEEE Trans. Signal Proc., 65(1):5-14, 2017 (<a href="http://arxiv.org/abs/1511.05578">ArXiv</a> |
+        <a href="http://dx.doi.org/10.1109/TSP.2016.2600506">DOI</a>).
+      </blockquote>
 
-<p>
-This program is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-General Public License for more details (<a href="https://github.com/astro-informatics/s2let/blob/main/LICENSE">License.txt</a>).
-
-<p>
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.
-</p>
-</blockquote>
-
-<br>
-
-<!--------------------------------------------------------------->
-<a name="authors"><h2>Authors</h2></a>
-
-<p> <strong>S2LET</strong> was initially developed by Boris Leistedt, Martin B&uuml;ttner, and <a href="http://www.jasonmcewen.org/">Jason McEwen</a> but significant contributors have since been made by a number of <a href="https://github.com/astro-informatics/s2let/graphs/contributors">others</a>.
-</p>
-
-</div>
-
-
-
-<!--------------------------- FOOTER --------------------------->
-<div id="footer">
-
-  <p>
-  <a href="#header">Back to top</a><br >
-
-  <p>&copy; 2012-2015 <a href="http://www.ixkael.com/blog">Boris Leistedt</a> & <a href="http://www.jasonmcewen.org">Jason McEwen</a> | Design by
-  <a href="http://andreasviklund.com/">Andreas Viklund</a> </p>
+      <blockquote> J. D. McEwen, C. Durastanti, Y. Wiaux, <a
+          href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">Localisation of directional
+          scale-discretised wavelets on the sphere</a>, Applied Comput. Harm. Anal., 44(1), 59-88, 2018 (<a
+          href="http://arxiv.org/abs/1509.06749">ArXiv</a> | <a
+          href="http://dx.doi.org/10.1016/j.acha.2016.03.009">DOI</a>). </blockquote>
 
 
+      <p>You may also like to consider citing the following papers on which the fast algorithms of S2LET are based: </p>
 
-</div>
+      <blockquote> J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, <a
+          href="http://ieeexplore.ieee.org/document/7298431/">A novel sampling theorem on the rotation group</a>, IEEE
+        Sig. Proc. Let., 22(12):2425-2429, 2015 (<a href="http://arxiv.org/abs/1508.03101">ArXiv</a> | <a
+          href="http://dx.doi.org/10.1109/LSP.2015.2490676">DOI</a>). </blockquote>
+
+      <blockquote> J. D. McEwen and
+        Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-so-3/">A
+          novel sampling theorem on the sphere</a>, IEEE Trans. Signal Proc., 59, 5876-5887, 2011 (<a
+          href="http://arxiv.org/abs/1110.6298">ArXiv</a>
+        | <a href="http://dx.doi.org/10.1109/TSP.2011.2166394">DOI</a>). </blockquote>
+
+
+      <!--------------------------------------------------------------->
+      <a name="license">
+        <h2>License</h2>
+      </a>
+
+      <blockquote>
+        <p>
+          S2LET package to perform fast wavelet transform on the sphere<br>
+          Copyright (C) 2012- Boris Leistedt, Jason McEwen, Martin B&uuml;ttner and contributors
+
+        <p>
+          This program is free software; you can redistribute it and/or modify
+          it under the terms of the GNU General Public License as published by
+          the Free Software Foundation; either version 3 of the License, or (at
+          your option) any later version.
+
+        <p>
+          This program is distributed in the hope that it will be useful, but
+          WITHOUT ANY WARRANTY; without even the implied warranty of
+          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+          General Public License for more details (<a
+            href="https://github.com/astro-informatics/s2let/blob/main/LICENSE">License.txt</a>).
+
+        <p>
+          You should have received a copy of the GNU General Public License
+          along with this program. If not, see <a
+            href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.
+        </p>
+      </blockquote>
+
+      <br>
+
+      <!--------------------------------------------------------------->
+      <a name="authors">
+        <h2>Authors</h2>
+      </a>
+
+      <p> <strong>S2LET</strong> was initially developed by Boris Leistedt, Martin B&uuml;ttner, and <a
+          href="http://www.jasonmcewen.org/">Jason McEwen</a> but significant contributors have since been made by a
+        number of <a href="https://github.com/astro-informatics/s2let/graphs/contributors">others</a>.
+      </p>
+
+    </div>
+
+
+
+    <!--------------------------- FOOTER --------------------------->
+    <div id="footer">
+
+      <p>
+        <a href="#header">Back to top</a><br>
+
+      <p>&copy; 2012-2015 <a href="http://www.ixkael.com/blog">Boris Leistedt</a> & <a
+          href="http://www.jasonmcewen.org">Jason McEwen</a> | Design by
+        <a href="http://andreasviklund.com/">Andreas Viklund</a>
+      </p>
+
+
+
+    </div>
 </body>
+
 </html>

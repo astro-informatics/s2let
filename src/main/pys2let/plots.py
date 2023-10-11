@@ -1,8 +1,10 @@
 import numpy as np
 import os
 
+
 def read_matfile(wavelet_type):
     from scipy import io as sio
+
     matfile = os.path.join(
         os.environ["S2LET"], "src", "main", "matlab", "kappas_" + wavelet_type
     )

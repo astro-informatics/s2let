@@ -1,11 +1,12 @@
+from pathlib import Path
+
 from skbuild import setup
 
 cmake_args = [
-    "-Dpython:BOOL=ON",
-    "-Dtests:BOOL=OFF",
+    "-DBUILD_TESTING:BOOL=OFF",
     "-Dconan_deps:BOOL=ON",
-    "-Dcfitsio:BOOL=OFF",
-    "-DfPIC=ON",
+    "-Dcfitsio:BOOL=ON",
+    "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
 ]
 
 build_requirements = [
@@ -21,18 +22,12 @@ build_requirements = [
 
 setup(
     name="pys2let",
-    version="2.1.0",
-    author=[
-        "Boris Leistedt",
-        "Martin Büttner",
-        "Jennifer Chan",
-        "Jason McEwen",
-    ],
+    version="2.2.6",
+    author=["Boris Leistedt", "Martin Büttner", "Jennifer Chan", "Jason McEwen"],
     install_requires=["numpy"],
     extras_require={
-        "build": build_requirements,
-        "dev": build_requirements,
-        "plots": ["scipy"],
+        "dev": build_requirements + ["pytest", "black"],
+        "plots": ["scipy", "healpy"],
     },
     description="Fast spin spherical transforms",
     url="http://astro-informatics.github.io/s2let/",
@@ -41,4 +36,6 @@ setup(
     cmake_languages=("C",),
     license="GPL-2",
     packages=["pys2let"],
+    long_description=Path(__file__).with_name("README.md").read_text(),
+    long_description_content_type="text/markdown",
 )

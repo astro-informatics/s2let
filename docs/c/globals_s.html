@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: Globals</title>
+<title>s2let: Globals</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -75,8 +75,8 @@ $(function() {
 , <a class="el" href="s2let__alloc_8h.html#a1e37dc2888e4d40c947e7c7727eb8ad7">s2let_alloc.h</a>
 </li>
 <li>s2let_allocate_f_wav_manual()
-: <a class="el" href="s2let__alloc_8c.html#a2a547a089b006e1dda73b84cad4c085e">s2let_alloc.c</a>
-, <a class="el" href="s2let__alloc_8h.html#aa5c19adf92fef81e6e6481d445b481bb">s2let_alloc.h</a>
+: <a class="el" href="s2let__alloc_8c.html#afb051ec7fd9741b39b184f4b957acd36">s2let_alloc.c</a>
+, <a class="el" href="s2let__alloc_8h.html#afc97a325f105008a466164506e12c864">s2let_alloc.h</a>
 </li>
 <li>s2let_allocate_f_wav_real()
 : <a class="el" href="s2let__alloc_8c.html#a979f526f58f72c9c96e16e2ba46e0f63">s2let_alloc.c</a>
@@ -542,9 +542,12 @@ $(function() {
 : <a class="el" href="s2let__synthesis_8c.html#a4ef1adffb439379ca652533588879ab5">s2let_synthesis.c</a>
 , <a class="el" href="s2let__synthesis_8h.html#a4ef1adffb439379ca652533588879ab5">s2let_synthesis.h</a>
 </li>
+<li>S2LET_TESTS
+: <a class="el" href="test__back__and__forth_8c.html#a47e61454d11e89fdf7bdfed2b12de0f5">test_back_and_forth.c</a>
+</li>
 <li>s2let_tiling_axisym()
-: <a class="el" href="s2let__tiling_8h.html#a2dcc3541cd5003f7c20189b5f1e569b0">s2let_tiling.h</a>
-, <a class="el" href="s2let__tiling_8c.html#a2dcc3541cd5003f7c20189b5f1e569b0">s2let_tiling.c</a>
+: <a class="el" href="s2let__tiling_8c.html#a2dcc3541cd5003f7c20189b5f1e569b0">s2let_tiling.c</a>
+, <a class="el" href="s2let__tiling_8h.html#a2dcc3541cd5003f7c20189b5f1e569b0">s2let_tiling.h</a>
 </li>
 <li>s2let_tiling_axisym_allocate()
 : <a class="el" href="s2let__tiling_8c.html#acfff04a4e1d0f2c422b2c0a22a01c9a9">s2let_tiling.c</a>
@@ -562,12 +565,12 @@ $(function() {
 , <a class="el" href="s2let__tiling_8h.html#ae2b1be4ee6ee593ccc3673bb8c8119a0">s2let_tiling.h</a>
 </li>
 <li>s2let_tiling_direction_allocate()
-: <a class="el" href="s2let__tiling_8h.html#a14a6f342214def49e0a4007425a85885">s2let_tiling.h</a>
-, <a class="el" href="s2let__tiling_8c.html#a10fa29a59b170d6ade97303878faf7ef">s2let_tiling.c</a>
+: <a class="el" href="s2let__tiling_8c.html#a10fa29a59b170d6ade97303878faf7ef">s2let_tiling.c</a>
+, <a class="el" href="s2let__tiling_8h.html#a14a6f342214def49e0a4007425a85885">s2let_tiling.h</a>
 </li>
 <li>s2let_tiling_direction_check_identity()
-: <a class="el" href="s2let__tiling_8c.html#ab69e82a484169f248873ae9ccb5bb89a">s2let_tiling.c</a>
-, <a class="el" href="s2let__tiling_8h.html#a57fea5748d955b5caa9ddf46cda3036b">s2let_tiling.h</a>
+: <a class="el" href="s2let__tiling_8h.html#a57fea5748d955b5caa9ddf46cda3036b">s2let_tiling.h</a>
+, <a class="el" href="s2let__tiling_8c.html#ab69e82a484169f248873ae9ccb5bb89a">s2let_tiling.c</a>
 </li>
 <li>s2let_tiling_direction_test()
 : <a class="el" href="s2let__test_8c.html#a84ab4ae94142563376cc58ce9b3f0529">s2let_test.c</a>
@@ -582,23 +585,23 @@ $(function() {
 : <a class="el" href="s2let__tiling_8c.html#afd4de938c00ee3cbde3e6e10944a496b">s2let_tiling.c</a>
 </li>
 <li>s2let_tiling_wavelet()
-: <a class="el" href="s2let__tiling_8c.html#a9878fae074371b64e7de24ebfdbd752c">s2let_tiling.c</a>
-, <a class="el" href="s2let__tiling_8h.html#ae0e09c45e6d87dee84f94bb04b6215d8">s2let_tiling.h</a>
+: <a class="el" href="s2let__tiling_8h.html#ae0e09c45e6d87dee84f94bb04b6215d8">s2let_tiling.h</a>
+, <a class="el" href="s2let__tiling_8c.html#a9878fae074371b64e7de24ebfdbd752c">s2let_tiling.c</a>
 </li>
 <li>s2let_tiling_wavelet_allocate()
 : <a class="el" href="s2let__tiling_8h.html#af5491812d40095dfbab3c08edf4d9fa5">s2let_tiling.h</a>
 , <a class="el" href="s2let__tiling_8c.html#af1770bfbe7ff5ead2769089867a03fbb">s2let_tiling.c</a>
 </li>
 <li>s2let_tiling_wavelet_check_identity()
-: <a class="el" href="s2let__tiling_8c.html#abd52d0b819985f55fe6fca8259597b48">s2let_tiling.c</a>
-, <a class="el" href="s2let__tiling_8h.html#a9a4117a039022f6fff78939c4e0f3a86">s2let_tiling.h</a>
+: <a class="el" href="s2let__tiling_8h.html#a9a4117a039022f6fff78939c4e0f3a86">s2let_tiling.h</a>
+, <a class="el" href="s2let__tiling_8c.html#abd52d0b819985f55fe6fca8259597b48">s2let_tiling.c</a>
 </li>
 <li>s2let_tiling_wavelet_test()
 : <a class="el" href="s2let__test_8c.html#ad612b1930b2a90f6bb8b507f6dc2ae4d">s2let_test.c</a>
 </li>
 <li>s2let_transform_axisym_allocate_hpx_f_wav_real()
-: <a class="el" href="s2let__transform__axisym__hpx_8c.html#a8d0f962069938cdf19c4ad1cce2862f8">s2let_transform_axisym_hpx.c</a>
-, <a class="el" href="s2let__transform__axisym__hpx_8h.html#a8d0f962069938cdf19c4ad1cce2862f8">s2let_transform_axisym_hpx.h</a>
+: <a class="el" href="s2let__transform__axisym__hpx_8h.html#a8d0f962069938cdf19c4ad1cce2862f8">s2let_transform_axisym_hpx.h</a>
+, <a class="el" href="s2let__transform__axisym__hpx_8c.html#a8d0f962069938cdf19c4ad1cce2862f8">s2let_transform_axisym_hpx.c</a>
 </li>
 <li>s2let_transform_axisym_allocate_mw_f_wav()
 : <a class="el" href="s2let__transform__axisym__mw_8h.html#aa0ce4a50c9b076757a1360030dc00c9e">s2let_transform_axisym_mw.h</a>
@@ -627,12 +630,12 @@ $(function() {
 , <a class="el" href="s2let__transform__axisym__lm_8h.html#a6ed8eae362ffc710e4f256f4a2c7a59c">s2let_transform_axisym_lm.h</a>
 </li>
 <li>s2let_transform_axisym_lm_allocate_f_wav_multires()
-: <a class="el" href="s2let__transform__axisym__lm_8c.html#a53fc1d52b6e959e2d2a23319237c9087">s2let_transform_axisym_lm.c</a>
-, <a class="el" href="s2let__transform__axisym__lm_8h.html#a49deaad455c0f37f085794a95bc2cc8f">s2let_transform_axisym_lm.h</a>
+: <a class="el" href="s2let__transform__axisym__lm_8h.html#a49deaad455c0f37f085794a95bc2cc8f">s2let_transform_axisym_lm.h</a>
+, <a class="el" href="s2let__transform__axisym__lm_8c.html#a53fc1d52b6e959e2d2a23319237c9087">s2let_transform_axisym_lm.c</a>
 </li>
 <li>s2let_transform_axisym_lm_allocate_wav()
-: <a class="el" href="s2let__transform__axisym__lm_8h.html#ae5c57282bb1116eababa279c2f8757a9">s2let_transform_axisym_lm.h</a>
-, <a class="el" href="s2let__transform__axisym__lm_8c.html#ae5c57282bb1116eababa279c2f8757a9">s2let_transform_axisym_lm.c</a>
+: <a class="el" href="s2let__transform__axisym__lm_8c.html#ae5c57282bb1116eababa279c2f8757a9">s2let_transform_axisym_lm.c</a>
+, <a class="el" href="s2let__transform__axisym__lm_8h.html#ae5c57282bb1116eababa279c2f8757a9">s2let_transform_axisym_lm.h</a>
 </li>
 <li>s2let_transform_axisym_lm_wav()
 : <a class="el" href="s2let__transform__axisym__lm_8c.html#a2efd3fe3938b0f6cb3166804f0ca62bc">s2let_transform_axisym_lm.c</a>
@@ -650,12 +653,12 @@ $(function() {
 : <a class="el" href="s2let__test_8c.html#a6490580b66410b64846b31124ae5a0f4">s2let_test.c</a>
 </li>
 <li>s2let_transform_axisym_lm_wav_synthesis()
-: <a class="el" href="s2let__transform__axisym__lm_8h.html#acaad9856b9ff5ea5588fff2a796a8ecf">s2let_transform_axisym_lm.h</a>
-, <a class="el" href="s2let__transform__axisym__lm_8c.html#a288f88b4dd18d732a0d6819c4d06e3f4">s2let_transform_axisym_lm.c</a>
+: <a class="el" href="s2let__transform__axisym__lm_8c.html#a288f88b4dd18d732a0d6819c4d06e3f4">s2let_transform_axisym_lm.c</a>
+, <a class="el" href="s2let__transform__axisym__lm_8h.html#acaad9856b9ff5ea5588fff2a796a8ecf">s2let_transform_axisym_lm.h</a>
 </li>
 <li>s2let_transform_axisym_lm_wav_synthesis_multires()
-: <a class="el" href="s2let__transform__axisym__lm_8c.html#ad31585dbae5edde3fc3704a59cbe1034">s2let_transform_axisym_lm.c</a>
-, <a class="el" href="s2let__transform__axisym__lm_8h.html#a1cf1b759d1947fea4f100a80d8a420aa">s2let_transform_axisym_lm.h</a>
+: <a class="el" href="s2let__transform__axisym__lm_8h.html#a1cf1b759d1947fea4f100a80d8a420aa">s2let_transform_axisym_lm.h</a>
+, <a class="el" href="s2let__transform__axisym__lm_8c.html#ad31585dbae5edde3fc3704a59cbe1034">s2let_transform_axisym_lm.c</a>
 </li>
 <li>s2let_transform_axisym_lm_wav_test()
 : <a class="el" href="s2let__test_8c.html#a21e0d56f5074c798cb77ee9ccf081e3c">s2let_test.c</a>
@@ -667,16 +670,16 @@ $(function() {
 : <a class="el" href="s2let__test_8c.html#a45c632c898e73d473bcc38e492847182">s2let_test.c</a>
 </li>
 <li>s2let_transform_axisym_wav_analysis_adjoint_mw()
-: <a class="el" href="s2let__transform__axisym__mw_8h.html#afca147888501702b34ca4e1767c78710">s2let_transform_axisym_mw.h</a>
-, <a class="el" href="s2let__transform__axisym__mw_8c.html#a73b9085432c8673c6fde059b708dea46">s2let_transform_axisym_mw.c</a>
+: <a class="el" href="s2let__transform__axisym__mw_8c.html#a73b9085432c8673c6fde059b708dea46">s2let_transform_axisym_mw.c</a>
+, <a class="el" href="s2let__transform__axisym__mw_8h.html#afca147888501702b34ca4e1767c78710">s2let_transform_axisym_mw.h</a>
 </li>
 <li>s2let_transform_axisym_wav_analysis_adjoint_mw_multires()
 : <a class="el" href="s2let__transform__axisym__mw_8c.html#abbbb0b8729b4b4d936723f57fa133bde">s2let_transform_axisym_mw.c</a>
 , <a class="el" href="s2let__transform__axisym__mw_8h.html#a516ee27f27eb79de7c3214cab7271779">s2let_transform_axisym_mw.h</a>
 </li>
 <li>s2let_transform_axisym_wav_analysis_adjoint_mw_multires_real()
-: <a class="el" href="s2let__transform__axisym__mw_8h.html#ad16f124ef82ba5422107d53991578e2b">s2let_transform_axisym_mw.h</a>
-, <a class="el" href="s2let__transform__axisym__mw_8c.html#ad16f124ef82ba5422107d53991578e2b">s2let_transform_axisym_mw.c</a>
+: <a class="el" href="s2let__transform__axisym__mw_8c.html#ad16f124ef82ba5422107d53991578e2b">s2let_transform_axisym_mw.c</a>
+, <a class="el" href="s2let__transform__axisym__mw_8h.html#ad16f124ef82ba5422107d53991578e2b">s2let_transform_axisym_mw.h</a>
 </li>
 <li>s2let_transform_axisym_wav_analysis_adjoint_mw_real()
 : <a class="el" href="s2let__transform__axisym__mw_8c.html#a9d190e3dc17c1e73036fa7def51baf44">s2let_transform_axisym_mw.c</a>
@@ -695,8 +698,8 @@ $(function() {
 , <a class="el" href="s2let__transform__axisym__mw_8h.html#aec92f0a5f1bf3d14ed9dcdadd96153c3">s2let_transform_axisym_mw.h</a>
 </li>
 <li>s2let_transform_axisym_wav_analysis_mw_multires_real()
-: <a class="el" href="s2let__transform__axisym__mw_8c.html#abbaca141c3699c766e341c5ceee14cdb">s2let_transform_axisym_mw.c</a>
-, <a class="el" href="s2let__transform__axisym__mw_8h.html#abbaca141c3699c766e341c5ceee14cdb">s2let_transform_axisym_mw.h</a>
+: <a class="el" href="s2let__transform__axisym__mw_8h.html#abbaca141c3699c766e341c5ceee14cdb">s2let_transform_axisym_mw.h</a>
+, <a class="el" href="s2let__transform__axisym__mw_8c.html#abbaca141c3699c766e341c5ceee14cdb">s2let_transform_axisym_mw.c</a>
 </li>
 <li>s2let_transform_axisym_wav_analysis_mw_real()
 : <a class="el" href="s2let__transform__axisym__mw_8c.html#abab7d46ecc4813503ab0fd5f09d8bfa7">s2let_transform_axisym_mw.c</a>
@@ -732,20 +735,20 @@ $(function() {
 , <a class="el" href="s2let__transform__axisym__mw_8c.html#abcfc455a2b4dfd52f52d095227ff67c3">s2let_transform_axisym_mw.c</a>
 </li>
 <li>s2let_transform_axisym_wav_synthesis_adjoint_mw_real()
-: <a class="el" href="s2let__transform__axisym__mw_8c.html#a202737e2b30d90af7984051d82e6b55a">s2let_transform_axisym_mw.c</a>
-, <a class="el" href="s2let__transform__axisym__mw_8h.html#a202737e2b30d90af7984051d82e6b55a">s2let_transform_axisym_mw.h</a>
+: <a class="el" href="s2let__transform__axisym__mw_8h.html#a202737e2b30d90af7984051d82e6b55a">s2let_transform_axisym_mw.h</a>
+, <a class="el" href="s2let__transform__axisym__mw_8c.html#a202737e2b30d90af7984051d82e6b55a">s2let_transform_axisym_mw.c</a>
 </li>
 <li>s2let_transform_axisym_wav_synthesis_hpx_real()
-: <a class="el" href="s2let__transform__axisym__hpx_8c.html#ad1987cd08f8add08bba681aa26c32b77">s2let_transform_axisym_hpx.c</a>
-, <a class="el" href="s2let__transform__axisym__hpx_8h.html#ad1987cd08f8add08bba681aa26c32b77">s2let_transform_axisym_hpx.h</a>
+: <a class="el" href="s2let__transform__axisym__hpx_8h.html#ad1987cd08f8add08bba681aa26c32b77">s2let_transform_axisym_hpx.h</a>
+, <a class="el" href="s2let__transform__axisym__hpx_8c.html#ad1987cd08f8add08bba681aa26c32b77">s2let_transform_axisym_hpx.c</a>
 </li>
 <li>s2let_transform_axisym_wav_synthesis_mw()
 : <a class="el" href="s2let__transform__axisym__mw_8h.html#a26507106a70d5143e76fba3bb298f7e7">s2let_transform_axisym_mw.h</a>
 , <a class="el" href="s2let__transform__axisym__mw_8c.html#ab2dba22615138e520985ca58ead38e28">s2let_transform_axisym_mw.c</a>
 </li>
 <li>s2let_transform_axisym_wav_synthesis_mw_multires()
-: <a class="el" href="s2let__transform__axisym__mw_8h.html#a988074918fff2d3f06b6898542ba1072">s2let_transform_axisym_mw.h</a>
-, <a class="el" href="s2let__transform__axisym__mw_8c.html#a002718ed6a64a6d7268626e01931ecba">s2let_transform_axisym_mw.c</a>
+: <a class="el" href="s2let__transform__axisym__mw_8c.html#a002718ed6a64a6d7268626e01931ecba">s2let_transform_axisym_mw.c</a>
+, <a class="el" href="s2let__transform__axisym__mw_8h.html#a988074918fff2d3f06b6898542ba1072">s2let_transform_axisym_mw.h</a>
 </li>
 <li>s2let_transform_axisym_wav_synthesis_mw_multires_real()
 : <a class="el" href="s2let__transform__axisym__mw_8c.html#a9a77993fec7b5b26a0290ade7623c1ea">s2let_transform_axisym_mw.c</a>
@@ -839,6 +842,12 @@ $(function() {
 <li>s2let_wav_transform_wavlm_manual_test()
 : <a class="el" href="s2let__test_8c.html#a73199654867cc48b0fdfa593987dfecd">s2let_test.c</a>
 </li>
+<li>seed
+: <a class="el" href="test__adjoint_8c.html#ab1633aa266a0a720540840343194b2cf">test_adjoint.c</a>
+, <a class="el" href="test__back__and__forth_8c.html#ab1633aa266a0a720540840343194b2cf">test_back_and_forth.c</a>
+, <a class="el" href="test__axisym__vs__directional_8c.html#ab1633aa266a0a720540840343194b2cf">test_axisym_vs_directional.c</a>
+, <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">test_tiling.c</a>
+</li>
 <li>so3_test_gen_flmn_complex()
 : <a class="el" href="s2let__test_8c.html#af5b2cded1bb3914d1398df3b65eec310">s2let_test.c</a>
 </li>
@@ -849,7 +858,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

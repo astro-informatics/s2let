@@ -2,14 +2,18 @@
 
 [docs-img]: https://img.shields.io/badge/docs-stable-blue.svg
 [docs-url]: https://astro-informatics.github.io/s2let/
-[bintray-img]: https://img.shields.io/bintray/v/mdavezac/AstroFizz/s2let:AstroFizz?label=C%20package
-[bintray-url]: https://bintray.com/mdavezac/AstroFizz/s2let:AstroFizz/2.1.0:stable/link
+[conan-img]: https://img.shields.io/badge/ConanCenter-C%20Package-red.svg
+[conan-url]: https://conan.io/center/s2let
 [pypi-img]: https://badge.fury.io/py/pys2let.svg
 [pypi-url]: https://badge.fury.io/py/pys2let
+[codefactor-img]: https://www.codefactor.io/repository/github/astro-informatics/s2let/badge/main
+[codefactor-url]: https://www.codefactor.io/repository/github/astro-informatics/s2let/overview/main
 
 [![][docs-img]][docs-url]
-[![][bintray-img]][bintray-url]
+[![][conan-img]][conan-url]
 [![][pypi-img]][pypi-url]
+![CMake Build](https://github.com/astro-informatics/s2let/workflows/CMake%20Build/badge.svg)
+![Python Build](https://github.com/astro-informatics/s2let/workflows/Python%20Build/badge.svg)
 
 ## DESCRIPTION
 
@@ -18,7 +22,7 @@ wavelet transforms on the sphere.
 
 ## INSTALLATION
 
-The python package, <strong>pys2let</strong>, is available on <a href="https://pypi.org/project/pys2let/">pypi</a> and can be installed with:
+The python package, **pys2let**, is available on [pypi](https://pypi.org/project/pys2let/) and can be installed with:
  
  ```bash
  pip install pys2let
@@ -36,7 +40,7 @@ The C package can be installed with [CMake](https://cmake.org) and
 Both can be installed using pip:
 
 ```bash
-pip install conan cmake
+pip install "conan<1" cmake
 ```
 
 Then **S2LET** can be compiled with:
@@ -63,22 +67,22 @@ Usage for the python package is also given in the package docstring.
 
 ## REFERENCING
 
-If you use <strong>S2LET</strong> for work that results in publication, please reference <a href="http://github.com/astro-informatics/s2let">https://github.com/astro-informatics/s2let/</a> and cite the relevant academic paper(s):
+If you use **S2LET** for work that results in publication, please reference [http://github.com/astro-informatics/s2let](https://github.com/astro-informatics/s2let/) and cite the relevant academic paper(s):
 
 - Y. Wiaux, J. D. McEwen,  P. Vandergheynst, O. Blanc,
-  <a href="http://www.jasonmcewen.org/publication/wiaux-2007-sdw/">Exact reconstruction with directional wavelets on the sphere</a>, Mon. Not. Roy. Astron. Soc., 388(2):770-788, 2008. (<a href="http://arxiv.org/abs/arXiv:0712.3519">ArXiv</a>
-  | <a href="http://dx.doi.org/10.1111/j.1365-2966.2008.13448.x">DOI</a>)
-- B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/leistedt-s-2-let-axisym/">S2LET: A code to perform fast wavelet analysis on the sphere</a>, Astronomy & Astrophysics, 558(A128):1-9, 2013 (<a href="http://arxiv.org/abs/1211.1680">ArXiv</a> | <a href="http://dx.doi.org/10.1051/0004-6361/201220729">DOI</a>)
-- J. D. McEwen,  B. Leistedt, M. B&uuml;ttner, H. V. Peiris, Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/">Directional spin wavelets on the sphere</a>, IEEE Trans. Signal Proc., submitted, 2015 (<a href="http://arxiv.org/abs/1509.06749">ArXiv</a>)
--  J. D. McEwen, M. Price, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/">Ridgelet transform on the sphere</a>, 27th European Signal Processing Conference (EUSIPCO), 2019 (<a href="http://arxiv.org/abs/1510.01595v1">ArXiv</a> | <a href="http://dx.doi.org/10.23919/EUSIPCO.2019.8903034">DOI</a>)
-- J. Y. H. Chan, B. Leistedt, T. D. Kitching, J. D. McEwen, <a href="http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/">Second-generation curvelets on the sphere</a>, IEEE Trans. Signal Proc., 65(1):5-14, 2017 (<a href="http://arxiv.org/abs/1511.05578">ArXiv</a> | <a href="http://dx.doi.org/10.1109/TSP.2016.2600506">DOI</a>)
-- J. D. McEwen,  C. Durastanti, Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/">Localisation of directional scale-discretised wavelets on the sphere</a>, Applied Comput. Harm. Anal., 44(1), 59-88, 2018 (<a href="http://arxiv.org/abs/1509.06749">ArXiv</a> | <a href="http://dx.doi.org/10.1016/j.acha.2016.03.009">DOI</a>)
+  [Exact reconstruction with directional wavelets on the sphere](http://www.jasonmcewen.org/publication/wiaux-2007-sdw/), Mon. Not. Roy. Astron. Soc., 388(2):770-788, 2008. ([ArXiv](http://arxiv.org/abs/arXiv:0712.3519))
+  | [DOI](http://dx.doi.org/10.1111/j.1365-2966.2008.13448.x))
+- B. Leistedt, J. D. McEwen, P. Vandergheynst and Y. Wiaux, [S2LET: A code to perform fast wavelet analysis on the sphere](http://www.jasonmcewen.org/publication/leistedt-s-2-let-axisym/), Astronomy & Astrophysics, 558(A128):1-9, 2013 (http://arxiv.org/abs/1211.1680">ArXiv</a> | [DOI](http://dx.doi.org/10.1051/0004-6361/201220729)
+- J. D. McEwen,  B. Leistedt, M. Büttner, H. V. Peiris, Y. Wiaux, [Directional spin wavelets on the sphere](http://www.jasonmcewen.org/publication/mcewen-s-2-let-spin/), IEEE Trans. Signal Proc., submitted, 2015 ([ArXiv](http://arxiv.org/abs/1509.06749)
+-  J. D. McEwen, M. Price, [Ridgelet transform on the sphere](http://www.jasonmcewen.org/publication/mcewen-s-2-let-ridgelets/), 27th European Signal Processing Conference (EUSIPCO), 2019 ([ArXiv](http://arxiv.org/abs/1510.01595v1) | [DOI](http://dx.doi.org/10.23919/EUSIPCO.2019.8903034))
+- J. Y. H. Chan, B. Leistedt, T. D. Kitching, J. D. McEwen, [Second-generation curvelets on the sphere](http://www.jasonmcewen.org/publication/chan-s-2-let-curvelets/), IEEE Trans. Signal Proc., 65(1):5-14, 2017 ([ArXiv](http://arxiv.org/abs/1511.05578) | [DOI](http://dx.doi.org/10.1109/TSP.2016.2600506))
+- J. D. McEwen,  C. Durastanti, Y. Wiaux, [Localisation of directional scale-discretised wavelets on the sphere](http://www.jasonmcewen.org/publication/mcewen-s-2-let-localisation/), Applied Comput. Harm. Anal., 44(1), 59-88, 2018 ([ArXiv](http://arxiv.org/abs/1509.06749) | [DOI](http://dx.doi.org/10.1016/j.acha.2016.03.009))
 
 You may also like to consider citing the following papers on which the fast algorithms of S2LET are based:
-- J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, <a href="http://ieeexplore.ieee.org/document/7298431/">A novel sampling theorem on the rotation group</a>, IEEE Sig. Proc. Let., 22(12):2425-2429, 2015 (<a href="http://arxiv.org/abs/1508.03101">ArXiv</a> | <a href="http://dx.doi.org/10.1109/LSP.2015.2490676">DOI</a>)
+- J. D. McEwen, M. B&uuml;ttner, B. Leistedt, H. V. Peiris, Y. Wiaux, [A novel sampling theorem on the rotation group](http://ieeexplore.ieee.org/document/7298431/), IEEE Sig. Proc. Let., 22(12):2425-2429, 2015 ([ArXiv](http://arxiv.org/abs/1508.03101) | [DOI](http://dx.doi.org/10.1109/LSP.2015.2490676))
 - J. D. McEwen and Y. Wiaux, <a href="http://www.jasonmcewen.org/publication/mcewen-so-3/">A
- novel sampling theorem on the sphere</a>, IEEE Trans. Signal Proc., 59, 5876-5887, 2011 (<a href="http://arxiv.org/abs/1110.6298">ArXiv</a>
- | <a href="http://dx.doi.org/10.1109/TSP.2011.2166394">DOI</a>)
+ novel sampling theorem on the sphere</a>, IEEE Trans. Signal Proc., 59, 5876-5887, 2011 ([ArXiv](http://arxiv.org/abs/1110.6298)
+ | [DOI](http://dx.doi.org/10.1109/TSP.2011.2166394))
 
 
 
@@ -90,4 +94,4 @@ S2LET is released under the GPL-3 license.  For further details see
 
 ## AUTHORS
 
-**S2LET** was initially developed by Boris Leistedt, Martin B&uuml;ttner, and <a href="http://www.jasonmcewen.org/">Jason McEwen</a> but significant contributors have since been made by a number of <a href="https://github.com/astro-informatics/s2let/graphs/contributors">others</a>.
+**S2LET** was initially developed by Boris Leistedt, Martin Büttner, and [Jason McEwen](http://www.jasonmcewen.org/) but significant contributors have since been made by a number of [others](https://github.com/astro-informatics/s2let/graphs/contributors).

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: src/main/c/s2let_fits.c File Reference</title>
+<title>s2let: src/main/c/s2let_fits.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -76,9 +76,42 @@ $(function() {
 <div class="contents">
 <div class="textblock"><code>#include &lt;fitsio.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="s2let_8h_source.html">s2let.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for s2let_fits.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="s2let__fits_8c__incl.png" border="0" usemap="#asrc_2main_2c_2s2let__fits_8c" alt=""/></div>
+<map name="src_2main_2c_2s2let__fits_8c" id="asrc_2main_2c_2s2let__fits_8c">
+<area shape="rect" title=" " alt="" coords="706,5,856,32"/>
+<area shape="rect" title=" " alt="" coords="708,80,769,107"/>
+<area shape="rect" href="s2let_8h.html" title=" " alt="" coords="793,80,854,107"/>
+<area shape="rect" title=" " alt="" coords="935,319,1022,345"/>
+<area shape="rect" href="s2let__alloc_8h.html" title=" " alt="" coords="54,162,148,189"/>
+<area shape="rect" href="s2let__types_8h.html" title=" " alt="" coords="52,244,152,271"/>
+<area shape="rect" href="s2let__analysis_8h.html" title=" " alt="" coords="176,244,292,271"/>
+<area shape="rect" href="s2let__analysis__adjoint_8h.html" title=" " alt="" coords="316,244,478,271"/>
+<area shape="rect" href="s2let__error_8h.html" title=" " alt="" coords="325,162,418,189"/>
+<area shape="rect" href="s2let__fits_8h.html" title=" " alt="" coords="443,162,530,189"/>
+<area shape="rect" href="s2let__helper_8h.html" title=" " alt="" coords="639,244,742,271"/>
+<area shape="rect" href="s2let__hpx_8h.html" title=" " alt="" coords="606,162,695,189"/>
+<area shape="rect" href="s2let__idl__hpx_8h.html" title=" " alt="" coords="924,244,1033,271"/>
+<area shape="rect" href="s2let__idl__mw_8h.html" title=" " alt="" coords="770,162,877,189"/>
+<area shape="rect" href="s2let__lm_8h.html" title=" " alt="" coords="901,162,984,189"/>
+<area shape="rect" href="s2let__math_8h.html" title=" " alt="" coords="1008,162,1106,189"/>
+<area shape="rect" href="s2let__mw_8h.html" title=" " alt="" coords="1130,162,1216,189"/>
+<area shape="rect" href="s2let__so3_8h.html" title=" " alt="" coords="1240,162,1330,189"/>
+<area shape="rect" href="s2let__synthesis_8h.html" title=" " alt="" coords="1354,162,1478,189"/>
+<area shape="rect" href="s2let__synthesis__adjoint_8h.html" title=" " alt="" coords="1502,162,1671,189"/>
+<area shape="rect" href="s2let__tiling_8h.html" title=" " alt="" coords="1546,244,1640,271"/>
+<area shape="rect" href="s2let__transform__axisym__hpx_8h.html" title=" " alt="" coords="1747,155,1908,196"/>
+<area shape="rect" href="s2let__transform__axisym__lm_8h.html" title=" " alt="" coords="1671,244,1864,271"/>
+<area shape="rect" href="s2let__transform__axisym__mw_8h.html" title=" " alt="" coords="1892,244,2091,271"/>
+<area shape="rect" title=" " alt="" coords="553,244,614,271"/>
+<area shape="rect" title=" " alt="" coords="817,244,900,271"/>
+<area shape="rect" title=" " alt="" coords="1212,244,1291,271"/>
+<area shape="rect" title=" " alt="" coords="1316,244,1374,271"/>
+</map>
 </div>
-<p><a href="s2let__fits_8c_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aca57f410eb9f3d6ec61c1c17d4aea3da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__fits_8c.html#aca57f410eb9f3d6ec61c1c17d4aea3da">printerror</a> (int status)</td></tr>
@@ -121,8 +154,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00009">9</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
-
 </div>
 </div>
 <a id="a332b4542fd283126c1bfd55c6f96d0e9"></a>
@@ -154,8 +185,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00059">59</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
-
 </div>
 </div>
 <a id="a32b9baca740954e5dd89ff84a873bd5f"></a>
@@ -186,8 +215,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00018">18</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
 
 </div>
 </div>
@@ -237,8 +264,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00207">207</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
 
 </div>
 </div>
@@ -295,8 +320,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00437">437</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
-
 </div>
 </div>
 <a id="a33e069a17c3116f44eb667a9cba40615"></a>
@@ -345,8 +368,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00098">98</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
 
 </div>
 </div>
@@ -403,8 +424,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00322">322</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
-
 </div>
 </div>
 <a id="a30d6c0469210655e662bbdf8153d3e3f"></a>
@@ -453,8 +472,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00260">260</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
 
 </div>
 </div>
@@ -511,8 +528,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00494">494</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
-
 </div>
 </div>
 <a id="a7b7613e2e45ffa5e2ff4ef51c88039f7"></a>
@@ -561,8 +576,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00149">149</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
 
 </div>
 </div>
@@ -619,14 +632,12 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__fits_8c_source.html#l00376">376</a> of file <a class="el" href="s2let__fits_8c_source.html">s2let_fits.c</a>.</p>
-
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

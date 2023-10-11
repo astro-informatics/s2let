@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: src/main/c/s2let_synthesis_adjoint.c File Reference</title>
+<title>s2let: src/main/c/s2let_synthesis_adjoint.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -74,16 +74,50 @@ $(function() {
 <div class="title">s2let_synthesis_adjoint.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="s2let_8h_source.html">s2let.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;complex.h&gt;</code><br />
+<code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;so3/so3.h&gt;</code><br />
 <code>#include &lt;ssht/ssht.h&gt;</code><br />
-<code>#include &lt;complex.h&gt;</code><br />
-<code>#include &lt;math.h&gt;</code><br />
-<code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="s2let_8h_source.html">s2let.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for s2let_synthesis_adjoint.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="s2let__synthesis__adjoint_8c__incl.png" border="0" usemap="#asrc_2main_2c_2s2let__synthesis__adjoint_8c" alt=""/></div>
+<map name="src_2main_2c_2s2let__synthesis__adjoint_8c" id="asrc_2main_2c_2s2let__synthesis__adjoint_8c">
+<area shape="rect" title=" " alt="" coords="2108,5,2287,47"/>
+<area shape="rect" title=" " alt="" coords="5,259,88,285"/>
+<area shape="rect" title=" " alt="" coords="2286,95,2349,121"/>
+<area shape="rect" title=" " alt="" coords="2131,259,2210,285"/>
+<area shape="rect" title=" " alt="" coords="1062,333,1149,360"/>
+<area shape="rect" title=" " alt="" coords="1924,259,1985,285"/>
+<area shape="rect" title=" " alt="" coords="2373,95,2437,121"/>
+<area shape="rect" href="s2let_8h.html" title=" " alt="" coords="1139,95,1200,121"/>
+<area shape="rect" href="s2let__alloc_8h.html" title=" " alt="" coords="463,177,558,203"/>
+<area shape="rect" href="s2let__types_8h.html" title=" " alt="" coords="762,259,862,285"/>
+<area shape="rect" href="s2let__analysis_8h.html" title=" " alt="" coords="634,177,750,203"/>
+<area shape="rect" href="s2let__analysis__adjoint_8h.html" title=" " alt="" coords="774,177,935,203"/>
+<area shape="rect" href="s2let__error_8h.html" title=" " alt="" coords="1901,177,1995,203"/>
+<area shape="rect" href="s2let__fits_8h.html" title=" " alt="" coords="959,177,1046,203"/>
+<area shape="rect" href="s2let__helper_8h.html" title=" " alt="" coords="1065,259,1167,285"/>
+<area shape="rect" href="s2let__hpx_8h.html" title=" " alt="" coords="78,177,167,203"/>
+<area shape="rect" href="s2let__idl__hpx_8h.html" title=" " alt="" coords="1204,259,1313,285"/>
+<area shape="rect" href="s2let__idl__mw_8h.html" title=" " alt="" coords="1071,177,1177,203"/>
+<area shape="rect" href="s2let__lm_8h.html" title=" " alt="" coords="1343,259,1425,285"/>
+<area shape="rect" href="s2let__math_8h.html" title=" " alt="" coords="1453,259,1550,285"/>
+<area shape="rect" href="s2let__mw_8h.html" title=" " alt="" coords="1591,177,1678,203"/>
+<area shape="rect" href="s2let__so3_8h.html" title=" " alt="" coords="2070,177,2159,203"/>
+<area shape="rect" href="s2let__synthesis_8h.html" title=" " alt="" coords="1702,177,1826,203"/>
+<area shape="rect" href="s2let__synthesis__adjoint_8h.html" title=" " alt="" coords="1679,259,1849,285"/>
+<area shape="rect" href="s2let__tiling_8h.html" title=" " alt="" coords="191,177,286,203"/>
+<area shape="rect" href="s2let__transform__axisym__hpx_8h.html" title=" " alt="" coords="1303,169,1465,211"/>
+<area shape="rect" href="s2let__transform__axisym__lm_8h.html" title=" " alt="" coords="219,259,413,285"/>
+<area shape="rect" href="s2let__transform__axisym__mw_8h.html" title=" " alt="" coords="437,259,635,285"/>
+<area shape="rect" title=" " alt="" coords="2048,259,2107,285"/>
+</map>
 </div>
-<p><a href="s2let__synthesis__adjoint_8c_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa22074c5b8f3c6f93101bda21dd41477"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__synthesis__adjoint_8c.html#aa22074c5b8f3c6f93101bda21dd41477">s2let_synthesis_adjoint_lm2lmn</a> (complex double *f_wav_lmn, complex double *f_scal_lm, const complex double *flm, const complex double *wav_lm, const double *scal_l, const <a class="el" href="structs2let__parameters__t.html">s2let_parameters_t</a> *parameters)</td></tr>
@@ -155,9 +189,9 @@ Functions</h2></td></tr>
 <p>Wavelet synthesis adjoint from harmonic space to Wigner space for complex signals.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">f_wav_lmn</td><td>Wavelet transform (Wigner coefficients of wavelet contribution). </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">f_scal_lm</td><td>Wavelet transform (Spherical harmonic coefficients of scaling contribution). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">flm</td><td>Spherical harmonic coefficients of input function. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">f_wav_lmn</td><td>Wavelet transform (Wigner coefficients of wavelet contribution).</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">f_scal_lm</td><td>Wavelet transform (Spherical harmonic coefficients of scaling contribution).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">flm</td><td>Spherical harmonic coefficients of input function.</td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">wav_lm</td><td>Wavelet kernels in harmonic space. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">scal_l</td><td>Scaling function kernels in harmonic space. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">parameters</td><td>A fully populated parameters object. The <a class="el" href="structs2let__parameters__t.html#a7718737039d19e05501792535b32ef6d">reality</a> flag is ignored. Use <a class="el" href="s2let__analysis_8h.html#a0ae75e5749e9bb978f21d86b674c41b5">s2let_analysis_lm2lmn_real</a> instead for real signals. </td></tr>
@@ -170,8 +204,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00027">27</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
 
 </div>
 </div>
@@ -227,12 +259,12 @@ Functions</h2></td></tr>
 <p>Wavelet synthesis adjoint from harmonic space to Wigner space for real signals.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[out]</td><td class="paramname">f_wav_lmn</td><td>Wavelet transform (Wigner coefficients of wavelet contribution). </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">f_scal_lm</td><td>Wavelet transform (spherical harmonic coefficients of scaling contribution). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">flm</td><td>Spherical harmonic coefficients of input function. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">wav_lm</td><td>Wavelet kernels. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">scal_l</td><td>Scaling function kernels. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">parameters</td><td>A fully populated parameters object. The <a class="el" href="structs2let__parameters__t.html#a7718737039d19e05501792535b32ef6d">reality</a> flag is ignored. Use <a class="el" href="s2let__analysis_8h.html#a1ff7c08702b71c00f79668abbc950d30">s2let_analysis_lm2lmn</a> instead for complex signals. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">f_wav_lmn</td><td>Wavelet transform (Wigner coefficients of wavelet contribution).</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">f_scal_lm</td><td>Wavelet transform (spherical harmonic coefficients of scaling contribution).</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">flm</td><td>Spherical harmonic coefficients of input function.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">wav_lm</td><td>Wavelet kernels.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">scal_l</td><td>Scaling function kernels.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">parameters</td><td>A fully populated parameters object. The <a class="el" href="structs2let__parameters__t.html#a7718737039d19e05501792535b32ef6d">reality</a> flag is ignored. Use <a class="el" href="s2let__analysis_8h.html#a1ff7c08702b71c00f79668abbc950d30">s2let_analysis_lm2lmn</a> instead for complex signals.</td></tr>
   </table>
   </dd>
 </dl>
@@ -242,8 +274,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00113">113</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
 
 </div>
 </div>
@@ -300,8 +330,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00325">325</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
 
 </div>
 </div>
@@ -408,8 +436,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00208">208</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
-
 </div>
 </div>
 <a id="a3d89c7c0fd47c34293d0c915e8680212"></a>
@@ -466,8 +492,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00415">415</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
-
 </div>
 </div>
 <a id="af92b8ee7a5d7467aca1aadf574101ed1"></a>
@@ -523,8 +547,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00504">504</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
 
 </div>
 </div>
@@ -584,14 +606,12 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__synthesis__adjoint_8c_source.html#l00547">547</a> of file <a class="el" href="s2let__synthesis__adjoint_8c_source.html">s2let_synthesis_adjoint.c</a>.</p>
-
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

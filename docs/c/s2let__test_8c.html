@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.19"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>S2LET: src/test/c/s2let_test.c File Reference</title>
+<title>s2let: src/test/c/s2let_test.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,10 +22,10 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="wav.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">S2LET
-   &#160;<span id="projectnumber">1.2.0</span>
+   <div id="projectname">s2let
+   &#160;<span id="projectnumber">2.2.0</span>
    </div>
-   <div id="projectbrief">Exact wavelets on the sphere</div>
+   <div id="projectbrief">Fast wavelets on the sphere</div>
   </td>
  </tr>
  </tbody>
@@ -82,9 +82,44 @@ $(function() {
 <code>#include &lt;math.h&gt;</code><br />
 <code>#include &lt;time.h&gt;</code><br />
 <code>#include &lt;so3/so3.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for s2let_test.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="s2let__test_8c__incl.png" border="0" usemap="#asrc_2test_2c_2s2let__test_8c" alt=""/></div>
+<map name="src_2test_2c_2s2let__test_8c" id="asrc_2test_2c_2s2let__test_8c">
+<area shape="rect" title=" " alt="" coords="2333,5,2483,32"/>
+<area shape="rect" href="s2let_8h.html" title=" " alt="" coords="1227,80,1288,107"/>
+<area shape="rect" title=" " alt="" coords="1162,319,1249,345"/>
+<area shape="rect" title=" " alt="" coords="2127,244,2209,271"/>
+<area shape="rect" title=" " alt="" coords="2234,244,2313,271"/>
+<area shape="rect" title=" " alt="" coords="2337,244,2396,271"/>
+<area shape="rect" title=" " alt="" coords="2471,80,2540,107"/>
+<area shape="rect" title=" " alt="" coords="2564,80,2628,107"/>
+<area shape="rect" title=" " alt="" coords="2653,80,2715,107"/>
+<area shape="rect" href="s2let__alloc_8h.html" title=" " alt="" coords="1623,162,1718,189"/>
+<area shape="rect" href="s2let__types_8h.html" title=" " alt="" coords="1499,244,1599,271"/>
+<area shape="rect" href="s2let__analysis_8h.html" title=" " alt="" coords="1623,244,1739,271"/>
+<area shape="rect" href="s2let__analysis__adjoint_8h.html" title=" " alt="" coords="1763,244,1925,271"/>
+<area shape="rect" href="s2let__error_8h.html" title=" " alt="" coords="1320,162,1413,189"/>
+<area shape="rect" href="s2let__fits_8h.html" title=" " alt="" coords="135,162,222,189"/>
+<area shape="rect" href="s2let__helper_8h.html" title=" " alt="" coords="1949,244,2051,271"/>
+<area shape="rect" href="s2let__hpx_8h.html" title=" " alt="" coords="2039,162,2129,189"/>
+<area shape="rect" href="s2let__idl__hpx_8h.html" title=" " alt="" coords="5,244,115,271"/>
+<area shape="rect" href="s2let__idl__mw_8h.html" title=" " alt="" coords="557,162,664,189"/>
+<area shape="rect" href="s2let__lm_8h.html" title=" " alt="" coords="343,244,425,271"/>
+<area shape="rect" href="s2let__math_8h.html" title=" " alt="" coords="553,244,650,271"/>
+<area shape="rect" href="s2let__mw_8h.html" title=" " alt="" coords="298,162,385,189"/>
+<area shape="rect" href="s2let__so3_8h.html" title=" " alt="" coords="2255,162,2345,189"/>
+<area shape="rect" href="s2let__synthesis_8h.html" title=" " alt="" coords="409,162,533,189"/>
+<area shape="rect" href="s2let__synthesis__adjoint_8h.html" title=" " alt="" coords="689,162,858,189"/>
+<area shape="rect" href="s2let__tiling_8h.html" title=" " alt="" coords="882,162,977,189"/>
+<area shape="rect" href="s2let__transform__axisym__hpx_8h.html" title=" " alt="" coords="1438,155,1599,196"/>
+<area shape="rect" href="s2let__transform__axisym__lm_8h.html" title=" " alt="" coords="1001,162,1194,189"/>
+<area shape="rect" href="s2let__transform__axisym__mw_8h.html" title=" " alt="" coords="1038,244,1237,271"/>
+<area shape="rect" title=" " alt="" coords="1312,244,1373,271"/>
+</map>
 </div>
-<p><a href="s2let__test_8c_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a72ed78cf85c9437d0a2545c8e3a61cf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a72ed78cf85c9437d0a2545c8e3a61cf2">s2let_tiling_axisym_test</a> (int B, int L, int J_min)</td></tr>
@@ -95,81 +130,81 @@ Functions</h2></td></tr>
 <tr class="separator:ad612b1930b2a90f6bb8b507f6dc2ae4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a468603fe2a4ae0176b1a3008b5508ac7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a468603fe2a4ae0176b1a3008b5508ac7">s2let_binomial_coefficient_test</a> (int n_max)</td></tr>
 <tr class="separator:a468603fe2a4ae0176b1a3008b5508ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21e0d56f5074c798cb77ee9ccf081e3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a21e0d56f5074c798cb77ee9ccf081e3c">s2let_transform_axisym_lm_wav_test</a> (int B, int L, int J_min, int seed)</td></tr>
+<tr class="memitem:a21e0d56f5074c798cb77ee9ccf081e3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a21e0d56f5074c798cb77ee9ccf081e3c">s2let_transform_axisym_lm_wav_test</a> (int B, int L, int J_min, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a21e0d56f5074c798cb77ee9ccf081e3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6490580b66410b64846b31124ae5a0f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a6490580b66410b64846b31124ae5a0f4">s2let_transform_axisym_lm_wav_multires_test</a> (int B, int L, int J_min, int seed)</td></tr>
+<tr class="memitem:a6490580b66410b64846b31124ae5a0f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a6490580b66410b64846b31124ae5a0f4">s2let_transform_axisym_lm_wav_multires_test</a> (int B, int L, int J_min, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a6490580b66410b64846b31124ae5a0f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73199654867cc48b0fdfa593987dfecd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a73199654867cc48b0fdfa593987dfecd">s2let_wav_transform_wavlm_manual_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a73199654867cc48b0fdfa593987dfecd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a73199654867cc48b0fdfa593987dfecd">s2let_wav_transform_wavlm_manual_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a73199654867cc48b0fdfa593987dfecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36c393819821e9d3230f1b611029c03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a36c393819821e9d3230f1b611029c03a">s2let_wav_transform_harmonic_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a36c393819821e9d3230f1b611029c03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a36c393819821e9d3230f1b611029c03a">s2let_wav_transform_harmonic_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a36c393819821e9d3230f1b611029c03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a6c059a89a24d1faf87c71d4daa0aad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a9a6c059a89a24d1faf87c71d4daa0aad">s2let_wav_transform_harmonic_multires_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a9a6c059a89a24d1faf87c71d4daa0aad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a9a6c059a89a24d1faf87c71d4daa0aad">s2let_wav_transform_harmonic_multires_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a9a6c059a89a24d1faf87c71d4daa0aad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f77ce64b0ecb6acdfeb8cd03b5b4d19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4f77ce64b0ecb6acdfeb8cd03b5b4d19">s2let_transform_axisym_wav_test</a> (int B, int L, int J_min, int seed)</td></tr>
+<tr class="memitem:a4f77ce64b0ecb6acdfeb8cd03b5b4d19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4f77ce64b0ecb6acdfeb8cd03b5b4d19">s2let_transform_axisym_wav_test</a> (int B, int L, int J_min, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a4f77ce64b0ecb6acdfeb8cd03b5b4d19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42ef36d238046edb1b4a03e2269797f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a42ef36d238046edb1b4a03e2269797f2">s2let_transform_axisym_wav_real_test</a> (int B, int L, int J_min, int seed)</td></tr>
+<tr class="memitem:a42ef36d238046edb1b4a03e2269797f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a42ef36d238046edb1b4a03e2269797f2">s2let_transform_axisym_wav_real_test</a> (int B, int L, int J_min, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a42ef36d238046edb1b4a03e2269797f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac20052515fa751c919b54fb6bfb7b5a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ac20052515fa751c919b54fb6bfb7b5a1">s2let_transform_axisym_wav_multires_test</a> (int B, int L, int J_min, int seed)</td></tr>
+<tr class="memitem:ac20052515fa751c919b54fb6bfb7b5a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ac20052515fa751c919b54fb6bfb7b5a1">s2let_transform_axisym_wav_multires_test</a> (int B, int L, int J_min, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:ac20052515fa751c919b54fb6bfb7b5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30b6b4ec19a7bc9c3bb7fb3b933e6c94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a30b6b4ec19a7bc9c3bb7fb3b933e6c94">s2let_transform_axisym_wav_multires_real_test</a> (int B, int L, int J_min, int seed)</td></tr>
+<tr class="memitem:a30b6b4ec19a7bc9c3bb7fb3b933e6c94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a30b6b4ec19a7bc9c3bb7fb3b933e6c94">s2let_transform_axisym_wav_multires_real_test</a> (int B, int L, int J_min, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a30b6b4ec19a7bc9c3bb7fb3b933e6c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac21ea0848f541e57646992df1f019ac6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ac21ea0848f541e57646992df1f019ac6">s2let_wav_transform_mw_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:ac21ea0848f541e57646992df1f019ac6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ac21ea0848f541e57646992df1f019ac6">s2let_wav_transform_mw_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:ac21ea0848f541e57646992df1f019ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af85961da9316af3f997f88fedd2604d9"><td class="memItemLeft" align="right" valign="top">complex double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#af85961da9316af3f997f88fedd2604d9">s2let_dot_product_complex</a> (complex double *v1, complex double *v2, int N_length)</td></tr>
 <tr class="separator:af85961da9316af3f997f88fedd2604d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9098753dfdaad47814f9d13a5e838a1"><td class="memItemLeft" align="right" valign="top">complex double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ab9098753dfdaad47814f9d13a5e838a1">s2let_dot_product_real</a> (double *v1, double *v2, int N_length)</td></tr>
 <tr class="separator:ab9098753dfdaad47814f9d13a5e838a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc35303ba9eb6beeee088d9f08c3444c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#afc35303ba9eb6beeee088d9f08c3444c">s2let_wav_analysis_adjoint_lm_lmn_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:afc35303ba9eb6beeee088d9f08c3444c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#afc35303ba9eb6beeee088d9f08c3444c">s2let_wav_analysis_adjoint_lm_lmn_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:afc35303ba9eb6beeee088d9f08c3444c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33ed7d71c1e2543ab0ec5d5034a0269f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a33ed7d71c1e2543ab0ec5d5034a0269f">s2let_wav_synthesis_adjoint_lm_lmn_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a33ed7d71c1e2543ab0ec5d5034a0269f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a33ed7d71c1e2543ab0ec5d5034a0269f">s2let_wav_synthesis_adjoint_lm_lmn_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a33ed7d71c1e2543ab0ec5d5034a0269f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b3a9612e87e483e27bff0888bd964a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4b3a9612e87e483e27bff0888bd964a0">s2let_wav_analysis_adjoint_mw_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a4b3a9612e87e483e27bff0888bd964a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4b3a9612e87e483e27bff0888bd964a0">s2let_wav_analysis_adjoint_mw_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a4b3a9612e87e483e27bff0888bd964a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07e8d14353d7a404098560c1a9db92fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a07e8d14353d7a404098560c1a9db92fe">s2let_wav_analysis_adjoint_mw_real_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a07e8d14353d7a404098560c1a9db92fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a07e8d14353d7a404098560c1a9db92fe">s2let_wav_analysis_adjoint_mw_real_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a07e8d14353d7a404098560c1a9db92fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9c1885807e8ac48440a0b0d3dd2a667"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ae9c1885807e8ac48440a0b0d3dd2a667">s2let_wav_synthesis_adjoint_lm2wav_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:ae9c1885807e8ac48440a0b0d3dd2a667"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ae9c1885807e8ac48440a0b0d3dd2a667">s2let_wav_synthesis_adjoint_lm2wav_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:ae9c1885807e8ac48440a0b0d3dd2a667"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bb00b26cbe0fbb23f41778220fa5824"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a1bb00b26cbe0fbb23f41778220fa5824">s2let_wav_synthesis_adjoint_mw_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a1bb00b26cbe0fbb23f41778220fa5824"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a1bb00b26cbe0fbb23f41778220fa5824">s2let_wav_synthesis_adjoint_mw_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a1bb00b26cbe0fbb23f41778220fa5824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5185ca4b0f65740ab88242cff55b796d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a5185ca4b0f65740ab88242cff55b796d">s2let_wav_synthesis_adjoint_mw_real_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a5185ca4b0f65740ab88242cff55b796d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a5185ca4b0f65740ab88242cff55b796d">s2let_wav_synthesis_adjoint_mw_real_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a5185ca4b0f65740ab88242cff55b796d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5b2cded1bb3914d1398df3b65eec310"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#af5b2cded1bb3914d1398df3b65eec310">so3_test_gen_flmn_complex</a> (complex double *flmn, const so3_parameters_t *parameters, int seed)</td></tr>
+<tr class="memitem:af5b2cded1bb3914d1398df3b65eec310"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#af5b2cded1bb3914d1398df3b65eec310">so3_test_gen_flmn_complex</a> (complex double *flmn, const so3_parameters_t *parameters, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:af5b2cded1bb3914d1398df3b65eec310"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac85f518078a76b2dd77de9ccc9f34f07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ac85f518078a76b2dd77de9ccc9f34f07">s2let_wav_so3_forward_adjoint_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:ac85f518078a76b2dd77de9ccc9f34f07"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#ac85f518078a76b2dd77de9ccc9f34f07">s2let_wav_so3_forward_adjoint_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:ac85f518078a76b2dd77de9ccc9f34f07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c730406b8d674ce01adf2f00b23a80b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a8c730406b8d674ce01adf2f00b23a80b">s2let_wav_transform_mw_real_test</a> (int B, int L, int J_min, int N, int seed)</td></tr>
+<tr class="memitem:a8c730406b8d674ce01adf2f00b23a80b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a8c730406b8d674ce01adf2f00b23a80b">s2let_wav_transform_mw_real_test</a> (int B, int L, int J_min, int N, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a8c730406b8d674ce01adf2f00b23a80b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e3ae237fa88d72d1dbd073219148d14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a8e3ae237fa88d72d1dbd073219148d14">s2let_wav_transform_mw_multires_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a8e3ae237fa88d72d1dbd073219148d14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a8e3ae237fa88d72d1dbd073219148d14">s2let_wav_transform_mw_multires_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a8e3ae237fa88d72d1dbd073219148d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d1b3d1c528a9251c2f7ca5841b7ea4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4d1b3d1c528a9251c2f7ca5841b7ea4c">s2let_wav_transform_mw_multires_real_test</a> (int B, int L, int J_min, int N, int seed)</td></tr>
+<tr class="memitem:a4d1b3d1c528a9251c2f7ca5841b7ea4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4d1b3d1c528a9251c2f7ca5841b7ea4c">s2let_wav_transform_mw_multires_real_test</a> (int B, int L, int J_min, int N, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a4d1b3d1c528a9251c2f7ca5841b7ea4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50a13ab98a0345f3d9d66d4252f6b4c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a50a13ab98a0345f3d9d66d4252f6b4c6">s2let_wav_transform_mwss_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a50a13ab98a0345f3d9d66d4252f6b4c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a50a13ab98a0345f3d9d66d4252f6b4c6">s2let_wav_transform_mwss_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a50a13ab98a0345f3d9d66d4252f6b4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0405e044e4b231f44c78768efa065da2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a0405e044e4b231f44c78768efa065da2">s2let_wav_transform_mwss_real_test</a> (int B, int L, int J_min, int N, int seed)</td></tr>
+<tr class="memitem:a0405e044e4b231f44c78768efa065da2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a0405e044e4b231f44c78768efa065da2">s2let_wav_transform_mwss_real_test</a> (int B, int L, int J_min, int N, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a0405e044e4b231f44c78768efa065da2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47c841b99612070b47ad9cc82e15381f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a47c841b99612070b47ad9cc82e15381f">s2let_wav_transform_mwss_multires_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a47c841b99612070b47ad9cc82e15381f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a47c841b99612070b47ad9cc82e15381f">s2let_wav_transform_mwss_multires_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a47c841b99612070b47ad9cc82e15381f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98871d63a676332bf18fa0e759ed7b75"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a98871d63a676332bf18fa0e759ed7b75">s2let_wav_transform_mwss_multires_real_test</a> (int B, int L, int J_min, int N, int seed)</td></tr>
+<tr class="memitem:a98871d63a676332bf18fa0e759ed7b75"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a98871d63a676332bf18fa0e759ed7b75">s2let_wav_transform_mwss_multires_real_test</a> (int B, int L, int J_min, int N, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a98871d63a676332bf18fa0e759ed7b75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf679450a2ce6ea636c2dc10f7e540a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a2cf679450a2ce6ea636c2dc10f7e540a">s2let_wav_transform_lm2wav_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:a2cf679450a2ce6ea636c2dc10f7e540a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a2cf679450a2ce6ea636c2dc10f7e540a">s2let_wav_transform_lm2wav_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a2cf679450a2ce6ea636c2dc10f7e540a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4631a44a831e086e712e9f1aa7ffab62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4631a44a831e086e712e9f1aa7ffab62">s2let_wav_transform_lm2wav_real_test</a> (int B, int L, int J_min, int N, int seed)</td></tr>
+<tr class="memitem:a4631a44a831e086e712e9f1aa7ffab62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4631a44a831e086e712e9f1aa7ffab62">s2let_wav_transform_lm2wav_real_test</a> (int B, int L, int J_min, int N, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a4631a44a831e086e712e9f1aa7ffab62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af37a0a8300c436e3de4404914b06644b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#af37a0a8300c436e3de4404914b06644b">s2let_wav_transform_lm2wav_multires_test</a> (int B, int L, int J_min, int N, int spin, int seed)</td></tr>
+<tr class="memitem:af37a0a8300c436e3de4404914b06644b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#af37a0a8300c436e3de4404914b06644b">s2let_wav_transform_lm2wav_multires_test</a> (int B, int L, int J_min, int N, int spin, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:af37a0a8300c436e3de4404914b06644b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97581c49341c7cd099bde20868fc7cd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a97581c49341c7cd099bde20868fc7cd6">s2let_wav_transform_lm2wav_multires_real_test</a> (int B, int L, int J_min, int N, int seed)</td></tr>
+<tr class="memitem:a97581c49341c7cd099bde20868fc7cd6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a97581c49341c7cd099bde20868fc7cd6">s2let_wav_transform_lm2wav_multires_real_test</a> (int B, int L, int J_min, int N, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a97581c49341c7cd099bde20868fc7cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45c632c898e73d473bcc38e492847182"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a45c632c898e73d473bcc38e492847182">s2let_transform_axisym_vs_directional_mw_test</a> (B, L, J_min, seed)</td></tr>
+<tr class="memitem:a45c632c898e73d473bcc38e492847182"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a45c632c898e73d473bcc38e492847182">s2let_transform_axisym_vs_directional_mw_test</a> (B, L, J_min, <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a45c632c898e73d473bcc38e492847182"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4942f2f69c0519399f61579dc47d98d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4942f2f69c0519399f61579dc47d98d2">s2let_transform_axisym_vs_directional_mw_multires_test</a> (B, L, J_min, seed)</td></tr>
+<tr class="memitem:a4942f2f69c0519399f61579dc47d98d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a4942f2f69c0519399f61579dc47d98d2">s2let_transform_axisym_vs_directional_mw_multires_test</a> (B, L, J_min, <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a4942f2f69c0519399f61579dc47d98d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf6416ad05d8f169fc6eadb5a9ad537d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#abf6416ad05d8f169fc6eadb5a9ad537d">s2let_transform_performance_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int seed)</td></tr>
+<tr class="memitem:abf6416ad05d8f169fc6eadb5a9ad537d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#abf6416ad05d8f169fc6eadb5a9ad537d">s2let_transform_performance_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:abf6416ad05d8f169fc6eadb5a9ad537d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6707d377e1f45cf08f165f35f9b4f4cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a6707d377e1f45cf08f165f35f9b4f4cc">s2let_transform_performance_multires_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int seed)</td></tr>
+<tr class="memitem:a6707d377e1f45cf08f165f35f9b4f4cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a6707d377e1f45cf08f165f35f9b4f4cc">s2let_transform_performance_multires_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a6707d377e1f45cf08f165f35f9b4f4cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a677d7f0b1315a8f13a3ecd057a928372"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a677d7f0b1315a8f13a3ecd057a928372">s2let_transform_lm_performance_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int seed)</td></tr>
+<tr class="memitem:a677d7f0b1315a8f13a3ecd057a928372"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a677d7f0b1315a8f13a3ecd057a928372">s2let_transform_lm_performance_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a677d7f0b1315a8f13a3ecd057a928372"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a601830de99f48906fcfe6b53907bb190"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a601830de99f48906fcfe6b53907bb190">s2let_transform_lm_performance_multires_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int seed)</td></tr>
+<tr class="memitem:a601830de99f48906fcfe6b53907bb190"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a601830de99f48906fcfe6b53907bb190">s2let_transform_lm_performance_multires_test</a> (int B, int J_min, int <a class="el" href="s2let__test__csv_8c.html#a9fa6466347dd349266768c7f7f0b0e4e">NREPEAT</a>, int NSCALE, int <a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>)</td></tr>
 <tr class="separator:a601830de99f48906fcfe6b53907bb190"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="s2let__test_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
 <tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,8 +236,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02910">2910</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a468603fe2a4ae0176b1a3008b5508ac7"></a>
@@ -220,8 +253,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00117">117</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -257,8 +288,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00900">900</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="ab9098753dfdaad47814f9d13a5e838a1"></a>
@@ -292,8 +321,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00921">921</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -344,8 +371,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00022">22</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a84ab4ae94142563376cc58ce9b3f0529"></a>
@@ -387,8 +412,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00054">54</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -453,8 +476,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00088">88</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a6490580b66410b64846b31124ae5a0f4"></a>
@@ -510,8 +531,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00235">235</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -569,8 +588,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00170">170</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a4942f2f69c0519399f61579dc47d98d2"></a>
@@ -600,7 +617,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">seed&#160;</td>
+          <td class="paramtype"><a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -626,8 +643,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02553">2553</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -658,7 +673,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">seed&#160;</td>
+          <td class="paramtype"><a class="el" href="test__tiling_8c.html#ab1633aa266a0a720540840343194b2cf">seed</a>&#160;</td>
           <td class="paramname">&#160;</td>
         </tr>
         <tr>
@@ -684,8 +699,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02496">2496</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -743,8 +756,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00770">770</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="ac20052515fa751c919b54fb6bfb7b5a1"></a>
@@ -800,8 +811,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00704">704</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -859,8 +868,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00638">638</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a4f77ce64b0ecb6acdfeb8cd03b5b4d19"></a>
@@ -917,8 +924,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00573">573</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a601830de99f48906fcfe6b53907bb190"></a>
@@ -964,8 +969,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02836">2836</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1013,8 +1016,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02761">2761</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a6707d377e1f45cf08f165f35f9b4f4cc"></a>
@@ -1061,8 +1062,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02685">2685</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="abf6416ad05d8f169fc6eadb5a9ad537d"></a>
@@ -1108,8 +1107,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02610">2610</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1181,8 +1178,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00947">947</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a07e8d14353d7a404098560c1a9db92fe"></a>
@@ -1234,8 +1229,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01228">1228</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1289,8 +1282,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01139">1139</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="ac85f518078a76b2dd77de9ccc9f34f07"></a>
@@ -1343,8 +1334,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01638">1638</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="ae9c1885807e8ac48440a0b0d3dd2a667"></a>
@@ -1396,8 +1385,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01318">1318</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1469,8 +1456,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01047">1047</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a5185ca4b0f65740ab88242cff55b796d"></a>
@@ -1523,8 +1508,6 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01496">1496</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a1bb00b26cbe0fbb23f41778220fa5824"></a>
@@ -1576,8 +1559,6 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01407">1407</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1649,8 +1630,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00483">483</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a36c393819821e9d3230f1b611029c03a"></a>
@@ -1721,8 +1700,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00410">410</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a97581c49341c7cd099bde20868fc7cd6"></a>
@@ -1786,8 +1763,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02437">2437</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1859,8 +1834,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02375">2375</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a4631a44a831e086e712e9f1aa7ffab62"></a>
@@ -1923,8 +1896,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02312">2312</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -1996,8 +1967,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02250">2250</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a4d1b3d1c528a9251c2f7ca5841b7ea4c"></a>
@@ -2061,8 +2030,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01881">1881</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -2134,8 +2101,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01808">1808</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a8c730406b8d674ce01adf2f00b23a80b"></a>
@@ -2198,8 +2163,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01734">1734</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -2271,8 +2234,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00838">838</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a98871d63a676332bf18fa0e759ed7b75"></a>
@@ -2336,8 +2297,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02176">2176</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -2409,8 +2368,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02102">2102</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a0405e044e4b231f44c78768efa065da2"></a>
@@ -2473,8 +2430,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l02027">2027</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
 
 </div>
 </div>
@@ -2546,8 +2501,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01953">1953</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="a73199654867cc48b0fdfa593987dfecd"></a>
@@ -2618,8 +2571,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l00304">304</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 <a id="af5b2cded1bb3914d1398df3b65eec310"></a>
@@ -2654,14 +2605,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="s2let__test_8c_source.html#l01585">1585</a> of file <a class="el" href="s2let__test_8c_source.html">s2let_test.c</a>.</p>
-
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 18 2020 11:29:20 for S2LET by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
+Generated by&#160;<a href="http://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.8.19
 </small></address>
 </body>
 </html>

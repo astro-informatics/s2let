@@ -1,0 +1,7 @@
+[requires]
+astro-informatics-so3/[>=1.3.4]
+cfitsio/[>=3.490]
+[generators]
+cmake
+[options]
+cfitsio:shared=False

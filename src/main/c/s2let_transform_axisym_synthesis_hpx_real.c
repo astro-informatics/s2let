@@ -2,14 +2,15 @@
 // Copyright (C) 2012
 // Boris Leistedt & Jason McEwen
 
-#include "s2let.h"
 #include <assert.h>
 #include <complex.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include <time.h>
+
+#include "s2let/s2let.h"
 
 /*!
  * PROGRAM : s2let_transform_axisym_hpx_synthesis_real
@@ -21,8 +22,7 @@
  * - L : bandlimit for the decomposition
  * OUTPUT : fits files containing the reconstructed healpix map
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   printf("--------------------------------------------------\n");
   printf("S2LET library : axisymmetric wavelet transform\n");
   printf("Real signal, HEALPIX sampling\n");
@@ -55,31 +55,32 @@ int main(int argc, char *argv[])
   char file[100];
   sprintf(params, "%d%s%d%s%d", L, "_", B, "_", J_min);
   int j, offset = 0;
-  printf("File root = %s\n",fileroot);
+  printf("File root = %s\n", fileroot);
 
   // Init read procedure, read nside
   sprintf(file, "%s%s%s%s", fileroot, "_scal_", params, ".fits");
-  printf("- Infile_scal = %s\n",file);
+  printf("- Infile_scal = %s\n", file);
   const int nside = s2let_fits_hpx_read_nside(file);
-  printf("- Detected bandlimit nside = %i\n",nside);
+  printf("- Detected bandlimit nside = %i\n", nside);
   // Allocate memory for wavelets
   double *f_wav, *f_scal;
   s2let_transform_axisym_allocate_hpx_f_wav_real(&f_wav, &f_scal, nside, &parameters);
   // Read the scaling function
   s2let_hpx_read_map(f_scal, file, nside); // Now write the map to fits file
   // Read the wavelets
-  for(j = J_min; j <= J; j++){
+  for (j = J_min; j <= J; j++) {
     sprintf(file, "%s%s%s%s%d%s", fileroot, "_wav_", params, "_", j, ".fits");
-    printf("- Infile_wav[j=%i] = %s\n",j,file);
+    printf("- Infile_wav[j=%i] = %s\n", j, file);
     s2let_hpx_read_map(f_wav + offset, file, nside); // Now write the map to fits file
-    offset += 12*nside*nside; // Go to the next wavelet
+    offset += 12 * nside * nside;                    // Go to the next wavelet
   }
 
   // Allocate memory for reconstruction
-  double *f = (double*)calloc(12*nside*nside, sizeof(double));
+  double *f = (double *)calloc(12 * nside * nside, sizeof(double));
   printf("File successfully read from file\n");
 
-  printf("Performing wavelet reconstruction...");fflush(NULL);
+  printf("Performing wavelet reconstruction...");
+  fflush(NULL);
   s2let_transform_axisym_wav_synthesis_hpx_real(f, f_wav, f_scal, nside, &parameters);
   printf("done\n");
 
@@ -87,13 +88,11 @@ int main(int argc, char *argv[])
   printf("Writing reconsturcted map to FITS files\n");
   char outfile[100];
   sprintf(outfile, "%s%s%s%s", fileroot, "_recon_", params, ".fits");
-  printf("- Outfile = %s\n",outfile);
-  remove(outfile); // In case the file exists
+  printf("- Outfile = %s\n", outfile);
+  remove(outfile);                        // In case the file exists
   s2let_hpx_write_map(outfile, f, nside); // Now write the map to fits file
 
   printf("--------------------------------------------------\n");
 
   return 0;
 }
-
-
