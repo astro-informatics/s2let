@@ -1,31 +1,26 @@
-cmake_minimum_required(VERSION 3.12...3.26)
+cmake_minimum_required(VERSION 3.24)
+
+if(NOT SKBUILD_PROJECT_NAME)
+  set(project_name s2let)
+else()
+  set(project_name ${SKBUILD_PROJECT_NAME})
+endif()
 
 project(
-  s2let
+  ${project_name}
   VERSION "2.2.6"
   DESCRIPTION "Fast wavelets on the sphere"
   HOMEPAGE_URL "http://astro-informatics.github.io/s2let/"
   LANGUAGES C)
 
 option(cfitsio "Links to cfitsio" OFF)
-option(conan_deps "Download dependencies using conan" OFF)
-
-if(conan_deps AND NOT cfitsio)
-  message(
-    WARNING "cfitsio is always included when managing dependencies via conan")
-endif()
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 include(CTest)
-if(conan_deps OR CONAN_EDITABLE_MODE)
-  include("${PROJECT_SOURCE_DIR}/cmake/conan_dependencies.cmake")
-endif()
-if(EXISTS "${PROJECT_BINARY_DIR}/conan_paths.cmake")
-  include("${PROJECT_BINARY_DIR}/conan_paths.cmake")
-elseif(EXISTS "${PROJECT_BINARY_DIR}/FindFFTW3.cmake")
+if(EXISTS "${PROJECT_BINARY_DIR}/FindFFTW3.cmake")
   list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}")
 else()
   list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
@@ -37,25 +32,26 @@ if(cfitsio)
   find_package(cfitsio REQUIRED)
 endif()
 
-add_subdirectory(src/main/c)
+add_subdirectory(src/c)
 
 include(CTest)
 if(BUILD_TESTING)
   include("${PROJECT_SOURCE_DIR}/cmake/fetch_cmocka.cmake")
-  add_subdirectory(src/test/c)
+  add_subdirectory(test/c)
 endif()
 
 if(SKBUILD)
-  find_package(PythonExtensions REQUIRED)
-  find_package(Cython REQUIRED)
-  find_package(NumPy REQUIRED)
-  add_subdirectory(src/main/pys2let)
-elseif(NOT CONAN_EXPORTED)
+  find_package(
+    Python
+    COMPONENTS Interpreter Development.Module NumPy
+    REQUIRED)
+  add_subdirectory(src/pys2let)
+else()
   include("${PROJECT_SOURCE_DIR}/cmake/exporting.cmake")
 endif()
 
 # only run documentation if this is not a sub-project
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND NOT SKBUILD)
   find_package(Doxygen)
   if(DOXYGEN_FOUND)
     set(DOXYGEN_PROJECT_LOGO ${PROJECT_SOURCE_DIR}/docs/images/wav.png)

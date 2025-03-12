@@ -1,7 +1,10 @@
 [requires]
 astro-informatics-so3/[>=1.3.4]
+ssht/[>=1.5.2]
 cfitsio/[>=3.490]
+[layout]
+cmake_layout
 [generators]
-cmake
+CMakeDeps
 [options]
-cfitsio:shared=False
+cfitsio/*:shared=False
