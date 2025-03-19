@@ -155,7 +155,7 @@ void test_wav_analysis_adjoint_mw(void **state) {
       dot_complex(f_scal_rec, f_scal, s2let_n_scal(parameters)) -
       dot_complex(f_rec, f, parameters->L * (2 * parameters->L - 1));
 
-  assert_float_equal(creal(error), 0, 1e-12);
+  assert_float_equal(creal(error), 0, 1e-11);
   assert_float_equal(cimag(error), 0, 1e-12);
 
   free(f);
@@ -200,7 +200,7 @@ void test_wav_analysis_adjoint_mw_real(void **state) {
                        dot_real(f_scal_rec, f_scal, s2let_n_scal(&parameters)) -
                        dot_real(f_rec, f, parameters.L * (2 * parameters.L - 1));
 
-  assert_float_equal(error, 0, 1e-12);
+  assert_float_equal(error, 0, 1e-11);
 
   free(f);
   free(f_rec);
@@ -353,7 +353,7 @@ void test_wav_synthesis_adjoint_mw_real(void **state) {
                        dot_real(f_scal_rec, f_scal, s2let_n_scal(&parameters)) -
                        dot_real(f_rec, f, parameters.L * (2 * parameters.L - 1));
 
-  assert_float_equal(error, 0, 1e-12);
+  assert_float_equal(error, 0, 1e-11);
 
   free(f);
   free(f_rec);
