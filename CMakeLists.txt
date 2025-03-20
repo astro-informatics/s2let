@@ -8,7 +8,7 @@ endif()
 
 project(
   ${project_name}
-  VERSION "2.2.6"
+  VERSION "2.2.7"
   DESCRIPTION "Fast wavelets on the sphere"
   HOMEPAGE_URL "http://astro-informatics.github.io/s2let/"
   LANGUAGES C)

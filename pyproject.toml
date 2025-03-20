@@ -1,6 +1,6 @@
 [project]
 name = "pys2let"
-version = "2.2.6"
+version = "2.2.7"
 authors = [
     {name="Jason D. McEwen"},
     {name="Chris R. G. Wallis"},
@@ -54,4 +54,5 @@ build-dir="build"
 [dependency-groups]
 dev = [
     "pytest>=8.3.5",
+    "bumpversion"
 ]
