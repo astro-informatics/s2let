@@ -34,3 +34,4 @@ compile_commands.json
 .devenv.*
 devenv*
 .envrc
+/wheelhouse/
