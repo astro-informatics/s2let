@@ -40,17 +40,18 @@ The C package can be installed with [CMake](https://cmake.org) and
 Both can be installed using pip:
 
 ```bash
-pip install "conan<1" cmake
+pip install "conan" cmake
 ```
 
 Then **S2LET** can be compiled with:
 
 ```bash
 git clone https://github.com/astro-informatics/s2let.git
-mkdir s2let/build && cd s2let/build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -Dconan_deps=ON  -Dcfitsio=ON ..
-make
-make install
+cd s2let
+cmake -B ./build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./cmake/conan_provider.cmake -Dcfitsio=ON 
+cmake --build build
+ctest --test-dir build
+cmake --install build --install-prefix=/usr/local
 ```
 
 The above will also download all necessary dependencies.

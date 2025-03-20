@@ -1,8 +1,32 @@
-[build-system]
-requires = [
-    "setuptools", "wheel", "scikit-build", "cmake>=3.12", "ninja", "cython",
-    "numpy", "conan<2"
+[project]
+name = "pys2let"
+version = "2.2.6"
+authors = [
+    {name="Jason D. McEwen"},
+    {name="Chris R. G. Wallis"},
+    {name="Martin Büttner"},
+    {name="Jennifer Chan"},
+    {name="Boris Leistedt"}
 ]
+description = "Fast wavelet transforms on the sphere"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+keywords = ["numerical transforms", "signal processing", "science"]
+dependencies = [ "numpy", "scipy" ]
+requires-python = ">= 3.8"
+
+[project.optional-dependencies]
+plots = ["healpy"]
+
+[project.urls]
+Homepage = "http://astro-informatics.github.io/s2let/"
+Repository = "http://github.com/astro-informatics/s2let.git"
+Issues = "http://github.com/astro-informatics/s2let/issues"
+
+[build-system]
+requires = ["scikit-build-core", "cython>=3.0.0", "numpy", "conan"]
+build-backend = "scikit_build_core.build"
+
 [tool.black]
 line-length = 88
 
@@ -16,3 +40,18 @@ line_length = 88
 
 [tool.pylint.format]
 max-line-length = 88
+
+[tool.scikit-build]
+cmake.args=[
+    "-DBUILD_TESTING:BOOL=OFF",
+    "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./cmake/conan_provider.cmake",
+    "-Dcfitsio:BOOL=ON",
+    "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
+]
+ninja.make-fallback = false
+build-dir="build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+]

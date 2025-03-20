@@ -30,3 +30,8 @@ MANIFEST
 .clangd/
 compile_commands.json
 /_skbuild/
+.devenv/
+.devenv.*
+devenv*
+.envrc
+/wheelhouse/

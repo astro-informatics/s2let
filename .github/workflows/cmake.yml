@@ -2,7 +2,7 @@ name: CMake Build
 
 on:
   push:
-      branches: ["main"]
+    branches: ["main"]
   pull_request:
 
 env:
@@ -10,6 +10,7 @@ env:
 
 jobs:
   build:
+    name: CMake build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -18,26 +19,34 @@ jobs:
         python-version: [3.8]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Create Build Environment
-      run: |
-        pip install --upgrade pip wheel "conan<2"
-        cmake -E make_directory ${{runner.workspace}}/build
+      - name: Create Build Environment
+        shell: bash
+        run: |
+          python -m pip install wheel
+          python -m pip install --upgrade pip "conan"
+          cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake
-      working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -Dpython=False -Dconan_deps=True
+      - name: Configure CMake
+        working-directory: ${{runner.workspace}}/build
+        run: >-
+          cmake $GITHUB_WORKSPACE
+          -DCMAKE_C_COMPILER=gcc
+          -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+          -Dpython=False
+          -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=./cmake/conan_provider.cmake
 
-    - name: Build
-      working-directory: ${{runner.workspace}}/build
-      run: cmake --build . --config $BUILD_TYPE
+      - name: Build
+        working-directory: ${{runner.workspace}}/build
+        run: cmake --build . --config $BUILD_TYPE
 
-    - name: Test
-      working-directory: ${{runner.workspace}}/build
-      run: ctest -C $BUILD_TYPE
+      - name: Test
+        working-directory: ${{runner.workspace}}/build
+        run: ctest -C $BUILD_TYPE --output-on-failure
+
