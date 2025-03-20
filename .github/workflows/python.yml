@@ -84,9 +84,12 @@ jobs:
         run: uv pip install pytest && uv run pytest
 
   publication:
-    name: publish to pypi
+    name: Build wheels and publish on ${{ matrix.os }}
     if: ${{ startsWith(github.ref, 'refs/tags') }}
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-13, macos-14]
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
@@ -97,10 +100,16 @@ jobs:
       - name: Build sdist
         run: uv build --sdist
 
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.23.1
+        env:
+          CIBW_SKIP: "cp36-* cp37-* pp* *musllinux*"
+
+
       - name: Publish distribution 📦 to Test PyPI
         if: ${{ github.ref != 'refs/tags/v2.2.6' }}
-        run: "uv publish --publish-url https://test.pypi.org/legacy/ --token ${{ secrets.TEST_PYPI_TOKEN }}"
+        run: "uv publish --publish-url https://test.pypi.org/legacy/ --token ${{ secrets.TEST_PYPI_TOKEN }} sdist/*.tar.gz wheelhouse/*.whl"
 
       - name: Publish distribution 📦 to PyPI
         if: ${{ github.ref == 'refs/tags/v2.2.6' }}
-        run: "uv publish --publish-url https://test.pypi.org/legacy/ --token ${{ secrets.PYPI_TOKEN }}"
+        run: "uv publish --token ${{ secrets.PYPI_TOKEN }} sdist/*.tar.gz wheelhouse/*.whl"
