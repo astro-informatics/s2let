@@ -107,9 +107,9 @@ jobs:
 
 
       - name: Publish distribution 📦 to Test PyPI
-        if: ${{ github.ref != 'refs/tags/v2.2.6' }}
+        if: ${{ github.ref != 'refs/tags/v2.2.7' }}
         run: "uv publish --publish-url https://test.pypi.org/legacy/ --token ${{ secrets.TEST_PYPI_TOKEN }} sdist/*.tar.gz wheelhouse/*.whl"
 
       - name: Publish distribution 📦 to PyPI
-        if: ${{ github.ref == 'refs/tags/v2.2.6' }}
+        if: ${{ github.ref == 'refs/tags/v2.2.7' }}
         run: "uv publish --token ${{ secrets.PYPI_TOKEN }} sdist/*.tar.gz wheelhouse/*.whl"
