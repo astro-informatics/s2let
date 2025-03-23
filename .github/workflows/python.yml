@@ -83,7 +83,7 @@ jobs:
       - name: run pytests
         run: uv pip install pytest && uv run pytest
 
-  publication:
+  publish_wheels:
     name: Build wheels and publish on ${{ matrix.os }}
     if: ${{ startsWith(github.ref, 'refs/tags') }}
     runs-on: ${{ matrix.os }}
@@ -97,19 +97,40 @@ jobs:
         with:
           version: "0.6.5"
 
-      - name: Build sdist
-        run: uv build --sdist
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.1
         env:
-          CIBW_SKIP: "cp36-* cp37-* pp* *musllinux*"
-
+          CIBW_SKIP: "cp36-* cp37-* cp38-* pp* *musllinux*"
+          CIBW_BUILD_FRONTEND: "build[uv]"
 
       - name: Publish distribution 📦 to Test PyPI
         if: ${{ github.ref != 'refs/tags/v2.2.7' }}
-        run: "uv publish --publish-url https://test.pypi.org/legacy/ --token ${{ secrets.TEST_PYPI_TOKEN }} sdist/*.tar.gz wheelhouse/*.whl"
+        run: "uv publish --publish-url https://test.pypi.org/legacy/ --token ${{ secrets.TEST_PYPI_TOKEN }} wheelhouse/*.whl"
 
       - name: Publish distribution 📦 to PyPI
         if: ${{ github.ref == 'refs/tags/v2.2.7' }}
-        run: "uv publish --token ${{ secrets.PYPI_TOKEN }} sdist/*.tar.gz wheelhouse/*.whl"
+        run: "uv publish --token ${{ secrets.PYPI_TOKEN }} wheelhouse/*.whl"
+
+  publish_sdist:
+    name: Build sdist and publish on ubuntu
+    if: ${{ startsWith(github.ref, 'refs/tags') }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.6.5"
+
+      - name: Build sdist
+        run: uv build --sdist
+
+      - name: Publish distribution 📦 to Test PyPI
+        if: ${{ github.ref != 'refs/tags/v2.2.7' }}
+        run: "uv publish --publish-url https://test.pypi.org/legacy/ dist/*.tar.gz"
+
+      - name: Publish distribution 📦 to PyPI
+        if: ${{ github.ref == 'refs/tags/v2.2.7' }}
+        run: "uv publish dist/*.tar.gz"

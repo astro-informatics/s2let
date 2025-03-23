@@ -1,6 +1,6 @@
 [project]
 name = "pys2let"
-version = "2.2.7"
+version = "2.2.7rc2"
 authors = [
     {name="Jason D. McEwen"},
     {name="Chris R. G. Wallis"},
