@@ -90,6 +90,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm, macos-13, macos-14]
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
